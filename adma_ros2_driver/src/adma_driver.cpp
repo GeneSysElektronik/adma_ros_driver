@@ -6,14 +6,11 @@ namespace genesys
 {
         ADMADriver::ADMADriver(const rclcpp::NodeOptions &options) : Node("adma_driver", options)
         {
-                //TODO: inject as parameter
                 std::string param_address = this->declare_parameter("adma_ip_address", "0.0.0.0");
                 _address = boost::asio::ip::address::from_string(param_address);
                 _port = this->declare_parameter("adma_port", 3333);
                 _performance_check = this->declare_parameter("use_performance_check", true);
 
-                RCLCPP_INFO(get_logger(), "using param: %s", param_address.c_str());
-                
                 _pub_adma_data = this->create_publisher<adma_msgs::msg::AdmaData>("adma/data", 1);
                 _pub_navsat_fix = this->create_publisher<sensor_msgs::msg::NavSatFix>("gps/fix", 1);
                 _pub_heading = this->create_publisher<std_msgs::msg::Float64>("gps/heading", 1);
@@ -32,7 +29,7 @@ namespace genesys
                 boost::asio::io_service io_service;
                 /* Establish UDP connection*/
                 boost::asio::ip::udp::endpoint local_endpoint = boost::asio::ip::udp::endpoint(_address, _port);
-                std::cout << "Local bind " << local_endpoint << std::endl;
+                // RCLCPP_INFO(get_logger(), "binding to: %s:%d", _address.to_string(), _port);
 
                 /* Socket handling */
                 boost::asio::ip::udp::socket socket(io_service);
@@ -44,6 +41,8 @@ namespace genesys
                         /* The length of the stream from ADMA is 856 bytes */
                         std::array<char, 856> recv_buf;
                         _len = socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
+
+                        RCLCPP_INFO(get_logger(), "received payload: %ld", _len);
                         /* Prepare for parsing */
                         std::string local_data(recv_buf.begin(), recv_buf.end());
                         /* Load the messages on the publishers */
@@ -72,7 +71,6 @@ namespace genesys
                                 RCLCPP_INFO(get_logger(), "%f ", ((grab_time * 1000) - (message.instimemsec + 1592697600000)));
                         }
                         
-                        rclcpp::spin_some(this->shared_from_this());
                 }
         }
 } // namespace genesys

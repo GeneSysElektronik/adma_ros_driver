@@ -21,17 +21,18 @@ find_package(adma_msgs REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system date_time)
 
 include_directories(include
-  SYSTEM {Boost_INCLUDE_DIRS}
+  # SYSTEM {Boost_INCLUDE_DIRS}
 )
 
 add_library(${PROJECT_NAME}_node SHARED
   src/adma_parse.cpp
   src/adma_driver.cpp
+  src/adma_data_server.cpp
 )
 
-target_link_libraries(${PROJECT_NAME}_node
-  ${Boost_LIBRARIES}
-)
+# target_link_libraries(${PROJECT_NAME}_node
+#   ${Boost_LIBRARIES}
+# )
 
 ament_target_dependencies(${PROJECT_NAME}_node
   rclcpp
@@ -44,6 +45,11 @@ ament_target_dependencies(${PROJECT_NAME}_node
 rclcpp_components_register_node(${PROJECT_NAME}_node
   PLUGIN "genesys::ADMADriver"
   EXECUTABLE adma_driver
+)
+
+rclcpp_components_register_node(${PROJECT_NAME}_node
+  PLUGIN "genesys::DataServer"
+  EXECUTABLE data_server
 )
 
 install(TARGETS ${PROJECT_NAME}_node

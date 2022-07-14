@@ -2,5 +2,10 @@ genesys:
   adma_ros2_driver:
     ros__parameters:
       adma_ip_address: '0.0.0.0'
-      adma_port: 1234
+      adma_port: 3333
       use_performance_check: True
+  data_server:
+    ros__parameters:
+      ip_address: '127.0.0.1'
+      port: 3333
+      frequence: 20
