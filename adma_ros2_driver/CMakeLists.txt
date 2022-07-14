@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(adma_ros2_driver)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS YES)
+
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)
@@ -12,66 +14,54 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(adma_msgs REQUIRED)
-find_package(std_msgs REQUIRED)
+find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(adma_msgs REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system date_time)
 
-include_directories(
-  include
-  ${adma_msgs_INCLUDE_DIRS}
+include_directories(include
   SYSTEM {Boost_INCLUDE_DIRS}
 )
 
-add_library(adma_connect_core
+add_library(${PROJECT_NAME}_node SHARED
   src/adma_parse.cpp
+  src/adma_driver.cpp
 )
 
-ament_target_dependencies(adma_connect_core
-  adma_msgs
-)
-
-
-
-target_link_libraries(adma_connect_core
+target_link_libraries(${PROJECT_NAME}_node
   ${Boost_LIBRARIES}
-  ${adma_msgs_LIBRARIES}
 )
 
-target_include_directories(adma_connect_core
-  PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>)
-
-
-add_executable(${PROJECT_NAME} src/adma_driver.cpp)
-
-ament_target_dependencies(${PROJECT_NAME} 
-  rclcpp 
-  adma_msgs
+ament_target_dependencies(${PROJECT_NAME}_node
+  rclcpp
+  rclcpp_components
   sensor_msgs
   std_msgs
+  adma_msgs
 )
 
-target_link_libraries(${PROJECT_NAME}
-  adma_connect_core
-  ${rclcpp_LIBRARIES}
-  ${Boost_LIBRARIES}
+rclcpp_components_register_node(${PROJECT_NAME}_node
+  PLUGIN "genesys::ADMADriver"
+  EXECUTABLE adma_driver
 )
 
-install(
-  DIRECTORY include/
-  DESTINATION include
+install(TARGETS ${PROJECT_NAME}_node
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include
 )
 
-install(TARGETS
-  ${PROJECT_NAME}
-  DESTINATION lib/${PROJECT_NAME}
-)
-install(TARGETS
-  adma_connect_core
-  DESTINATION lib/${PROJECT_NAME}
-)
+install(DIRECTORY include/
+  DESTINATION include)
+
+# install additional files of folders
+install(DIRECTORY launch config
+  DESTINATION share/${PROJECT_NAME})
+
+ament_export_include_directories(include)
+ament_export_libraries(${PROJECT_NAME}_node)
 
 ament_package()
 

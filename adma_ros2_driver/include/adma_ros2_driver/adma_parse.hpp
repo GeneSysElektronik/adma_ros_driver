@@ -1,11 +1,9 @@
-#pragma once
 #include "adma_msgs/msg/adma_data.hpp"
-#include "std_msgs/msg/float64.hpp"
-#include "sensor_msgs/msg/nav_sat_fix.hpp"
+#include <std_msgs/msg/float64.hpp>
+#include <sensor_msgs/msg/nav_sat_fix.hpp>
 #include <bitset>
 
-
-
+#pragma once
 
 void getparseddata(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::NavSatFix& msg_fix, std_msgs::msg::Float64& msg_heading, std_msgs::msg::Float64& msg_velocity);
 void getadmastaticheader(const std::string& local_data, adma_msgs::msg::AdmaData& message);

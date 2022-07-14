@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(adma_msgs)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS YES)
+
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)
@@ -14,8 +16,6 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(builtin_interfaces REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
-
-ament_export_include_directories(include)
 
 rosidl_generate_interfaces(adma_msgs
   "msg/AdmaDataDelta.msg"

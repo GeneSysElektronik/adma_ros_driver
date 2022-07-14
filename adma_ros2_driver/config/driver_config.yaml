@@ -1,0 +1,6 @@
+genesys:
+  adma_ros2_driver:
+    ros__parameters:
+      adma_ip_address: '0.0.0.0'
+      adma_port: 1234
+      use_performance_check: True
