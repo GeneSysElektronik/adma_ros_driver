@@ -70,7 +70,6 @@ namespace genesys
                                 float weektime = message.instimeweek;
                                 RCLCPP_INFO(get_logger(), "%f ", ((grab_time * 1000) - (message.instimemsec + 1592697600000)));
                         }
-                        
                 }
         }
 } // namespace genesys
