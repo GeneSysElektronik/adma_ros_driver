@@ -1,5 +1,6 @@
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/nav_sat_fix.hpp>
+#include <sensor_msgs/msg/imu.hpp>
 #include <std_msgs/msg/float64.hpp>
 #include <boost/asio.hpp>
 #include "adma_msgs/msg/adma_data.hpp"
@@ -29,7 +30,11 @@ namespace genesys
                         // publisher
                         rclcpp::Publisher<adma_msgs::msg::AdmaData>::SharedPtr _pub_adma_data;
                         rclcpp::Publisher<sensor_msgs::msg::NavSatFix>::SharedPtr _pub_navsat_fix;
+                        rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr _pub_imu;
                         rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr _pub_heading;
                         rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr _pub_velocity;
+
+                        std::string _gnss_frame;
+                        std::string _imu_frame;
         };
 }
