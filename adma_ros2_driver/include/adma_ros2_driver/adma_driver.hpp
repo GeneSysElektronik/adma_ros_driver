@@ -2,7 +2,7 @@
 #include <sensor_msgs/msg/nav_sat_fix.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 #include <std_msgs/msg/float64.hpp>
-#include <boost/asio.hpp>
+#include <netdb.h>
 #include "adma_msgs/msg/adma_data.hpp"
 
 #pragma once
@@ -16,13 +16,18 @@ namespace genesys
                         virtual ~ADMADriver();
                 
                 private:
+                        void initializeUDP(std::string admaAdress);
                         void updateLoop();
 
-                        /** \brief IP address to which ADMA broadcasts */
-                        boost::asio::ip::address _address;
-                        /** \brief port to which ADMA broadcasts */
-                        unsigned short _port;
-                        /** \brief Length of the stream */
+                        // Socket file descriptor for receiving from adma
+                        int _rcvSockfd; 
+                        // Address info for receiving from adma
+                        struct addrinfo* _rcvAddrInfo;
+                        // adma socket address
+                        struct sockaddr_in _admaAddr;
+                        //Adma  socket address length
+                        socklen_t _admaAddrLen;
+                        int _admaPort;
                         size_t _len = 0;
                         /** \brief Check the timings */
                         bool _performance_check = true;

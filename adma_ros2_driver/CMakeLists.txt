@@ -20,10 +20,8 @@ find_package(std_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(adma_msgs REQUIRED)
-find_package(Boost REQUIRED COMPONENTS system date_time)
 
 include_directories(include
-  # SYSTEM {Boost_INCLUDE_DIRS}
 )
 
 add_library(${PROJECT_NAME}_node SHARED
@@ -31,10 +29,6 @@ add_library(${PROJECT_NAME}_node SHARED
   src/adma_driver.cpp
   src/adma_data_server.cpp
 )
-
-# target_link_libraries(${PROJECT_NAME}_node
-#   ${Boost_LIBRARIES}
-# )
 
 ament_target_dependencies(${PROJECT_NAME}_node
   rclcpp

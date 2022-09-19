@@ -1,14 +1,24 @@
 #include "adma_ros2_driver/adma_driver.hpp"
 #include "adma_ros2_driver/adma_parse.hpp"
 #include <rclcpp_components/register_node_macro.hpp>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/select.h>
+#include <arpa/inet.h>
 
 namespace genesys
 {
-        ADMADriver::ADMADriver(const rclcpp::NodeOptions &options) : Node("adma_driver", options)
+        ADMADriver::ADMADriver(const rclcpp::NodeOptions &options) : Node("adma_driver", options),
+        _rcvSockfd(-1),
+        _rcvAddrInfo(NULL),
+        _admaAddr(),
+        _admaAddrLen(4),
+        _admaPort(0)
         {
                 std::string param_address = this->declare_parameter("destination_ip", "0.0.0.0");
-                _address = boost::asio::ip::address::from_string(param_address);
-                _port = this->declare_parameter("destination_port", 1040);
+                _admaPort = this->declare_parameter("destination_port", 1040);
+                initializeUDP(param_address);
+
                 _performance_check = this->declare_parameter("use_performance_check", false);
                 _gnss_frame = this->declare_parameter("gnss_frame", "gnss_link");
                 _imu_frame = this->declare_parameter("imu_frame", "imu_link");
@@ -23,29 +33,87 @@ namespace genesys
         }
 
         ADMADriver::~ADMADriver(){
+                freeaddrinfo(_rcvAddrInfo);
+                ::shutdown(_rcvSockfd, SHUT_RDWR);
+                _rcvSockfd = -1;
+        }
 
+        void ADMADriver::initializeUDP(std::string admaAdress)
+        {
+                struct addrinfo hints;
+                memset(&hints, 0, sizeof(hints));
+                hints.ai_family = AF_UNSPEC;
+                hints.ai_socktype = SOCK_DGRAM;
+                hints.ai_protocol = IPPROTO_UDP;
+                std::string rcvPortStr = std::to_string(_admaPort);
+
+
+                _admaAddrLen= sizeof(_admaAddr);
+                memset((char *) &_admaAddr, 0, _admaAddrLen);
+                _admaAddr.sin_family = AF_INET;
+                _admaAddr.sin_port = htons(_admaPort);
+                inet_aton(admaAdress.c_str(), &(_admaAddr.sin_addr));
+
+                int r = getaddrinfo(admaAdress.c_str(), rcvPortStr.c_str(), &hints, &_rcvAddrInfo);
+                if (r != 0 || _rcvAddrInfo == NULL) {
+                        RCLCPP_FATAL(get_logger(), "Invalid port for UDP socket: \"%s:%s\"", admaAdress.c_str(), rcvPortStr.c_str());
+                        throw rclcpp::exceptions::InvalidParameterValueException("Invalid port for UDP socket: \"" + admaAdress + ":" + rcvPortStr + "\"");
+                }
+                _rcvSockfd = socket(_rcvAddrInfo->ai_family, SOCK_DGRAM | SOCK_CLOEXEC, IPPROTO_UDP);
+                if (_rcvSockfd == -1) {
+                        freeaddrinfo(_rcvAddrInfo);
+                        RCLCPP_FATAL(get_logger(), "Could not create UDP socket for: \"%s:%s", admaAdress.c_str(), rcvPortStr.c_str());
+                        throw rclcpp::exceptions::InvalidParameterValueException("Could not create UDP socket for: \"" + admaAdress + ":" + rcvPortStr + "\"");
+                }
+                r = bind(_rcvSockfd, _rcvAddrInfo->ai_addr, _rcvAddrInfo->ai_addrlen);
+                if (r != 0) {
+                        freeaddrinfo(_rcvAddrInfo);
+                        ::shutdown(_rcvSockfd, SHUT_RDWR);
+                        RCLCPP_FATAL(get_logger(), "Could not bind UDP socket with: \"%s:%s", admaAdress.c_str(), rcvPortStr.c_str());
+                        throw rclcpp::exceptions::InvalidParameterValueException("Could not bind UDP socket with: \"" + admaAdress + ":" + rcvPortStr + "\"");
+                }
         }
 
         void ADMADriver::updateLoop()
         {
-                /* Create an IO Service wit the OS given the IP and the port */
-                boost::asio::io_service io_service;
-                /* Establish UDP connection*/
-                boost::asio::ip::udp::endpoint local_endpoint = boost::asio::ip::udp::endpoint(_address, _port);
-                // RCLCPP_INFO(get_logger(), "binding to: %s:%d", _address.to_string(), _port);
+                fd_set s;
+                struct timeval timeout;
+                // AdmaData admaData;
+                std::array<char, 856> recv_buf;
+                struct sockaddr srcAddr;
+                socklen_t srcAddrLen;
 
-                /* Socket handling */
-                boost::asio::ip::udp::socket socket(io_service);
-                socket.open(boost::asio::ip::udp::v4());
-                socket.bind(local_endpoint);
-                boost::asio::ip::udp::endpoint sender_endpoint;
                 while (rclcpp::ok())
                 {
-                        /* The length of the stream from ADMA is 856 bytes */
-                        std::array<char, 856> recv_buf;
-                        _len = socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
+                        // check if new data is available
+                        FD_ZERO(&s);
+                        FD_SET(_rcvSockfd, &s);
+                        timeout.tv_sec = 1;
+                        timeout.tv_usec = 0;
+                        int ret = select(_rcvSockfd + 1, &s, NULL, NULL, &timeout);
+                        if (ret == 0) {
+                                // reached timeout
+                                RCLCPP_INFO(get_logger(), "Waiting for ADMA data...");
+                                continue;
+                        } else if (ret == -1) {
+                                // error
+                                RCLCPP_WARN(get_logger(), "Select-error: %s", strerror(errno));
+                                continue;
+                        }
 
-                        RCLCPP_INFO(get_logger(), "received payload: %ld", _len);
+                        ret = ::recvfrom(_rcvSockfd, (void *) (&recv_buf), sizeof(recv_buf), 0, &srcAddr, &srcAddrLen);
+
+                        if (ret < 0) {
+                                RCLCPP_WARN(get_logger(), "Receive-error: %s", strerror(errno));
+                                continue;
+                        } else if (ret != sizeof(recv_buf)) {
+                                RCLCPP_WARN(get_logger(), "Invalid ADMA message size: %d instead of %ld", ret, sizeof(recv_buf));
+                                continue;
+                        }
+
+
+                        builtin_interfaces::msg::Time curTimestamp = this->get_clock()->now();
+
                         /* Prepare for parsing */
                         std::string local_data(recv_buf.begin(), recv_buf.end());
                         /* Load the messages on the publishers */
