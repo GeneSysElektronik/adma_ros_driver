@@ -367,7 +367,7 @@ void getsensorbodyxyz(const std::string& local_data, adma_msgs::msg::AdmaData& m
     char rate_body_hr_x[] = {local_data[116],local_data[117],local_data[118],local_data[119]};
     memcpy(&message.ratebodyhrx , &rate_body_hr_x, sizeof(message.ratebodyhrx));
     message.fratebodyhrx = message.ratebodyhrx * 0.0001;
-    msg_imu.angular_velocity.x = message.fratebodyhrx * M_PI / 180.0;
+    msg_imu.angular_velocity.x = message.fratebodyhrx * PI / 180.0;
 
     //! sensor body y
     char acc_body_hr_y[] = {local_data[120],local_data[121],local_data[122],local_data[123]};
@@ -378,7 +378,7 @@ void getsensorbodyxyz(const std::string& local_data, adma_msgs::msg::AdmaData& m
     char rate_body_hr_y[] = {local_data[124],local_data[125],local_data[126],local_data[127]};
     memcpy(&message.ratebodyhry , &rate_body_hr_y, sizeof(message.ratebodyhry));
     message.fratebodyhry = message.ratebodyhry * 0.0001;
-    msg_imu.angular_velocity.y = message.fratebodyhry * M_PI / 180.0;
+    msg_imu.angular_velocity.y = message.fratebodyhry * PI / 180.0;
 
     //! sensor body z
     char acc_body_hr_z[] = {local_data[128],local_data[129],local_data[130],local_data[131]};
@@ -389,7 +389,7 @@ void getsensorbodyxyz(const std::string& local_data, adma_msgs::msg::AdmaData& m
     char rate_body_hr_z[] = {local_data[132],local_data[133],local_data[134],local_data[135]};
     memcpy(&message.ratebodyhrz , &rate_body_hr_z, sizeof(message.ratebodyhrz));
     message.fratebodyhrz = message.ratebodyhrz * 0.0001;
-    msg_imu.angular_velocity.z = message.fratebodyhrz * M_PI / 180.0;
+    msg_imu.angular_velocity.z = message.fratebodyhrz * PI / 180.0;
 
 }
 
@@ -1277,9 +1277,9 @@ void getinsanglegpscog(const std::string& local_data, adma_msgs::msg::AdmaData& 
     message.fgpscog = message.gpscog * 0.01; 
 
     tf2::Quaternion q;
-    double roll_rad = message.finsroll * M_PI / 180.0;
-    double pitch_rad = message.finspitch * M_PI / 180.0;
-    double yaw_rad = message.finsyaw * M_PI / 180.0;
+    double roll_rad = message.finsroll * PI / 180.0;
+    double pitch_rad = message.finspitch * PI / 180.0;
+    double yaw_rad = message.finsyaw * PI / 180.0;
     q.setRPY(roll_rad, pitch_rad, yaw_rad);
     msg_imu.orientation = tf2::toMsg(q);
 }
@@ -1852,9 +1852,9 @@ void getinseveandete(const std::string& local_data, adma_msgs::msg::AdmaData& me
     memcpy(&message.insstddevyaw , &ins_stddev_yaw, sizeof(message.insstddevyaw));
     message.finsstddevyaw = message.insstddevyaw * 0.01;
 
-    msg_imu.orientation_covariance[0] = message.finsstddevroll * M_PI/180 * message.finsstddevroll * M_PI/180;
-    msg_imu.orientation_covariance[4] = message.finsstddevpitch * M_PI/180 * message.finsstddevpitch * M_PI/180;
-    msg_imu.orientation_covariance[8] = message.finsstddevyaw * M_PI/180 * message.finsstddevyaw * M_PI/180;
+    msg_imu.orientation_covariance[0] = message.finsstddevroll * PI/180 * message.finsstddevroll * PI/180;
+    msg_imu.orientation_covariance[4] = message.finsstddevpitch * PI/180 * message.finsstddevpitch * PI/180;
+    msg_imu.orientation_covariance[8] = message.finsstddevyaw * PI/180 * message.finsstddevyaw * PI/180;
 
     // ADMA does not provide covariance for linear acceleration and angular velocity.
     // These values need to be measured at standstill each ADMA model.
