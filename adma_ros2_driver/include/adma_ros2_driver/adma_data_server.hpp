@@ -1,5 +1,7 @@
 #include <rclcpp/rclcpp.hpp>
-#include <boost/asio.hpp>
+
+#include <memory>
+#include <netdb.h>
 
 namespace genesys
 {
@@ -10,11 +12,10 @@ namespace genesys
                 private:
                         void updateLoop();
 
-                        /** \brief IP address to boradcast msgs */
-                        boost::asio::ip::address _address;
-                        /** \brief port to broadcast msgs */
-                        unsigned short _port;
-                        /** \brief frequence to publish the data */
+                        int _sendSocketfd;
+                        struct sockaddr_in _socketAdress;
+                        socklen_t _adressLength;
+                        int _port;
                         unsigned short _frequence;
         };
 } // end namespace genesys
