@@ -123,34 +123,45 @@ namespace genesys
                         /* Prepare for parsing */
                         // std::string local_data(recv_buf.begin(), recv_buf.end());
                         // memcpy(&admaData , &recv_buf, sizeof(admaData));
+
+                        // read Adma msg from UDP data packet
                         adma_msgs::msg::AdmaData admaData_rosMsg;
                         mapAdmaMessageToROS(admaData_rosMsg, admaData);
-
-                        /* Load the messages on the publishers */
-                        // adma_msgs::msg::AdmaData message;
-                        // sensor_msgs::msg::NavSatFix message_fix;
-                        // message_fix.header.stamp = this->now();
-                        // message_fix.header.frame_id = "adma";
-                        // std_msgs::msg::Float64 message_heading;
-                        // std_msgs::msg::Float64 message_velocity;
                         admaData_rosMsg.timemsec = this->get_clock()->now().seconds() * 1000;
                         admaData_rosMsg.timensec = this->get_clock()->now().nanoseconds();
-                        // getparseddata(local_data, message, message_fix, message_heading, message_velocity);
                         
-                        // /* publish the ADMA message */
-                        _pub_adma_data->publish(admaData_rosMsg);
-                        // _pub_navsat_fix->publish(message_fix);
-                        // _pub_heading->publish(message_heading);
-                        // _pub_velocity->publish(message_velocity);
-                        // double grab_time = this->get_clock()->now().seconds();
+                        // read NavSatFix out of AdmaData
+                        sensor_msgs::msg::NavSatFix message_fix;
+                        message_fix.header.stamp = curTimestamp;
+                        message_fix.header.frame_id = "adma";
+                        extractNavSatFix(admaData_rosMsg, message_fix);
 
-                        // if (_performance_check)
-                        // {
-                        //         char ins_time_msec[] = {local_data[584], local_data[585], local_data[586], local_data[587]};
-                        //         memcpy(&message.instimemsec, &ins_time_msec, sizeof(message.instimemsec));
-                        //         float weektime = message.instimeweek;
-                        //         RCLCPP_INFO(get_logger(), "%f ", ((grab_time * 1000) - (message.instimemsec + 1592697600000)));
-                        // }
+                        // read heading and velocity
+                        std_msgs::msg::Float64 message_heading;
+                        std_msgs::msg::Float64 message_velocity;
+                        message_heading.data = admaData_rosMsg.finsyaw;
+                        message_velocity.data = std::sqrt(std::pow(admaData_rosMsg.fgpsvelframex, 2) + std::pow(admaData_rosMsg.fgpsvelframey, 2)) * 3.6;
+
+                        // read IMU
+                        sensor_msgs::msg::Imu message_imu;
+                        message_imu.header.frame_id = _imu_frame;
+                        message_fix.header.stamp = curTimestamp;
+                        extractIMU(admaData_rosMsg, message_imu);
+
+                        // publish the messages
+                        _pub_adma_data->publish(admaData_rosMsg);
+                        _pub_navsat_fix->publish(message_fix);
+                        _pub_heading->publish(message_heading);
+                        _pub_velocity->publish(message_velocity);
+                        _pub_imu->publish(message_imu);
+                        
+                        double grab_time = this->get_clock()->now().seconds();
+
+                        if (_performance_check)
+                        {
+                                float weektime = admaData_rosMsg.instimeweek;
+                                RCLCPP_INFO(get_logger(), "%f ", ((grab_time * 1000) - (admaData_rosMsg.instimemsec + 1592697600000)));
+                        }
 
                         //TODO: Old approach, can be removed if everything works, otherwise comment it out to use it..
                         // std::string local_data(recv_buf.begin(), recv_buf.end());

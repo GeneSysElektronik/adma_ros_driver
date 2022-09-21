@@ -13,3 +13,5 @@ void getstatusgps(adma_msgs::msg::AdmaData& rosMsg, AdmaDataV32& admaMsg);
 void getstatustrigger(adma_msgs::msg::AdmaData& rosMsg, AdmaDataV32& admaMsg);
 void getevkstatus(adma_msgs::msg::AdmaData& rosMsg, AdmaDataV32& admaMsg);
 void geterrorandwarning(adma_msgs::msg::AdmaData& rosMsg, AdmaDataV32& admaMsg);
+void extractNavSatFix(adma_msgs::msg::AdmaData& rosMsg, sensor_msgs::msg::NavSatFix& navRosMsg);
+void extractIMU(adma_msgs::msg::AdmaData& rosMsg, sensor_msgs::msg::Imu& imuRosMsg);

@@ -1,5 +1,6 @@
 #include "adma_ros2_driver/parser/adma2ros_parser_v32.hpp"
 #include "adma_ros2_driver/parser/parser_utils.hpp"
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 void mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, AdmaDataV32& admaMsg){
         // fill static header information
@@ -658,4 +659,67 @@ void geterrorandwarning(adma_msgs::msg::AdmaData& rosMsg, AdmaDataV32& admaMsg)
     rosMsg.warngps = warngps.to_string();
     rosMsg.warnmisc1 = warnmisc1.to_string();
     rosMsg.errorhwsticky = erhwsticky.to_string();
+}
+
+void extractNavSatFix(adma_msgs::msg::AdmaData& rosMsg, sensor_msgs::msg::NavSatFix& navRosMsg)
+{
+    // fil status
+    switch (rosMsg.statusgpsmode)
+    {
+    case 1:
+        // No GNSS Data
+        navRosMsg.status.status = sensor_msgs::msg::NavSatStatus::STATUS_NO_FIX; 
+        break;
+    case 2:
+        // single GNSS
+        navRosMsg.status.status = sensor_msgs::msg::NavSatStatus::STATUS_FIX; 
+        break;
+    case 4:
+        // actually DGNSS Coarse Mode, but used to distinguish here 
+        navRosMsg.status.status = sensor_msgs::msg::NavSatStatus::STATUS_SBAS_FIX;
+        break;
+    case 8:
+        // DGNSS Precise Mode
+        navRosMsg.status.status = sensor_msgs::msg::NavSatStatus::STATUS_GBAS_FIX;
+        break;
+    default:
+        break;
+    }
+
+    navRosMsg.altitude = rosMsg.finsheight;
+    navRosMsg.latitude = rosMsg.finslatabs;
+    navRosMsg.longitude = rosMsg.finslonabs;
+    navRosMsg.position_covariance[0] = std::pow(rosMsg.finsstddevlat, 2);
+    navRosMsg.position_covariance[4] = std::pow(rosMsg.finsstddevlong, 2);
+    navRosMsg.position_covariance[8] = std::pow(rosMsg.finsstddevheight, 2);
+
+    navRosMsg.position_covariance_type = sensor_msgs::msg::NavSatFix::COVARIANCE_TYPE_DIAGONAL_KNOWN;
+
+}
+
+void extractIMU(adma_msgs::msg::AdmaData& rosMsg, sensor_msgs::msg::Imu& imuRosMsg)
+{
+    imuRosMsg.linear_acceleration.x = rosMsg.faccbodyhrx * 9.81;
+    imuRosMsg.linear_acceleration.y = rosMsg.faccbodyhry * 9.81;
+    imuRosMsg.linear_acceleration.z = rosMsg.faccbodyhrz * 9.81;
+
+    imuRosMsg.angular_velocity.x = rosMsg.fratebodyhrx * PI / 180.0;
+    imuRosMsg.angular_velocity.y = rosMsg.fratebodyhry * PI / 180.0;
+    imuRosMsg.angular_velocity.z = rosMsg.fratebodyhrz * PI / 180.0;
+
+    tf2::Quaternion q;
+    double roll_rad = rosMsg.finsroll * PI / 180.0;
+    double pitch_rad = rosMsg.finspitch * PI / 180.0;
+    double yaw_rad = rosMsg.finsyaw * PI / 180.0;
+    q.setRPY(roll_rad, pitch_rad, yaw_rad);
+    imuRosMsg.orientation = tf2::toMsg(q);
+
+    imuRosMsg.orientation_covariance[0] = std::pow(rosMsg.finsstddevroll * PI / 180.0, 2);
+    imuRosMsg.orientation_covariance[4] = std::pow(rosMsg.finsstddevpitch * PI / 180.0, 2);
+    imuRosMsg.orientation_covariance[8] = std::pow(rosMsg.finsstddevyaw * PI / 180.0, 2);
+
+    // ADMA does not provide covariance for linear acceleration and angular velocity.
+    // These values need to be measured at standstill each ADMA model.
+    imuRosMsg.angular_velocity_covariance[0] = -1;
+    imuRosMsg.linear_acceleration_covariance[0] = -1;
 }
