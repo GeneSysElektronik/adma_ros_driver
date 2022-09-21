@@ -17,5 +17,6 @@ namespace genesys
                         socklen_t _adressLength;
                         int _port;
                         unsigned short _frequence;
+                        std::string _protocolversion;
         };
 } // end namespace genesys

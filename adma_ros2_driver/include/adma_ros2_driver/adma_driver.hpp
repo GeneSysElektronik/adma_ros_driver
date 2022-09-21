@@ -31,6 +31,7 @@ namespace genesys
                         size_t _len = 0;
                         /** \brief Check the timings */
                         bool _performance_check = true;
+                        std::string _protocolversion;
 
                         // publisher
                         rclcpp::Publisher<adma_msgs::msg::AdmaData>::SharedPtr _pub_adma_data;

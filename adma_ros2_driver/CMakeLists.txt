@@ -25,7 +25,9 @@ include_directories(include
 )
 
 add_library(${PROJECT_NAME}_node SHARED
-  src/adma_parse.cpp
+  src/parser/adma_parse_deprecated.cpp
+  src/parser/adma2ros_parser_v32.cpp
+  src/parser/parser_utils.cpp
   src/adma_driver.cpp
   src/adma_data_server.cpp
 )

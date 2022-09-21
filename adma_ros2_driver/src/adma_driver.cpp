@@ -1,5 +1,7 @@
 #include "adma_ros2_driver/adma_driver.hpp"
-#include "adma_ros2_driver/adma_parse.hpp"
+#include "adma_ros2_driver/parser/adma_parse_deprecated.hpp"
+#include "adma_ros2_driver/parser/adma2ros_parser_v32.hpp"
+#include "adma_ros2_driver/data/adma_data_v32.hpp"
 #include <rclcpp_components/register_node_macro.hpp>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -22,6 +24,7 @@ namespace genesys
                 _performance_check = this->declare_parameter("use_performance_check", false);
                 _gnss_frame = this->declare_parameter("gnss_frame", "gnss_link");
                 _imu_frame = this->declare_parameter("imu_frame", "imu_link");
+                _protocolversion = this->declare_parameter("protocol_version", "v3.3.3");
 
                 _pub_adma_data = this->create_publisher<adma_msgs::msg::AdmaData>("adma/data", 1);
                 _pub_navsat_fix = this->create_publisher<sensor_msgs::msg::NavSatFix>("adma/fix", 1);
@@ -78,8 +81,8 @@ namespace genesys
         {
                 fd_set s;
                 struct timeval timeout;
-                // AdmaData admaData;
-                std::array<char, 856> recv_buf;
+                AdmaDataV32 admaData;
+                //std::array<char, 768> recv_buf;
                 struct sockaddr srcAddr;
                 socklen_t srcAddrLen;
 
@@ -101,13 +104,16 @@ namespace genesys
                                 continue;
                         }
 
-                        ret = ::recvfrom(_rcvSockfd, (void *) (&recv_buf), sizeof(recv_buf), 0, &srcAddr, &srcAddrLen);
+                        //ret = ::recvfrom(_rcvSockfd, (void *) (&recv_buf), sizeof(recv_buf), 0, &srcAddr, &srcAddrLen);
+                        ret = ::recvfrom(_rcvSockfd, (void *) (&admaData), sizeof(admaData), 0, &srcAddr, &srcAddrLen);
 
                         if (ret < 0) {
                                 RCLCPP_WARN(get_logger(), "Receive-error: %s", strerror(errno));
                                 continue;
-                        } else if (ret != sizeof(recv_buf)) {
-                                RCLCPP_WARN(get_logger(), "Invalid ADMA message size: %d instead of %ld", ret, sizeof(recv_buf));
+                        // } else if (ret != sizeof(recv_buf)) {
+                        //         RCLCPP_WARN(get_logger(), "Invalid ADMA message size: %d instead of %ld", ret, sizeof(recv_buf));
+                        } else if (ret != sizeof(admaData)) {
+                                RCLCPP_WARN(get_logger(), "Invalid ADMA message size: %d instead of %ld", ret, sizeof(admaData));
                                 continue;
                         }
 
@@ -115,7 +121,11 @@ namespace genesys
                         builtin_interfaces::msg::Time curTimestamp = this->get_clock()->now();
 
                         /* Prepare for parsing */
-                        std::string local_data(recv_buf.begin(), recv_buf.end());
+                        // std::string local_data(recv_buf.begin(), recv_buf.end());
+                        // memcpy(&admaData , &recv_buf, sizeof(admaData));
+                        adma_msgs::msg::AdmaData admaData_rosMsg;
+                        mapAdmaMessageToROS(admaData_rosMsg, admaData);
+
                         /* Load the messages on the publishers */
                         // adma_msgs::msg::AdmaData message;
                         // sensor_msgs::msg::NavSatFix message_fix;
@@ -123,12 +133,12 @@ namespace genesys
                         // message_fix.header.frame_id = "adma";
                         // std_msgs::msg::Float64 message_heading;
                         // std_msgs::msg::Float64 message_velocity;
-                        // message.timemsec = this->get_clock()->now().seconds() * 1000;
-                        // message.timensec = this->get_clock()->now().nanoseconds();
+                        admaData_rosMsg.timemsec = this->get_clock()->now().seconds() * 1000;
+                        admaData_rosMsg.timensec = this->get_clock()->now().nanoseconds();
                         // getparseddata(local_data, message, message_fix, message_heading, message_velocity);
                         
                         // /* publish the ADMA message */
-                        // _pub_adma_data->publish(message);
+                        _pub_adma_data->publish(admaData_rosMsg);
                         // _pub_navsat_fix->publish(message_fix);
                         // _pub_heading->publish(message_heading);
                         // _pub_velocity->publish(message_velocity);
@@ -142,35 +152,37 @@ namespace genesys
                         //         RCLCPP_INFO(get_logger(), "%f ", ((grab_time * 1000) - (message.instimemsec + 1592697600000)));
                         // }
 
-                        adma_msgs::msg::AdmaData message_admadata;
-                        message_admadata.timemsec = this->get_clock()->now().seconds() * 1000;
-                        message_admadata.timensec = this->get_clock()->now().nanoseconds();
-                        sensor_msgs::msg::NavSatFix message_navsatfix;
-                        message_navsatfix.header.stamp = this->get_clock()->now();
-                        message_navsatfix.header.frame_id = _gnss_frame;
-                        sensor_msgs::msg::Imu message_imu;
-                        message_imu.header.stamp = this->get_clock()->now();
-                        message_imu.header.frame_id = _imu_frame;
+                        //TODO: Old approach, can be removed if everything works, otherwise comment it out to use it..
+                        // std::string local_data(recv_buf.begin(), recv_buf.end());
+                        // adma_msgs::msg::AdmaData message_admadata;
+                        // message_admadata.timemsec = this->get_clock()->now().seconds() * 1000;
+                        // message_admadata.timensec = this->get_clock()->now().nanoseconds();
+                        // sensor_msgs::msg::NavSatFix message_navsatfix;
+                        // message_navsatfix.header.stamp = this->get_clock()->now();
+                        // message_navsatfix.header.frame_id = _gnss_frame;
+                        // sensor_msgs::msg::Imu message_imu;
+                        // message_imu.header.stamp = this->get_clock()->now();
+                        // message_imu.header.frame_id = _imu_frame;
 
-                        std_msgs::msg::Float64 message_heading;
-                        std_msgs::msg::Float64 message_velocity;
-                        getparseddata(local_data, message_admadata, message_navsatfix, message_imu, message_heading, message_velocity);
+                        // std_msgs::msg::Float64 message_heading;
+                        // std_msgs::msg::Float64 message_velocity;
+                        // getparseddata(local_data, message_admadata, message_navsatfix, message_imu, message_heading, message_velocity);
 
-                        /* publish the ADMA message */
-                        _pub_adma_data->publish(message_admadata);
-                        _pub_navsat_fix->publish(message_navsatfix);
-                        _pub_imu->publish(message_imu);
-                        _pub_heading->publish(message_heading);
-                        _pub_velocity->publish(message_velocity);
+                        // /* publish the ADMA message */
+                        // _pub_adma_data->publish(message_admadata);
+                        // _pub_navsat_fix->publish(message_navsatfix);
+                        // _pub_imu->publish(message_imu);
+                        // _pub_heading->publish(message_heading);
+                        // _pub_velocity->publish(message_velocity);
 
-                        if (_performance_check)
-                        {
-                        double grab_time = this->get_clock()->now().seconds();
-                        char ins_time_msec[] = { local_data[584], local_data[585], local_data[586], local_data[587] };
-                        memcpy(&message_admadata.instimemsec, &ins_time_msec, sizeof(message_admadata.instimemsec));
-                        float weektime = message_admadata.instimeweek;
-                        RCLCPP_INFO(this->get_logger(), "%f ", ((grab_time * 1000) - (message_admadata.instimemsec + 1592697600000)));
-                        }
+                        // if (_performance_check)
+                        // {
+                        // double grab_time = this->get_clock()->now().seconds();
+                        // char ins_time_msec[] = { local_data[584], local_data[585], local_data[586], local_data[587] };
+                        // memcpy(&message_admadata.instimemsec, &ins_time_msec, sizeof(message_admadata.instimemsec));
+                        // float weektime = message_admadata.instimeweek;
+                        // RCLCPP_INFO(this->get_logger(), "%f ", ((grab_time * 1000) - (message_admadata.instimemsec + 1592697600000)));
+                        // }
                 }
         }
 } // namespace genesys

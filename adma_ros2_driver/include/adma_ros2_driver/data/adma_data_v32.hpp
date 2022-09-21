@@ -2,8 +2,6 @@
 
 #pragma once
 
-
-
 // definition of the whole data packet of the UDP protocol (V 3.2)
 struct AdmaDataV32
 {
@@ -163,15 +161,15 @@ struct AdmaDataV32
         Reserved2 reservedSpace7;
 
         // ins position height (msl)
-        int32_t ingHeight;
+        int32_t insHeight;
         Reserved4 reservedSpace8;
-        int32_t ingHeightPOI1;
-        int32_t ingHeightPOI2;
-        int32_t ingHeightPOI3;
-        int32_t ingHeightPOI4;
-        int32_t ingHeightPOI5;
-        int32_t ingHeightPOI6;
-        int32_t ingHeightPOI7;
+        int32_t insHeightPOI1;
+        int32_t insHeightPOI2;
+        int32_t insHeightPOI3;
+        int32_t insHeightPOI4;
+        int32_t insHeightPOI5;
+        int32_t insHeightPOI6;
+        int32_t insHeightPOI7;
         Reserved4 reservedSpace9;
 
         // ins time utc

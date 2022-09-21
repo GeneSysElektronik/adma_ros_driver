@@ -96,4 +96,3 @@ void getinseveandete(const std::string& local_data, adma_msgs::msg::AdmaData& me
 void getanalog(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getkalmanfilter(const std::string& local_data, adma_msgs::msg::AdmaData& message);
 void getgnssreceiver(const std::string& local_data, adma_msgs::msg::AdmaData& message);
-bool getbit(unsigned char byte, int position);

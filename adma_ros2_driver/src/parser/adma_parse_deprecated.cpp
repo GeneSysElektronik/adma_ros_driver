@@ -1,4 +1,5 @@
-#include "adma_ros2_driver/adma_parse.hpp"
+#include "adma_ros2_driver/parser/adma_parse_deprecated.hpp"
+#include "adma_ros2_driver/parser/parser_utils.hpp"
 #include <sensor_msgs/msg/nav_sat_fix.hpp>
 #include <cstring>
 #include <iostream>
@@ -7,8 +8,6 @@
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 using namespace std;
-
-#define PI 3.1415926535897932384626433832795028841971f
 
 void getparseddata(const std::string& local_data, adma_msgs::msg::AdmaData& message, sensor_msgs::msg::NavSatFix& msg_fix, sensor_msgs::msg::Imu& msg_imu, std_msgs::msg::Float64& msg_heading, std_msgs::msg::Float64& msg_velocity)
 {
@@ -1910,15 +1909,5 @@ void getgnssreceiver(const std::string& local_data, adma_msgs::msg::AdmaData& me
     memcpy(&message.gpsreceivererror , &gps_receiver_error, sizeof(message.gpsreceivererror));
     char gps_receiver_status[] = {local_data[852],local_data[853],local_data[854],local_data[855]};
     memcpy(&message.gpsreceiverstatus , &gps_receiver_status, sizeof(message.gpsreceiverstatus));
-}
-
-/// \file
-/// \brief  bit shift function
-/// \param  byte byte information
-/// \param  position message
-/// \return an integer 0 upon exit success
-bool getbit(unsigned char byte, int position) // position in range 0-7
-{
-    return (byte >> position) & 0x1;
 }
 
