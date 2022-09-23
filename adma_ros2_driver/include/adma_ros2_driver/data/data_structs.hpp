@@ -18,11 +18,6 @@ struct Reserved2
         char reservedSpace[2];
 };
 
-struct Reserved1
-{
-        char reservedSpace[1];
-};
-
 // struct of the static header 
 struct AdmaStaticHeader
 {
@@ -77,13 +72,6 @@ struct Miscellaneous
         int16_t invPathRadius;
         int16_t sideSlipAngle;
         uint32_t distanceTraveled;
-};
-
-// struct to define a GPS position (unit-indepent)
-struct GPSPosition
-{
-        int32_t latitude;
-        int32_t longitude;
 };
 
 // struct to define a GNSS position (unit-indepent)

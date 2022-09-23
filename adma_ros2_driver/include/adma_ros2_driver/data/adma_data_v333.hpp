@@ -16,7 +16,7 @@ struct AdmaDataV333
         
         int8_t statuscount;
         unsigned char kfStatus;
-        Reserved3 reservedStatus1;
+        unsigned char reservedStatus1[3];
 
         //contains several errors/warning in 1 byte
         unsigned char dataError1;
@@ -167,18 +167,28 @@ struct AdmaDataV333
         int16_t undulation;
         Reserved2 reservedSpace7;
         
+        //gnss dualant time UTC
+        uint32_t gnssDualAntTimeMsec;
+        uint16_t gnssDualAntTimeWeek;
+        Reserved2 reservedSpace8;
+        
+        //gnss dualant angle
+        uint16_t gnssDualAntHeading;
+        int16_t gnsDualAntPitch;
+        Reserved4 reservedSpace9;
+
         // gnss dualant angle ete
         // all units in °
         unsigned char gnssdualantsttdevheading;
         unsigned char gnssdualantstddevpitch;
         uint16_t gnssdualantsttdevheadinghr;
         uint16_t gnssdualantstddevpitchhr;
-        Reserved2 reservedSpace8;
+        Reserved2 reservedSpace10;
 
         // ins position height (msl)
         // all units in m
         int32_t insHeight;
-        Reserved4 reservedSpace9;
+        Reserved4 reservedSpace11;
         int32_t insHeightPOI1;
         int32_t insHeightPOI2;
         int32_t insHeightPOI3;
@@ -242,7 +252,7 @@ struct AdmaDataV333
         uint16_t insstddevlat;
         uint16_t insstddevlong;
         uint16_t insstddevheight;
-        Reserved2 reservedSpace11;
+        Reserved2 reservedSpace12;
 
         // ins eve and ins ete
         //  std vel in m/s
@@ -253,7 +263,7 @@ struct AdmaDataV333
         int8_t insstddevroll;
         int8_t insstddevpitch;
         int8_t insstddevyaw;
-        Reserved2 reservedSpace12;
+        Reserved2 reservedSpace13;
 
         // analog in1
         // analog in v
@@ -267,7 +277,7 @@ struct AdmaDataV333
         uint8_t kflatstimulated;
         uint8_t kflongstimulated;
         uint8_t kfsteadystate;
-        Reserved1 reservedSpace13;
+        unsigned char reservedSpace14[5];
         
         // gnss receiver status and error
         uint32_t gnssreceivererror;

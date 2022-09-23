@@ -102,11 +102,11 @@ struct AdmaDataV32
 
         // gps position absolute
         // position in deg
-        GPSPosition posAbs;
+        GNSSPosition gpsPosAbs;
 
         // gps position relative
         // position in m
-        GPSPosition posRel;
+        GNSSPosition gpsPosRel;
 
         // gps epe
         //  error in m
@@ -185,22 +185,22 @@ struct AdmaDataV32
         // ins positions
         // absolute position in deg
         // relative position in m
-        GPSPosition insPosAbs;
-        GPSPosition insPosRel;
-        GPSPosition insPosAbsPOI1;
-        GPSPosition insPosRelPOI1;
-        GPSPosition insPosAbsPOI2;
-        GPSPosition insPosRelPOI2;
-        GPSPosition insPosAbsPOI3;
-        GPSPosition insPosRelPOI3;
-        GPSPosition insPosAbsPOI4;
-        GPSPosition insPosRelPOI4;
-        GPSPosition insPosAbsPOI5;
-        GPSPosition insPosRelPOI5;
-        GPSPosition insPosAbsPOI6;
-        GPSPosition insPosRelPOI6;
-        GPSPosition insPosAbsPOI7;
-        GPSPosition insPosRelPOI7;
+        GNSSPosition insPosAbs;
+        GNSSPosition insPosRel;
+        GNSSPosition insPosAbsPOI1;
+        GNSSPosition insPosRelPOI1;
+        GNSSPosition insPosAbsPOI2;
+        GNSSPosition insPosRelPOI2;
+        GNSSPosition insPosAbsPOI3;
+        GNSSPosition insPosRelPOI3;
+        GNSSPosition insPosAbsPOI4;
+        GNSSPosition insPosRelPOI4;
+        GNSSPosition insPosAbsPOI5;
+        GNSSPosition insPosRelPOI5;
+        GNSSPosition insPosAbsPOI6;
+        GNSSPosition insPosRelPOI6;
+        GNSSPosition insPosAbsPOI7;
+        GNSSPosition insPosRelPOI7;
         
 
         // ins velocity horizontal
