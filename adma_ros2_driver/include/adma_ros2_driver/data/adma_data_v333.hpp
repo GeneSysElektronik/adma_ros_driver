@@ -2,31 +2,34 @@
 
 #pragma once
 
-// definition of the whole data packet of the UDP protocol (V 3.2)
-struct AdmaDataV32
+
+
+// definition of the whole data packet of the UDP protocol (V 3.3.3)
+struct AdmaDataV333
 {
         AdmaStaticHeader staticHeader;
         AdmaDynamicHeader dynamicHeader;
         //contains several states in 1 byte
-        unsigned char gpsStatus;
-        unsigned char gpsTriggerStatus;
-        unsigned char evkStatus;
+        unsigned char gnssStatus;
+        unsigned char signalInStatus;
+        unsigned char miscStatus;
         
         int8_t statuscount;
-        Reserved4 reservedStatus1;
+        unsigned char kfStatus;
+        unsigned char reservedStatus1[3];
 
         //contains several errors/warning in 1 byte
         unsigned char dataError1;
         unsigned char dataError2;
         unsigned char dataWarn1;
-        unsigned char dataErrorHW;
+        unsigned char dataError3;
         Reserved4 reservedError1;
 
         SensorBody sensorsBodyX;
         SensorBody sensorsBodyY;
         SensorBody sensorsBodyZ;
-        Vector3 rateBody; // deg/s
-        Vector3 rateHorizontal; //deg/s
+        Vector3 ratesBody; // deg/s
+        Vector3 ratesHorizontal; //deg/s
         Vector3 accBody; // g
         Vector3 accHorizontal; // g
 
@@ -38,6 +41,7 @@ struct AdmaDataV32
         Vector3 accBodyPOI5; // g
         Vector3 accBodyPOI6; // g
         Vector3 accBodyPOI7; // g
+        Vector3 accBodyPOI8; // g
         Vector3 accHorizontalPOI1; // g
         Vector3 accHorizontalPOI2; // g
         Vector3 accHorizontalPOI3; // g
@@ -45,6 +49,7 @@ struct AdmaDataV32
         Vector3 accHorizontalPOI5; // g
         Vector3 accHorizontalPOI6; // g
         Vector3 accHorizontalPOI7; // g
+        Vector3 accHorizontalPOI8; // g
 
         //  vel in m/s
         Vector2 extVelAnalog;
@@ -54,15 +59,14 @@ struct AdmaDataV32
         uint16_t extveldigpulsesx;
         int16_t extveldigpulsesy;
         Vector2 extVelCorrected;
-
-        // barometer
-        uint32_t extbaropressure; // mbar
-        Reserved4 reservedSpace1;
-        int32_t extbaroheight; //m
-        int32_t extbaroheightcorrected; //m
-
-        Reserved4 reservedSpace2;
-        Reserved4 reservedSpace3;
+        
+        // Reserved Block
+        Reserved4 reservedData1;
+        Reserved4 reservedData2;
+        Reserved4 reservedData3;
+        Reserved4 reservedData4;
+        Reserved4 reservedData5;
+        Reserved4 reservedData6;
 
         // miscellaneous
         Miscellaneous misc;
@@ -73,6 +77,7 @@ struct AdmaDataV32
         Miscellaneous miscPOI5;
         Miscellaneous miscPOI6;
         Miscellaneous miscPOI7;
+        Miscellaneous miscPOI8;
 
         // triggers 1 and 2
         // triggers in mu.s
@@ -98,71 +103,92 @@ struct AdmaDataV32
         // system dsp load in %
         uint16_t systemdspload;
 
-        // gps position absolute
+        // gnss position absolute
         // position in deg
-        GNSSPosition gpsPosAbs;
+        GNSSPosition posAbs; 
 
-        // gps position relative
+        // gnss position relative
         // position in m
-        GNSSPosition gpsPosRel;
+        GNSSPosition posRel;
 
-        // gps epe
+        // gnss epe
         //  error in m
-        uint16_t gpsstddevlat;
-        uint16_t gpsstddevlon;
-        uint16_t gpsstddevheight;
+        uint16_t gnssstddevlat;
+        uint16_t gnssstddevlon;
+        uint16_t gnssstddevheight;
         Reserved2 reservedSpace4;
 
-        // gps velocity frame
+        // gnss velocity frame
         // vel in m/s
-        int16_t gpsvelframex;
-        int16_t gpsvelframey;
-        int16_t gpsvelframez;
+        int16_t gnssvelframex;
+        int16_t gnssvelframey;
+        int16_t gnssvelframez;
         // latency in s
-        uint16_t gpsvellatency;
+        uint16_t gnssvellatency;
 
-        // gps eve
+        // gnss eve
         // error in m/s
-        Vector3 gpsStdDevVel;
+        Vector3 gnssStdDevVel;
 
-        // gps time utc
-        // gpstimemsec in ms
-        uint32_t gpstimemsec;
-        // gpstimeweek in week
-        uint16_t gpstimeweek;
-        // gpstrigger in mu.s
-        uint16_t gpstrigger;
+        // gnss time utc
+        // gnsstimemsec in ms
+        uint32_t gnsstimemsec;
+        // gnsstimeweek in week
+        uint16_t gnsstimeweek;
+        // gnsstrigger in mu.s
+        uint16_t gnsstrigger;
 
-        // gps auxdata 1
-        // gpsdiffage in s
-        uint16_t gpsdiffage;
-        unsigned char gpssatsused;
-        unsigned char gpssatsvisible;
-        Reserved4 reservedSpace5;
+        // gnss auxdata 1
+        // gnssdiffage in s
+        uint16_t gnssdiffage;
+        unsigned char gnsssatsused;
+        unsigned char gnsssatsvisible;
+        unsigned char gnsssatsdualantused;
+        unsigned char gnsssatsdualantvisible;
+        Reserved2 reservedSpace5;
 
-        // gps auxdata 2
-        // gpslogdelay in ta
-        unsigned char gpslogdelay;
-        // gpsreceiverload in %
-        unsigned char gpsreceiverload;
-        unsigned char gpsbasenr[4];
+        // gnss auxdata 2
+        // gnsslogdelay in ta
+        unsigned char gnsslogdelay;
+        // gnssreceiverload in %
+        unsigned char gnssreceiverload;
+        unsigned char gnssbasenr[4];
         Reserved2 reservedSpace6;
 
-        // ins angle and gps cog
+        // ins angle and gnss cog
         // all units in deg
         int16_t insroll;
         int16_t inspitch;
         uint16_t insyaw;
-        uint16_t gpscog;
+        uint16_t gnsscog;
 
-        // gps height(msl)
-        int32_t gpsheight;
+        // gnss height(msl)
+        int32_t gnssheight;
         int16_t undulation;
         Reserved2 reservedSpace7;
+        
+        //gnss dualant time UTC
+        uint32_t gnssDualAntTimeMsec;
+        uint16_t gnssDualAntTimeWeek;
+        Reserved2 reservedSpace8;
+        
+        //gnss dualant angle
+        uint16_t gnssDualAntHeading;
+        int16_t gnsDualAntPitch;
+        Reserved4 reservedSpace9;
+
+        // gnss dualant angle ete
+        // all units in °
+        unsigned char gnssdualantsttdevheading;
+        unsigned char gnssdualantstddevpitch;
+        uint16_t gnssdualantsttdevheadinghr;
+        uint16_t gnssdualantstddevpitchhr;
+        Reserved2 reservedSpace10;
 
         // ins position height (msl)
+        // all units in m
         int32_t insHeight;
-        Reserved4 reservedSpace8;
+        Reserved4 reservedSpace11;
         int32_t insHeightPOI1;
         int32_t insHeightPOI2;
         int32_t insHeightPOI3;
@@ -170,7 +196,7 @@ struct AdmaDataV32
         int32_t insHeightPOI5;
         int32_t insHeightPOI6;
         int32_t insHeightPOI7;
-        Reserved4 reservedSpace9;
+        int32_t insHeightPOI8;
 
         // ins time utc
         // instimemsec in ms
@@ -199,6 +225,8 @@ struct AdmaDataV32
         GNSSPosition insPosRelPOI6;
         GNSSPosition insPosAbsPOI7;
         GNSSPosition insPosRelPOI7;
+        GNSSPosition insPosAbsPOI8;
+        GNSSPosition insPosRelPOI8;
         
 
         // ins velocity horizontal
@@ -217,13 +245,14 @@ struct AdmaDataV32
         Vector3 insVelHorPOI5; 
         Vector3 insVelHorPOI6;
         Vector3 insVelHorPOI7;
+        Vector3 insVelHorPOI8;
 
         // ins epe
         // error in m
         uint16_t insstddevlat;
         uint16_t insstddevlong;
         uint16_t insstddevheight;
-        Reserved2 reservedSpace10;
+        Reserved2 reservedSpace12;
 
         // ins eve and ins ete
         //  std vel in m/s
@@ -234,7 +263,7 @@ struct AdmaDataV32
         int8_t insstddevroll;
         int8_t insstddevpitch;
         int8_t insstddevyaw;
-        Reserved2 reservedSpace11;
+        Reserved2 reservedSpace13;
 
         // analog in1
         // analog in v
@@ -242,4 +271,15 @@ struct AdmaDataV32
         int16_t an2;
         int16_t an3;
         int16_t an4;
+        
+        // kalmanfilter status
+        // all units in %
+        uint8_t kflatstimulated;
+        uint8_t kflongstimulated;
+        uint8_t kfsteadystate;
+        unsigned char reservedSpace14[5];
+        
+        // gnss receiver status and error
+        uint32_t gnssreceivererror;
+        uint32_t gnssreceiverstatus;
 };

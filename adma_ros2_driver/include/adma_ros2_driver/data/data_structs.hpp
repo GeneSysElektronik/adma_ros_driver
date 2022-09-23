@@ -74,8 +74,8 @@ struct Miscellaneous
         uint32_t distanceTraveled;
 };
 
-// struct to define a GPS position (unit-indepent)
-struct GPSPosition
+// struct to define a GNSS position (unit-indepent)
+struct GNSSPosition
 {
         int32_t latitude;
         int32_t longitude;
