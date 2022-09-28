@@ -6,10 +6,10 @@ genesys:
       use_performance_check: False
       gnss_frame: 'gnss_link'
       imu_frame: 'imu_link'
-      protocol_version: 'v3.2'
+      protocol_version: 'v3.3.3'
   data_server:
     ros__parameters:
       ip_address: '127.0.0.1'
       port: 1040
       frequence: 20
-      protocol_version: 'v3.2'
+      protocol_version: 'v3.3.3'

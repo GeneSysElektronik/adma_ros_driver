@@ -1,12 +1,16 @@
-#include "adma_ros2_driver/parser/adma2ros_parser_v32.hpp"
+#include "adma_ros2_driver/parser/adma2ros_parser_v333.hpp"
 #include "adma_ros2_driver/parser/parser_utils.hpp"
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
-ADMA2ROSParserV32::ADMA2ROSParserV32()
+ADMA2ROSParserV333::ADMA2ROSParserV333()
 {
 }
 
-void ADMA2ROSParserV32::mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, AdmaDataV32& admaData)
+ADMA2ROSParserV333::~ADMA2ROSParserV333()
+{
+
+}
+
+void ADMA2ROSParserV333::mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, AdmaDataV333& admaData)
 {
         rosMsg.statuscount = admaData.statuscount;
 
@@ -19,12 +23,12 @@ void ADMA2ROSParserV32::mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, Ad
         rosMsg.ratebodyhrz = admaData.sensorsBodyZ.rateHR;
 
         //fill rates
-        rosMsg.ratebodyx = admaData.rateBody.x;
-        rosMsg.ratebodyy = admaData.rateBody.y;
-        rosMsg.ratebodyz = admaData.rateBody.z;
-        rosMsg.ratehorx = admaData.rateHorizontal.x;
-        rosMsg.ratehory = admaData.rateHorizontal.y;
-        rosMsg.ratehorz = admaData.rateHorizontal.z;
+        rosMsg.ratebodyx = admaData.ratesBody.x;
+        rosMsg.ratebodyy = admaData.ratesBody.y;
+        rosMsg.ratebodyz = admaData.ratesBody.z;
+        rosMsg.ratehorx = admaData.ratesHorizontal.x;
+        rosMsg.ratehory = admaData.ratesHorizontal.y;
+        rosMsg.ratehorz = admaData.ratesHorizontal.z;
 
         //fill accelerations
         rosMsg.accbodyx = admaData.accBody.x;
@@ -56,6 +60,9 @@ void ADMA2ROSParserV32::mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, Ad
         rosMsg.accbodyx_7 = admaData.accBodyPOI7.x;
         rosMsg.accbodyy_7 = admaData.accBodyPOI7.y;
         rosMsg.accbodyz_7 = admaData.accBodyPOI7.z;
+        rosMsg.accbodyx_8 = admaData.accBodyPOI8.x;
+        rosMsg.accbodyy_8 = admaData.accBodyPOI8.y;
+        rosMsg.accbodyz_8 = admaData.accBodyPOI8.z;
         
         rosMsg.acchorx_1 = admaData.accHorizontalPOI1.x;
         rosMsg.acchory_1 = admaData.accHorizontalPOI1.y;
@@ -78,6 +85,9 @@ void ADMA2ROSParserV32::mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, Ad
         rosMsg.acchorx_7 = admaData.accHorizontalPOI7.x;
         rosMsg.acchory_7 = admaData.accHorizontalPOI7.y;
         rosMsg.acchorz_7 = admaData.accHorizontalPOI7.z;
+        rosMsg.acchorx_8 = admaData.accHorizontalPOI8.x;
+        rosMsg.acchory_8 = admaData.accHorizontalPOI8.y;
+        rosMsg.acchorz_8 = admaData.accHorizontalPOI8.z;
 
         //fill external velocity
         rosMsg.extvelanx = admaData.extVelAnalog.x;
@@ -88,11 +98,6 @@ void ADMA2ROSParserV32::mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, Ad
         rosMsg.extveldigpulsesy = admaData.extveldigpulsesy;
         rosMsg.extvelxcorrected = admaData.extVelCorrected.x;
         rosMsg.extvelycorrected = admaData.extVelCorrected.y;
-
-        //fill barometer values
-        rosMsg.extbaropressure = admaData.extbaropressure;
-        rosMsg.extbaroheight = admaData.extbaroheight;
-        rosMsg.extbaroheightcorrected = admaData.extbaroheightcorrected;
 
         //fill miscellaneous
         rosMsg.invpathradius = admaData.misc.invPathRadius;
@@ -121,6 +126,9 @@ void ADMA2ROSParserV32::mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, Ad
         rosMsg.invpathradius_7 = admaData.miscPOI7.invPathRadius;
         rosMsg.sideslipangle_7 = admaData.miscPOI7.sideSlipAngle;
         rosMsg.disttrav_7 = admaData.miscPOI7.distanceTraveled;
+        rosMsg.invpathradius_8 = admaData.miscPOI8.invPathRadius;
+        rosMsg.sideslipangle_8 = admaData.miscPOI8.sideSlipAngle;
+        rosMsg.disttrav_8 = admaData.miscPOI8.distanceTraveled;
 
         // fill triggers
         rosMsg.trigrising1 = admaData.trigrising1;
@@ -139,50 +147,63 @@ void ADMA2ROSParserV32::mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, Ad
         rosMsg.systemdspload = admaData.systemdspload;
         
         //fill GPS position
-        rosMsg.gpslatabs = admaData.gpsPosAbs.latitude;
-        rosMsg.gpslonabs = admaData.gpsPosAbs.longitude;
-        rosMsg.gpslatrel = admaData.gpsPosRel.latitude;
-        rosMsg.gpslonrel = admaData.gpsPosRel.longitude;
+        rosMsg.gpslatabs = admaData.posAbs.latitude;
+        rosMsg.gpslonabs = admaData.posAbs.longitude;
+        rosMsg.gpslatrel = admaData.posRel.latitude;
+        rosMsg.gpslonrel = admaData.posRel.longitude;
 
         // fill GPS Expected Position Error
-        rosMsg.gpsstddevlat = admaData.gpsstddevlat;
-        rosMsg.gpsstddevlon = admaData.gpsstddevlon;
-        rosMsg.gpsstddevheight = admaData.gpsstddevheight;
+        rosMsg.gpsstddevlat = admaData.gnssstddevlat;
+        rosMsg.gpsstddevlon = admaData.gnssstddevlon;
+        rosMsg.gpsstddevheight = admaData.gnssstddevheight;
 
         //fill GPS Velocity
-        rosMsg.gpsvelframex = admaData.gpsvelframex;
-        rosMsg.gpsvelframey = admaData.gpsvelframey;
-        rosMsg.gpsvelframez = admaData.gpsvelframez;
-        rosMsg.gpsvellatency = admaData.gpsvellatency;
+        rosMsg.gpsvelframex = admaData.gnssvelframex;
+        rosMsg.gpsvelframey = admaData.gnssvelframey;
+        rosMsg.gpsvelframez = admaData.gnssvelframez;
+        rosMsg.gpsvellatency = admaData.gnssvellatency;
 
         //fill GPS Expected Velocity error
-        rosMsg.gpsstddevvelx = admaData.gpsStdDevVel.x;
-        rosMsg.gpsstddevvely = admaData.gpsStdDevVel.y;
-        rosMsg.gpsstddevvelz = admaData.gpsStdDevVel.z;
+        rosMsg.gpsstddevvelx = admaData.gnssStdDevVel.x;
+        rosMsg.gpsstddevvely = admaData.gnssStdDevVel.y;
+        rosMsg.gpsstddevvelz = admaData.gnssStdDevVel.z;
         
-
         //fill GPS Time
-        rosMsg.gpstimemsec = admaData.gpstimemsec;
-        rosMsg.gpstimeweek = admaData.gpstimeweek;
-        rosMsg.gpstrigger = admaData.gpstrigger;
+        rosMsg.gpstimemsec = admaData.gnsstimemsec;
+        rosMsg.gpstimeweek = admaData.gnsstimeweek;
+        rosMsg.gpstrigger = admaData.gnsstrigger;
 
         //fill GPS AUX data
-        rosMsg.gpsdiffage = admaData.gpsdiffage;
-        rosMsg.gpssatsused = admaData.gpssatsused;
-        rosMsg.gpssatsvisible = admaData.gpssatsvisible;
-        rosMsg.gpslogdelay = admaData.gpslogdelay;
-        rosMsg.gpsreceiverload = admaData.gpsreceiverload;
+        rosMsg.gpsdiffage = admaData.gnssdiffage;
+        rosMsg.gpssatsused = admaData.gnsssatsused;
+        rosMsg.gpssatsvisible = admaData.gnsssatsvisible;
+        rosMsg.gpssatsdualantused = admaData.gnsssatsdualantused;
+        rosMsg.gpssatsdualantvisible = admaData.gnsssatsdualantvisible;
+        rosMsg.gpslogdelay = admaData.gnsslogdelay;
+        rosMsg.gpsreceiverload = admaData.gnssreceiverload;
         // rosMsg.gpsbasenr = admaData.gpsbasenr; //TODO: incompatible..
 
         //fill INS Angle and GPS COG
         rosMsg.insroll = admaData.insroll;
         rosMsg.inspitch = admaData.inspitch;
         rosMsg.insyaw = admaData.insyaw;
-        rosMsg.gpscog = admaData.gpscog;
+        rosMsg.gpscog = admaData.gnsscog;
         
         //fill GPS Height MSL
-        rosMsg.gpsheight = admaData.gpsheight;
+        rosMsg.gpsheight = admaData.gnssheight;
         rosMsg.undulation = admaData.undulation;
+
+        // GNSS DUal ant information 
+        rosMsg.gpsdualanttimemsec = admaData.gnssDualAntTimeMsec;
+        rosMsg.gpsdualanttimeweek = admaData.gnssDualAntTimeWeek;
+        rosMsg.gpsdualantheading = admaData.gnssDualAntHeading;
+        rosMsg.gpsdualantpitch = admaData.gnssDualAntPitch;
+
+        //GNSS Dualant ETE
+        rosMsg.gpsdualantstddevheading = admaData.gnssdualantstdevheading;
+        rosMsg.gpsdualantstddevpitch = admaData.gnssdualantstddevpitch;
+        rosMsg.gpsdualantstddevheading_hr = admaData.gnssdualantstdevheadinghr;
+        rosMsg.gpsdualantstddevpitch_hr = admaData.gnssdualantstddevpitchhr;
 
         //fill INS height MSL (+ POI)
         rosMsg.insheight = admaData.insHeight;
@@ -193,6 +214,7 @@ void ADMA2ROSParserV32::mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, Ad
         rosMsg.insheight_5 = admaData.insHeightPOI5;
         rosMsg.insheight_6 = admaData.insHeightPOI6;
         rosMsg.insheight_7 = admaData.insHeightPOI7;
+        rosMsg.insheight_8 = admaData.insHeightPOI8;
 
         //fill INS time UTC
         rosMsg.instimemsec = admaData.instimemsec;
@@ -232,6 +254,10 @@ void ADMA2ROSParserV32::mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, Ad
         rosMsg.inslonabs_7 = admaData.insPosAbsPOI7.longitude;
         rosMsg.inslatrel_7 = admaData.insPosRelPOI7.latitude;
         rosMsg.inslonrel_7 = admaData.insPosRelPOI7.longitude;
+        rosMsg.inslatabs_8 = admaData.insPosAbsPOI8.latitude;
+        rosMsg.inslonabs_8 = admaData.insPosAbsPOI8.longitude;
+        rosMsg.inslatrel_8 = admaData.insPosRelPOI8.latitude;
+        rosMsg.inslonrel_8 = admaData.insPosRelPOI8.longitude;
         
         //fill ins velocity (horizontal + frame)
         rosMsg.insvelhorx = admaData.insVelHor.x;
@@ -263,6 +289,9 @@ void ADMA2ROSParserV32::mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, Ad
         rosMsg.insvelhorx_7 = admaData.insVelHorPOI7.x;
         rosMsg.insvelhory_7 = admaData.insVelHorPOI7.y;
         rosMsg.insvelhorz_7 = admaData.insVelHorPOI7.z;
+        rosMsg.insvelhorx_8 = admaData.insVelHorPOI8.x;
+        rosMsg.insvelhory_8 = admaData.insVelHorPOI8.y;
+        rosMsg.insvelhorz_8 = admaData.insVelHorPOI8.z;
 
         //fill INS Expected Position Error
         rosMsg.insstddevlat = admaData.insstddevlat;
@@ -282,4 +311,39 @@ void ADMA2ROSParserV32::mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, Ad
         rosMsg.an2 = admaData.an2;
         rosMsg.an3 = admaData.an3;
         rosMsg.an4 = admaData.an4;
+
+        // kalman filter status
+        rosMsg.kflatstimulated = admaData.kflatstimulated;
+        rosMsg.kflongstimulated = admaData.kflongstimulated;
+        rosMsg.kfsteadystate = admaData.kfsteadystate;
+
+        // gnss receiver status and error
+        rosMsg.gpsreceivererror = admaData.gnssreceivererror;
+        rosMsg.gpsreceiverstatus = admaData.gnssreceiverstatus;
+}
+
+void ADMA2ROSParserV333::getKFStatus(adma_msgs::msg::AdmaData& rosMsg, unsigned char kfStatus)
+{
+        bool status_speed_b2 = getbit(kfStatus,5);
+        bool status_speed_b1 = getbit(kfStatus,4);
+        bool status_kf_steady_state = getbit(kfStatus,3);
+        bool status_kf_long_stimulated = getbit(kfStatus,2);
+        bool status_kf_lat_stimulated = getbit(kfStatus,1);
+        bool status_kalmanfilter_settled = getbit(kfStatus,0);
+        rosMsg.statuskalmanfiltersetteled = status_kalmanfilter_settled;
+        rosMsg.statuskflatstimulated = status_kf_lat_stimulated;
+        rosMsg.statuskflongstimulated = status_kf_long_stimulated;
+        rosMsg.statuskfsteadystate = status_kf_steady_state;
+        if(status_speed_b1==0 && status_speed_b2==0)
+        {
+                rosMsg.statusspeed = 0;
+        }
+        else if(status_speed_b1==0 && status_speed_b2==1)
+        {
+                rosMsg.statusspeed = 1;
+        }
+        else if(status_speed_b1==1 && status_speed_b2==0)
+        {
+                rosMsg.statusspeed = 2;
+        }
 }

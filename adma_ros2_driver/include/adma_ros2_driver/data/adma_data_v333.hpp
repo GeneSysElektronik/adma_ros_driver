@@ -174,14 +174,14 @@ struct AdmaDataV333
         
         //gnss dualant angle
         uint16_t gnssDualAntHeading;
-        int16_t gnsDualAntPitch;
+        int16_t gnssDualAntPitch;
         Reserved4 reservedSpace9;
 
         // gnss dualant angle ete
         // all units in °
-        unsigned char gnssdualantsttdevheading;
+        unsigned char gnssdualantstdevheading;
         unsigned char gnssdualantstddevpitch;
-        uint16_t gnssdualantsttdevheadinghr;
+        uint16_t gnssdualantstdevheadinghr;
         uint16_t gnssdualantstddevpitchhr;
         Reserved2 reservedSpace10;
 

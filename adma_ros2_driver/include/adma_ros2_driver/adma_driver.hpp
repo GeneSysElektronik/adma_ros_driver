@@ -4,6 +4,7 @@
 #include <std_msgs/msg/float64.hpp>
 #include <netdb.h>
 #include "adma_msgs/msg/adma_data.hpp"
+#include "adma_ros2_driver/parser/adma2ros_parser.hpp"
 
 #pragma once
 
@@ -42,5 +43,7 @@ namespace genesys
 
                         std::string _gnss_frame;
                         std::string _imu_frame;
+
+                        ADMA2ROSParser* _parser;
         };
 }

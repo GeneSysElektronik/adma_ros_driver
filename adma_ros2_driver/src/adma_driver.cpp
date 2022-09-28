@@ -1,6 +1,6 @@
 #include "adma_ros2_driver/adma_driver.hpp"
 #include "adma_ros2_driver/parser/adma_parse_deprecated.hpp"
-#include "adma_ros2_driver/parser/adma2ros_parser_v32.hpp"
+#include "adma_ros2_driver/parser/parser_utils.hpp"
 #include "adma_ros2_driver/data/adma_data_v32.hpp"
 #include <rclcpp_components/register_node_macro.hpp>
 #include <sys/types.h>
@@ -24,7 +24,15 @@ namespace genesys
                 _performance_check = this->declare_parameter("use_performance_check", false);
                 _gnss_frame = this->declare_parameter("gnss_frame", "gnss_link");
                 _imu_frame = this->declare_parameter("imu_frame", "imu_link");
+                // define protocol specific stuff
                 _protocolversion = this->declare_parameter("protocol_version", "v3.3.3");
+                if(_protocolversion == "v3.2"){
+                        _len =  768;
+                }else if (_protocolversion == "v3.3.3")
+                {
+                        _len = 856;
+                }
+                _parser = new ADMA2ROSParser(_protocolversion);
 
                 _pub_adma_data = this->create_publisher<adma_msgs::msg::AdmaData>("adma/data", 1);
                 _pub_navsat_fix = this->create_publisher<sensor_msgs::msg::NavSatFix>("adma/fix", 1);
@@ -81,10 +89,10 @@ namespace genesys
         {
                 fd_set s;
                 struct timeval timeout;
-                AdmaDataV32 admaData;
-                //std::array<char, 768> recv_buf;
                 struct sockaddr srcAddr;
                 socklen_t srcAddrLen;
+
+                std::vector<char> recv_buf;
 
                 while (rclcpp::ok())
                 {
@@ -104,37 +112,29 @@ namespace genesys
                                 continue;
                         }
 
-                        //ret = ::recvfrom(_rcvSockfd, (void *) (&recv_buf), sizeof(recv_buf), 0, &srcAddr, &srcAddrLen);
-                        ret = ::recvfrom(_rcvSockfd, (void *) (&admaData), sizeof(admaData), 0, &srcAddr, &srcAddrLen);
-
+                        ret = ::recv(_rcvSockfd, (void *) (&recv_buf), _len, 0);
                         if (ret < 0) {
                                 RCLCPP_WARN(get_logger(), "Receive-error: %s", strerror(errno));
                                 continue;
-                        // } else if (ret != sizeof(recv_buf)) {
-                        //         RCLCPP_WARN(get_logger(), "Invalid ADMA message size: %d instead of %ld", ret, sizeof(recv_buf));
-                        } else if (ret != sizeof(admaData)) {
-                                RCLCPP_WARN(get_logger(), "Invalid ADMA message size: %d instead of %ld", ret, sizeof(admaData));
+                        } else if (ret != _len) {
+                                RCLCPP_WARN(get_logger(), "Invalid ADMA message size: %d instead of %ld", ret, _len);
                                 continue;
                         }
 
-
                         builtin_interfaces::msg::Time curTimestamp = this->get_clock()->now();
-
-                        /* Prepare for parsing */
-                        // std::string local_data(recv_buf.begin(), recv_buf.end());
-                        // memcpy(&admaData , &recv_buf, sizeof(admaData));
-
+                        
                         // read Adma msg from UDP data packet
                         adma_msgs::msg::AdmaData admaData_rosMsg;
-                        mapAdmaMessageToROS(admaData_rosMsg, admaData);
-                        admaData_rosMsg.timemsec = this->get_clock()->now().seconds() * 1000;
-                        admaData_rosMsg.timensec = this->get_clock()->now().nanoseconds();
+                        _parser->mapAdmaMessageToROS(admaData_rosMsg, recv_buf);
+
+                        admaData_rosMsg.timemsec = curTimestamp.sec * 1000;
+                        admaData_rosMsg.timensec = curTimestamp.nanosec;
                         
                         // read NavSatFix out of AdmaData
                         sensor_msgs::msg::NavSatFix message_fix;
                         message_fix.header.stamp = curTimestamp;
                         message_fix.header.frame_id = "adma";
-                        extractNavSatFix(admaData_rosMsg, message_fix);
+                        _parser->extractNavSatFix(admaData_rosMsg, message_fix);
 
                         // read heading and velocity
                         std_msgs::msg::Float64 message_heading;
@@ -146,7 +146,7 @@ namespace genesys
                         sensor_msgs::msg::Imu message_imu;
                         message_imu.header.frame_id = _imu_frame;
                         message_fix.header.stamp = curTimestamp;
-                        extractIMU(admaData_rosMsg, message_imu);
+                        _parser->extractIMU(admaData_rosMsg, message_imu);
 
                         // publish the messages
                         _pub_adma_data->publish(admaData_rosMsg);
@@ -163,8 +163,13 @@ namespace genesys
                                 RCLCPP_INFO(get_logger(), "%f ", ((grab_time * 1000) - (admaData_rosMsg.instimemsec + 1592697600000)));
                         }
 
+                        recv_buf.clear();
+
                         //TODO: Old approach, can be removed if everything works, otherwise comment it out to use it..
                         // std::string local_data(recv_buf.begin(), recv_buf.end());
+
+                        // RCLCPP_INFO(get_logger(), "size of local_data: %ld", local_data.size());
+
                         // adma_msgs::msg::AdmaData message_admadata;
                         // message_admadata.timemsec = this->get_clock()->now().seconds() * 1000;
                         // message_admadata.timensec = this->get_clock()->now().nanoseconds();
