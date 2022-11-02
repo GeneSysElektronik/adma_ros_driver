@@ -141,8 +141,8 @@ void ADMA2ROSParserV32::mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, Ad
         //fill GPS position
         rosMsg.gpslatabs = admaData.gpsPosAbs.latitude;
         rosMsg.gpslonabs = admaData.gpsPosAbs.longitude;
-        rosMsg.gpslatrel = admaData.gpsPosRel.latitude;
-        rosMsg.gpslonrel = admaData.gpsPosRel.longitude;
+        rosMsg.gpslatrel = admaData.gpsPosRel.longitude;
+        rosMsg.gpslonrel = admaData.gpsPosRel.latitude;
 
         // fill GPS Expected Position Error
         rosMsg.gpsstddevlat = admaData.gpsstddevlat;
@@ -172,7 +172,9 @@ void ADMA2ROSParserV32::mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, Ad
         rosMsg.gpssatsvisible = admaData.gpssatsvisible;
         rosMsg.gpslogdelay = admaData.gpslogdelay;
         rosMsg.gpsreceiverload = admaData.gpsreceiverload;
-        // rosMsg.gpsbasenr = admaData.gpsbasenr; //TODO: incompatible..
+        std::stringstream ss;
+        ss <<  admaData.gpsbasenr;
+        rosMsg.gpsbasenr = ss.str();
 
         //fill INS Angle and GPS COG
         rosMsg.insroll = admaData.insroll;
@@ -202,36 +204,36 @@ void ADMA2ROSParserV32::mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, Ad
         //fill INS Position (+POI)
         rosMsg.inslatabs = admaData.insPosAbs.latitude;
         rosMsg.inslonabs = admaData.insPosAbs.longitude;
-        rosMsg.inslatrel = admaData.insPosRel.latitude;
-        rosMsg.inslonrel = admaData.insPosRel.longitude;
+        rosMsg.inslatrel = admaData.insPosRel.longitude;
+        rosMsg.inslonrel = admaData.insPosRel.latitude;
         rosMsg.inslatabs_1 = admaData.insPosAbsPOI1.latitude;
         rosMsg.inslonabs_1 = admaData.insPosAbsPOI1.longitude;
-        rosMsg.inslatrel_1 = admaData.insPosRelPOI1.latitude;
-        rosMsg.inslonrel_1 = admaData.insPosRelPOI1.longitude;
+        rosMsg.inslatrel_1 = admaData.insPosRelPOI1.longitude;
+        rosMsg.inslonrel_1 = admaData.insPosRelPOI1.latitude;
         rosMsg.inslatabs_2 = admaData.insPosAbsPOI2.latitude;
         rosMsg.inslonabs_2 = admaData.insPosAbsPOI2.longitude;
-        rosMsg.inslatrel_2 = admaData.insPosRelPOI2.latitude;
-        rosMsg.inslonrel_2 = admaData.insPosRelPOI2.longitude;
+        rosMsg.inslatrel_2 = admaData.insPosRelPOI2.longitude;
+        rosMsg.inslonrel_2 = admaData.insPosRelPOI2.latitude;
         rosMsg.inslatabs_3 = admaData.insPosAbsPOI3.latitude;
         rosMsg.inslonabs_3 = admaData.insPosAbsPOI3.longitude;
-        rosMsg.inslatrel_3 = admaData.insPosRelPOI3.latitude;
-        rosMsg.inslonrel_3 = admaData.insPosRelPOI3.longitude;
+        rosMsg.inslatrel_3 = admaData.insPosRelPOI3.longitude;
+        rosMsg.inslonrel_3 = admaData.insPosRelPOI3.latitude;
         rosMsg.inslatabs_4 = admaData.insPosAbsPOI4.latitude;
         rosMsg.inslonabs_4 = admaData.insPosAbsPOI4.longitude;
-        rosMsg.inslatrel_4 = admaData.insPosRelPOI4.latitude;
-        rosMsg.inslonrel_4 = admaData.insPosRelPOI4.longitude;
+        rosMsg.inslatrel_4 = admaData.insPosRelPOI4.longitude;
+        rosMsg.inslonrel_4 = admaData.insPosRelPOI4.latitude;
         rosMsg.inslatabs_5 = admaData.insPosAbsPOI5.latitude;
         rosMsg.inslonabs_5 = admaData.insPosAbsPOI5.longitude;
-        rosMsg.inslatrel_5 = admaData.insPosRelPOI5.latitude;
-        rosMsg.inslonrel_5 = admaData.insPosRelPOI5.longitude;
+        rosMsg.inslatrel_5 = admaData.insPosRelPOI5.longitude;
+        rosMsg.inslonrel_5 = admaData.insPosRelPOI5.latitude;
         rosMsg.inslatabs_6 = admaData.insPosAbsPOI6.latitude;
         rosMsg.inslonabs_6 = admaData.insPosAbsPOI6.longitude;
-        rosMsg.inslatrel_6 = admaData.insPosRelPOI6.latitude;
-        rosMsg.inslonrel_6 = admaData.insPosRelPOI6.longitude;
+        rosMsg.inslatrel_6 = admaData.insPosRelPOI6.longitude;
+        rosMsg.inslonrel_6 = admaData.insPosRelPOI6.latitude;
         rosMsg.inslatabs_7 = admaData.insPosAbsPOI7.latitude;
         rosMsg.inslonabs_7 = admaData.insPosAbsPOI7.longitude;
-        rosMsg.inslatrel_7 = admaData.insPosRelPOI7.latitude;
-        rosMsg.inslonrel_7 = admaData.insPosRelPOI7.longitude;
+        rosMsg.inslatrel_7 = admaData.insPosRelPOI7.longitude;
+        rosMsg.inslonrel_7 = admaData.insPosRelPOI7.latitude;
         
         //fill ins velocity (horizontal + frame)
         rosMsg.insvelhorx = admaData.insVelHor.x;

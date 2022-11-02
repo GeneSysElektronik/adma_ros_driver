@@ -253,11 +253,11 @@ void ADMA2ROSParser::geterrorandwarning(adma_msgs::msg::AdmaData& rosMsg, unsign
 void ADMA2ROSParser::parseScaledData(adma_msgs::msg::AdmaData& rosMsg)
 {
         rosMsg.faccbodyhrx = getScaledValue(rosMsg.accbodyhrx, 0.0001);
-        rosMsg.ratebodyhrx = getScaledValue(rosMsg.ratebodyhrx, 0.0001);
+        rosMsg.fratebodyhrx = getScaledValue(rosMsg.ratebodyhrx, 0.0001);
         rosMsg.faccbodyhry = getScaledValue(rosMsg.accbodyhry, 0.0001);
-        rosMsg.ratebodyhry = getScaledValue(rosMsg.ratebodyhry, 0.0001);
+        rosMsg.fratebodyhry = getScaledValue(rosMsg.ratebodyhry, 0.0001);
         rosMsg.faccbodyhrz = getScaledValue(rosMsg.accbodyhrz, 0.0001);
-        rosMsg.ratebodyhrz = getScaledValue(rosMsg.ratebodyhrz, 0.0001);
+        rosMsg.fratebodyhrz = getScaledValue(rosMsg.ratebodyhrz, 0.0001);
 
         rosMsg.fratebodyx = getScaledValue(rosMsg.ratebodyx, 0.01);
         rosMsg.fratebodyy = getScaledValue(rosMsg.ratebodyy, 0.01);
@@ -459,6 +459,7 @@ void ADMA2ROSParser::parseScaledData(adma_msgs::msg::AdmaData& rosMsg)
 
         rosMsg.finsstddevlat = getScaledValue(rosMsg.insstddevlat, 0.01);
         rosMsg.finsstddevlong = getScaledValue(rosMsg.insstddevlong, 0.01);
+        rosMsg.finsstddevheight = getScaledValue(rosMsg.insstddevheight, 0.01);
 
         rosMsg.finsstddevvelx = getScaledValue(rosMsg.insstddevvelx, 0.01);
         rosMsg.finsstddevvely = getScaledValue(rosMsg.insstddevvely, 0.01);

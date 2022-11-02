@@ -493,7 +493,7 @@ int8 gpslogdelay
 int8 gpsreceiverload
 float64 fgpsreceiverload
 
-int32 gpsbasenr
+string gpsbasenr
 
 # ins angle and gps cog
 # all units in deg
