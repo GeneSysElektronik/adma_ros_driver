@@ -255,24 +255,24 @@ void ADMA2ROSParserV334::mapUnscaledData(adma_msgs::msg::AdmaDataScaled& rosMsg,
 
 void ADMA2ROSParserV334::mapScaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& admaData)
 {
-        rosMsg.acc_body_hr_x = getScaledValue(admaData.sensorsBodyX.accHR, 0.0001);
-        rosMsg.acc_body_hr_y = getScaledValue(admaData.sensorsBodyY.accHR, 0.0001);
-        rosMsg.acc_body_hr_z = getScaledValue(admaData.sensorsBodyZ.accHR, 0.0001);
-        rosMsg.rate_body_hr_x = getScaledValue(admaData.sensorsBodyX.rateHR, 0.0001);
-        rosMsg.rate_body_hr_y = getScaledValue(admaData.sensorsBodyY.rateHR, 0.0001);
-        rosMsg.rate_body_hr_z = getScaledValue(admaData.sensorsBodyZ.rateHR, 0.0001);
-        rosMsg.rate_body_x = getScaledValue(admaData.ratesBody.x, 0.01);
-        rosMsg.rate_body_y = getScaledValue(admaData.ratesBody.y, 0.01);
-        rosMsg.rate_body_z = getScaledValue(admaData.ratesBody.z, 0.01);
-        rosMsg.rate_hor_x = getScaledValue(admaData.ratesHorizontal.x, 0.01);
-        rosMsg.rate_hor_y = getScaledValue(admaData.ratesHorizontal.y, 0.01);
-        rosMsg.rate_hor_z = getScaledValue(admaData.ratesHorizontal.z, 0.01);
-        rosMsg.acc_body_x = getScaledValue(admaData.accBody.x, 0.0004);
-        rosMsg.acc_body_y = getScaledValue(admaData.accBody.y, 0.0004);
-        rosMsg.acc_body_z = getScaledValue(admaData.accBody.z, 0.0004);
-        rosMsg.acc_hor_x = getScaledValue(admaData.accHorizontal.x, 0.0004);
-        rosMsg.acc_hor_y = getScaledValue(admaData.accHorizontal.y, 0.0004);
-        rosMsg.acc_hor_z = getScaledValue(admaData.accHorizontal.z, 0.0004);
+        rosMsg.acc_body_hr.x = getScaledValue(admaData.sensorsBodyX.accHR, 0.0001);
+        rosMsg.acc_body_hr.y = getScaledValue(admaData.sensorsBodyY.accHR, 0.0001);
+        rosMsg.acc_body_hr.z = getScaledValue(admaData.sensorsBodyZ.accHR, 0.0001);
+        rosMsg.rate_body_hr.x = getScaledValue(admaData.sensorsBodyX.rateHR, 0.0001);
+        rosMsg.rate_body_hr.y = getScaledValue(admaData.sensorsBodyY.rateHR, 0.0001);
+        rosMsg.rate_body_hr.z = getScaledValue(admaData.sensorsBodyZ.rateHR, 0.0001);
+        rosMsg.rate_body.x = getScaledValue(admaData.ratesBody.x, 0.01);
+        rosMsg.rate_body.y = getScaledValue(admaData.ratesBody.y, 0.01);
+        rosMsg.rate_body.z = getScaledValue(admaData.ratesBody.z, 0.01);
+        rosMsg.rate_hor.x = getScaledValue(admaData.ratesHorizontal.x, 0.01);
+        rosMsg.rate_hor.y = getScaledValue(admaData.ratesHorizontal.y, 0.01);
+        rosMsg.rate_hor.z = getScaledValue(admaData.ratesHorizontal.z, 0.01);
+        rosMsg.acc_body.x = getScaledValue(admaData.accBody.x, 0.0004);
+        rosMsg.acc_body.y = getScaledValue(admaData.accBody.y, 0.0004);
+        rosMsg.acc_body.z = getScaledValue(admaData.accBody.z, 0.0004);
+        rosMsg.acc_hor.x = getScaledValue(admaData.accHorizontal.x, 0.0004);
+        rosMsg.acc_hor.y = getScaledValue(admaData.accHorizontal.y, 0.0004);
+        rosMsg.acc_hor.z = getScaledValue(admaData.accHorizontal.z, 0.0004);
 
         rosMsg.ext_vel_an_x = getScaledValue(admaData.extVelAnalog.x, 0.005);
         rosMsg.ext_vel_an_y = getScaledValue(admaData.extVelAnalog.y, 0.005);
@@ -297,14 +297,14 @@ void ADMA2ROSParserV334::mapScaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, A
         rosMsg.gnss_stddev_lon = getScaledValue(admaData.gnssstddevlon, 0.001);
         rosMsg.gnss_stddev_height = getScaledValue(admaData.gnssstddevheight, 0.001);
 
-        rosMsg.gnss_vel_frame_x = getScaledValue(admaData.gnssvelframex, 0.005);
-        rosMsg.gnss_vel_frame_y = getScaledValue(admaData.gnssvelframey, 0.005);
-        rosMsg.gnss_vel_frame_z = getScaledValue(admaData.gnssvelframez, 0.005);
+        rosMsg.gnss_vel_frame.x = getScaledValue(admaData.gnssvelframex, 0.005);
+        rosMsg.gnss_vel_frame.y = getScaledValue(admaData.gnssvelframey, 0.005);
+        rosMsg.gnss_vel_frame.z = getScaledValue(admaData.gnssvelframez, 0.005);
         rosMsg.gnss_vel_latency = getScaledValue(admaData.gnssvellatency, 0.001);
 
-        rosMsg.gnss_stddev_vel_x = getScaledValue(admaData.gnssStdDevVel.x, 0.001);
-        rosMsg.gnss_stddev_vel_y = getScaledValue(admaData.gnssStdDevVel.y, 0.001);
-        rosMsg.gnss_stddev_vel_z = getScaledValue(admaData.gnssStdDevVel.z, 0.001);
+        rosMsg.gnss_stddev_vel.x = getScaledValue(admaData.gnssStdDevVel.x, 0.001);
+        rosMsg.gnss_stddev_vel.y = getScaledValue(admaData.gnssStdDevVel.y, 0.001);
+        rosMsg.gnss_stddev_vel.z = getScaledValue(admaData.gnssStdDevVel.z, 0.001);
 
         rosMsg.gnss_diffage = getScaledValue(admaData.gnssdiffage, 0.1);
         rosMsg.gnss_receiver_load = getScaledValue(admaData.gnssreceiverload, 0.5);
@@ -324,20 +324,20 @@ void ADMA2ROSParserV334::mapScaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, A
         rosMsg.ins_pos_rel_x = getScaledValue(admaData.insPos.pos_rel.x, 0.01);
         rosMsg.ins_pos_rel_y = getScaledValue(admaData.insPos.pos_rel.y, 0.01);
         
-        rosMsg.ins_vel_hor_x = getScaledValue(admaData.insVelHor.x, 0.005);
-        rosMsg.ins_vel_hor_y = getScaledValue(admaData.insVelHor.y, 0.005);
-        rosMsg.ins_vel_hor_z = getScaledValue(admaData.insVelHor.z, 0.005);
-        rosMsg.ins_vel_frame_x = getScaledValue(admaData.insVelFrame.x, 0.005);
-        rosMsg.ins_vel_frame_y = getScaledValue(admaData.insVelFrame.y, 0.005);
-        rosMsg.ins_vel_frame_z = getScaledValue(admaData.insVelFrame.z, 0.005);
+        rosMsg.ins_vel_hor.x = getScaledValue(admaData.insVelHor.x, 0.005);
+        rosMsg.ins_vel_hor.y = getScaledValue(admaData.insVelHor.y, 0.005);
+        rosMsg.ins_vel_hor.z = getScaledValue(admaData.insVelHor.z, 0.005);
+        rosMsg.ins_vel_frame.x = getScaledValue(admaData.insVelFrame.x, 0.005);
+        rosMsg.ins_vel_frame.y = getScaledValue(admaData.insVelFrame.y, 0.005);
+        rosMsg.ins_vel_frame.z = getScaledValue(admaData.insVelFrame.z, 0.005);
 
         rosMsg.ins_stddev_lat = getScaledValue(admaData.insstddevlat, 0.01);
         rosMsg.ins_stddev_long = getScaledValue(admaData.insstddevlong, 0.01);
         rosMsg.ins_stddev_height = getScaledValue(admaData.insstddevheight, 0.01);
 
-        rosMsg.ins_stddev_vel_x = getScaledValue(admaData.insstddevvelx, 0.01);
-        rosMsg.ins_stddev_vel_y = getScaledValue(admaData.insstddevvely, 0.01);
-        rosMsg.ins_stddev_vel_z = getScaledValue(admaData.insstddevvelz, 0.01);
+        rosMsg.ins_stddev_vel.x = getScaledValue(admaData.insstddevvelx, 0.01);
+        rosMsg.ins_stddev_vel.y = getScaledValue(admaData.insstddevvely, 0.01);
+        rosMsg.ins_stddev_vel.z = getScaledValue(admaData.insstddevvelz, 0.01);
         rosMsg.ins_stddev_roll = getScaledValue(admaData.insstddevroll, 0.01);
         rosMsg.ins_stddev_pitch = getScaledValue(admaData.insstddevpitch, 0.01);
         rosMsg.ins_stddev_yaw = getScaledValue(admaData.insstddevyaw, 0.01);

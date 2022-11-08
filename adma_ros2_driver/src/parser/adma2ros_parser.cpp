@@ -590,13 +590,13 @@ void ADMA2ROSParser::extractIMU(adma_msgs::msg::AdmaData& rosMsg, sensor_msgs::m
 
 void ADMA2ROSParser::extractIMU(adma_msgs::msg::AdmaDataScaled& rosMsg, sensor_msgs::msg::Imu& imuRosMsg)
 {
-        imuRosMsg.linear_acceleration.x = rosMsg.acc_body_hr_x * 9.81;
-        imuRosMsg.linear_acceleration.y = rosMsg.acc_body_hr_y * 9.81;
-        imuRosMsg.linear_acceleration.z = rosMsg.acc_body_hr_z * 9.81;
+        imuRosMsg.linear_acceleration.x = rosMsg.acc_body_hr.x * 9.81;
+        imuRosMsg.linear_acceleration.y = rosMsg.acc_body_hr.y * 9.81;
+        imuRosMsg.linear_acceleration.z = rosMsg.acc_body_hr.z * 9.81;
 
-        imuRosMsg.angular_velocity.x = rosMsg.rate_body_hr_x * PI / 180.0;
-        imuRosMsg.angular_velocity.y = rosMsg.rate_body_hr_y * PI / 180.0;
-        imuRosMsg.angular_velocity.z = rosMsg.rate_body_hr_z * PI / 180.0;
+        imuRosMsg.angular_velocity.x = rosMsg.rate_body_hr.x * PI / 180.0;
+        imuRosMsg.angular_velocity.y = rosMsg.rate_body_hr.y * PI / 180.0;
+        imuRosMsg.angular_velocity.z = rosMsg.rate_body_hr.z * PI / 180.0;
 
         tf2::Quaternion q;
         double roll_rad = rosMsg.ins_roll * PI / 180.0;

@@ -51,38 +51,22 @@ string warn_misc1
 string error_hw_sticky
 
 # sensors body acc in g
-float64 acc_body_hr_x
-float64 acc_body_hr_y
-float64 acc_body_hr_z
+geometry_msgs/Vector3 acc_body_hr
 
 # sensors body rate in deg/s
-float64 rate_body_hr_x
-float64 rate_body_hr_y
-float64 rate_body_hr_z
+geometry_msgs/Vector3 rate_body_hr
 
-# rates body
-# rates in deg/s
-float64 rate_body_x
-float64 rate_body_y
-float64 rate_body_z
+# rates body in deg/s
+geometry_msgs/Vector3 rate_body
 
-# rates horz
-# rates in deg/s
-float64 rate_hor_x
-float64 rate_hor_y
-float64 rate_hor_z
+# rates hor in deg/s
+geometry_msgs/Vector3 rate_hor
 
-# accelerations body
-# acc in g
-float64 acc_body_x
-float64 acc_body_y
-float64 acc_body_z
+# accelerations body in g
+geometry_msgs/Vector3 acc_body
 
-# acceleration horizontal
-# acc in g
-float64 acc_hor_x
-float64 acc_hor_y
-float64 acc_hor_z
+# acceleration horizontal in g
+geometry_msgs/Vector3 acc_hor
 
 # external velocity analog
 #  vel in m/s
@@ -148,19 +132,13 @@ float64 gnss_stddev_lat
 float64 gnss_stddev_lon
 float64 gnss_stddev_height
 
-# gnss velocity frame
-# vel in m/s
-float64 gnss_vel_frame_x
-float64 gnss_vel_frame_y
-float64 gnss_vel_frame_z
+# gnss velocity frame in m/s
+geometry_msgs/Vector3 gnss_vel_frame
 # latency in s
 float64 gnss_vel_latency
 
-# gnss eve
-# error in m/s
-float64 gnss_stddev_vel_x
-float64 gnss_stddev_vel_y
-float64 gnss_stddev_vel_z
+# gnss eve error in m/s
+geometry_msgs/Vector3 gnss_stddev_vel
 
 # gnss time utc
 # gnsstimemsec in ms
@@ -236,17 +214,11 @@ float64 ins_lon_abs
 float64 ins_pos_rel_x
 float64 ins_pos_rel_y
 
-# ins velocity horizontal
-# velocity in m/s
-float64 ins_vel_hor_x
-float64 ins_vel_hor_y
-float64 ins_vel_hor_z
+# ins velocity horizontal in m/s
+geometry_msgs/Vector3 ins_vel_hor
 
-# ins velocity frame
-# velocity in m/s
-float64 ins_vel_frame_x
-float64 ins_vel_frame_y
-float64 ins_vel_frame_z
+# ins velocity frame in m/s
+geometry_msgs/Vector3 ins_vel_frame
 
 # ins epe
 # error in m
@@ -254,11 +226,8 @@ float64 ins_stddev_lat
 float64 ins_stddev_long
 float64 ins_stddev_height
 
-# ins eve and ins ete
-#  std vel in m/s
-float64 ins_stddev_vel_x
-float64 ins_stddev_vel_y
-float64 ins_stddev_vel_z
+# ins eve and ins ete std vel in m/s
+geometry_msgs/Vector3 ins_stddev_vel
 # std ete in deg
 float64 ins_stddev_roll
 float64 ins_stddev_pitch
