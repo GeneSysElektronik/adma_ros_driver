@@ -1,55 +1,28 @@
-# accelerations body poi
-# acc in g
-int16 acc_body_x
-int16 acc_body_y
-int16 acc_body_z
-float64 f_acc_body_x
-float64 f_acc_body_y
-float64 f_acc_body_z
+# accelerations body poi (in g)
+geometry_msgs/Vector3 acc_body
 
-# acceleration horizontal poi
-# acc in g
-int16 acc_hor_x
-int16 acc_hor_y
-int16 acc_hor_z
-float64 f_acc_hor_x
-float64 f_acc_hor_y
-float64 f_acc_hor_z
+# acceleration horizontal poi (in g)
+geometry_msgs/Vector3 acc_hor
 
-# miscellaneous_poi
-# invpath radius in 1/m
-int16 inv_path_radius
-float64 f_inv_path_radius
-# side slip in degrees
-int16 side_slip_angle
-float64 f_side_slip_angle
-# dis_trav in m
-uint32 dist_trav
-float64 f_dist_trav
+# invpath radius (in 1/m)
+float64 inv_path_radius
+
+# side slip (in deg)
+float64 side_slip_angle
+
+# distance traveled (in m)
+float64 dist_trav
 
 # ins position height poi(msl)
-int32 ins_height
-float64 f_ins_height
+float64 ins_height
 
-# ins position absolute
-# position in deg
-int32 ins_lat_abs
-int32 ins_lon_abs
-float64 f_ins_lat_abs
-float64 f_ins_lon_abs
+# ins position absolute (in deg)
+float64 ins_lat_abs
+float64 ins_lon_abs
 
-# ins position relative
-# position in m
-int32 ins_lat_rel
-int32 ins_lon_rel
-float64 f_ins_lat_rel
-float64 f_ins_lon_rel
+# ins position relative (in m)
+float64 ins_pos_rel_x
+float64 ins_pos_rel_y
 
-# ins velocity horizontal poi
-# velocity in m/s
-int16 ins_vel_hor_x
-int16 ins_vel_hor_y
-int16 ins_vel_hor_z
-float64 f_ins_vel_hor_x
-float64 f_ins_vel_hor_y
-float64 f_ins_vel_hor_z
+# ins velocity horizontal poi (in m/s)
+geometry_msgs/Vector3 ins_vel_hor

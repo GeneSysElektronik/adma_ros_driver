@@ -5,15 +5,16 @@ ADMA2ROSParserV334::ADMA2ROSParserV334()
 {
 }
 
-void ADMA2ROSParserV334::mapAdmaMessageToROS(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV333& admaData)
+void ADMA2ROSParserV334::mapAdmaMessageToROS(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& admaData)
 {
         mapAdmaHeader(rosMsg, admaData);
         mapBitfields(rosMsg, admaData);
         mapUnscaledData(rosMsg, admaData);
         mapScaledData(rosMsg, admaData);
+        mapPOI(rosMsg.poi, admaData);
 }
 
-void ADMA2ROSParserV334::mapAdmaHeader(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV333& admaData)
+void ADMA2ROSParserV334::mapAdmaHeader(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& admaData)
 {
         // fill static header information
         AdmaStaticHeader staticHeader = admaData.staticHeader;
@@ -40,7 +41,7 @@ void ADMA2ROSParserV334::mapAdmaHeader(adma_msgs::msg::AdmaDataScaled& rosMsg, A
         rosMsg.slice_data = dynamicHeader.slicedata;
 }
 
-void ADMA2ROSParserV334::mapBitfields(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV333& admaData)
+void ADMA2ROSParserV334::mapBitfields(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& admaData)
 {
         unsigned char gnssStatus = admaData.gnssStatus;
         bool status_external_vel = getbit(gnssStatus,7);
@@ -205,7 +206,7 @@ void ADMA2ROSParserV334::mapBitfields(adma_msgs::msg::AdmaDataScaled& rosMsg, Ad
         rosMsg.error_hw_sticky = erhwsticky.to_string();
 }
 
-void ADMA2ROSParserV334::mapUnscaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV333& admaData)
+void ADMA2ROSParserV334::mapUnscaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& admaData)
 {
         rosMsg.status_count = admaData.statuscount;
         //fill external velocity
@@ -252,7 +253,7 @@ void ADMA2ROSParserV334::mapUnscaledData(adma_msgs::msg::AdmaDataScaled& rosMsg,
         rosMsg.gnss_receiver_status = admaData.gnssreceiverstatus;
 }
 
-void ADMA2ROSParserV334::mapScaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV333& admaData)
+void ADMA2ROSParserV334::mapScaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& admaData)
 {
         rosMsg.acc_body_hr_x = getScaledValue(admaData.sensorsBodyX.accHR, 0.0001);
         rosMsg.acc_body_hr_y = getScaledValue(admaData.sensorsBodyY.accHR, 0.0001);
@@ -272,55 +273,6 @@ void ADMA2ROSParserV334::mapScaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, A
         rosMsg.acc_hor_x = getScaledValue(admaData.accHorizontal.x, 0.0004);
         rosMsg.acc_hor_y = getScaledValue(admaData.accHorizontal.y, 0.0004);
         rosMsg.acc_hor_z = getScaledValue(admaData.accHorizontal.z, 0.0004);
-        rosMsg.acc_body_x_1 = getScaledValue(admaData.accBodyPOI1.x, 0.0004);
-        rosMsg.acc_body_y_1 = getScaledValue(admaData.accBodyPOI1.y, 0.0004);
-        rosMsg.acc_body_z_1 = getScaledValue(admaData.accBodyPOI1.z, 0.0004);
-        rosMsg.acc_body_x_2 = getScaledValue(admaData.accBodyPOI2.x, 0.0004);
-        rosMsg.acc_body_y_2 = getScaledValue(admaData.accBodyPOI2.y, 0.0004);
-        rosMsg.acc_body_z_2 = getScaledValue(admaData.accBodyPOI2.z, 0.0004);
-        rosMsg.acc_body_x_3 = getScaledValue(admaData.accBodyPOI3.x, 0.0004);
-        rosMsg.acc_body_y_3 = getScaledValue(admaData.accBodyPOI3.y, 0.0004);
-        rosMsg.acc_body_z_3 = getScaledValue(admaData.accBodyPOI3.z, 0.0004);
-        rosMsg.acc_body_x_4 = getScaledValue(admaData.accBodyPOI4.x, 0.0004);
-        rosMsg.acc_body_y_4 = getScaledValue(admaData.accBodyPOI4.y, 0.0004);
-        rosMsg.acc_body_z_4 = getScaledValue(admaData.accBodyPOI4.z, 0.0004);
-        rosMsg.acc_body_x_5 = getScaledValue(admaData.accBodyPOI5.x, 0.0004);
-        rosMsg.acc_body_y_5 = getScaledValue(admaData.accBodyPOI5.y, 0.0004);
-        rosMsg.acc_body_z_5 = getScaledValue(admaData.accBodyPOI5.z, 0.0004);
-        rosMsg.acc_body_x_6 = getScaledValue(admaData.accBodyPOI6.x, 0.0004);
-        rosMsg.acc_body_y_6 = getScaledValue(admaData.accBodyPOI6.y, 0.0004);
-        rosMsg.acc_body_z_6 = getScaledValue(admaData.accBodyPOI6.z, 0.0004);
-        rosMsg.acc_body_x_7 = getScaledValue(admaData.accBodyPOI7.x, 0.0004);
-        rosMsg.acc_body_y_7 = getScaledValue(admaData.accBodyPOI7.y, 0.0004);
-        rosMsg.acc_body_z_7 = getScaledValue(admaData.accBodyPOI7.z, 0.0004);
-        rosMsg.acc_body_x_8 = getScaledValue(admaData.accBodyPOI8.x, 0.0004);
-        rosMsg.acc_body_y_8 = getScaledValue(admaData.accBodyPOI8.y, 0.0004);
-        rosMsg.acc_body_z_8 = getScaledValue(admaData.accBodyPOI8.z, 0.0004);
-
-        rosMsg.acc_hor_x_1 = getScaledValue(admaData.accHorizontalPOI1.x, 0.0004);
-        rosMsg.acc_hor_y_1 = getScaledValue(admaData.accHorizontalPOI1.y, 0.0004);
-        rosMsg.acc_hor_z_1 = getScaledValue(admaData.accHorizontalPOI1.z, 0.0004);
-        rosMsg.acc_hor_x_2 = getScaledValue(admaData.accHorizontalPOI2.x, 0.0004);
-        rosMsg.acc_hor_y_2 = getScaledValue(admaData.accHorizontalPOI2.y, 0.0004);
-        rosMsg.acc_hor_z_2 = getScaledValue(admaData.accHorizontalPOI2.z, 0.0004);
-        rosMsg.acc_hor_x_3 = getScaledValue(admaData.accHorizontalPOI3.x, 0.0004);
-        rosMsg.acc_hor_y_3 = getScaledValue(admaData.accHorizontalPOI3.y, 0.0004);
-        rosMsg.acc_hor_z_3 = getScaledValue(admaData.accHorizontalPOI3.z, 0.0004);
-        rosMsg.acc_hor_x_4 = getScaledValue(admaData.accHorizontalPOI4.x, 0.0004);
-        rosMsg.acc_hor_y_4 = getScaledValue(admaData.accHorizontalPOI4.y, 0.0004);
-        rosMsg.acc_hor_z_4 = getScaledValue(admaData.accHorizontalPOI4.z, 0.0004);
-        rosMsg.acc_hor_x_5 = getScaledValue(admaData.accHorizontalPOI5.x, 0.0004);
-        rosMsg.acc_hor_y_5 = getScaledValue(admaData.accHorizontalPOI5.y, 0.0004);
-        rosMsg.acc_hor_z_5 = getScaledValue(admaData.accHorizontalPOI5.z, 0.0004);
-        rosMsg.acc_hor_x_6 = getScaledValue(admaData.accHorizontalPOI6.x, 0.0004);
-        rosMsg.acc_hor_y_6 = getScaledValue(admaData.accHorizontalPOI6.y, 0.0004);
-        rosMsg.acc_hor_z_6 = getScaledValue(admaData.accHorizontalPOI6.z, 0.0004);
-        rosMsg.acc_hor_x_7 = getScaledValue(admaData.accHorizontalPOI7.x, 0.0004);
-        rosMsg.acc_hor_y_7 = getScaledValue(admaData.accHorizontalPOI7.y, 0.0004);
-        rosMsg.acc_hor_z_7 = getScaledValue(admaData.accHorizontalPOI7.z, 0.0004);
-        rosMsg.acc_hor_x_8 = getScaledValue(admaData.accHorizontalPOI8.x, 0.0004);
-        rosMsg.acc_hor_y_8 = getScaledValue(admaData.accHorizontalPOI8.y, 0.0004);
-        rosMsg.acc_hor_z_8 = getScaledValue(admaData.accHorizontalPOI8.z, 0.0004);
 
         rosMsg.ext_vel_an_x = getScaledValue(admaData.extVelAnalog.x, 0.005);
         rosMsg.ext_vel_an_y = getScaledValue(admaData.extVelAnalog.y, 0.005);
@@ -332,31 +284,6 @@ void ADMA2ROSParserV334::mapScaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, A
         rosMsg.inv_path_radius = getScaledValue(admaData.misc.invPathRadius, 0.0001);
         rosMsg.side_slip_angle = getScaledValue(admaData.misc.sideSlipAngle, 0.01);
         rosMsg.dist_trav = getScaledValue(admaData.misc.distanceTraveled, 0.01);
-
-        rosMsg.inv_path_radius_1 = getScaledValue(admaData.miscPOI1.invPathRadius, 0.0001);
-        rosMsg.side_slip_angle_1 = getScaledValue(admaData.miscPOI1.sideSlipAngle, 0.01);
-        rosMsg.dist_trav_1 = getScaledValue(admaData.miscPOI1.distanceTraveled, 0.01);
-        rosMsg.inv_path_radius_2 = getScaledValue(admaData.miscPOI2.invPathRadius, 0.0001);
-        rosMsg.side_slip_angle_2 = getScaledValue(admaData.miscPOI2.sideSlipAngle, 0.01);
-        rosMsg.dist_trav_2 = getScaledValue(admaData.miscPOI2.distanceTraveled, 0.01);
-        rosMsg.inv_path_radius_3 = getScaledValue(admaData.miscPOI3.invPathRadius, 0.0001);
-        rosMsg.side_slip_angle_3 = getScaledValue(admaData.miscPOI3.sideSlipAngle, 0.01);
-        rosMsg.dist_trav_3 = getScaledValue(admaData.miscPOI3.distanceTraveled, 0.01);
-        rosMsg.inv_path_radius_4 = getScaledValue(admaData.miscPOI4.invPathRadius, 0.0001);
-        rosMsg.side_slip_angle_4 = getScaledValue(admaData.miscPOI4.sideSlipAngle, 0.01);
-        rosMsg.dist_trav_4 = getScaledValue(admaData.miscPOI4.distanceTraveled, 0.01);
-        rosMsg.inv_path_radius_5 = getScaledValue(admaData.miscPOI5.invPathRadius, 0.0001);
-        rosMsg.side_slip_angle_5 = getScaledValue(admaData.miscPOI5.sideSlipAngle, 0.01);
-        rosMsg.dist_trav_5 = getScaledValue(admaData.miscPOI5.distanceTraveled, 0.01);
-        rosMsg.inv_path_radius_6 = getScaledValue(admaData.miscPOI6.invPathRadius, 0.0001);
-        rosMsg.side_slip_angle_6 = getScaledValue(admaData.miscPOI6.sideSlipAngle, 0.01);
-        rosMsg.dist_trav_6 = getScaledValue(admaData.miscPOI6.distanceTraveled, 0.01);
-        rosMsg.inv_path_radius_7 = getScaledValue(admaData.miscPOI7.invPathRadius, 0.0001);
-        rosMsg.side_slip_angle_7 = getScaledValue(admaData.miscPOI7.sideSlipAngle, 0.01);
-        rosMsg.dist_trav_7 = getScaledValue(admaData.miscPOI7.distanceTraveled, 0.01);
-        rosMsg.inv_path_radius_8 = getScaledValue(admaData.miscPOI8.invPathRadius, 0.0001);
-        rosMsg.side_slip_angle_8 = getScaledValue(admaData.miscPOI8.sideSlipAngle, 0.01);
-        rosMsg.dist_trav_8 = getScaledValue(admaData.miscPOI8.distanceTraveled, 0.01);
 
         rosMsg.system_temp = getScaledValue(admaData.systemtemp, 0.1);
         rosMsg.system_dsp_load = getScaledValue(admaData.systemdspload, 0.1);
@@ -391,51 +318,11 @@ void ADMA2ROSParserV334::mapScaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, A
         rosMsg.undulation = getScaledValue(admaData.undulation, 0.01);
 
         rosMsg.ins_height = getScaledValue(admaData.insHeight, 0.01);
-        rosMsg.ins_height_1 = getScaledValue(admaData.insHeightPOI1, 0.01);
-        rosMsg.ins_height_2 = getScaledValue(admaData.insHeightPOI2, 0.01);
-        rosMsg.ins_height_3 = getScaledValue(admaData.insHeightPOI3, 0.01);
-        rosMsg.ins_height_4 = getScaledValue(admaData.insHeightPOI4, 0.01);
-        rosMsg.ins_height_5 = getScaledValue(admaData.insHeightPOI5, 0.01);
-        rosMsg.ins_height_6 = getScaledValue(admaData.insHeightPOI6, 0.01);
-        rosMsg.ins_height_7 = getScaledValue(admaData.insHeightPOI7, 0.01);
-        rosMsg.ins_height_8 = getScaledValue(admaData.insHeightPOI8, 0.01);
 
-        rosMsg.ins_lat_abs = getScaledValue(admaData.insPosAbs.latitude, 0.0000001);
-        rosMsg.ins_lon_abs = getScaledValue(admaData.insPosAbs.longitude, 0.0000001);
-        rosMsg.ins_pos_rel_x = getScaledValue(admaData.insPosRel.longitude, 0.01);
-        rosMsg.ins_pos_rel_y = getScaledValue(admaData.insPosRel.latitude, 0.01);
-        rosMsg.ins_lat_abs_1 = getScaledValue(admaData.insPosAbsPOI1.latitude, 0.0000001);
-        rosMsg.ins_lon_abs_1 = getScaledValue(admaData.insPosAbsPOI1.longitude, 0.0000001);
-        rosMsg.ins_pos_rel_x_1 = getScaledValue(admaData.insPosRelPOI1.longitude, 0.01);
-        rosMsg.ins_pos_rel_y_1 = getScaledValue(admaData.insPosRelPOI1.latitude, 0.01);
-        rosMsg.ins_lat_abs_2 = getScaledValue(admaData.insPosAbsPOI2.latitude, 0.0000001);
-        rosMsg.ins_lon_abs_2 = getScaledValue(admaData.insPosAbsPOI2.longitude, 0.0000001);
-        rosMsg.ins_pos_rel_x_2 = getScaledValue(admaData.insPosRelPOI2.longitude, 0.01);
-        rosMsg.ins_pos_rel_y_2 = getScaledValue(admaData.insPosRelPOI2.latitude, 0.01);
-        rosMsg.ins_lat_abs_3 = getScaledValue(admaData.insPosAbsPOI3.latitude, 0.0000001);
-        rosMsg.ins_lon_abs_3 = getScaledValue(admaData.insPosAbsPOI3.longitude, 0.0000001);
-        rosMsg.ins_pos_rel_x_3 = getScaledValue(admaData.insPosRelPOI3.longitude, 0.01);
-        rosMsg.ins_pos_rel_y_3 = getScaledValue(admaData.insPosRelPOI3.latitude, 0.01);
-        rosMsg.ins_lat_abs_4 = getScaledValue(admaData.insPosAbsPOI4.latitude, 0.0000001);
-        rosMsg.ins_lon_abs_4 = getScaledValue(admaData.insPosAbsPOI4.longitude, 0.0000001);
-        rosMsg.ins_pos_rel_x_4 = getScaledValue(admaData.insPosRelPOI4.longitude, 0.01);
-        rosMsg.ins_pos_rel_y_4 = getScaledValue(admaData.insPosRelPOI4.latitude, 0.01);
-        rosMsg.ins_lat_abs_5 = getScaledValue(admaData.insPosAbsPOI5.latitude, 0.0000001);
-        rosMsg.ins_lon_abs_5 = getScaledValue(admaData.insPosAbsPOI5.longitude, 0.0000001);
-        rosMsg.ins_pos_rel_x_5 = getScaledValue(admaData.insPosRelPOI5.longitude, 0.01);
-        rosMsg.ins_pos_rel_y_5 = getScaledValue(admaData.insPosRelPOI5.latitude, 0.01);
-        rosMsg.ins_lat_abs_6 = getScaledValue(admaData.insPosAbsPOI6.latitude, 0.0000001);
-        rosMsg.ins_lon_abs_6 = getScaledValue(admaData.insPosAbsPOI6.longitude, 0.0000001);
-        rosMsg.ins_pos_rel_x_6 = getScaledValue(admaData.insPosRelPOI6.longitude, 0.01);
-        rosMsg.ins_pos_rel_y_6 = getScaledValue(admaData.insPosRelPOI6.latitude, 0.01);
-        rosMsg.ins_lat_abs_7 = getScaledValue(admaData.insPosAbsPOI7.latitude, 0.0000001);
-        rosMsg.ins_lon_abs_7 = getScaledValue(admaData.insPosAbsPOI7.longitude, 0.0000001);
-        rosMsg.ins_pos_rel_x_7 = getScaledValue(admaData.insPosRelPOI7.longitude, 0.01);
-        rosMsg.ins_pos_rel_y_7 = getScaledValue(admaData.insPosRelPOI7.latitude, 0.01);
-        rosMsg.ins_lat_abs_8 = getScaledValue(admaData.insPosAbsPOI8.latitude, 0.0000001);
-        rosMsg.ins_lon_abs_8 = getScaledValue(admaData.insPosAbsPOI8.longitude, 0.0000001);
-        rosMsg.ins_pos_rel_x_8 = getScaledValue(admaData.insPosRelPOI8.longitude, 0.01);
-        rosMsg.ins_pos_rel_y_8 = getScaledValue(admaData.insPosRelPOI8.latitude, 0.01);
+        rosMsg.ins_lat_abs = getScaledValue(admaData.insPos.pos_abs.latitude, 0.0000001);
+        rosMsg.ins_lon_abs = getScaledValue(admaData.insPos.pos_abs.longitude, 0.0000001);
+        rosMsg.ins_pos_rel_x = getScaledValue(admaData.insPos.pos_rel.x, 0.01);
+        rosMsg.ins_pos_rel_y = getScaledValue(admaData.insPos.pos_rel.y, 0.01);
         
         rosMsg.ins_vel_hor_x = getScaledValue(admaData.insVelHor.x, 0.005);
         rosMsg.ins_vel_hor_y = getScaledValue(admaData.insVelHor.y, 0.005);
@@ -443,31 +330,6 @@ void ADMA2ROSParserV334::mapScaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, A
         rosMsg.ins_vel_frame_x = getScaledValue(admaData.insVelFrame.x, 0.005);
         rosMsg.ins_vel_frame_y = getScaledValue(admaData.insVelFrame.y, 0.005);
         rosMsg.ins_vel_frame_z = getScaledValue(admaData.insVelFrame.z, 0.005);
-
-        rosMsg.ins_vel_hor_x_1 = getScaledValue(admaData.insVelHorPOI1.x, 0.005);
-        rosMsg.ins_vel_hor_y_1 = getScaledValue(admaData.insVelHorPOI1.y, 0.005);
-        rosMsg.ins_vel_hor_z_1 = getScaledValue(admaData.insVelHorPOI1.z, 0.005);
-        rosMsg.ins_vel_hor_x_2 = getScaledValue(admaData.insVelHorPOI2.x, 0.005);
-        rosMsg.ins_vel_hor_y_2 = getScaledValue(admaData.insVelHorPOI2.y, 0.005);
-        rosMsg.ins_vel_hor_z_2 = getScaledValue(admaData.insVelHorPOI2.z, 0.005);
-        rosMsg.ins_vel_hor_x_3 = getScaledValue(admaData.insVelHorPOI3.x, 0.005);
-        rosMsg.ins_vel_hor_y_3 = getScaledValue(admaData.insVelHorPOI3.y, 0.005);
-        rosMsg.ins_vel_hor_z_3 = getScaledValue(admaData.insVelHorPOI3.z, 0.005);
-        rosMsg.ins_vel_hor_x_4 = getScaledValue(admaData.insVelHorPOI4.x, 0.005);
-        rosMsg.ins_vel_hor_y_4 = getScaledValue(admaData.insVelHorPOI4.y, 0.005);
-        rosMsg.ins_vel_hor_z_4 = getScaledValue(admaData.insVelHorPOI4.z, 0.005);
-        rosMsg.ins_vel_hor_x_5 = getScaledValue(admaData.insVelHorPOI5.x, 0.005);
-        rosMsg.ins_vel_hor_y_5 = getScaledValue(admaData.insVelHorPOI5.y, 0.005);
-        rosMsg.ins_vel_hor_z_5 = getScaledValue(admaData.insVelHorPOI5.z, 0.005);
-        rosMsg.ins_vel_hor_x_6 = getScaledValue(admaData.insVelHorPOI6.x, 0.005);
-        rosMsg.ins_vel_hor_y_6 = getScaledValue(admaData.insVelHorPOI6.y, 0.005);
-        rosMsg.ins_vel_hor_z_6 = getScaledValue(admaData.insVelHorPOI6.z, 0.005);
-        rosMsg.ins_vel_hor_x_7 = getScaledValue(admaData.insVelHorPOI7.x, 0.005);
-        rosMsg.ins_vel_hor_y_7 = getScaledValue(admaData.insVelHorPOI7.y, 0.005);
-        rosMsg.ins_vel_hor_z_7 = getScaledValue(admaData.insVelHorPOI7.z, 0.005);
-        rosMsg.ins_vel_hor_x_8 = getScaledValue(admaData.insVelHorPOI8.x, 0.005);
-        rosMsg.ins_vel_hor_y_8 = getScaledValue(admaData.insVelHorPOI8.y, 0.005);
-        rosMsg.ins_vel_hor_z_8 = getScaledValue(admaData.insVelHorPOI8.z, 0.005);
 
         rosMsg.ins_stddev_lat = getScaledValue(admaData.insstddevlat, 0.01);
         rosMsg.ins_stddev_long = getScaledValue(admaData.insstddevlong, 0.01);
@@ -485,11 +347,44 @@ void ADMA2ROSParserV334::mapScaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, A
         rosMsg.an3 = getScaledValue(admaData.an3, 0.0005);
         rosMsg.an4 = getScaledValue(admaData.an4, 0.0005);
 
-        // only for >= v3.3.3
         rosMsg.gnss_dualant_heading = getScaledValue(admaData.gnssDualAntHeading, 0.01);
         rosMsg.gnss_dualant_pitch = getScaledValue(admaData.gnssDualAntPitch, 0.01);
         rosMsg.gnss_dualant_stddev_heading = getScaledValue(admaData.gnssdualantstdevheading, 0.01);
         rosMsg.gnss_dualant_stddev_pitch = getScaledValue(admaData.gnssdualantstddevpitch, 0.01);
         rosMsg.gnss_dualant_stddev_heading_hr = getScaledValue(admaData.gnssdualantstdevheadinghr, 0.01);
         rosMsg.gnss_dualant_stddev_pitch_hr = getScaledValue(admaData.gnssdualantstddevpitchhr, 0.01);
+}
+
+void ADMA2ROSParserV334::mapPOI(std::vector<adma_msgs::msg::POI>& poiList, AdmaDataV334& admaData)
+{
+        for (size_t i = 0; i < 8; i++)
+        {
+                adma_msgs::msg::POI newPOI;
+
+                Vector3 curAccBody = admaData.accBodyPOI[i];
+                Vector3 curAccHorizontal = admaData.accHorizontalPOI[i];
+                Miscellaneous curMisc = admaData.miscPOI[i];
+                int32_t curINSHeight = admaData.insHeightPOI[i];
+                INSPosition curINSPosition = admaData.insPosPOI[i];
+                Vector3 curINSVelHor = admaData.insVelHorPOI[i];
+
+                newPOI.acc_body.x = getScaledValue(curAccBody.x, 0.0004);
+                newPOI.acc_body.y = getScaledValue(curAccBody.y, 0.0004);
+                newPOI.acc_body.z = getScaledValue(curAccBody.z, 0.0004);
+                newPOI.acc_hor.x = getScaledValue(curAccHorizontal.x, 0.0004);
+                newPOI.acc_hor.y = getScaledValue(curAccHorizontal.y, 0.0004);
+                newPOI.acc_hor.z = getScaledValue(curAccHorizontal.z, 0.0004);
+                newPOI.inv_path_radius = getScaledValue(curMisc.invPathRadius, 0.0001);
+                newPOI.side_slip_angle = getScaledValue(curMisc.sideSlipAngle, 0.01);
+                newPOI.dist_trav = getScaledValue(curMisc.distanceTraveled, 0.01);
+                newPOI.ins_height = getScaledValue(curINSHeight, 0.01);
+                newPOI.ins_lat_abs = getScaledValue(curINSPosition.pos_abs.latitude, 0.0000001);
+                newPOI.ins_lon_abs = getScaledValue(curINSPosition.pos_abs.longitude, 0.0000001);
+                newPOI.ins_pos_rel_x = getScaledValue(curINSPosition.pos_rel.x, 0.01);
+                newPOI.ins_pos_rel_y = getScaledValue(curINSPosition.pos_rel.y, 0.01);
+                newPOI.ins_vel_hor.x = getScaledValue(curINSVelHor.x, 0.005);
+                newPOI.ins_vel_hor.y = getScaledValue(curINSVelHor.y, 0.005);
+                newPOI.ins_vel_hor.z = getScaledValue(curINSVelHor.z, 0.005);
+                poiList.push_back(newPOI);
+        }
 }

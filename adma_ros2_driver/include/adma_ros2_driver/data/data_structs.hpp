@@ -80,3 +80,9 @@ struct GNSSPosition
         int32_t latitude;
         int32_t longitude;
 };
+
+struct INSPosition
+{
+        GNSSPosition pos_abs; //deg
+        Vector2 pos_rel; //m
+};

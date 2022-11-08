@@ -45,7 +45,7 @@ void ADMA2ROSParser::mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, std::
 
 void ADMA2ROSParser::parseV334(adma_msgs::msg::AdmaDataScaled& rosMsg, std::vector<char>& localData)
 {
-    AdmaDataV333 admaData;
+    AdmaDataV334 admaData;
     memcpy(&admaData , &localData, sizeof(admaData));
     _parserV334.mapAdmaMessageToROS(rosMsg, admaData);
 }

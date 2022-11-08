@@ -84,102 +84,6 @@ float64 acc_hor_x
 float64 acc_hor_y
 float64 acc_hor_z
 
-# accelerations body poi1
-# acc in g
-float64 acc_body_x_1
-float64 acc_body_y_1
-float64 acc_body_z_1
-
-# accelerations body poi2
-# acc in g
-float64 acc_body_x_2
-float64 acc_body_y_2
-float64 acc_body_z_2
-
-# accelerations body poi3
-# acc in g
-float64 acc_body_x_3
-float64 acc_body_y_3
-float64 acc_body_z_3
-
-# accelerations body poi4
-# acc in g
-float64 acc_body_x_4
-float64 acc_body_y_4
-float64 acc_body_z_4
-
-# accelerations body poi5
-# acc in g
-float64 acc_body_x_5
-float64 acc_body_y_5
-float64 acc_body_z_5
-
-# accelerations body poi6
-# acc in g
-float64 acc_body_x_6
-float64 acc_body_y_6
-float64 acc_body_z_6
-
-# accelerations body poi7
-# acc in g
-float64 acc_body_x_7
-float64 acc_body_y_7
-float64 acc_body_z_7
-
-# accelerations body poi8
-# acc in g
-float64 acc_body_x_8
-float64 acc_body_y_8
-float64 acc_body_z_8
-
-# acceleration horizontal poi1
-# acc in g
-float64 acc_hor_x_1
-float64 acc_hor_y_1
-float64 acc_hor_z_1
-
-# acceleration horizontal poi2
-# acc in g
-float64 acc_hor_x_2
-float64 acc_hor_y_2
-float64 acc_hor_z_2
-
-# acceleration horizontal poi3
-# acc in g
-float64 acc_hor_x_3
-float64 acc_hor_y_3
-float64 acc_hor_z_3
-
-# acceleration horizontal poi4
-# acc in g
-float64 acc_hor_x_4
-float64 acc_hor_y_4
-float64 acc_hor_z_4
-
-# acceleration horizontal poi5
-# acc in g
-float64 acc_hor_x_5
-float64 acc_hor_y_5
-float64 acc_hor_z_5
-
-# acceleration horizontal poi6
-# acc in g
-float64 acc_hor_x_6
-float64 acc_hor_y_6
-float64 acc_hor_z_6
-
-# acceleration horizontal poi7
-# acc in g
-float64 acc_hor_x_7
-float64 acc_hor_y_7
-float64 acc_hor_z_7
-
-# acceleration horizontal poi8
-# acc in g
-float64 acc_hor_x_8
-float64 acc_hor_y_8
-float64 acc_hor_z_8
-
 # external velocity analog
 #  vel in m/s
 float64 ext_vel_an_x
@@ -203,46 +107,6 @@ float64 inv_path_radius
 float64 side_slip_angle
 # dis_trav in m
 float64 dist_trav
-
-# miscellaneous_poi1
-float64 inv_path_radius_1
-float64 side_slip_angle_1
-float64 dist_trav_1
-
-# miscellaneous_poi2
-float64 inv_path_radius_2
-float64 side_slip_angle_2
-float64 dist_trav_2
-
-# miscellaneous_poi3
-float64 inv_path_radius_3
-float64 side_slip_angle_3
-float64 dist_trav_3
-
-# miscellaneous_poi4
-float64 inv_path_radius_4
-float64 side_slip_angle_4
-float64 dist_trav_4
-
-# miscellaneous_poi5
-float64 inv_path_radius_5
-float64 side_slip_angle_5
-float64 dist_trav_5
-
-# miscellaneous_poi6
-float64 inv_path_radius_6
-float64 side_slip_angle_6
-float64 dist_trav_6
-
-# miscellaneous_poi7
-float64 inv_path_radius_7
-float64 side_slip_angle_7
-float64 dist_trav_7
-
-# miscellaneous_poi8
-float64 inv_path_radius_8
-float64 side_slip_angle_8
-float64 dist_trav_8
 
 # triggers 1 and 2
 # triggers in mu.s
@@ -354,22 +218,6 @@ float32 gnss_dualant_stddev_pitch_hr
 # ins position height (msl)
 float64 ins_height
 
-# ins position height poi1 and poi2 (msl)
-float64 ins_height_1
-float64 ins_height_2
-
-# ins position height poi3 and poi4 (msl)
-float64 ins_height_3
-float64 ins_height_4
-
-# ins position height poi5 and poi6 (msl)
-float64 ins_height_5
-float64 ins_height_6
-
-# ins position height poi7 and poi8 (msl)
-float64 ins_height_7
-float64 ins_height_8
-
 # ins time utc
 # instimemsec in ms
 uint32 ins_time_msec
@@ -388,86 +236,6 @@ float64 ins_lon_abs
 float64 ins_pos_rel_x
 float64 ins_pos_rel_y
 
-# ins position absolute pos1
-# position in deg
-float64 ins_lat_abs_1
-float64 ins_lon_abs_1
-
-# ins position relative pos1
-# position in m
-float64 ins_pos_rel_x_1
-float64 ins_pos_rel_y_1
-
-# ins position absolute pos2
-# position in deg
-float64 ins_lat_abs_2
-float64 ins_lon_abs_2
-
-# ins position relative pos2
-# position in m
-float64 ins_pos_rel_x_2
-float64 ins_pos_rel_y_2
-
-# ins position absolute pos3
-# position in deg
-float64 ins_lat_abs_3
-float64 ins_lon_abs_3
-
-# ins position relative pos3
-# position in m
-float64 ins_pos_rel_x_3
-float64 ins_pos_rel_y_3
-
-# ins position absolute pos4
-# position in deg
-float64 ins_lat_abs_4
-float64 ins_lon_abs_4
-
-# ins position relative pos4
-# position in m
-float64 ins_pos_rel_x_4
-float64 ins_pos_rel_y_4
-
-# ins position absolute pos5
-# position in deg
-float64 ins_lat_abs_5
-float64 ins_lon_abs_5
-
-# ins position relative pos5
-# position in m
-float64 ins_pos_rel_x_5
-float64 ins_pos_rel_y_5
-
-# ins position absolute pos6
-# position in deg
-float64 ins_lat_abs_6
-float64 ins_lon_abs_6
-
-# ins position relative pos6
-# position in m
-float64 ins_pos_rel_x_6
-float64 ins_pos_rel_y_6
-
-# ins position absolute pos7
-# position in deg
-float64 ins_lat_abs_7
-float64 ins_lon_abs_7
-
-# ins position relative pos7
-# position in m
-float64 ins_pos_rel_x_7
-float64 ins_pos_rel_y_7
-
-# ins position absolute pos8
-# position in deg
-float64 ins_lat_abs_8
-float64 ins_lon_abs_8
-
-# ins position relative pos8
-# position in m
-float64 ins_pos_rel_x_8
-float64 ins_pos_rel_y_8
-
 # ins velocity horizontal
 # velocity in m/s
 float64 ins_vel_hor_x
@@ -479,54 +247,6 @@ float64 ins_vel_hor_z
 float64 ins_vel_frame_x
 float64 ins_vel_frame_y
 float64 ins_vel_frame_z
-
-# ins velocity horizontal poi1
-# velocity in m/s
-float64 ins_vel_hor_x_1
-float64 ins_vel_hor_y_1
-float64 ins_vel_hor_z_1
-
-# ins velocity horizontal poi2
-# velocity in m/s
-float64 ins_vel_hor_x_2
-float64 ins_vel_hor_y_2
-float64 ins_vel_hor_z_2
-
-# ins velocity horizontal poi3
-# velocity in m/s
-float64 ins_vel_hor_x_3
-float64 ins_vel_hor_y_3
-float64 ins_vel_hor_z_3
-
-# ins velocity horizontal poi4
-# velocity in m/s
-float64 ins_vel_hor_x_4
-float64 ins_vel_hor_y_4
-float64 ins_vel_hor_z_4
-
-# ins velocity horizontal poi5
-# velocity in m/s
-float64 ins_vel_hor_x_5
-float64 ins_vel_hor_y_5
-float64 ins_vel_hor_z_5
-
-# ins velocity horizontal poi6
-# velocity in m/s
-float64 ins_vel_hor_x_6
-float64 ins_vel_hor_y_6
-float64 ins_vel_hor_z_6
-
-# ins velocity horizontal poi7
-# velocity in m/s
-float64 ins_vel_hor_x_7
-float64 ins_vel_hor_y_7
-float64 ins_vel_hor_z_7
-
-# ins velocity horizontal poi8
-# velocity in m/s
-float64 ins_vel_hor_x_8
-float64 ins_vel_hor_y_8
-float64 ins_vel_hor_z_8
 
 # ins epe
 # error in m
@@ -565,3 +285,6 @@ uint32 gnss_receiver_status
 # mobileeye time comparison
 float64 time_msec
 float64 time_nsec
+
+# list of POIs
+POI[] poi
