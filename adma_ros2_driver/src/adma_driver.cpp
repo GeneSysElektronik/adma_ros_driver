@@ -26,15 +26,22 @@ namespace genesys
                 _imu_frame = this->declare_parameter("imu_frame", "imu_link");
                 // define protocol specific stuff
                 _protocolversion = this->declare_parameter("protocol_version", "v3.3.3");
-                if(_protocolversion == "v3.2"){
+                if(_protocolversion == "v3.2")
+                {
                         _len =  768;
+                        _pub_adma_data = this->create_publisher<adma_msgs::msg::AdmaData>("adma/data", 1);
                 }else if (_protocolversion == "v3.3.3")
                 {
                         _len = 856;
+                        _pub_adma_data = this->create_publisher<adma_msgs::msg::AdmaData>("adma/data", 1);
+                }else if (_protocolversion == "v3.3.4")
+                {
+                        _len = 856;
+                        _pub_adma_data_raw = this->create_publisher<std_msgs::msg::String>("adma/data_raw", 1);
+                        _pub_adma_data_scaled = this->create_publisher<adma_msgs::msg::AdmaDataScaled>("adma/data_scaled", 1);
                 }
                 _parser = new ADMA2ROSParser(_protocolversion);
-
-                _pub_adma_data = this->create_publisher<adma_msgs::msg::AdmaData>("adma/data", 1);
+                
                 _pub_navsat_fix = this->create_publisher<sensor_msgs::msg::NavSatFix>("adma/fix", 1);
                 _pub_imu = this->create_publisher<sensor_msgs::msg::Imu>("adma/imu", 1);
                 _pub_heading = this->create_publisher<std_msgs::msg::Float64>("adma/heading", 1);
@@ -122,34 +129,60 @@ namespace genesys
                         }
 
                         builtin_interfaces::msg::Time curTimestamp = this->get_clock()->now();
-                        
-                        // read Adma msg from UDP data packet
-                        adma_msgs::msg::AdmaData admaData_rosMsg;
-                        _parser->mapAdmaMessageToROS(admaData_rosMsg, recv_buf);
-
-                        admaData_rosMsg.timemsec = curTimestamp.sec * 1000;
-                        admaData_rosMsg.timensec = curTimestamp.nanosec;
-                        
-                        // read NavSatFix out of AdmaData
+                                                
+                        // prepare several ros msgs
                         sensor_msgs::msg::NavSatFix message_fix;
                         message_fix.header.stamp = curTimestamp;
                         message_fix.header.frame_id = "adma";
-                        _parser->extractNavSatFix(admaData_rosMsg, message_fix);
-
-                        // read heading and velocity
                         std_msgs::msg::Float64 message_heading;
                         std_msgs::msg::Float64 message_velocity;
-                        message_heading.data = admaData_rosMsg.finsyaw;
-                        message_velocity.data = std::sqrt(std::pow(admaData_rosMsg.fgpsvelframex, 2) + std::pow(admaData_rosMsg.fgpsvelframey, 2)) * 3.6;
-
-                        // read IMU
                         sensor_msgs::msg::Imu message_imu;
                         message_imu.header.frame_id = _imu_frame;
                         message_fix.header.stamp = curTimestamp;
-                        _parser->extractIMU(admaData_rosMsg, message_imu);
+                        float weektime;
+                        uint32_t instimemsec;
+
+                        // read Adma msg from UDP data packet
+                        if (_protocolversion == "v3.2" || _protocolversion == "v3.3.3")
+                        {
+                                adma_msgs::msg::AdmaData admaData_rosMsg;
+                                _parser->mapAdmaMessageToROS(admaData_rosMsg, recv_buf);
+
+                                admaData_rosMsg.timemsec = curTimestamp.sec * 1000;
+                                admaData_rosMsg.timensec = curTimestamp.nanosec;
+                                
+                                // read NavSatFix out of AdmaData
+                                _parser->extractNavSatFix(admaData_rosMsg, message_fix);
+
+                                // read heading and velocity
+                                message_heading.data = admaData_rosMsg.finsyaw;
+                                message_velocity.data = std::sqrt(std::pow(admaData_rosMsg.fgpsvelframex, 2) + std::pow(admaData_rosMsg.fgpsvelframey, 2)) * 3.6;
+
+                                // read IMU
+                                _parser->extractIMU(admaData_rosMsg, message_imu);
+                                _pub_adma_data->publish(admaData_rosMsg);
+                                weektime = admaData_rosMsg.instimeweek;
+                                instimemsec = admaData_rosMsg.instimemsec;
+                        }else if (_protocolversion == "v3.3.4")
+                        {
+                                std_msgs::msg::String rawDataMsg;
+                                adma_msgs::msg::AdmaDataScaled admaDataScaledMsg;
+
+                                _parser->parseV334(admaDataScaledMsg, recv_buf);
+                                _parser->extractNavSatFix(admaDataScaledMsg, message_fix);
+                                _parser->extractIMU(admaDataScaledMsg, message_imu);
+
+                                _pub_adma_data_scaled->publish(admaDataScaledMsg);
+
+                                //TODO: also fill raw data with content                             
+                                _pub_adma_data_raw->publish(rawDataMsg);
+
+                                weektime = admaDataScaledMsg.ins_time_week;
+                                instimemsec = admaDataScaledMsg.ins_time_msec;
+                        }
+                        
 
                         // publish the messages
-                        _pub_adma_data->publish(admaData_rosMsg);
                         _pub_navsat_fix->publish(message_fix);
                         _pub_heading->publish(message_heading);
                         _pub_velocity->publish(message_velocity);
@@ -159,8 +192,7 @@ namespace genesys
 
                         if (_performance_check)
                         {
-                                float weektime = admaData_rosMsg.instimeweek;
-                                RCLCPP_INFO(get_logger(), "%f ", ((grab_time * 1000) - (admaData_rosMsg.instimemsec + 1592697600000)));
+                                RCLCPP_INFO(get_logger(), "%f ", ((grab_time * 1000) - (instimemsec + 1592697600000)));
                         }
 
                         recv_buf.clear();

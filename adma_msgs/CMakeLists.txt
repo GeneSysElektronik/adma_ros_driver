@@ -20,6 +20,7 @@ find_package(rosidl_default_generators REQUIRED)
 rosidl_generate_interfaces(adma_msgs
   "msg/AdmaDataDelta.msg"
   "msg/AdmaData.msg"
+  "msg/AdmaDataScaled.msg"
   "msg/POI.msg"
   DEPENDENCIES builtin_interfaces
 )

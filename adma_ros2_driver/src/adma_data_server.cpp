@@ -153,7 +153,7 @@ namespace genesys
                         {
                                 ::sendto(_sendSocketfd, (void*)(&data_msg_v32), sizeof(data_msg_v32), 0, (struct sockaddr *) &_socketAdress, _adressLength);
                                 RCLCPP_INFO(get_logger(), "sended payload: %ld", sizeof(data_msg_v32));
-                        }else if (_protocolversion == "v3.3.3")
+                        }else if (_protocolversion == "v3.3.3" || _protocolversion == "v3.3.4")
                         {
                                 ::sendto(_sendSocketfd, (void*)(&data_msg_v333), sizeof(data_msg_v333), 0, (struct sockaddr *) &_socketAdress, _adressLength);
                                 RCLCPP_INFO(get_logger(), "sended payload: %ld", sizeof(data_msg_v333));

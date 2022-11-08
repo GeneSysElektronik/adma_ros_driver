@@ -5,7 +5,8 @@
 
 ADMA2ROSParser::ADMA2ROSParser(std::string version)
         : _parserV32(), 
-        _parserV333(), 
+        _parserV333(),
+        _parserV334(),
         _version(version)
 {
 }
@@ -42,16 +43,11 @@ void ADMA2ROSParser::mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, std::
         parseScaledData(rosMsg);
 }
 
-void ADMA2ROSParser::parseV32(adma_msgs::msg::AdmaData& rosMsg, std::vector<char>& localData)
+void ADMA2ROSParser::parseV334(adma_msgs::msg::AdmaDataScaled& rosMsg, std::vector<char>& localData)
 {
-        AdmaDataV32 admaData;
-        parseStaticHeader(rosMsg, admaData.staticHeader);
-        parseDynamicHeader(rosMsg, admaData.dynamicHeader);
-}
-
-void ADMA2ROSParser::parseV333(adma_msgs::msg::AdmaData& rosMsg, std::vector<char>& localData)
-{
-        
+    AdmaDataV333 admaData;
+    memcpy(&admaData , &localData, sizeof(admaData));
+    _parserV334.mapAdmaMessageToROS(rosMsg, admaData);
 }
 
 template <typename AdmaDataStruct>
@@ -75,13 +71,13 @@ template <typename AdmaDataStruct>
 void ADMA2ROSParser::parseDynamicHeader(adma_msgs::msg::AdmaData& rosMsg, AdmaDataStruct& dynamicHeader)
 {
     // fill dynamic header information
-        rosMsg.configid = dynamicHeader.configid;
-        rosMsg.configformat = dynamicHeader.configformat;
-        rosMsg.configversion = dynamicHeader.configversion;
-        rosMsg.configsize = dynamicHeader.configsize;
-        rosMsg.byteoffset = dynamicHeader.byteoffset;
-        rosMsg.slicesize = dynamicHeader.slicesize;
-        rosMsg.slicedata = dynamicHeader.slicedata;
+    rosMsg.configid = dynamicHeader.configid;
+    rosMsg.configformat = dynamicHeader.configformat;
+    rosMsg.configversion = dynamicHeader.configversion;
+    rosMsg.configsize = dynamicHeader.configsize;
+    rosMsg.byteoffset = dynamicHeader.byteoffset;
+    rosMsg.slicesize = dynamicHeader.slicesize;
+    rosMsg.slicedata = dynamicHeader.slicedata;
 }
 
 
@@ -103,22 +99,18 @@ void ADMA2ROSParser::getstatusgps(adma_msgs::msg::AdmaData& rosMsg, unsigned cha
     if(gps_out)
     {
         rosMsg.statusgpsmode = 1;
-        // msg_fix.status.status = sensor_msgs::msg::NavSatStatus::STATUS_NO_FIX; // No GNSS Data
     }
     else if (gps_mode) 
     {
         rosMsg.statusgpsmode = 2;
-        // msg_fix.status.status = sensor_msgs::msg::NavSatStatus::STATUS_FIX; // single GNSS
     }
     else if (rtk_coarse) 
     {
         rosMsg.statusgpsmode = 4;
-        // msg_fix.status.status = sensor_msgs::msg::NavSatStatus::STATUS_SBAS_FIX; // actually DGNSS Coarse Mode, but used to distinguish here 
     }
     else if (rtk_precise) 
     {
         rosMsg.statusgpsmode = 8;
-        // msg_fix.status.status = sensor_msgs::msg::NavSatStatus::STATUS_GBAS_FIX; // DGNSS Precise Mode
     }
     /* status stand still */
     rosMsg.statusstandstill = standstill_c;
@@ -534,6 +526,41 @@ void ADMA2ROSParser::extractNavSatFix(adma_msgs::msg::AdmaData& rosMsg, sensor_m
         navRosMsg.position_covariance_type = sensor_msgs::msg::NavSatFix::COVARIANCE_TYPE_DIAGONAL_KNOWN;
 }
 
+void ADMA2ROSParser::extractNavSatFix(adma_msgs::msg::AdmaDataScaled& rosMsg, sensor_msgs::msg::NavSatFix& navRosMsg)
+{
+        // fil status
+        switch (rosMsg.status_gnss_mode)
+        {
+        case 1:
+                // No GNSS Data
+                navRosMsg.status.status = sensor_msgs::msg::NavSatStatus::STATUS_NO_FIX; 
+                break;
+        case 2:
+                // single GNSS
+                navRosMsg.status.status = sensor_msgs::msg::NavSatStatus::STATUS_FIX; 
+                break;
+        case 4:
+                // actually DGNSS Coarse Mode, but used to distinguish here 
+                navRosMsg.status.status = sensor_msgs::msg::NavSatStatus::STATUS_SBAS_FIX;
+                break;
+        case 8:
+                // DGNSS Precise Mode
+                navRosMsg.status.status = sensor_msgs::msg::NavSatStatus::STATUS_GBAS_FIX;
+                break;
+        default:
+                break;
+        }
+
+        navRosMsg.altitude = rosMsg.ins_height;
+        navRosMsg.latitude = rosMsg.ins_lat_abs;
+        navRosMsg.longitude = rosMsg.ins_lon_abs;
+        navRosMsg.position_covariance[0] = std::pow(rosMsg.ins_stddev_lat, 2);
+        navRosMsg.position_covariance[4] = std::pow(rosMsg.ins_stddev_long, 2);
+        navRosMsg.position_covariance[8] = std::pow(rosMsg.ins_stddev_height, 2);
+
+        navRosMsg.position_covariance_type = sensor_msgs::msg::NavSatFix::COVARIANCE_TYPE_DIAGONAL_KNOWN;
+}
+
 void ADMA2ROSParser::extractIMU(adma_msgs::msg::AdmaData& rosMsg, sensor_msgs::msg::Imu& imuRosMsg)
 {
          imuRosMsg.linear_acceleration.x = rosMsg.faccbodyhrx * 9.81;
@@ -561,3 +588,29 @@ void ADMA2ROSParser::extractIMU(adma_msgs::msg::AdmaData& rosMsg, sensor_msgs::m
         imuRosMsg.linear_acceleration_covariance[0] = -1;
 }
 
+void ADMA2ROSParser::extractIMU(adma_msgs::msg::AdmaDataScaled& rosMsg, sensor_msgs::msg::Imu& imuRosMsg)
+{
+        imuRosMsg.linear_acceleration.x = rosMsg.acc_body_hr_x * 9.81;
+        imuRosMsg.linear_acceleration.y = rosMsg.acc_body_hr_y * 9.81;
+        imuRosMsg.linear_acceleration.z = rosMsg.acc_body_hr_z * 9.81;
+
+        imuRosMsg.angular_velocity.x = rosMsg.rate_body_hr_x * PI / 180.0;
+        imuRosMsg.angular_velocity.y = rosMsg.rate_body_hr_y * PI / 180.0;
+        imuRosMsg.angular_velocity.z = rosMsg.rate_body_hr_z * PI / 180.0;
+
+        tf2::Quaternion q;
+        double roll_rad = rosMsg.ins_roll * PI / 180.0;
+        double pitch_rad = rosMsg.ins_pitch * PI / 180.0;
+        double yaw_rad = rosMsg.ins_yaw * PI / 180.0;
+        q.setRPY(roll_rad, pitch_rad, yaw_rad);
+        imuRosMsg.orientation = tf2::toMsg(q);
+
+        imuRosMsg.orientation_covariance[0] = std::pow(rosMsg.ins_stddev_roll * PI / 180.0, 2);
+        imuRosMsg.orientation_covariance[4] = std::pow(rosMsg.ins_stddev_pitch * PI / 180.0, 2);
+        imuRosMsg.orientation_covariance[8] = std::pow(rosMsg.ins_stddev_yaw * PI / 180.0, 2);
+
+        // ADMA does not provide covariance for linear acceleration and angular velocity.
+        // These values need to be measured at standstill each ADMA model.
+        imuRosMsg.angular_velocity_covariance[0] = -1;
+        imuRosMsg.linear_acceleration_covariance[0] = -1;
+}
