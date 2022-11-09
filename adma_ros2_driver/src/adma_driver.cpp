@@ -169,6 +169,8 @@ namespace genesys
                                 adma_msgs::msg::AdmaDataScaled admaDataScaledMsg;
 
                                 _parser->parseV334(admaDataScaledMsg, recv_buf);
+                                admaDataScaledMsg.time_msec = curTimestamp.sec * 1000;
+                                admaDataScaledMsg.time_nsec = curTimestamp.nanosec;
                                 _parser->extractNavSatFix(admaDataScaledMsg, message_fix);
                                 _parser->extractIMU(admaDataScaledMsg, message_imu);
 
