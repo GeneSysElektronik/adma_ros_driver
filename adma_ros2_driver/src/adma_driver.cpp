@@ -172,6 +172,10 @@ namespace genesys
                                 _parser->extractNavSatFix(admaDataScaledMsg, message_fix);
                                 _parser->extractIMU(admaDataScaledMsg, message_imu);
 
+                                // read heading and velocity
+                                message_heading.data = admaDataScaledMsg.ins_yaw;
+                                message_velocity.data = std::sqrt(std::pow(admaDataScaledMsg.gnss_vel_frame.x, 2) + std::pow(admaDataScaledMsg.gnss_vel_frame.y, 2)) * 3.6;
+
                                 _pub_adma_data_scaled->publish(admaDataScaledMsg);
 
                                 //TODO: also fill raw data with content                             

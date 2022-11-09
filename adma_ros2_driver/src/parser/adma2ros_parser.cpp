@@ -563,7 +563,7 @@ void ADMA2ROSParser::extractNavSatFix(adma_msgs::msg::AdmaDataScaled& rosMsg, se
 
 void ADMA2ROSParser::extractIMU(adma_msgs::msg::AdmaData& rosMsg, sensor_msgs::msg::Imu& imuRosMsg)
 {
-         imuRosMsg.linear_acceleration.x = rosMsg.faccbodyhrx * 9.81;
+        imuRosMsg.linear_acceleration.x = rosMsg.faccbodyhrx * 9.81;
         imuRosMsg.linear_acceleration.y = rosMsg.faccbodyhry * 9.81;
         imuRosMsg.linear_acceleration.z = rosMsg.faccbodyhrz * 9.81;
 
