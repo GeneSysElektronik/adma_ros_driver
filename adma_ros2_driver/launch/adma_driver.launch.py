@@ -10,7 +10,7 @@ def generate_launch_description():
 
         performance_check_arg = DeclareLaunchArgument('use_performance_check', default_value='True', description='True if timing check is required')
         driver_config_arg = DeclareLaunchArgument('driver_config', default_value=driver_config)
-        log_level_arg = DeclareLaunchArgument('log_level', default_value='WARN')
+        log_level_arg = DeclareLaunchArgument('log_level', default_value='INFO')
 
         adma_driver = Node(
                 package='adma_ros2_driver',

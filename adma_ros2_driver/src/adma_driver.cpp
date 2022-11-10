@@ -25,6 +25,7 @@ namespace genesys
                 _imu_frame = this->declare_parameter("imu_frame", "imu_link");
                 // define protocol specific stuff
                 _protocolversion = this->declare_parameter("protocol_version", "v3.3.3");
+                RCLCPP_INFO(get_logger(), "Working with: %s", _protocolversion.c_str());
                 if(_protocolversion == "v3.2")
                 {
                         _len =  768;
