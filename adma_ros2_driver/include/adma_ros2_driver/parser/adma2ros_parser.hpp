@@ -18,18 +18,18 @@ class ADMA2ROSParser
         public:
                 ADMA2ROSParser(std::string version);
                 ~ADMA2ROSParser(){};
-                void mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, std::vector<char>& localData);
+                void mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, std::array<char, 856>& recvData);
                 void extractNavSatFix(adma_msgs::msg::AdmaData& rosMsg, sensor_msgs::msg::NavSatFix& navRosMsg);
                 void extractNavSatFix(adma_msgs::msg::AdmaDataScaled& rosMsg, sensor_msgs::msg::NavSatFix& navRosMsg); 
                 void extractIMU(adma_msgs::msg::AdmaData& rosMsg, sensor_msgs::msg::Imu& imuRosMsg);
                 void extractIMU(adma_msgs::msg::AdmaDataScaled& rosMsg, sensor_msgs::msg::Imu& imuRosMsg);
-                void parseV334(adma_msgs::msg::AdmaDataScaled& rosMsg, std::vector<char>& localData);
+                void parseV334(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& localData);
                 void parseScaledData(adma_msgs::msg::AdmaData& rosMsg);
         private:
-                template <typename AdmaDataStruct>
-                void parseStaticHeader(adma_msgs::msg::AdmaData& rosMsg, AdmaDataStruct& staticHeader);
-                template <typename AdmaDataStruct>
-                void parseDynamicHeader(adma_msgs::msg::AdmaData& rosMsg, AdmaDataStruct& dynamicHeader);
+                template <typename AdmaDataHeaderStruct>
+                void parseStaticHeader(adma_msgs::msg::AdmaData& rosMsg, AdmaDataHeaderStruct& staticHeader);
+                template <typename AdmaDataHeaderStruct>
+                void parseDynamicHeader(adma_msgs::msg::AdmaData& rosMsg, AdmaDataHeaderStruct& dynamicHeader);
                 void getstatusgps(adma_msgs::msg::AdmaData& rosMsg, unsigned char gpsStatus);
                 void getstatustrigger(adma_msgs::msg::AdmaData& rosMsg, unsigned char gpsTriggerStatus);
                 void getevkstatus(adma_msgs::msg::AdmaData& rosMsg, unsigned char evkStatus);

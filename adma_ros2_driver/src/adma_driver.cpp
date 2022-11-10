@@ -1,7 +1,6 @@
 #include "adma_ros2_driver/adma_driver.hpp"
 #include "adma_ros2_driver/parser/adma_parse_deprecated.hpp"
 #include "adma_ros2_driver/parser/parser_utils.hpp"
-#include "adma_ros2_driver/data/adma_data_v32.hpp"
 #include <rclcpp_components/register_node_macro.hpp>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -99,7 +98,7 @@ namespace genesys
                 struct sockaddr srcAddr;
                 socklen_t srcAddrLen;
 
-                std::vector<char> recv_buf;
+                std::array<char, 856> recv_buf;
 
                 while (rclcpp::ok())
                 {
@@ -141,13 +140,14 @@ namespace genesys
                         message_fix.header.stamp = curTimestamp;
                         float weektime;
                         uint32_t instimemsec;
+                        std::string recvData(recv_buf.begin(), recv_buf.end());
 
                         // read Adma msg from UDP data packet
                         if (_protocolversion == "v3.2" || _protocolversion == "v3.3.3")
                         {
                                 adma_msgs::msg::AdmaData admaData_rosMsg;
                                 _parser->mapAdmaMessageToROS(admaData_rosMsg, recv_buf);
-
+                                
                                 admaData_rosMsg.timemsec = curTimestamp.sec * 1000;
                                 admaData_rosMsg.timensec = curTimestamp.nanosec;
                                 
@@ -165,12 +165,13 @@ namespace genesys
                                 instimemsec = admaData_rosMsg.instimemsec;
                         }else if (_protocolversion == "v3.3.4")
                         {
-                                std_msgs::msg::String rawDataMsg;
+                                AdmaDataV334 dataStruct;
+                                memcpy(&dataStruct , &recv_buf, sizeof(dataStruct));
                                 adma_msgs::msg::AdmaDataScaled admaDataScaledMsg;
-
-                                _parser->parseV334(admaDataScaledMsg, recv_buf);
+                                _parser->parseV334(admaDataScaledMsg, dataStruct);
                                 admaDataScaledMsg.time_msec = curTimestamp.sec * 1000;
                                 admaDataScaledMsg.time_nsec = curTimestamp.nanosec;
+
                                 _parser->extractNavSatFix(admaDataScaledMsg, message_fix);
                                 _parser->extractIMU(admaDataScaledMsg, message_imu);
 
@@ -180,7 +181,14 @@ namespace genesys
 
                                 _pub_adma_data_scaled->publish(admaDataScaledMsg);
 
-                                //TODO: also fill raw data with content                             
+                                //publish raw data as HEX string
+                                std::stringstream ss;
+                                for(int i=0; i<_len; ++i)
+                                {
+                                        ss << std::hex << (int)recv_buf[i];
+                                }
+                                std_msgs::msg::String rawDataMsg;
+                                rawDataMsg.data = ss.str();
                                 _pub_adma_data_raw->publish(rawDataMsg);
 
                                 weektime = admaDataScaledMsg.ins_time_week;
@@ -200,43 +208,6 @@ namespace genesys
                         {
                                 RCLCPP_INFO(get_logger(), "%f ", ((grab_time * 1000) - (instimemsec + 1592697600000)));
                         }
-
-                        recv_buf.clear();
-
-                        //TODO: Old approach, can be removed if everything works, otherwise comment it out to use it..
-                        // std::string local_data(recv_buf.begin(), recv_buf.end());
-
-                        // RCLCPP_INFO(get_logger(), "size of local_data: %ld", local_data.size());
-
-                        // adma_msgs::msg::AdmaData message_admadata;
-                        // message_admadata.timemsec = this->get_clock()->now().seconds() * 1000;
-                        // message_admadata.timensec = this->get_clock()->now().nanoseconds();
-                        // sensor_msgs::msg::NavSatFix message_navsatfix;
-                        // message_navsatfix.header.stamp = this->get_clock()->now();
-                        // message_navsatfix.header.frame_id = _gnss_frame;
-                        // sensor_msgs::msg::Imu message_imu;
-                        // message_imu.header.stamp = this->get_clock()->now();
-                        // message_imu.header.frame_id = _imu_frame;
-
-                        // std_msgs::msg::Float64 message_heading;
-                        // std_msgs::msg::Float64 message_velocity;
-                        // getparseddata(local_data, message_admadata, message_navsatfix, message_imu, message_heading, message_velocity);
-
-                        // /* publish the ADMA message */
-                        // _pub_adma_data->publish(message_admadata);
-                        // _pub_navsat_fix->publish(message_navsatfix);
-                        // _pub_imu->publish(message_imu);
-                        // _pub_heading->publish(message_heading);
-                        // _pub_velocity->publish(message_velocity);
-
-                        // if (_performance_check)
-                        // {
-                        // double grab_time = this->get_clock()->now().seconds();
-                        // char ins_time_msec[] = { local_data[584], local_data[585], local_data[586], local_data[587] };
-                        // memcpy(&message_admadata.instimemsec, &ins_time_msec, sizeof(message_admadata.instimemsec));
-                        // float weektime = message_admadata.instimeweek;
-                        // RCLCPP_INFO(this->get_logger(), "%f ", ((grab_time * 1000) - (message_admadata.instimemsec + 1592697600000)));
-                        // }
                 }
         }
 } // namespace genesys

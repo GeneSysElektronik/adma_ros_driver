@@ -11,13 +11,12 @@ ADMA2ROSParser::ADMA2ROSParser(std::string version)
 {
 }
 
-void ADMA2ROSParser::mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, std::vector<char>& localdata)
+void ADMA2ROSParser::mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, std::array<char, 856>& recvData)
 {
-
         if(_version == "v3.2")
         {       
                 AdmaDataV32 admaData;
-                memcpy(&admaData , &localdata, sizeof(admaData));
+                memcpy(&admaData, &recvData, sizeof(admaData));
                 parseStaticHeader(rosMsg, admaData.staticHeader);
                 parseDynamicHeader(rosMsg, admaData.dynamicHeader);
                 getstatusgps(rosMsg, admaData.gpsStatus);
@@ -29,7 +28,7 @@ void ADMA2ROSParser::mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, std::
         }else if (_version == "v3.3.3")
         {
                 AdmaDataV333 admaData;
-                memcpy(&admaData , &localdata, sizeof(admaData));
+                memcpy(&admaData, &recvData, sizeof(admaData));
                 parseStaticHeader(rosMsg, admaData.staticHeader);
                 parseDynamicHeader(rosMsg, admaData.dynamicHeader);
                 getstatusgps(rosMsg, admaData.gnssStatus);
@@ -43,15 +42,13 @@ void ADMA2ROSParser::mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, std::
         parseScaledData(rosMsg);
 }
 
-void ADMA2ROSParser::parseV334(adma_msgs::msg::AdmaDataScaled& rosMsg, std::vector<char>& localData)
+void ADMA2ROSParser::parseV334(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& recvData)
 {
-    AdmaDataV334 admaData;
-    memcpy(&admaData , &localData, sizeof(admaData));
-    _parserV334.mapAdmaMessageToROS(rosMsg, admaData);
+    _parserV334.mapAdmaMessageToROS(rosMsg, recvData);
 }
 
-template <typename AdmaDataStruct>
-void ADMA2ROSParser::parseStaticHeader(adma_msgs::msg::AdmaData& rosMsg, AdmaDataStruct& staticHeader)
+template <typename AdmaDataHeaderStruct>
+void ADMA2ROSParser::parseStaticHeader(adma_msgs::msg::AdmaData& rosMsg, AdmaDataHeaderStruct& staticHeader)
 {
     // fill static header information
     rosMsg.genesysid = staticHeader.genesysid;
@@ -67,8 +64,8 @@ void ADMA2ROSParser::parseStaticHeader(adma_msgs::msg::AdmaData& rosMsg, AdmaDat
     rosMsg.serialno = staticHeader.serialno;
 }
 
-template <typename AdmaDataStruct>
-void ADMA2ROSParser::parseDynamicHeader(adma_msgs::msg::AdmaData& rosMsg, AdmaDataStruct& dynamicHeader)
+template <typename AdmaDataHeaderStruct>
+void ADMA2ROSParser::parseDynamicHeader(adma_msgs::msg::AdmaData& rosMsg, AdmaDataHeaderStruct& dynamicHeader)
 {
     // fill dynamic header information
     rosMsg.configid = dynamicHeader.configid;
