@@ -55,22 +55,22 @@ void ADMA2ROSParserV334::mapBitfields(adma_msgs::msg::AdmaDataScaled& rosMsg, Ad
         /* status gnss mode */
         if(gnss_out)
         {
-                rosMsg.status_gnss_mode = 1;
+                rosMsg.status_gnssmode = 1;
         }
         else if (gnss_mode) 
         {
-                rosMsg.status_gnss_mode = 2;
+                rosMsg.status_gnssmode = 2;
         }
         else if (rtk_coarse) 
         {
-                rosMsg.status_gnss_mode = 4;
+                rosMsg.status_gnssmode = 4;
         }
         else if (rtk_precise) 
         {
-                rosMsg.status_gnss_mode = 8;
+                rosMsg.status_gnssmode = 8;
         }
         /* status stand still */
-        rosMsg.status_stand_still = standstill_c;
+        rosMsg.status_standstill = standstill_c;
         /* status skidding */
         rosMsg.status_skidding = status_skidding;
         /* status external velocity slip */
@@ -101,7 +101,7 @@ void ADMA2ROSParserV334::mapBitfields(adma_msgs::msg::AdmaDataScaled& rosMsg, Ad
         /* status statusdeadreckoning */
         rosMsg.status_dead_reckoning = status_dead_reckoning;
         /* status statussynclock */
-        rosMsg.status_sync_lock = status_synclock;
+        rosMsg.status_synclock = status_synclock;
 
 
         unsigned char evkStatus = admaData.miscStatus;
@@ -173,12 +173,17 @@ void ADMA2ROSParserV334::mapBitfields(adma_msgs::msg::AdmaDataScaled& rosMsg, Ad
                 rosMsg.status_speed = 2;
         }
 
+        std::bitset<4> statusRobot;
+
+
 
         unsigned char ewBytes[] = {admaData.dataError1, admaData.dataError2, admaData.dataWarn1, admaData.dataError3};
         std::bitset<8> bitdataerror1 = ewBytes[0];
         std::bitset<8> bitdataerror2 = ewBytes[1];
         std::bitset<8> bitdatawarn3 = ewBytes[2];
         std::bitset<8> errorhw = ewBytes[3];
+        std::bitset<8> bitStatusRobot = admaData.statusRobot;
+        std::bitset<4> statusRobot;
         std::bitset<4> erhw1;
         std::bitset<4> ermisc1;
         std::bitset<4> ermisc2;
@@ -195,6 +200,7 @@ void ADMA2ROSParserV334::mapBitfields(adma_msgs::msg::AdmaDataScaled& rosMsg, Ad
                 ermisc3[i]  = bitdataerror2[i+4];
                 warngnss[i]  = bitdatawarn3[i];
                 warnmisc1[i]  = bitdatawarn3[i+4];
+                statusRobot[i] = bitStatusRobot[i];
         }
         erhwsticky[0] = errorhw[1];
         rosMsg.error_hardware = erhw1.to_string();
@@ -204,6 +210,7 @@ void ADMA2ROSParserV334::mapBitfields(adma_msgs::msg::AdmaDataScaled& rosMsg, Ad
         rosMsg.warn_gnss = warngnss.to_string();
         rosMsg.warn_misc1 = warnmisc1.to_string();
         rosMsg.error_hw_sticky = erhwsticky.to_string();
+        rosMsg.status_robot = statusRobot.to_string();
 }
 
 void ADMA2ROSParserV334::mapUnscaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& admaData)
@@ -245,9 +252,9 @@ void ADMA2ROSParserV334::mapUnscaledData(adma_msgs::msg::AdmaDataScaled& rosMsg,
         rosMsg.ins_time_week = admaData.instimeweek;
         rosMsg.leap_seconds = admaData.leapseconds;
         // kalman filter status
-        rosMsg.kf_lat_stimulated = admaData.kflatstimulated;
-        rosMsg.kf_long_stimulated = admaData.kflongstimulated;
-        rosMsg.kf_steady_state = admaData.kfsteadystate;
+        rosMsg.status_kf_lat_stimulated = admaData.kflatstimulated;
+        rosMsg.status_kf_long_stimulated = admaData.kflongstimulated;
+        rosMsg.status_kf_steady_state = admaData.kfsteadystate;
         // gnss receiver status and error
         rosMsg.gnss_receiver_error = admaData.gnssreceivererror;
         rosMsg.gnss_receiver_status = admaData.gnssreceiverstatus;
@@ -289,12 +296,12 @@ void ADMA2ROSParserV334::mapScaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, A
         rosMsg.system_dsp_load = getScaledValue(admaData.systemdspload, 0.1);
 
         rosMsg.gnss_lat_abs = getScaledValue(admaData.posAbs.latitude, 0.0000001);
-        rosMsg.gnss_lon_abs = getScaledValue(admaData.posAbs.longitude, 0.0000001);
+        rosMsg.gnss_long_abs = getScaledValue(admaData.posAbs.longitude, 0.0000001);
         rosMsg.gnss_pos_rel_x = getScaledValue(admaData.posRel.longitude, 0.01);
         rosMsg.gnss_pos_rel_y = getScaledValue(admaData.posRel.latitude, 0.01);
 
         rosMsg.gnss_stddev_lat = getScaledValue(admaData.gnssstddevlat, 0.001);
-        rosMsg.gnss_stddev_lon = getScaledValue(admaData.gnssstddevlon, 0.001);
+        rosMsg.gnss_stddev_long = getScaledValue(admaData.gnssstddevlon, 0.001);
         rosMsg.gnss_stddev_height = getScaledValue(admaData.gnssstddevheight, 0.001);
 
         rosMsg.gnss_vel_frame.x = getScaledValue(admaData.gnssvelframex, 0.005);
@@ -320,7 +327,7 @@ void ADMA2ROSParserV334::mapScaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, A
         rosMsg.ins_height = getScaledValue(admaData.insHeight, 0.01);
 
         rosMsg.ins_lat_abs = getScaledValue(admaData.insPos.pos_abs.latitude, 0.0000001);
-        rosMsg.ins_lon_abs = getScaledValue(admaData.insPos.pos_abs.longitude, 0.0000001);
+        rosMsg.ins_long_abs = getScaledValue(admaData.insPos.pos_abs.longitude, 0.0000001);
         rosMsg.ins_pos_rel_x = getScaledValue(admaData.insPos.pos_rel.x, 0.01);
         rosMsg.ins_pos_rel_y = getScaledValue(admaData.insPos.pos_rel.y, 0.01);
         

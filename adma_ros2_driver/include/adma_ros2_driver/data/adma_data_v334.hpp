@@ -16,7 +16,8 @@ struct AdmaDataV334
         
         int8_t statuscount;
         unsigned char kfStatus;
-        unsigned char reservedStatus1[3];
+        unsigned char statusRobot;
+        unsigned char reservedStatus1[2];
 
         //contains several errors/warning in 1 byte
         unsigned char dataError1;

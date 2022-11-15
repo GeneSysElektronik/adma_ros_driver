@@ -16,8 +16,8 @@ uint32 slice_size
 uint32 slice_data
 
 # status
-int32 status_gnss_mode
-int32 status_stand_still
+int32 status_gnssmode
+int32 status_standstill
 int32 status_skidding
 int32 status_external_vel_out
 int32 status_trig_gnss
@@ -27,7 +27,7 @@ int32 status_signal_in1
 int32 status_alignment
 int32 status_ahrs_ins
 int32 status_dead_reckoning
-int32 status_sync_lock
+int32 status_synclock
 int32 status_evk_activ
 int32 status_evk_estimates
 int32 status_heading_executed
@@ -40,6 +40,7 @@ int32 status_kf_lat_stimulated
 int32 status_kf_long_stimulated
 int32 status_kf_steady_state
 int32 status_speed
+string status_robot
 
 # error and warning
 string error_hardware
@@ -119,7 +120,7 @@ float64 system_dsp_load
 # gnss position absolute
 # position in deg
 float64 gnss_lat_abs
-float64 gnss_lon_abs
+float64 gnss_long_abs
 
 # gnss position relative
 # position in m
@@ -129,7 +130,7 @@ float64 gnss_pos_rel_y
 # gnss epe
 #  error in m
 float64 gnss_stddev_lat
-float64 gnss_stddev_lon
+float64 gnss_stddev_long
 float64 gnss_stddev_height
 
 # gnss velocity frame in m/s
@@ -207,7 +208,7 @@ int16 leap_seconds
 # ins position absolute
 # position in deg
 float64 ins_lat_abs
-float64 ins_lon_abs
+float64 ins_long_abs
 
 # ins position relative
 # position in m
@@ -239,12 +240,6 @@ float64 an1
 float64 an2
 float64 an3
 float64 an4
-
-# kalman filter status
-# all uints in %
-uint8 kf_lat_stimulated
-uint8 kf_long_stimulated
-uint8 kf_steady_state
 
 # gnss receiver status
 uint32 gnss_receiver_error
