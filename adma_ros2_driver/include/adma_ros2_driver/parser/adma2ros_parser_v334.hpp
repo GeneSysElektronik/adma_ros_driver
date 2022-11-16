@@ -14,6 +14,6 @@ class ADMA2ROSParserV334
                 void mapBitfields(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& admaData);
                 void mapUnscaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& admaData);
                 void mapScaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& admaData);
-                void mapPOI(std::vector<adma_msgs::msg::POI>& poiList, AdmaDataV334& admaData);
+                void mapPOI(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& admaData);
 };
 

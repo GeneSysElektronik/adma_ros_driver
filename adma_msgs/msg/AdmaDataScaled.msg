@@ -251,4 +251,11 @@ float64 time_msec
 float64 time_nsec
 
 # list of POIs
-POI[] poi
+POI poi_1
+POI poi_2
+POI poi_3
+POI poi_4
+POI poi_5
+POI poi_6
+POI poi_7
+POI poi_8

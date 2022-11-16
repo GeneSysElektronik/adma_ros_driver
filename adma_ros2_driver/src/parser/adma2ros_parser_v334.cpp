@@ -11,7 +11,7 @@ void ADMA2ROSParserV334::mapAdmaMessageToROS(adma_msgs::msg::AdmaDataScaled& ros
         mapBitfields(rosMsg, admaData);
         mapUnscaledData(rosMsg, admaData);
         mapScaledData(rosMsg, admaData);
-        mapPOI(rosMsg.poi, admaData);
+        mapPOI(rosMsg, admaData);
 }
 
 void ADMA2ROSParserV334::mapAdmaHeader(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& admaData)
@@ -358,8 +358,9 @@ void ADMA2ROSParserV334::mapScaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, A
         rosMsg.gnss_dualant_stddev_pitch_hr = getScaledValue(admaData.gnssdualantstddevpitchhr, 0.01);
 }
 
-void ADMA2ROSParserV334::mapPOI(std::vector<adma_msgs::msg::POI>& poiList, AdmaDataV334& admaData)
+void ADMA2ROSParserV334::mapPOI(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& admaData)
 {
+        std::array<adma_msgs::msg::POI, 8> pois;
         for (size_t i = 0; i < 8; i++)
         {
                 adma_msgs::msg::POI newPOI;
@@ -388,6 +389,15 @@ void ADMA2ROSParserV334::mapPOI(std::vector<adma_msgs::msg::POI>& poiList, AdmaD
                 newPOI.ins_vel_hor.x = getScaledValue(curINSVelHor.x, 0.005);
                 newPOI.ins_vel_hor.y = getScaledValue(curINSVelHor.y, 0.005);
                 newPOI.ins_vel_hor.z = getScaledValue(curINSVelHor.z, 0.005);
-                poiList.push_back(newPOI);
+                pois[i] = newPOI;
         }
+
+        rosMsg.poi_1 = pois[0];
+        rosMsg.poi_2 = pois[1];
+        rosMsg.poi_3 = pois[2];
+        rosMsg.poi_4 = pois[3];
+        rosMsg.poi_5 = pois[4];
+        rosMsg.poi_6 = pois[5];
+        rosMsg.poi_7 = pois[6];
+        rosMsg.poi_8 = pois[7];
 }
