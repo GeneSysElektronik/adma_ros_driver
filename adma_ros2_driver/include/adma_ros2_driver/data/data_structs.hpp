@@ -84,5 +84,6 @@ struct GNSSPosition
 struct INSPosition
 {
         GNSSPosition pos_abs; //deg
-        Vector2 pos_rel; //m
+        int32_t pos_rel_x; //m
+        int32_t pos_rel_y; //m
 };

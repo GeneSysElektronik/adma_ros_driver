@@ -526,7 +526,7 @@ void ADMA2ROSParser::extractNavSatFix(adma_msgs::msg::AdmaData& rosMsg, sensor_m
 void ADMA2ROSParser::extractNavSatFix(adma_msgs::msg::AdmaDataScaled& rosMsg, sensor_msgs::msg::NavSatFix& navRosMsg)
 {
         // fil status
-        switch (rosMsg.status_gnss_mode)
+        switch (rosMsg.status_gnssmode)
         {
         case 1:
                 // No GNSS Data
@@ -550,7 +550,7 @@ void ADMA2ROSParser::extractNavSatFix(adma_msgs::msg::AdmaDataScaled& rosMsg, se
 
         navRosMsg.altitude = rosMsg.ins_height;
         navRosMsg.latitude = rosMsg.ins_lat_abs;
-        navRosMsg.longitude = rosMsg.ins_lon_abs;
+        navRosMsg.longitude = rosMsg.ins_long_abs;
         navRosMsg.position_covariance[0] = std::pow(rosMsg.ins_stddev_lat, 2);
         navRosMsg.position_covariance[4] = std::pow(rosMsg.ins_stddev_long, 2);
         navRosMsg.position_covariance[8] = std::pow(rosMsg.ins_stddev_height, 2);

@@ -173,10 +173,6 @@ void ADMA2ROSParserV334::mapBitfields(adma_msgs::msg::AdmaDataScaled& rosMsg, Ad
                 rosMsg.status_speed = 2;
         }
 
-        std::bitset<4> statusRobot;
-
-
-
         unsigned char ewBytes[] = {admaData.dataError1, admaData.dataError2, admaData.dataWarn1, admaData.dataError3};
         std::bitset<8> bitdataerror1 = ewBytes[0];
         std::bitset<8> bitdataerror2 = ewBytes[1];
@@ -328,8 +324,8 @@ void ADMA2ROSParserV334::mapScaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, A
 
         rosMsg.ins_lat_abs = getScaledValue(admaData.insPos.pos_abs.latitude, 0.0000001);
         rosMsg.ins_long_abs = getScaledValue(admaData.insPos.pos_abs.longitude, 0.0000001);
-        rosMsg.ins_pos_rel_x = getScaledValue(admaData.insPos.pos_rel.x, 0.01);
-        rosMsg.ins_pos_rel_y = getScaledValue(admaData.insPos.pos_rel.y, 0.01);
+        rosMsg.ins_pos_rel_x = getScaledValue(admaData.insPos.pos_rel_x, 0.01);
+        rosMsg.ins_pos_rel_y = getScaledValue(admaData.insPos.pos_rel_y, 0.01);
         
         rosMsg.ins_vel_hor.x = getScaledValue(admaData.insVelHor.x, 0.005);
         rosMsg.ins_vel_hor.y = getScaledValue(admaData.insVelHor.y, 0.005);
@@ -387,8 +383,8 @@ void ADMA2ROSParserV334::mapPOI(std::vector<adma_msgs::msg::POI>& poiList, AdmaD
                 newPOI.ins_height = getScaledValue(curINSHeight, 0.01);
                 newPOI.ins_lat_abs = getScaledValue(curINSPosition.pos_abs.latitude, 0.0000001);
                 newPOI.ins_lon_abs = getScaledValue(curINSPosition.pos_abs.longitude, 0.0000001);
-                newPOI.ins_pos_rel_x = getScaledValue(curINSPosition.pos_rel.x, 0.01);
-                newPOI.ins_pos_rel_y = getScaledValue(curINSPosition.pos_rel.y, 0.01);
+                newPOI.ins_pos_rel_x = getScaledValue(curINSPosition.pos_rel_x, 0.01);
+                newPOI.ins_pos_rel_y = getScaledValue(curINSPosition.pos_rel_y, 0.01);
                 newPOI.ins_vel_hor.x = getScaledValue(curINSVelHor.x, 0.005);
                 newPOI.ins_vel_hor.y = getScaledValue(curINSVelHor.y, 0.005);
                 newPOI.ins_vel_hor.z = getScaledValue(curINSVelHor.z, 0.005);
