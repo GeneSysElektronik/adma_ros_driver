@@ -6,6 +6,7 @@
 #include <netdb.h>
 #include "adma_msgs/msg/adma_data.hpp"
 #include "adma_msgs/msg/adma_data_scaled.hpp"
+#include "adma_msgs/msg/adma_state.hpp"
 #include "adma_ros2_driver/parser/adma2ros_parser.hpp"
 
 #pragma once
@@ -40,6 +41,7 @@ namespace genesys
                         rclcpp::Publisher<adma_msgs::msg::AdmaData>::SharedPtr _pub_adma_data;
                         rclcpp::Publisher<std_msgs::msg::String>::SharedPtr _pub_adma_data_raw;
                         rclcpp::Publisher<adma_msgs::msg::AdmaDataScaled>::SharedPtr _pub_adma_data_scaled;
+                        rclcpp::Publisher<adma_msgs::msg::AdmaState>::SharedPtr _pub_adma_state;
                         rclcpp::Publisher<sensor_msgs::msg::NavSatFix>::SharedPtr _pub_navsat_fix;
                         rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr _pub_imu;
                         rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr _pub_heading;

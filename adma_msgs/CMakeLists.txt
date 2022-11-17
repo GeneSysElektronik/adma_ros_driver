@@ -23,6 +23,11 @@ rosidl_generate_interfaces(adma_msgs
   "msg/AdmaData.msg"
   "msg/AdmaDataScaled.msg"
   "msg/POI.msg"
+  "msg/ByteEW.msg"
+  "msg/ByteStates.msg"
+  "msg/EW.msg"
+  "msg/States.msg"
+  "msg/AdmaState.msg"
   DEPENDENCIES builtin_interfaces geometry_msgs
 )
 

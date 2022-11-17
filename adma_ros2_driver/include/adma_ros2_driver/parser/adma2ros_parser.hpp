@@ -24,6 +24,7 @@ class ADMA2ROSParser
                 void extractIMU(adma_msgs::msg::AdmaData& rosMsg, sensor_msgs::msg::Imu& imuRosMsg);
                 void extractIMU(adma_msgs::msg::AdmaDataScaled& rosMsg, sensor_msgs::msg::Imu& imuRosMsg);
                 void parseV334(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& localData);
+                void parseV334State(adma_msgs::msg::AdmaState& rosMsg, AdmaDataV334& localData);
                 void parseScaledData(adma_msgs::msg::AdmaData& rosMsg);
         private:
                 template <typename AdmaDataHeaderStruct>

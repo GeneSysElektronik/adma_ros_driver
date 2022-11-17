@@ -15,42 +15,6 @@ uint32 byte_offset
 uint32 slice_size
 uint32 slice_data
 
-# status
-int32 status_gnssmode
-int32 status_standstill
-int32 status_skidding
-int32 status_external_vel_out
-int32 status_trig_gnss
-int32 status_signal_in3
-int32 status_signal_in2
-int32 status_signal_in1
-int32 status_alignment
-int32 status_ahrs_ins
-int32 status_dead_reckoning
-int32 status_synclock
-int32 status_evk_activ
-int32 status_evk_estimates
-int32 status_heading_executed
-int32 status_config_changed
-int32 status_tilt
-int32 status_pos
-int8 status_count
-int32 status_kalmanfilter_settled
-int32 status_kf_lat_stimulated
-int32 status_kf_long_stimulated
-int32 status_kf_steady_state
-int32 status_speed
-string status_robot
-
-# error and warning
-string error_hardware
-string error_misc1
-string error_misc2
-string error_misc3
-string warn_gnss
-string warn_misc1
-string error_hw_sticky
-
 # sensors body acc in g
 geometry_msgs/Vector3 acc_body_hr
 
@@ -245,7 +209,6 @@ float64 an4
 uint32 gnss_receiver_error
 uint32 gnss_receiver_status
 
-
 # mobileeye time comparison
 float64 time_msec
 float64 time_nsec
@@ -259,3 +222,6 @@ POI poi_5
 POI poi_6
 POI poi_7
 POI poi_8
+
+ByteEW error_warnings
+States states
