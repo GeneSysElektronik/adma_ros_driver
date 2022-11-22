@@ -8,18 +8,18 @@ ADMA2ROSParserV334::ADMA2ROSParserV334()
 void ADMA2ROSParserV334::mapAdmaMessageToROS(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& admaData)
 {
         mapAdmaHeader(rosMsg, admaData);
-        mapEWBytes(rosMsg.error_warnings, admaData);
-        mapStatusBitfields(rosMsg.states, admaData);
+        mapErrorWarningBytes(rosMsg.error_warning, admaData);
+        mapStatusBitfields(rosMsg.status, admaData);
         mapUnscaledData(rosMsg, admaData);
         mapScaledData(rosMsg, admaData);
         mapPOI(rosMsg, admaData);
 }
 
-void ADMA2ROSParserV334::mapStateToROS(adma_msgs::msg::AdmaState& rosMsg, AdmaDataV334& admaData)
+void ADMA2ROSParserV334::mapStatusToROS(adma_msgs::msg::AdmaStatus& rosMsg, AdmaDataV334& admaData)
 {
-        mapStatusBytes(rosMsg.states_byte, admaData);
-        mapEWBytes(rosMsg.error_warnings_byte, admaData);
-        mapEWBitfields(rosMsg.error_warnings, admaData);
+        mapStatusBytes(rosMsg.status_bytes, admaData);
+        mapErrorWarningBytes(rosMsg.error_warnings_bytes, admaData);
+        mapErrorWarningBitfields(rosMsg.error_warnings, admaData);
 }
 
 void ADMA2ROSParserV334::mapAdmaHeader(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& admaData)
@@ -49,17 +49,17 @@ void ADMA2ROSParserV334::mapAdmaHeader(adma_msgs::msg::AdmaDataScaled& rosMsg, A
         rosMsg.slice_data = dynamicHeader.slicedata;
 }
 
-void ADMA2ROSParserV334::mapStatusBytes(adma_msgs::msg::ByteStates& rosMsgByteStates, AdmaDataV334& admaData)
+void ADMA2ROSParserV334::mapStatusBytes(adma_msgs::msg::ByteStatus& rosMsgByteStatus, AdmaDataV334& admaData)
 {
-        rosMsgByteStates.status_byte_0 = admaData.gnssStatus;
-        rosMsgByteStates.status_byte_1 = admaData.signalInStatus;
-        rosMsgByteStates.status_byte_2 = admaData.miscStatus;
-        rosMsgByteStates.status_count = admaData.statuscount;
-        rosMsgByteStates.status_byte_4 = admaData.kfStatus;
-        rosMsgByteStates.status_byte_5 = admaData.statusRobot;
+        rosMsgByteStatus.status_byte_0 = admaData.gnssStatus;
+        rosMsgByteStatus.status_byte_1 = admaData.signalInStatus;
+        rosMsgByteStatus.status_byte_2 = admaData.miscStatus;
+        rosMsgByteStatus.status_count = admaData.statuscount;
+        rosMsgByteStatus.status_byte_4 = admaData.kfStatus;
+        rosMsgByteStatus.status_byte_5 = admaData.statusRobot;
 }
 
-void ADMA2ROSParserV334::mapStatusBitfields(adma_msgs::msg::States& rosMsgStates, AdmaDataV334& admaData)
+void ADMA2ROSParserV334::mapStatusBitfields(adma_msgs::msg::Status& rosMsgStatus, AdmaDataV334& admaData)
 {
         // status_byte_0
         unsigned char gnssStatus = admaData.gnssStatus;
@@ -74,26 +74,26 @@ void ADMA2ROSParserV334::mapStatusBitfields(adma_msgs::msg::States& rosMsgStates
         /* status gnss mode */
         if(gnss_out)
         {
-                rosMsgStates.status_gnss_mode = 1;
+                rosMsgStatus.status_gnss_mode = 1;
         }
         else if (gnss_mode) 
         {
-                rosMsgStates.status_gnss_mode = 2;
+                rosMsgStatus.status_gnss_mode = 2;
         }
         else if (rtk_coarse) 
         {
-                rosMsgStates.status_gnss_mode = 4;
+                rosMsgStatus.status_gnss_mode = 4;
         }
         else if (rtk_precise) 
         {
-                rosMsgStates.status_gnss_mode = 8;
+                rosMsgStatus.status_gnss_mode = 8;
         }
         /* status stand still */
-        rosMsgStates.status_standstill = standstill_c;
+        rosMsgStatus.status_standstill = standstill_c;
         /* status skidding */
-        rosMsgStates.status_skidding = status_skidding;
+        rosMsgStatus.status_skidding = status_skidding;
         /* status external velocity slip */
-        rosMsgStates.status_external_vel_out = status_external_vel;
+        rosMsgStatus.status_external_vel_out = status_external_vel;
 
         // status_byte_1
         unsigned char gnssTriggerStatus = admaData.signalInStatus;
@@ -106,21 +106,21 @@ void ADMA2ROSParserV334::mapStatusBitfields(adma_msgs::msg::States& rosMsgStates
         bool status_signal_in3 = getbit(gnssTriggerStatus,1);
         bool status_trig_gnss = getbit(gnssTriggerStatus,0);
         /* status statustriggnss */
-        rosMsgStates.status_trig_gnss = status_trig_gnss;
+        rosMsgStatus.status_trig_gnss = status_trig_gnss;
         /* status statussignalin3 */
-        rosMsgStates.status_signal_in3 = status_signal_in3;
+        rosMsgStatus.status_signal_in3 = status_signal_in3;
         /* status statussignalin2 */
-        rosMsgStates.status_signal_in2 = status_signal_in2;
+        rosMsgStatus.status_signal_in2 = status_signal_in2;
         /* status statussignalin1 */
-        rosMsgStates.status_signal_in1 = status_signal_in1;
+        rosMsgStatus.status_signal_in1 = status_signal_in1;
         /* status statusalignment */
-        rosMsgStates.status_alignment = status_alignment;
+        rosMsgStatus.status_alignment = status_alignment;
         /* status statusahrsins */
-        rosMsgStates.status_ahrs_ins = status_ahrs_ins;
+        rosMsgStatus.status_ahrs_ins = status_ahrs_ins;
         /* status statusdeadreckoning */
-        rosMsgStates.status_dead_reckoning = status_dead_reckoning;
+        rosMsgStatus.status_dead_reckoning = status_dead_reckoning;
         /* status statussynclock */
-        rosMsgStates.status_synclock = status_synclock;
+        rosMsgStatus.status_synclock = status_synclock;
 
         // status_byte_2
         unsigned char evkStatus = admaData.miscStatus;
@@ -133,41 +133,41 @@ void ADMA2ROSParserV334::mapStatusBitfields(adma_msgs::msg::States& rosMsgStates
         bool status_evk_estimates = getbit(evkStatus,1);
         bool status_evk_activ = getbit(evkStatus,0);
         /* status statustriggnss */
-        rosMsgStates.status_evk_activ = status_evk_activ;
+        rosMsgStatus.status_evk_activ = status_evk_activ;
         /* status status_evk_estimates */
-        rosMsgStates.status_evk_estimates = status_evk_estimates;
+        rosMsgStatus.status_evk_estimates = status_evk_estimates;
         /* status status_heading_executed */
-        rosMsgStates.status_heading_executed = status_heading_executed;
+        rosMsgStatus.status_heading_executed = status_heading_executed;
         /* status status_configuration_changed */
-        rosMsgStates.status_config_changed = status_configuration_changed;
+        rosMsgStatus.status_config_changed = status_configuration_changed;
         /* status tilt */
         if(status_tilt_b1==0 && status_tilt_b2==0)
         {
-                rosMsgStates.status_tilt = 0;
+                rosMsgStatus.status_tilt = 0;
         }
         else if(status_tilt_b1==0 && status_tilt_b2==1)
         {
-                rosMsgStates.status_tilt = 1;
+                rosMsgStatus.status_tilt = 1;
         }
         else if(status_tilt_b1==1 && status_tilt_b2==0)
         {
-                rosMsgStates.status_tilt = 2;
+                rosMsgStatus.status_tilt = 2;
         }
         /* status pos */
         if(status_pos_b1==0 && status_pos_b2==0)
         {
-                rosMsgStates.status_pos = 0;
+                rosMsgStatus.status_pos = 0;
         }
         else if(status_pos_b1==0 && status_pos_b2==1)
         {
-                rosMsgStates.status_pos = 1;
+                rosMsgStatus.status_pos = 1;
         }
         else if(status_pos_b1==1 && status_pos_b2==0)
         {
-                rosMsgStates.status_pos = 2;
+                rosMsgStatus.status_pos = 2;
         }
 
-        rosMsgStates.status_count = admaData.statuscount;
+        rosMsgStatus.status_count = admaData.statuscount;
 
         // status_byte_4
         unsigned char kfStatus = admaData.kfStatus;
@@ -177,21 +177,21 @@ void ADMA2ROSParserV334::mapStatusBitfields(adma_msgs::msg::States& rosMsgStates
         bool status_kf_long_stimulated = getbit(kfStatus,2);
         bool status_kf_lat_stimulated = getbit(kfStatus,1);
         bool status_kalmanfilter_settled = getbit(kfStatus,0);
-        rosMsgStates.status_kalmanfilter_settled = status_kalmanfilter_settled;
-        rosMsgStates.status_kf_lat_stimulated = status_kf_lat_stimulated;
-        rosMsgStates.status_kf_long_stimulated = status_kf_long_stimulated;
-        rosMsgStates.status_kf_steady_state = status_kf_steady_state;
+        rosMsgStatus.status_kalmanfilter_settled = status_kalmanfilter_settled;
+        rosMsgStatus.status_kf_lat_stimulated = status_kf_lat_stimulated;
+        rosMsgStatus.status_kf_long_stimulated = status_kf_long_stimulated;
+        rosMsgStatus.status_kf_steady_state = status_kf_steady_state;
         if(status_speed_b1==0 && status_speed_b2==0)
         {
-                rosMsgStates.status_speed = 0;
+                rosMsgStatus.status_speed = 0;
         }
         else if(status_speed_b1==0 && status_speed_b2==1)
         {
-                rosMsgStates.status_speed = 1;
+                rosMsgStatus.status_speed = 1;
         }
         else if(status_speed_b1==1 && status_speed_b2==0)
         {
-                rosMsgStates.status_speed = 2;
+                rosMsgStatus.status_speed = 2;
         }
 
         // status_byte_5
@@ -201,48 +201,48 @@ void ADMA2ROSParserV334::mapStatusBitfields(adma_msgs::msg::States& rosMsgStates
         {
                 statusRobot[i] = bitStatusRobot[i];
         }
-        rosMsgStates.status_robot = statusRobot.to_ulong();
+        rosMsgStatus.status_robot = statusRobot.to_ulong();
 
 }
 
-void ADMA2ROSParserV334::mapEWBytes(adma_msgs::msg::ByteEW& rosMsgByteEW, AdmaDataV334& admaData)
+void ADMA2ROSParserV334::mapErrorWarningBytes(adma_msgs::msg::ByteErrorWarning& rosMsgByteErrorWarning, AdmaDataV334& admaData)
 {
-        rosMsgByteEW.error_1 = admaData.dataError1;
-        rosMsgByteEW.error_2 = admaData.dataError2;
-        rosMsgByteEW.warn_1 = admaData.dataWarn1;
-        rosMsgByteEW.error_3 = admaData.dataError3;
+        rosMsgByteErrorWarning.error_1 = admaData.dataError1;
+        rosMsgByteErrorWarning.error_2 = admaData.dataError2;
+        rosMsgByteErrorWarning.warn_1 = admaData.dataWarn1;
+        rosMsgByteErrorWarning.error_3 = admaData.dataError3;
 }
 
-void ADMA2ROSParserV334::mapEWBitfields(adma_msgs::msg::EW& rosMsgEW, AdmaDataV334& admaData)
+void ADMA2ROSParserV334::mapErrorWarningBitfields(adma_msgs::msg::ErrorWarning& rosMsgErrorWarning, AdmaDataV334& admaData)
 {
         unsigned char error_byte_0 = admaData.dataError1;
-        rosMsgEW.error_cmd = getbit(error_byte_0,7);
-        rosMsgEW.error_xmit = getbit(error_byte_0,6);
-        rosMsgEW.error_eeprom = getbit(error_byte_0,5);
-        rosMsgEW.error_data_bus_checksum = getbit(error_byte_0,4);
-        rosMsgEW.error_gnss_hw = getbit(error_byte_0,3);
-        rosMsgEW.error_ext_speed_hw = getbit(error_byte_0,2);
-        rosMsgEW.error_accel_hw = getbit(error_byte_0,1);
-        rosMsgEW.error_gyro_hw = getbit(error_byte_0,0);
+        rosMsgErrorWarning.error_cmd = getbit(error_byte_0,7);
+        rosMsgErrorWarning.error_xmit = getbit(error_byte_0,6);
+        rosMsgErrorWarning.error_eeprom = getbit(error_byte_0,5);
+        rosMsgErrorWarning.error_data_bus_checksum = getbit(error_byte_0,4);
+        rosMsgErrorWarning.error_gnss_hw = getbit(error_byte_0,3);
+        rosMsgErrorWarning.error_ext_speed_hw = getbit(error_byte_0,2);
+        rosMsgErrorWarning.error_accel_hw = getbit(error_byte_0,1);
+        rosMsgErrorWarning.error_gyro_hw = getbit(error_byte_0,0);
 
         unsigned char error_byte_1 = admaData.dataError2;
-        rosMsgEW.error_range_max = getbit(error_byte_1,6);
-        rosMsgEW.error_reduced_accuracy = getbit(error_byte_1,5);
-        rosMsgEW.error_temp_warning = getbit(error_byte_1,4);
-        rosMsgEW.error_num = getbit(error_byte_1,3);
-        rosMsgEW.error_can_bus = getbit(error_byte_1,1);
-        rosMsgEW.error_data_bus = getbit(error_byte_1,0);
+        rosMsgErrorWarning.error_range_max = getbit(error_byte_1,6);
+        rosMsgErrorWarning.error_reduced_accuracy = getbit(error_byte_1,5);
+        rosMsgErrorWarning.error_temp_warning = getbit(error_byte_1,4);
+        rosMsgErrorWarning.error_num = getbit(error_byte_1,3);
+        rosMsgErrorWarning.error_can_bus = getbit(error_byte_1,1);
+        rosMsgErrorWarning.error_data_bus = getbit(error_byte_1,0);
 
         unsigned char warn_byte_1 = admaData.dataWarn1;
-        rosMsgEW.warn_gnss_dualant_ignored = getbit(warn_byte_1,5);
-        rosMsgEW.warn_speed_off = getbit(warn_byte_1,4);
-        rosMsgEW.warn_gnss_unable_to_cfg = getbit(warn_byte_1,3);
-        rosMsgEW.warn_gnss_pos_ignored = getbit(warn_byte_1,2);
-        rosMsgEW.warn_gnss_vel_ignored = getbit(warn_byte_1,1);
-        rosMsgEW.warn_gnss_no_solution = getbit(warn_byte_1,0);
+        rosMsgErrorWarning.warn_gnss_dualant_ignored = getbit(warn_byte_1,5);
+        rosMsgErrorWarning.warn_speed_off = getbit(warn_byte_1,4);
+        rosMsgErrorWarning.warn_gnss_unable_to_cfg = getbit(warn_byte_1,3);
+        rosMsgErrorWarning.warn_gnss_pos_ignored = getbit(warn_byte_1,2);
+        rosMsgErrorWarning.warn_gnss_vel_ignored = getbit(warn_byte_1,1);
+        rosMsgErrorWarning.warn_gnss_no_solution = getbit(warn_byte_1,0);
 
         unsigned char error_byte_2 = admaData.dataError3;
-        rosMsgEW.error_hw_sticky = getbit(error_byte_2,0);
+        rosMsgErrorWarning.error_hw_sticky = getbit(error_byte_2,0);
 }
 
 void ADMA2ROSParserV334::mapUnscaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& admaData)

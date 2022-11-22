@@ -223,5 +223,5 @@ POI poi_6
 POI poi_7
 POI poi_8
 
-ByteEW error_warnings
-States states
+ByteErrorWarning error_warning
+Status status

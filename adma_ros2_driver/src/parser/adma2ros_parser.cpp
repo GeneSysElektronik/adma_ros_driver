@@ -47,9 +47,9 @@ void ADMA2ROSParser::parseV334(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV
         _parserV334.mapAdmaMessageToROS(rosMsg, recvData);
 }
 
-void ADMA2ROSParser::parseV334State(adma_msgs::msg::AdmaState& rosMsg, AdmaDataV334& localData)
+void ADMA2ROSParser::parseV334Status(adma_msgs::msg::AdmaStatus& rosMsg, AdmaDataV334& localData)
 {
-        _parserV334.mapStateToROS(rosMsg, localData);
+        _parserV334.mapStatusToROS(rosMsg, localData);
 }
 
 template <typename AdmaDataHeaderStruct>
@@ -531,7 +531,7 @@ void ADMA2ROSParser::extractNavSatFix(adma_msgs::msg::AdmaData& rosMsg, sensor_m
 void ADMA2ROSParser::extractNavSatFix(adma_msgs::msg::AdmaDataScaled& rosMsg, sensor_msgs::msg::NavSatFix& navRosMsg)
 {
         // fil status
-        switch (rosMsg.states.status_gnss_mode)
+        switch (rosMsg.status.status_gnss_mode)
         {
         case 1:
                 // No GNSS Data

@@ -39,7 +39,7 @@ namespace genesys
                         _len = 856;
                         _pub_adma_data_raw = this->create_publisher<std_msgs::msg::String>("adma/data_raw", 1);
                         _pub_adma_data_scaled = this->create_publisher<adma_msgs::msg::AdmaDataScaled>("adma/data_scaled", 1);
-                        _pub_adma_state = this->create_publisher<adma_msgs::msg::AdmaState>("adma/state", 1);
+                        _pub_adma_status = this->create_publisher<adma_msgs::msg::AdmaStatus>("adma/status", 1);
                 }
                 _parser = new ADMA2ROSParser(_protocolversion);
                 
@@ -196,10 +196,10 @@ namespace genesys
                                 weektime = admaDataScaledMsg.ins_time_week;
                                 instimemsec = admaDataScaledMsg.ins_time_msec;
 
-                                adma_msgs::msg::AdmaState stateMsg;
-                                stateMsg.header.stamp = curTimestamp;
-                                _parser->parseV334State(stateMsg, dataStruct);
-                                _pub_adma_state->publish(stateMsg);
+                                adma_msgs::msg::AdmaStatus statusMsg;
+                                statusMsg.header.stamp = curTimestamp;
+                                _parser->parseV334Status(statusMsg, dataStruct);
+                                _pub_adma_status->publish(statusMsg);
                         }
                         
 

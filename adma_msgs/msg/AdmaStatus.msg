@@ -1,10 +1,10 @@
 std_msgs/Header header
 
 # byte fields status
-ByteStates states_byte
+ByteStatus status_bytes
 
 # byte fields error/warning
-ByteEW error_warnings_byte
+ByteErrorWarning error_warnings_bytes
 
 # bitfields error/warning
-EW error_warnings
+ErrorWarning error_warnings
