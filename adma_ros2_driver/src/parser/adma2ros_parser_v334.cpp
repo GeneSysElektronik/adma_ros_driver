@@ -328,8 +328,8 @@ void ADMA2ROSParserV334::mapScaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, A
 
         rosMsg.gnss_lat_abs = getScaledValue(admaData.posAbs.latitude, 0.0000001);
         rosMsg.gnss_long_abs = getScaledValue(admaData.posAbs.longitude, 0.0000001);
-        rosMsg.gnss_pos_rel_x = getScaledValue(admaData.posRel.longitude, 0.01);
-        rosMsg.gnss_pos_rel_y = getScaledValue(admaData.posRel.latitude, 0.01);
+        rosMsg.gnss_pos_rel_x = getScaledValue(admaData.posRel.latitude, 0.01);
+        rosMsg.gnss_pos_rel_y = getScaledValue(admaData.posRel.longitude, 0.01);
 
         rosMsg.gnss_stddev_lat = getScaledValue(admaData.gnssstddevlat, 0.001);
         rosMsg.gnss_stddev_long = getScaledValue(admaData.gnssstddevlon, 0.001);
