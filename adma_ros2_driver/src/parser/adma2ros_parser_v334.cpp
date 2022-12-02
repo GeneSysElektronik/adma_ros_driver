@@ -66,28 +66,16 @@ void ADMA2ROSParserV334::mapStatusBitfields(adma_msgs::msg::Status& rosMsgStatus
         bool status_external_vel = getbit(gnssStatus,7);
         bool status_skidding = getbit(gnssStatus,5);
         bool standstill_c = getbit(gnssStatus,4);
-        bool rtk_precise = getbit(gnssStatus,3);
-        bool rtk_coarse = getbit(gnssStatus,2);
-        bool gnss_mode = getbit(gnssStatus,1);
-        bool gnss_out = getbit(gnssStatus,0);
 
         /* status gnss mode */
-        if(gnss_out)
-        {
-                rosMsgStatus.status_gnss_mode = 1;
-        }
-        else if (gnss_mode) 
-        {
-                rosMsgStatus.status_gnss_mode = 2;
-        }
-        else if (rtk_coarse) 
-        {
-                rosMsgStatus.status_gnss_mode = 4;
-        }
-        else if (rtk_precise) 
-        {
-                rosMsgStatus.status_gnss_mode = 8;
-        }
+        std::bitset<8> gnssStatusByte = admaData.gnssStatus;
+        std::bitset<4> status_gnss_mode;
+        status_gnss_mode[0] = gnssStatusByte[0];
+        status_gnss_mode[1] = gnssStatusByte[1];
+        status_gnss_mode[2] = gnssStatusByte[2];
+        status_gnss_mode[3] = gnssStatusByte[3];
+        rosMsgStatus.status_gnss_mode = status_gnss_mode.to_ulong();
+
         /* status stand still */
         rosMsgStatus.status_standstill = standstill_c;
         /* status skidding */
@@ -124,10 +112,6 @@ void ADMA2ROSParserV334::mapStatusBitfields(adma_msgs::msg::Status& rosMsgStatus
 
         // status_byte_2
         unsigned char evkStatus = admaData.miscStatus;
-        bool status_pos_b2 = getbit(evkStatus,0);
-        bool status_pos_b1 = getbit(evkStatus,1);
-        bool status_tilt_b2 = getbit(evkStatus,2);
-        bool status_tilt_b1 = getbit(evkStatus,3);
         bool status_configuration_changed = getbit(evkStatus,4);
         bool status_heading_executed = getbit(evkStatus,5);
         bool status_evk_estimates = getbit(evkStatus,6);
@@ -141,38 +125,21 @@ void ADMA2ROSParserV334::mapStatusBitfields(adma_msgs::msg::Status& rosMsgStatus
         /* status status_configuration_changed */
         rosMsgStatus.status_config_changed = status_configuration_changed;
         /* status tilt */
-        if(status_tilt_b1==0 && status_tilt_b2==0)
-        {
-                rosMsgStatus.status_tilt = 0;
-        }
-        else if(status_tilt_b1==0 && status_tilt_b2==1)
-        {
-                rosMsgStatus.status_tilt = 1;
-        }
-        else if(status_tilt_b1==1 && status_tilt_b2==0)
-        {
-                rosMsgStatus.status_tilt = 2;
-        }
+        std::bitset<8> evkStatusByte = admaData.miscStatus;
+        std::bitset<2> status_tilt;
+        status_tilt[0] = evkStatusByte[2];
+        status_tilt[1] = evkStatusByte[3];
+        rosMsgStatus.status_tilt = status_tilt.to_ulong();
         /* status pos */
-        if(status_pos_b1==0 && status_pos_b2==0)
-        {
-                rosMsgStatus.status_pos = 0;
-        }
-        else if(status_pos_b1==0 && status_pos_b2==1)
-        {
-                rosMsgStatus.status_pos = 1;
-        }
-        else if(status_pos_b1==1 && status_pos_b2==0)
-        {
-                rosMsgStatus.status_pos = 2;
-        }
+        std::bitset<2> status_pos;
+        status_pos[0] = evkStatusByte[0];
+        status_pos[1] = evkStatusByte[1];
+        rosMsgStatus.status_pos = status_pos.to_ulong();
 
         rosMsgStatus.status_count = admaData.statuscount;
 
         // status_byte_4
         unsigned char kfStatus = admaData.kfStatus;
-        bool status_speed_b2 = getbit(kfStatus,2);
-        bool status_speed_b1 = getbit(kfStatus,3);
         bool status_kf_steady_state = getbit(kfStatus,4);
         bool status_kf_long_stimulated = getbit(kfStatus,5);
         bool status_kf_lat_stimulated = getbit(kfStatus,6);
@@ -181,18 +148,12 @@ void ADMA2ROSParserV334::mapStatusBitfields(adma_msgs::msg::Status& rosMsgStatus
         rosMsgStatus.status_kf_lat_stimulated = status_kf_lat_stimulated;
         rosMsgStatus.status_kf_long_stimulated = status_kf_long_stimulated;
         rosMsgStatus.status_kf_steady_state = status_kf_steady_state;
-        if(status_speed_b1==0 && status_speed_b2==0)
-        {
-                rosMsgStatus.status_speed = 0;
-        }
-        else if(status_speed_b1==0 && status_speed_b2==1)
-        {
-                rosMsgStatus.status_speed = 1;
-        }
-        else if(status_speed_b1==1 && status_speed_b2==0)
-        {
-                rosMsgStatus.status_speed = 2;
-        }
+
+        std::bitset<8> kfStatusByte = admaData.kfStatus;
+        std::bitset<2> status_speed;
+        status_speed[0] = kfStatusByte[2];
+        status_speed[1] = kfStatusByte[3];
+        rosMsgStatus.status_speed = status_speed.to_ulong();
 
         // status_byte_5
         std::bitset<8> bitStatusRobot = admaData.statusRobot;
