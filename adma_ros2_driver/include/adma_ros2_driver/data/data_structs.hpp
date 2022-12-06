@@ -23,8 +23,8 @@ struct AdmaStaticHeader
 {
         char genesysid[4];
         char headerversion[4];
-        uint32_t formatid;
         Reserved16 reserved;
+        uint32_t formatid;
         char formatversion[4];
         uint32_t serialno;
         char alias[32];
