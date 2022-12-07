@@ -30,3 +30,5 @@
 *.exe
 *.out
 *.app
+
+adma_tools/adma_tools/__pycache__/

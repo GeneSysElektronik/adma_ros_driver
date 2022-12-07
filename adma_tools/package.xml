@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>adma_tools</name>
+  <version>0.0.0</version>
+  <description>Collection of tools to work with ADMA and ROS2</description>
+  <maintainer email="rico.schillings@hs-offenburg.de">rschilli</maintainer>
+  <license>MIT</license>
+
+  <depend>rclpy</depend>
+  <depend>adma_msgs</depend>
+  <depend>geometry_msgs</depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
