@@ -95,6 +95,8 @@ ros2 bag play $ROSBAG_FOLDER --remap /genesys/adma/data_raw:=/genesys/adma/data_
 ```
 After these steps you should have a new smaller rosbag that only contains the raw data in the desired topic.
 
+As an easier alternative you can set the `record_raw_data` parameter in the `config/driver_config.yaml` to `True`. This will add an additional `/genesys/adma/data_recorded` topic to the driver and also starts a rosbag record.
+
 Now you can prepare the configuration and launchfile:
 1. switch the parameter `use_recorded_data` of the `config/driver_config.yaml` to `True`
 2. modify the `rosbag_file_arg` in `launch/adma_driver_recorded_data.launch.py` to ensure it contains the correct path to your recorded rosbag

@@ -4,11 +4,12 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
-
+import os
+from ament_index_python.packages import get_package_share_directory
+import yaml
 def generate_launch_description():
 
         driver_config = PathJoinSubstitution([FindPackageShare('adma_ros2_driver'), 'config', 'driver_config_debug.yaml'])
-
         driver_config_arg = DeclareLaunchArgument('driver_config', default_value=driver_config)
         log_level_arg = DeclareLaunchArgument('log_level', default_value='INFO')
 

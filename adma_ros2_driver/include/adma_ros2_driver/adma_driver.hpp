@@ -38,11 +38,13 @@ namespace genesys
                         size_t _len = 0;
                         /** \brief Check the timings */
                         bool _performance_check = true;
+                        bool _record_data;
                         std::string _protocolversion;
 
                         // publisher
                         rclcpp::Publisher<adma_msgs::msg::AdmaData>::SharedPtr _pub_adma_data;
                         rclcpp::Publisher<adma_msgs::msg::AdmaDataRaw>::SharedPtr _pub_adma_data_raw;
+                        rclcpp::Publisher<adma_msgs::msg::AdmaDataRaw>::SharedPtr _pub_adma_data_recorded;
                         rclcpp::Publisher<adma_msgs::msg::AdmaDataScaled>::SharedPtr _pub_adma_data_scaled;
                         rclcpp::Publisher<adma_msgs::msg::AdmaStatus>::SharedPtr _pub_adma_status;
                         rclcpp::Publisher<sensor_msgs::msg::NavSatFix>::SharedPtr _pub_navsat_fix;

@@ -8,3 +8,4 @@ genesys:
       imu_frame: 'imu_link'
       protocol_version: 'v3.3.4'
       use_recorded_data: False
+      record_raw_data: False

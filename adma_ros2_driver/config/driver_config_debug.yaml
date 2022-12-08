@@ -7,6 +7,8 @@ genesys:
       gnss_frame: 'gnss_link'
       imu_frame: 'imu_link'
       protocol_version: 'v3.3.4'
+      use_recorded_data: False
+      record_raw_data: False
   data_server:
     ros__parameters:
       ip_address: '127.0.0.1'
