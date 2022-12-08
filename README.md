@@ -64,3 +64,41 @@ To work with it, simply use:
 ros2 launch adma_ros2_driver adma_driver_debugging.launch.py
 # for changing config, you can modify the separate 'driver_config_debug.yaml' file
 ```
+
+## Tools
+This repository also contains some useful tools to work with the ADMA.
+These can be found in the `adma_tools` package.
+
+### ROS2CSV-Converter
+This tool subscribes to `/genesys/adma/data_scaled` and `/genesys/adma/status`and generates a CSV file for postprocessing. It can be used live or e.g. to convert a rosbag to CSV. You just need to execute it in an additional terminal:
+
+```bash
+# ensure you have sourced the workspace also in this terminal
+cd ~/ros2_ws
+. install/setup.bash
+ros2 run adma_tools ros2csv
+```
+
+This will create a `recorded_data.csv` in the destination where you execute the `ros2 run..` command.
+If you want to use a different name, you can modify the code of `adma_tools/adma_tools/ros2csv_converter.py` line 11 (self.filename = '').
+## Re-use old recorded data
+
+Since V3.3.4 you can record rosbags that also publish the raw byte data received from the ADMA by UDP. Therefore it subscribes to the topic `genesys/adma/data_recorded`. To achieve this, you need to do the following steps:
+
+```bash
+# 1. record the rosbag
+ros2 bag record -a
+# 2. after recording, stop it and start a new recording with the desired topic
+ros2 bag record /genesys/adma/data_recorded 
+# 3. replay rosbag with remapped topic
+ros2 bag play $ROSBAG_FOLDER --remap /genesys/adma/data_raw:=/genesys/adma/data_recorded 
+```
+After these steps you should have a new smaller rosbag that only contains the raw data in the desired topic.
+
+Now you can prepare the configuration and launchfile:
+1. switch the parameter `use_recorded_data` of the `config/driver_config.yaml` to `True`
+2. modify the `rosbag_file_arg` in `launch/adma_driver_recorded_data.launch.py` to ensure it contains the correct path to your recorded rosbag
+
+```bash
+ros2 launch adma_ros2_driver adma_driver_recorded_data.launch.py
+```

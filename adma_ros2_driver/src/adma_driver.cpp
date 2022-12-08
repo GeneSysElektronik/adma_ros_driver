@@ -17,9 +17,9 @@ namespace genesys
         _admaPort(0)
         {
                 std::string param_address = this->declare_parameter("destination_ip", "0.0.0.0");
+                bool use_recorded_data = this->declare_parameter("use_recorded_data", false);
                 _admaPort = this->declare_parameter("destination_port", 1040);
-                initializeUDP(param_address);
-
+                
                 _performance_check = this->declare_parameter("use_performance_check", false);
                 _gnss_frame = this->declare_parameter("gnss_frame", "gnss_link");
                 _imu_frame = this->declare_parameter("imu_frame", "imu_link");
@@ -37,7 +37,7 @@ namespace genesys
                 }else if (_protocolversion == "v3.3.4")
                 {
                         _len = 856;
-                        _pub_adma_data_raw = this->create_publisher<std_msgs::msg::String>("adma/data_raw", 1);
+                        _pub_adma_data_raw = this->create_publisher<adma_msgs::msg::AdmaDataRaw>("adma/data_raw", 1);
                         _pub_adma_data_scaled = this->create_publisher<adma_msgs::msg::AdmaDataScaled>("adma/data_scaled", 1);
                         _pub_adma_status = this->create_publisher<adma_msgs::msg::AdmaStatus>("adma/status", 1);
                 }
@@ -48,7 +48,15 @@ namespace genesys
                 _pub_heading = this->create_publisher<std_msgs::msg::Float64>("adma/heading", 1);
                 _pub_velocity = this->create_publisher<std_msgs::msg::Float64>("adma/velocity", 1);
 
-                updateLoop();
+                if(use_recorded_data)
+                {
+                        // if we use recorded data, create desired subscriber
+                        _subRawData = this->create_subscription<adma_msgs::msg::AdmaDataRaw>("adma/data_recorded", 10, std::bind(&ADMADriver::recordedDataCB, this, std::placeholders::_1));
+                }else{
+                        // else setup UDP socket
+                        initializeUDP(param_address);
+                        updateLoop();
+                }
         }
 
         ADMADriver::~ADMADriver(){
@@ -93,6 +101,108 @@ namespace genesys
                 }
         }
 
+        void ADMADriver::recordedDataCB(adma_msgs::msg::AdmaDataRaw dataMsg)
+        {
+                std::array<char, 856> recv_buf;
+                for (size_t i = 0; i < dataMsg.size; i++)
+                {
+                        recv_buf[i] = dataMsg.raw_data[i];
+                }
+                parseData(recv_buf);
+        }
+
+        void ADMADriver::parseData(std::array<char, 856> recv_buf)
+        {
+                builtin_interfaces::msg::Time curTimestamp = this->get_clock()->now();
+                                                
+                // prepare several ros msgs
+                sensor_msgs::msg::NavSatFix message_fix;
+                message_fix.header.stamp = curTimestamp;
+                message_fix.header.frame_id = "adma";
+                std_msgs::msg::Float64 message_heading;
+                std_msgs::msg::Float64 message_velocity;
+                sensor_msgs::msg::Imu message_imu;
+                message_imu.header.frame_id = _imu_frame;
+                message_fix.header.stamp = curTimestamp;
+                float weektime;
+                uint32_t instimemsec;
+
+                // read Adma msg from UDP data packet
+                if (_protocolversion == "v3.2" || _protocolversion == "v3.3.3")
+                {
+                        adma_msgs::msg::AdmaData admaData_rosMsg;
+                        _parser->mapAdmaMessageToROS(admaData_rosMsg, recv_buf);
+                        
+                        admaData_rosMsg.timemsec = curTimestamp.sec * 1000;
+                        admaData_rosMsg.timensec = curTimestamp.nanosec;
+                        
+                        // read NavSatFix out of AdmaData
+                        _parser->extractNavSatFix(admaData_rosMsg, message_fix);
+
+                        // read heading and velocity
+                        message_heading.data = admaData_rosMsg.finsyaw;
+                        message_velocity.data = std::sqrt(std::pow(admaData_rosMsg.fgpsvelframex, 2) + std::pow(admaData_rosMsg.fgpsvelframey, 2)) * 3.6;
+
+                        // read IMU
+                        _parser->extractIMU(admaData_rosMsg, message_imu);
+                        _pub_adma_data->publish(admaData_rosMsg);
+                        weektime = admaData_rosMsg.instimeweek;
+                        instimemsec = admaData_rosMsg.instimemsec;
+                }else if (_protocolversion == "v3.3.4")
+                {
+                        AdmaDataV334 dataStruct;
+                        memcpy(&dataStruct , &recv_buf, sizeof(dataStruct));
+                        adma_msgs::msg::AdmaDataScaled admaDataScaledMsg;
+                        admaDataScaledMsg.header.frame_id = "data_scaled";
+                        admaDataScaledMsg.header.stamp = curTimestamp;
+                        _parser->parseV334(admaDataScaledMsg, dataStruct);
+                        admaDataScaledMsg.time_msec = curTimestamp.sec * 1000;
+                        admaDataScaledMsg.time_nsec = curTimestamp.nanosec;
+
+                        _parser->extractNavSatFix(admaDataScaledMsg, message_fix);
+                        _parser->extractIMU(admaDataScaledMsg, message_imu);
+
+                        // read heading and velocity
+                        message_heading.data = admaDataScaledMsg.ins_yaw;
+                        message_velocity.data = std::sqrt(std::pow(admaDataScaledMsg.gnss_vel_frame.x, 2) + std::pow(admaDataScaledMsg.gnss_vel_frame.y, 2)) * 3.6;
+
+                        _pub_adma_data_scaled->publish(admaDataScaledMsg);
+
+                        // publish raw data as byte array
+                        adma_msgs::msg::AdmaDataRaw rawDataMsg;
+                        rawDataMsg.size = _len;
+                        rawDataMsg.header.stamp = curTimestamp;
+                        rawDataMsg.header.frame_id = "raw_data";
+
+                        for(int i=0; i<_len; ++i)
+                        {
+                                rawDataMsg.raw_data.push_back(recv_buf[i]);
+                        }
+                        _pub_adma_data_raw->publish(rawDataMsg);
+
+                        weektime = admaDataScaledMsg.ins_time_week;
+                        instimemsec = admaDataScaledMsg.ins_time_msec;
+
+                        adma_msgs::msg::AdmaStatus statusMsg;
+                        statusMsg.header.stamp = curTimestamp;
+                        _parser->parseV334Status(statusMsg, dataStruct);
+                        _pub_adma_status->publish(statusMsg);
+                }
+
+                // publish the messages
+                _pub_navsat_fix->publish(message_fix);
+                _pub_heading->publish(message_heading);
+                _pub_velocity->publish(message_velocity);
+                _pub_imu->publish(message_imu);
+                
+                double grab_time = this->get_clock()->now().seconds();
+
+                if (_performance_check)
+                {
+                        RCLCPP_INFO(get_logger(), "%f ", ((grab_time * 1000) - (instimemsec + 1592697600000)));
+                }
+        }
+
         void ADMADriver::updateLoop()
         {
                 fd_set s;
@@ -129,92 +239,7 @@ namespace genesys
                                 continue;
                         }
 
-                        builtin_interfaces::msg::Time curTimestamp = this->get_clock()->now();
-                                                
-                        // prepare several ros msgs
-                        sensor_msgs::msg::NavSatFix message_fix;
-                        message_fix.header.stamp = curTimestamp;
-                        message_fix.header.frame_id = "adma";
-                        std_msgs::msg::Float64 message_heading;
-                        std_msgs::msg::Float64 message_velocity;
-                        sensor_msgs::msg::Imu message_imu;
-                        message_imu.header.frame_id = _imu_frame;
-                        message_fix.header.stamp = curTimestamp;
-                        float weektime;
-                        uint32_t instimemsec;
-                        std::string recvData(recv_buf.begin(), recv_buf.end());
-
-                        // read Adma msg from UDP data packet
-                        if (_protocolversion == "v3.2" || _protocolversion == "v3.3.3")
-                        {
-                                adma_msgs::msg::AdmaData admaData_rosMsg;
-                                _parser->mapAdmaMessageToROS(admaData_rosMsg, recv_buf);
-                                
-                                admaData_rosMsg.timemsec = curTimestamp.sec * 1000;
-                                admaData_rosMsg.timensec = curTimestamp.nanosec;
-                                
-                                // read NavSatFix out of AdmaData
-                                _parser->extractNavSatFix(admaData_rosMsg, message_fix);
-
-                                // read heading and velocity
-                                message_heading.data = admaData_rosMsg.finsyaw;
-                                message_velocity.data = std::sqrt(std::pow(admaData_rosMsg.fgpsvelframex, 2) + std::pow(admaData_rosMsg.fgpsvelframey, 2)) * 3.6;
-
-                                // read IMU
-                                _parser->extractIMU(admaData_rosMsg, message_imu);
-                                _pub_adma_data->publish(admaData_rosMsg);
-                                weektime = admaData_rosMsg.instimeweek;
-                                instimemsec = admaData_rosMsg.instimemsec;
-                        }else if (_protocolversion == "v3.3.4")
-                        {
-                                AdmaDataV334 dataStruct;
-                                memcpy(&dataStruct , &recv_buf, sizeof(dataStruct));
-                                adma_msgs::msg::AdmaDataScaled admaDataScaledMsg;
-                                _parser->parseV334(admaDataScaledMsg, dataStruct);
-                                admaDataScaledMsg.time_msec = curTimestamp.sec * 1000;
-                                admaDataScaledMsg.time_nsec = curTimestamp.nanosec;
-
-                                _parser->extractNavSatFix(admaDataScaledMsg, message_fix);
-                                _parser->extractIMU(admaDataScaledMsg, message_imu);
-
-                                // read heading and velocity
-                                message_heading.data = admaDataScaledMsg.ins_yaw;
-                                message_velocity.data = std::sqrt(std::pow(admaDataScaledMsg.gnss_vel_frame.x, 2) + std::pow(admaDataScaledMsg.gnss_vel_frame.y, 2)) * 3.6;
-
-                                _pub_adma_data_scaled->publish(admaDataScaledMsg);
-
-                                //publish raw data as HEX string
-                                std::stringstream ss;
-                                for(int i=0; i<_len; ++i)
-                                {
-                                        ss << std::hex << (int)recv_buf[i];
-                                }
-                                std_msgs::msg::String rawDataMsg;
-                                rawDataMsg.data = ss.str();
-                                _pub_adma_data_raw->publish(rawDataMsg);
-
-                                weektime = admaDataScaledMsg.ins_time_week;
-                                instimemsec = admaDataScaledMsg.ins_time_msec;
-
-                                adma_msgs::msg::AdmaStatus statusMsg;
-                                statusMsg.header.stamp = curTimestamp;
-                                _parser->parseV334Status(statusMsg, dataStruct);
-                                _pub_adma_status->publish(statusMsg);
-                        }
-                        
-
-                        // publish the messages
-                        _pub_navsat_fix->publish(message_fix);
-                        _pub_heading->publish(message_heading);
-                        _pub_velocity->publish(message_velocity);
-                        _pub_imu->publish(message_imu);
-                        
-                        double grab_time = this->get_clock()->now().seconds();
-
-                        if (_performance_check)
-                        {
-                                RCLCPP_INFO(get_logger(), "%f ", ((grab_time * 1000) - (instimemsec + 1592697600000)));
-                        }
+                        parseData(recv_buf);
                 }
         }
 } // namespace genesys

@@ -1,20 +1,23 @@
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import Vector3
-from adma_msgs.msg import AdmaDataScaled
+from adma_msgs.msg import AdmaDataScaled, AdmaStatus
+import message_filters
 
 class Ros2CSVConverter(Node):
 
     def __init__(self):
         super().__init__("ros2csvConverter")  
         
-        self.filename = "test_file.csv"
-        self.sub_adma_data_scaled = self.create_subscription(AdmaDataScaled, "/genesys/adma/data_scaled", self.msg_cb, 10)
+        self.filename = "recorded_data.csv"
+        self.sub_adma_data_scaled = message_filters.Subscriber(self, AdmaDataScaled, "/genesys/adma/data_scaled")
+        self.sub_adma_error_warning = message_filters.Subscriber(self, AdmaStatus, "/genesys/adma/status")
+
+        self.ts = message_filters.TimeSynchronizer([self.sub_adma_data_scaled, self.sub_adma_error_warning], 10)
+        self.ts.registerCallback(self.msg_cb)
 
         self.i = 1
 
-    def msg_cb(self, admaMsg : AdmaDataScaled):  
-        
+    def msg_cb(self, admaMsg : AdmaDataScaled, ewMsg : AdmaStatus):  
         #Open File and write Data
         if self.i > 1:
             file = open(self.filename,"a")
@@ -101,8 +104,15 @@ class Ros2CSVConverter(Node):
             {admaMsg.status.status_alignment}, {admaMsg.status.status_ahrs_ins}, {admaMsg.status.status_dead_reckoning}, {admaMsg.status.status_synclock},\
             {admaMsg.status.status_evk_activ}, {admaMsg.status.status_evk_estimates}, {admaMsg.status.status_heading_executed}, {admaMsg.status.status_config_changed},\
             {admaMsg.status.status_tilt}, {admaMsg.status.status_pos}, {admaMsg.status.status_count},\
-            {admaMsg.status.status_kalmanfilter_settled}, {admaMsg.status.status_kf_lat_stimulated}, {admaMsg.status.status_kf_long_stimulated}, {admaMsg.status.status_kf_steady_state}\
+            {admaMsg.status.status_kalmanfilter_settled}, {admaMsg.status.status_kf_lat_stimulated}, {admaMsg.status.status_kf_long_stimulated}, {admaMsg.status.status_kf_steady_state},\
             {admaMsg.status.status_speed}, {admaMsg.status.status_robot},\
+            {ewMsg.error_warnings.error_gyro_hw}, {ewMsg.error_warnings.error_accel_hw}, {ewMsg.error_warnings.error_ext_speed_hw}, {ewMsg.error_warnings.error_gnss_hw},\
+            {ewMsg.error_warnings.error_data_bus_checksum},{ewMsg.error_warnings.error_eeprom}, {ewMsg.error_warnings.error_xmit}, {ewMsg.error_warnings.error_cmd},\
+            {ewMsg.error_warnings.error_data_bus}, {ewMsg.error_warnings.error_can_bus}, {ewMsg.error_warnings.error_num},\
+            {ewMsg.error_warnings.error_temp_warning}, {ewMsg.error_warnings.error_reduced_accuracy}, {ewMsg.error_warnings.error_range_max},\
+            {ewMsg.error_warnings.warn_gnss_no_solution}, {ewMsg.error_warnings.warn_gnss_vel_ignored}, {ewMsg.error_warnings.warn_gnss_pos_ignored}, {ewMsg.error_warnings.warn_gnss_unable_to_cfg},\
+            {ewMsg.error_warnings.warn_speed_off}, {ewMsg.error_warnings.warn_gnss_dualant_ignored},\
+            {ewMsg.error_warnings.error_hw_sticky},\
             ")
             file.close()
         else:
@@ -188,6 +198,13 @@ class Ros2CSVConverter(Node):
             status_tilt, status_pos, status_count,\
             status_kalmanfilter_settled, status_kf_lat_stimulated, status_kf_long_stimulated, status_kf_steady_state,\
             status_speed, status_robot,\
+            error_gyro_hw, error_accel_hw, error_ext_speed_hw, error_gnss_hw,\
+            error_data_bus_checksum, error_eeprom, error_xmit, error_cmd,\
+            error_data_bus, error_can_bus, error_num,\
+            error_temp_warning, error_reduced_accuracy, error_range_max,\
+            warn_gnss_no_solution, warn_gnss_vel_ignored, warn_gnss_pos_ignored, warn_gnss_unable_to_cfg,\
+            warn_speed_off, warn_gnss_dualant_ignored,\
+            error_hw_sticky,\
             ")                                                        
 
         self.i += 1

@@ -17,7 +17,7 @@ namespace genesys
                 _frequence = this->declare_parameter("frequence", 20);
                  std::string ip_adress = this->declare_parameter("ip_address", "127.0.0.1");
                 _port = this->declare_parameter("port", 1040);
-                _protocolversion = this->declare_parameter("protocol_version", "v3.3.3");
+                _protocolversion = this->declare_parameter("protocol_version", "v3.3.4");
 
                 RCLCPP_INFO(get_logger(), "Working with: %s", _protocolversion.c_str());
                 
