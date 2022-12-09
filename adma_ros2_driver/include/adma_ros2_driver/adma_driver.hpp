@@ -10,6 +10,10 @@
 #include "adma_msgs/msg/adma_status.hpp"
 #include "adma_ros2_driver/parser/adma2ros_parser.hpp"
 
+#define MODE_DEFAULT "default"
+#define MODE_RECORD "record"
+#define MODE_REPLAY "replay"
+
 #pragma once
 
 namespace genesys
@@ -38,7 +42,8 @@ namespace genesys
                         size_t _len = 0;
                         /** \brief Check the timings */
                         bool _performance_check = true;
-                        bool _record_data;
+                        // the mode this driver node is used
+                        std::string _mode;
                         std::string _protocolversion;
 
                         // publisher

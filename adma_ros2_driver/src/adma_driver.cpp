@@ -17,8 +17,8 @@ namespace genesys
         _admaPort(0)
         {
                 std::string param_address = this->declare_parameter("destination_ip", "0.0.0.0");
-                bool use_recorded_data = this->declare_parameter("use_recorded_data", false);
-                _record_data = this->declare_parameter("record_raw_data", false);
+                _mode = this->declare_parameter("mode", "default");
+                RCLCPP_INFO(get_logger(), "Working mode: %s", _mode.c_str());
                 _admaPort = this->declare_parameter("destination_port", 1040);
                 
                 _performance_check = this->declare_parameter("use_performance_check", false);
@@ -49,17 +49,19 @@ namespace genesys
                 _pub_heading = this->create_publisher<std_msgs::msg::Float64>("adma/heading", 1);
                 _pub_velocity = this->create_publisher<std_msgs::msg::Float64>("adma/velocity", 1);
 
-                if(_record_data)
+                if(_mode == MODE_RECORD)
                 {
+                        // when recording we receive data from UDP and publish it to the recording topic
                         RCLCPP_INFO(get_logger(), " publish recording topic..");
                        _pub_adma_data_recorded = this->create_publisher<adma_msgs::msg::AdmaDataRaw>("adma/data_recorded", 1); 
+                        initializeUDP(param_address);
+                        updateLoop();
                 }
-                if(use_recorded_data)
+                else if(_mode == MODE_REPLAY)
                 {
-                        // if we use recorded data, create desired subscriber
+                        // if we use recorded data, create desired subscriber and no UDP connection is required
                         _subRawData = this->create_subscription<adma_msgs::msg::AdmaDataRaw>("adma/data_recorded", 10, std::bind(&ADMADriver::recordedDataCB, this, std::placeholders::_1));
-                }else{
-                        // else setup UDP socket
+                }else if(_mode == MODE_DEFAULT){
                         initializeUDP(param_address);
                         updateLoop();
                 }
@@ -185,7 +187,7 @@ namespace genesys
                                 rawDataMsg.raw_data.push_back(recv_buf[i]);
                         }
                         _pub_adma_data_raw->publish(rawDataMsg);
-                        if(_record_data)
+                        if(_mode == MODE_RECORD)
                         {
                                 _pub_adma_data_recorded->publish(rawDataMsg);
                         }

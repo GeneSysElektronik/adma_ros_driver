@@ -32,6 +32,17 @@ ros2 launch adma_ros2_driver adma_driver.launch.py
 
 ## Parameter configuration
 To change the parameters, just modify the possible values in the `adma_ros2_driver/config/driver_config.yaml`. If you built the workspace with `colcon build --symlink-install` you can direct restart the node with the changed parameters, otherwise (built without `--symlink-install`) you need to rebuild the workspace to update the files. Same "linking" rule applies to the `launch.py` files.
+In the table below you can find some further information about the available parameters.
+
+| Parameter | Possible Values | Description|
+|---|---|---|
+| destination_ip | Any IP as string | IP adress of your ADMA |
+| destination_port | any valid integer value | Port number of your ADMA |
+| use_performance_check | True/False | True if you want to log informations about the performance |
+| gnss_frame | any string name | ROS frame_id of the NavSat topic |
+| imu_frame | any string name | ROS frame_id of the IMU topic |
+| protocol_version | "v3.2" / "v3.3.3" / "v3.3.4" | the protocol version of your ADMA |
+| mode | "default" / "record" / "replay" | defines if you want to use it live with ADMA (default), record raw data received from ADMA (record) or replay the recorded raw data by replaying a rosbag (replay) |
 
 ## Supported ADMA Protocol versions
 This driver node supports several protocol versions.
@@ -85,22 +96,12 @@ If you want to use a different name, you can modify the code of `adma_tools/adma
 
 Since V3.3.4 you can record rosbags that also publish the raw byte data received from the ADMA by UDP. Therefore it subscribes to the topic `genesys/adma/data_recorded`. To achieve this, you need to do the following steps:
 
-```bash
-# 1. record the rosbag
-ros2 bag record -a
-# 2. after recording, stop it and start a new recording with the desired topic
-ros2 bag record /genesys/adma/data_recorded 
-# 3. replay rosbag with remapped topic
-ros2 bag play $ROSBAG_FOLDER --remap /genesys/adma/data_raw:=/genesys/adma/data_recorded 
-```
-After these steps you should have a new smaller rosbag that only contains the raw data in the desired topic.
+1. For recording the raw data received from the live ADMA, just switch the parameter `mode` to `record`.
 
-As an easier alternative you can set the `record_raw_data` parameter in the `config/driver_config.yaml` to `True`. This will add an additional `/genesys/adma/data_recorded` topic to the driver and also starts a rosbag record.
+This will add the additional topic and also start the recording of the rosbag. When you`re done, press Ctrl+C to finish the process and your rosbag will also be available.
 
+### Replay recorded rosbag
 Now you can prepare the configuration and launchfile:
-1. switch the parameter `use_recorded_data` of the `config/driver_config.yaml` to `True`
-2. modify the `rosbag_file_arg` in `launch/adma_driver_recorded_data.launch.py` to ensure it contains the correct path to your recorded rosbag
-
-```bash
-ros2 launch adma_ros2_driver adma_driver_recorded_data.launch.py
-```
+1. switch the `mode` parameter to `replay`
+2. modify the `rosbag_file_arg` in `launch/adma_driver.launch.py` to ensure it contains the correct path to your recorded rosbag
+3. start again with `ros2 launch adma_ros2_driver adma_driver.launch.py`.
