@@ -1,6 +1,6 @@
 from launch import LaunchDescription
 from launch.substitutions import TextSubstitution, PathJoinSubstitution, LaunchConfiguration
-from launch.actions import DeclareLaunchArgument, ExecuteProcess
+from launch.actions import DeclareLaunchArgument, ExecuteProcess, LogInfo, Shutdown
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
@@ -27,7 +27,9 @@ def generate_launch_description():
 
         rosbag_player = ExecuteProcess(
                 cmd=['ros2', 'bag', 'play', LaunchConfiguration('rosbag_file')],
-                output='screen'
+                output='screen',
+                on_exit=[LogInfo(msg=["Rosbag replay done. Stopping everything..."]),
+                Shutdown(reason='launch is shutting down')],
         )
         
         return LaunchDescription([
