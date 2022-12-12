@@ -40,8 +40,8 @@ class Ros2CSVConverter(Node):
             {admaMsg.system_ta}, {admaMsg.system_temp}, {admaMsg.system_time_since_init}, {admaMsg.system_dsp_load},\
             {admaMsg.gnss_lat_abs}, {admaMsg.gnss_long_abs}, {admaMsg.gnss_pos_rel_x}, {admaMsg.gnss_pos_rel_y},\
             {admaMsg.gnss_stddev_lat}, {admaMsg.gnss_stddev_long}, {admaMsg.gnss_stddev_height},\
-            {admaMsg.gnss_vel_frame.x}, {admaMsg.gnss_vel_frame.y}, {admaMsg.gnss_vel_frame.z}, {admaMsg.gnss_vel_latency}\
-            {admaMsg.gnss_stddev_vel.x}, {admaMsg.gnss_stddev_vel.y}, {admaMsg.gnss_stddev_vel.z}\
+            {admaMsg.gnss_vel_frame.x}, {admaMsg.gnss_vel_frame.y}, {admaMsg.gnss_vel_frame.z}, {admaMsg.gnss_vel_latency},\
+            {admaMsg.gnss_stddev_vel.x}, {admaMsg.gnss_stddev_vel.y}, {admaMsg.gnss_stddev_vel.z},\
             {admaMsg.gnss_time_msec}, {admaMsg.gnss_time_week}, {admaMsg.gnss_trigger},\
             {admaMsg.gnss_diffage}, {admaMsg.gnss_sats_used}, {admaMsg.gnss_sats_visible}, {admaMsg.gnss_sats_dualant_used}, {admaMsg.gnss_sats_dualant_visible},\
             {admaMsg.gnss_log_delay}, {admaMsg.gnss_receiver_load}, {admaMsg.gnss_base_nr},\
