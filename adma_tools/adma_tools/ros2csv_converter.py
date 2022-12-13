@@ -112,7 +112,7 @@ class Ros2CSVConverter(Node):
             {ewMsg.error_warnings.error_temp_warning}, {ewMsg.error_warnings.error_reduced_accuracy}, {ewMsg.error_warnings.error_range_max},\
             {ewMsg.error_warnings.warn_gnss_no_solution}, {ewMsg.error_warnings.warn_gnss_vel_ignored}, {ewMsg.error_warnings.warn_gnss_pos_ignored}, {ewMsg.error_warnings.warn_gnss_unable_to_cfg},\
             {ewMsg.error_warnings.warn_speed_off}, {ewMsg.error_warnings.warn_gnss_dualant_ignored},\
-            {ewMsg.error_warnings.error_hw_sticky},\
+            {ewMsg.error_warnings.error_hw_sticky}\
             ")
             file.close()
         else:
@@ -126,6 +126,7 @@ class Ros2CSVConverter(Node):
             rate_hor_x, rate_hor_y, rate_hor_z,\
             acc_body_x, acc_body_y, acc_body_z,\
             acc_hor_x, acc_hor_y, acc_hor_z,\
+            ext_vel_an_x, ext_vel_an_y,\
             ext_vel_dig_x, ext_vel_dig_y, ext_vel_dig_pulses_x, ext_vel_dig_pulses_y, ext_vel_x_corrected, ext_vel_y_corrected,\
             inv_path_radius, side_slip_angle, dist_trav,\
             trig_rising_1, trig_falling_1, trig_rising_2, trig_falling_2, trig_rising_3, trig_falling_3, trig_rising_4, trig_falling_4,\
@@ -204,7 +205,7 @@ class Ros2CSVConverter(Node):
             error_temp_warning, error_reduced_accuracy, error_range_max,\
             warn_gnss_no_solution, warn_gnss_vel_ignored, warn_gnss_pos_ignored, warn_gnss_unable_to_cfg,\
             warn_speed_off, warn_gnss_dualant_ignored,\
-            error_hw_sticky,\
+            error_hw_sticky\
             ")                                                        
 
         self.i += 1
