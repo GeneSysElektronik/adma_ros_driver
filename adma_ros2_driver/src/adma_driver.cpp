@@ -131,7 +131,7 @@ namespace genesys
                 std_msgs::msg::Float64 message_velocity;
                 sensor_msgs::msg::Imu message_imu;
                 message_imu.header.frame_id = _imu_frame;
-                message_fix.header.stamp = curTimestamp;
+                message_imu.header.stamp = curTimestamp;
                 float weektime;
                 uint32_t instimemsec;
 

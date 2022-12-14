@@ -207,6 +207,12 @@ float64 an2
 float64 an3
 float64 an4
 
+# kalman filter status
+# all uints in %
+uint8 kf_lat_stimulated
+uint8 kf_long_stimulated
+uint8 kf_steady_state
+
 # gnss receiver status
 uint32 gnss_receiver_error
 uint32 gnss_receiver_status

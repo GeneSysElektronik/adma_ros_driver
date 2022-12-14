@@ -243,9 +243,9 @@ void ADMA2ROSParserV334::mapUnscaledData(adma_msgs::msg::AdmaDataScaled& rosMsg,
         rosMsg.ins_time_week = admaData.instimeweek;
         rosMsg.leap_seconds = admaData.leapseconds;
         // kalman filter status
-        // rosMsg.status_kf_lat_stimulated = admaData.kflatstimulated;
-        // rosMsg.status_kf_long_stimulated = admaData.kflongstimulated;
-        // rosMsg.status_kf_steady_state = admaData.kfsteadystate;
+        rosMsg.kf_lat_stimulated = admaData.kflatstimulated;
+        rosMsg.kf_long_stimulated = admaData.kflongstimulated;
+        rosMsg.kf_steady_state = admaData.kfsteadystate;
         // gnss receiver status and error
         rosMsg.gnss_receiver_error = admaData.gnssreceivererror;
         rosMsg.gnss_receiver_status = admaData.gnssreceiverstatus;
