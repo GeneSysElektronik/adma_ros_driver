@@ -62,6 +62,9 @@ namespace genesys
 
                         std::string _gnss_frame;
                         std::string _imu_frame;
+                        std::string _adma_frame;
+                        std::string _adma_status_frame;
+                        std::string _raw_data_frame;
 
                         ADMA2ROSParser* _parser;
         };

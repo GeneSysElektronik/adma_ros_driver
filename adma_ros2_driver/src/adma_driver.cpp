@@ -22,8 +22,11 @@ namespace genesys
                 _admaPort = this->declare_parameter("destination_port", 1040);
                 
                 _performance_check = this->declare_parameter("use_performance_check", false);
-                _gnss_frame = this->declare_parameter("gnss_frame", "gnss_link");
-                _imu_frame = this->declare_parameter("imu_frame", "imu_link");
+                _gnss_frame = this->declare_parameter("frame_ids.navsatfix", "gnss_link");
+                _imu_frame = this->declare_parameter("frame_ids.imu", "imu_link");
+                _adma_frame= this->declare_parameter("frame_ids.adma", "adma");
+                _adma_status_frame = this->declare_parameter("frame_ids.adma_status", "adma_status");
+                _raw_data_frame = this->declare_parameter("frame_ids.raw_data", "data_raw");
                 // define protocol specific stuff
                 _protocolversion = this->declare_parameter("protocol_version", "v3.3.3");
                 RCLCPP_INFO(get_logger(), "Working with: %s", _protocolversion.c_str());
@@ -126,7 +129,7 @@ namespace genesys
                 // prepare several ros msgs
                 sensor_msgs::msg::NavSatFix message_fix;
                 message_fix.header.stamp = curTimestamp;
-                message_fix.header.frame_id = "adma";
+                message_fix.header.frame_id = _gnss_frame;
                 std_msgs::msg::Float64 message_heading;
                 std_msgs::msg::Float64 message_velocity;
                 sensor_msgs::msg::Imu message_imu;
@@ -161,7 +164,7 @@ namespace genesys
                         AdmaDataV334 dataStruct;
                         memcpy(&dataStruct , &recv_buf, sizeof(dataStruct));
                         adma_msgs::msg::AdmaDataScaled admaDataScaledMsg;
-                        admaDataScaledMsg.header.frame_id = "data_scaled";
+                        admaDataScaledMsg.header.frame_id = _adma_frame;
                         admaDataScaledMsg.header.stamp = curTimestamp;
                         _parser->parseV334(admaDataScaledMsg, dataStruct);
                         admaDataScaledMsg.time_msec = curTimestamp.sec * 1000;
@@ -180,7 +183,7 @@ namespace genesys
                         adma_msgs::msg::AdmaDataRaw rawDataMsg;
                         rawDataMsg.size = _len;
                         rawDataMsg.header.stamp = curTimestamp;
-                        rawDataMsg.header.frame_id = "raw_data";
+                        rawDataMsg.header.frame_id = _raw_data_frame;
 
                         for(int i=0; i<_len; ++i)
                         {
@@ -197,6 +200,7 @@ namespace genesys
 
                         adma_msgs::msg::AdmaStatus statusMsg;
                         statusMsg.header.stamp = curTimestamp;
+                        statusMsg.header.frame_id = _adma_status_frame;
                         _parser->parseV334Status(statusMsg, dataStruct);
                         _pub_adma_status->publish(statusMsg);
                 }

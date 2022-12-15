@@ -4,7 +4,11 @@ genesys:
       destination_ip: '0.0.0.0'
       destination_port: 1040
       use_performance_check: False
-      gnss_frame: 'gnss_link'
-      imu_frame: 'imu_link'
       protocol_version: 'v3.3.4'
       mode: "default" # available modes are: default/record/replay
+      frame_ids:
+        navsatfix: 'gnss_link'
+        imu: 'imu_link'
+        adma: 'adma'
+        adma_status: 'adma_status'
+        raw_data: 'data_raw'
