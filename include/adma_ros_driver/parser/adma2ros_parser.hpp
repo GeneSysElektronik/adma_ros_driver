@@ -16,10 +16,8 @@ class ADMA2ROSParser
         public:
                 ADMA2ROSParser();
                 ~ADMA2ROSParser(){};
-                void mapAdmaMessageToROS(adma_msgs::Adma& rosMsg, std::array<char, 856>& recvData);
-                void extractNavSatFix(adma_msgs::Adma& rosMsg, sensor_msgs::NavSatFix& navRosMsg);
+                void parseV333(adma_msgs::Adma& rosMsg, std::array<char, 856>& recvData);
                 void extractNavSatFix(adma_msgs::AdmaDataScaled& rosMsg, sensor_msgs::NavSatFix& navRosMsg); 
-                void extractIMU(adma_msgs::Adma& rosMsg, sensor_msgs::Imu& imuRosMsg);
                 void extractIMU(adma_msgs::AdmaDataScaled& rosMsg, sensor_msgs::Imu& imuRosMsg);
                 void parseV334(adma_msgs::AdmaDataScaled& rosMsg, AdmaDataV334& localData);
                 void parseV334Status(adma_msgs::AdmaStatus& rosMsg, AdmaDataV334& localData);

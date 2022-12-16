@@ -9,22 +9,8 @@ ADMA2ROSParser::ADMA2ROSParser()
 {
 }
 
-void ADMA2ROSParser::mapAdmaMessageToROS(adma_msgs::Adma& rosMsg, std::array<char, 856>& recvData)
+void ADMA2ROSParser::parseV333(adma_msgs::Adma& rosMsg, std::array<char, 856>& recvData)
 {
-        // if(_version == "v3.2")
-        // {       
-        //         AdmaDataV32 admaData;
-        //         memcpy(&admaData, &recvData, sizeof(admaData));
-        //         parseStaticHeader(rosMsg, admaData.staticHeader);
-        //         parseDynamicHeader(rosMsg, admaData.dynamicHeader);
-        //         getstatusgps(rosMsg, admaData.gpsStatus);
-        //         getstatustrigger(rosMsg, admaData.gpsTriggerStatus);
-        //         getevkstatus(rosMsg, admaData.evkStatus);
-        //         unsigned char ewBytes[] = {admaData.dataError1, admaData.dataError2, admaData.dataWarn1, admaData.dataErrorHW};
-        //         geterrorandwarning(rosMsg, ewBytes);
-        //         _parserV32.mapAdmaMessageToROS(rosMsg, admaData);
-        // }else if (_version == "v3.3.3")
-        // {
         AdmaDataV333 admaData;
         memcpy(&admaData, &recvData, sizeof(admaData));
         parseStaticHeader(rosMsg, admaData.staticHeader);
@@ -36,7 +22,7 @@ void ADMA2ROSParser::mapAdmaMessageToROS(adma_msgs::Adma& rosMsg, std::array<cha
         unsigned char ewBytes[] = {admaData.dataError1, admaData.dataError2, admaData.dataWarn1, admaData.dataError3};
         geterrorandwarning(rosMsg, ewBytes);
         _parserV333.mapAdmaMessageToROS(rosMsg, admaData);
-        // }
+
         parseScaledData(rosMsg);
 }
 
@@ -53,31 +39,31 @@ void ADMA2ROSParser::parseV334Status(adma_msgs::AdmaStatus& rosMsg, AdmaDataV334
 template <typename AdmaDataHeaderStruct>
 void ADMA2ROSParser::parseStaticHeader(adma_msgs::Adma& rosMsg, AdmaDataHeaderStruct& staticHeader)
 {
-    // fill static header information
-//     rosMsg.genesysid = staticHeader.genesysid;
-//     std::stringstream ss;
-//     ss <<  int(staticHeader.headerversion[0]) << int(staticHeader.headerversion[1]) << int(staticHeader.headerversion[2]) << int(staticHeader.headerversion[3]);
-//     rosMsg.headerversion = ss.str();
-//     ss.clear();
-//     ss.str("");
-//     rosMsg.formatid = staticHeader.formatid;
-//     //TODO: this value is parsed wrong?!        
-//     ss <<  int(staticHeader.formatversion[0]) << int(staticHeader.formatversion[1]) << int(staticHeader.formatversion[2]) << int(staticHeader.formatversion[3]);
-//     rosMsg.formatversion = ss.str();
-//     rosMsg.serialno = staticHeader.serialno;
+        // fill static header information
+        rosMsg.GeneSysID = staticHeader.genesysid;
+        std::stringstream ss;
+        ss <<  int(staticHeader.headerversion[0]) << int(staticHeader.headerversion[1]) << int(staticHeader.headerversion[2]) << int(staticHeader.headerversion[3]);
+        rosMsg.HeaderVersion = ss.str();
+        ss.clear();
+        ss.str("");
+        rosMsg.FormatID = staticHeader.formatid;
+        //TODO: this value is parsed wrong?!        
+        ss <<  int(staticHeader.formatversion[0]) << int(staticHeader.formatversion[1]) << int(staticHeader.formatversion[2]) << int(staticHeader.formatversion[3]);
+        rosMsg.FormatVersion = ss.str();
+        rosMsg.SerialNo = staticHeader.serialno;
 }
 
 template <typename AdmaDataHeaderStruct>
 void ADMA2ROSParser::parseDynamicHeader(adma_msgs::Adma& rosMsg, AdmaDataHeaderStruct& dynamicHeader)
 {
-    // fill dynamic header information
-//     rosMsg.configid = dynamicHeader.configid;
-//     rosMsg.configformat = dynamicHeader.configformat;
-//     rosMsg.configversion = dynamicHeader.configversion;
-//     rosMsg.configsize = dynamicHeader.configsize;
-//     rosMsg.byteoffset = dynamicHeader.byteoffset;
-//     rosMsg.slicesize = dynamicHeader.slicesize;
-//     rosMsg.slicedata = dynamicHeader.slicedata;
+        // fill dynamic header information
+        rosMsg.ConfigID = dynamicHeader.configid;
+        rosMsg.ConfigFormat = dynamicHeader.configformat;
+        rosMsg.ConfigVersion = dynamicHeader.configversion;
+        rosMsg.ConfigSize = dynamicHeader.configsize;
+        rosMsg.ByteOffset = dynamicHeader.byteoffset;
+        rosMsg.SliceSize = dynamicHeader.slicesize;
+        rosMsg.SliceData = dynamicHeader.slicedata;
 }
 
 
@@ -87,37 +73,37 @@ void ADMA2ROSParser::parseDynamicHeader(adma_msgs::Adma& rosMsg, AdmaDataHeaderS
 /// \param  gpsStatus byte with gps states
 void ADMA2ROSParser::getstatusgps(adma_msgs::Adma& rosMsg, unsigned char gpsStatus)
 {
-//     bool status_external_vel = getbit(gpsStatus,7);
-//     bool status_skidding = getbit(gpsStatus,5);
-//     bool standstill_c = getbit(gpsStatus,4);
-//     bool rtk_precise = getbit(gpsStatus,3);
-//     bool rtk_coarse = getbit(gpsStatus,2);
-//     bool gps_mode = getbit(gpsStatus,1);
-//     bool gps_out = getbit(gpsStatus,0);
+        bool status_external_vel = getbit(gpsStatus,7);
+        bool status_skidding = getbit(gpsStatus,5);
+        bool standstill_c = getbit(gpsStatus,4);
+        bool rtk_precise = getbit(gpsStatus,3);
+        bool rtk_coarse = getbit(gpsStatus,2);
+        bool gps_mode = getbit(gpsStatus,1);
+        bool gps_out = getbit(gpsStatus,0);
 
-//     /* status gps mode */
-//     if(gps_out)
-//     {
-//         rosMsg.statusgpsmode = 1;
-//     }
-//     else if (gps_mode) 
-//     {
-//         rosMsg.statusgpsmode = 2;
-//     }
-//     else if (rtk_coarse) 
-//     {
-//         rosMsg.statusgpsmode = 4;
-//     }
-//     else if (rtk_precise) 
-//     {
-//         rosMsg.statusgpsmode = 8;
-//     }
-//     /* status stand still */
-//     rosMsg.statusstandstill = standstill_c;
-//     /* status skidding */
-//     rosMsg.statusskidding = status_skidding;
-//     /* status external velocity slip */
-//     rosMsg.statusexternalvelout = status_external_vel;
+        /* status gps mode */
+        if(gps_out)
+        {
+        rosMsg.StatusGPSMode = 1;
+        }
+        else if (gps_mode) 
+        {
+        rosMsg.StatusGPSMode = 2;
+        }
+        else if (rtk_coarse) 
+        {
+        rosMsg.StatusGPSMode = 4;
+        }
+        else if (rtk_precise) 
+        {
+        rosMsg.StatusGPSMode = 8;
+        }
+        /* status stand still */
+        rosMsg.StatusStandStill = standstill_c;
+        /* status skidding */
+        rosMsg.StatusSkidding = status_skidding;
+        /* status external velocity slip */
+        rosMsg.StatusExternalVelOut = status_external_vel;
 }
 
 /// \file
@@ -126,30 +112,30 @@ void ADMA2ROSParser::getstatusgps(adma_msgs::Adma& rosMsg, unsigned char gpsStat
 /// \param  gpsTriggerStatus byte with gps trigger states
 void ADMA2ROSParser::getstatustrigger(adma_msgs::Adma& rosMsg, unsigned char gpsTriggerStatus)
 {
-//     bool status_synclock = getbit(gpsTriggerStatus,7);
-//     bool status_dead_reckoning = getbit(gpsTriggerStatus,6);
-//     bool status_ahrs_ins = getbit(gpsTriggerStatus,5);
-//     bool status_alignment = getbit(gpsTriggerStatus,4);
-//     bool status_signal_in1 = getbit(gpsTriggerStatus,3);
-//     bool status_signal_in2 = getbit(gpsTriggerStatus,2);
-//     bool status_signal_in3 = getbit(gpsTriggerStatus,1);
-//     bool status_trig_gps = getbit(gpsTriggerStatus,0);
-//     /* status statustriggps */
-//     rosMsg.statustriggps = status_trig_gps;
-//     /* status statussignalin3 */
-//     rosMsg.statussignalin3 = status_signal_in3;
-//     /* status statussignalin2 */
-//     rosMsg.statussignalin2 = status_signal_in2;
-//     /* status statussignalin1 */
-//     rosMsg.statussignalin1 = status_signal_in1;
-//     /* status statusalignment */
-//     rosMsg.statusalignment = status_alignment;
-//     /* status statusahrsins */
-//     rosMsg.statusahrsins = status_ahrs_ins;
-//     /* status statusdeadreckoning */
-//     rosMsg.statusdeadreckoning = status_dead_reckoning;
-//     /* status statussynclock */
-//     rosMsg.statussynclock = status_synclock;
+        bool status_synclock = getbit(gpsTriggerStatus,7);
+        bool status_dead_reckoning = getbit(gpsTriggerStatus,6);
+        bool status_ahrs_ins = getbit(gpsTriggerStatus,5);
+        bool status_alignment = getbit(gpsTriggerStatus,4);
+        bool status_signal_in1 = getbit(gpsTriggerStatus,3);
+        bool status_signal_in2 = getbit(gpsTriggerStatus,2);
+        bool status_signal_in3 = getbit(gpsTriggerStatus,1);
+        bool status_trig_gps = getbit(gpsTriggerStatus,0);
+        /* status statustriggps */
+        rosMsg.StatusTrigGps = status_trig_gps;
+        /* status statussignalin3 */
+        rosMsg.StatusSignalIN3 = status_signal_in3;
+        /* status statussignalin2 */
+        rosMsg.StatusSignalIn2 = status_signal_in2;
+        /* status statussignalin1 */
+        rosMsg.StatusSignalIn1 = status_signal_in1;
+        /* status statusalignment */
+        rosMsg.StatusAlignment = status_alignment;
+        /* status statusahrsins */
+        rosMsg.StatusAHRSINS = status_ahrs_ins;
+        /* status statusdeadreckoning */
+        rosMsg.StatusDeadReckoning = status_dead_reckoning;
+        /* status statussynclock */
+        rosMsg.StatusSyncLock = status_synclock;
 }
 
 /// \file
@@ -158,48 +144,48 @@ void ADMA2ROSParser::getstatustrigger(adma_msgs::Adma& rosMsg, unsigned char gps
 /// \param  evkStatus byte with evk states
 void ADMA2ROSParser::getevkstatus(adma_msgs::Adma& rosMsg, unsigned char evkStatus)
 {
-//     bool status_pos_b2 = getbit(evkStatus,7);
-//     bool status_pos_b1 = getbit(evkStatus,6);
-//     bool status_tilt_b2 = getbit(evkStatus,5);
-//     bool status_tilt_b1 = getbit(evkStatus,4);
-//     bool status_configuration_changed = getbit(evkStatus,3);
-//     bool status_heading_executed = getbit(evkStatus,2);
-//     bool status_evk_estimates = getbit(evkStatus,1);
-//     bool status_evk_activ = getbit(evkStatus,0);
-//     /* status statustriggps */
-//     rosMsg.statusevkactiv = status_evk_activ;
-//     /* status status_evk_estimates */
-//     rosMsg.statusevkestimates = status_evk_estimates;
-//     /* status status_heading_executed */
-//     rosMsg.statusheadingexecuted = status_heading_executed;
-//     /* status status_configuration_changed */
-//     rosMsg.statusconfigurationchanged = status_configuration_changed;
-//     /* status tilt */
-//     if(status_tilt_b1==0 && status_tilt_b2==0)
-//     {
-//         rosMsg.statustilt = 0;
-//     }
-//     else if(status_tilt_b1==0 && status_tilt_b2==1)
-//     {
-//         rosMsg.statustilt = 1;
-//     }
-//     else if(status_tilt_b1==1 && status_tilt_b2==0)
-//     {
-//         rosMsg.statustilt = 2;
-//     }
-//     /* status pos */
-//     if(status_pos_b1==0 && status_pos_b2==0)
-//     {
-//         rosMsg.statuspos = 0;
-//     }
-//     else if(status_pos_b1==0 && status_pos_b2==1)
-//     {
-//         rosMsg.statuspos = 1;
-//     }
-//     else if(status_pos_b1==1 && status_pos_b2==0)
-//     {
-//         rosMsg.statuspos = 2;
-//     }
+        bool status_pos_b2 = getbit(evkStatus,7);
+        bool status_pos_b1 = getbit(evkStatus,6);
+        bool status_tilt_b2 = getbit(evkStatus,5);
+        bool status_tilt_b1 = getbit(evkStatus,4);
+        bool status_configuration_changed = getbit(evkStatus,3);
+        bool status_heading_executed = getbit(evkStatus,2);
+        bool status_evk_estimates = getbit(evkStatus,1);
+        bool status_evk_activ = getbit(evkStatus,0);
+        /* status statustriggps */
+        rosMsg.StatusEVKActiv = status_evk_activ;
+        /* status status_evk_estimates */
+        rosMsg.StatusEVKEstimates = status_evk_estimates;
+        /* status status_heading_executed */
+        rosMsg.StatusHeadingExecuted = status_heading_executed;
+        /* status status_configuration_changed */
+        rosMsg.StatusConfigurationChanged = status_configuration_changed;
+        /* status tilt */
+        if(status_tilt_b1==0 && status_tilt_b2==0)
+        {
+        rosMsg.StatusTilt = 0;
+        }
+        else if(status_tilt_b1==0 && status_tilt_b2==1)
+        {
+        rosMsg.StatusTilt = 1;
+        }
+        else if(status_tilt_b1==1 && status_tilt_b2==0)
+        {
+        rosMsg.StatusTilt = 2;
+        }
+        /* status pos */
+        if(status_pos_b1==0 && status_pos_b2==0)
+        {
+        rosMsg.StatusPos = 0;
+        }
+        else if(status_pos_b1==0 && status_pos_b2==1)
+        {
+        rosMsg.StatusPos = 1;
+        }
+        else if(status_pos_b1==1 && status_pos_b2==0)
+        {
+        rosMsg.StatusPos = 2;
+        }
 }
 
 /// \file
@@ -208,35 +194,35 @@ void ADMA2ROSParser::getevkstatus(adma_msgs::Adma& rosMsg, unsigned char evkStat
 /// \param  ewBytes array of bytes with several error and warnings
 void ADMA2ROSParser::geterrorandwarning(adma_msgs::Adma& rosMsg, unsigned char ewBytes[4])
 {
-//     std::bitset<8> bitdataerror1 = ewBytes[0];
-//     std::bitset<8> bitdataerror2 = ewBytes[1];
-//     std::bitset<8> bitdatawarn3 = ewBytes[2];
-//     std::bitset<8> errorhw = ewBytes[3];
-//     std::bitset<4> erhw1;
-//     std::bitset<4> ermisc1;
-//     std::bitset<4> ermisc2;
-//     std::bitset<4> ermisc3;
-//     std::bitset<4> warngps;
-//     std::bitset<4> warnmisc1;
-//     std::bitset<1> erhwsticky;
+        std::bitset<8> bitdataerror1 = ewBytes[0];
+        std::bitset<8> bitdataerror2 = ewBytes[1];
+        std::bitset<8> bitdatawarn3 = ewBytes[2];
+        std::bitset<8> errorhw = ewBytes[3];
+        std::bitset<4> erhw1;
+        std::bitset<4> ermisc1;
+        std::bitset<4> ermisc2;
+        std::bitset<4> ermisc3;
+        std::bitset<4> warngps;
+        std::bitset<4> warnmisc1;
+        std::bitset<1> erhwsticky;
 
-//     for(size_t i=0;i<4;i++)
-//     {
-//         erhw1[i]    = bitdataerror1[i];
-//         ermisc1[i]  = bitdataerror1[i+4];
-//         ermisc2[i]  = bitdataerror2[i];
-//         ermisc3[i]  = bitdataerror2[i+4];
-//         warngps[i]  = bitdatawarn3[i];
-//         warnmisc1[i]  = bitdatawarn3[i+4];
-//     }
-//     erhwsticky[0] = errorhw[1];
-//     rosMsg.errorhardware = erhw1.to_string();
-//     rosMsg.error_misc1 = ermisc1.to_string();
-//     rosMsg.error_misc2 = ermisc2.to_string();
-//     rosMsg.error_misc3 = ermisc3.to_string();
-//     rosMsg.warngps = warngps.to_string();
-//     rosMsg.warnmisc1 = warnmisc1.to_string();
-//     rosMsg.errorhwsticky = erhwsticky.to_string();
+        for(size_t i=0;i<4;i++)
+        {
+        erhw1[i]    = bitdataerror1[i];
+        ermisc1[i]  = bitdataerror1[i+4];
+        ermisc2[i]  = bitdataerror2[i];
+        ermisc3[i]  = bitdataerror2[i+4];
+        warngps[i]  = bitdatawarn3[i];
+        warnmisc1[i]  = bitdatawarn3[i+4];
+        }
+        erhwsticky[0] = errorhw[1];
+        rosMsg.ErrorHardware = erhw1.to_string();
+        rosMsg.Error_Misc1 = ermisc1.to_string();
+        rosMsg.Error_Misc2 = ermisc2.to_string();
+        rosMsg.Error_Misc3 = ermisc3.to_string();
+        rosMsg.WarnGPS = warngps.to_string();
+        rosMsg.WarnMisc1 = warnmisc1.to_string();
+        rosMsg.ErrorHWSticky = erhwsticky.to_string();
 }
 
 /// \file
@@ -244,286 +230,251 @@ void ADMA2ROSParser::geterrorandwarning(adma_msgs::Adma& rosMsg, unsigned char e
 /// \param  rosMsg ros message to fill with content
 void ADMA2ROSParser::parseScaledData(adma_msgs::Adma& rosMsg)
 {
-        // rosMsg.faccbodyhrx = getScaledValue(rosMsg.accbodyhrx, 0.0001);
-        // rosMsg.fratebodyhrx = getScaledValue(rosMsg.ratebodyhrx, 0.0001);
-        // rosMsg.faccbodyhry = getScaledValue(rosMsg.accbodyhry, 0.0001);
-        // rosMsg.fratebodyhry = getScaledValue(rosMsg.ratebodyhry, 0.0001);
-        // rosMsg.faccbodyhrz = getScaledValue(rosMsg.accbodyhrz, 0.0001);
-        // rosMsg.fratebodyhrz = getScaledValue(rosMsg.ratebodyhrz, 0.0001);
+        rosMsg.fAccBodyHRX = getScaledValue(rosMsg.AccBodyHRX, 0.0001);
+        rosMsg.fRateBodyHRX = getScaledValue(rosMsg.RateBodyHRX, 0.0001);
+        rosMsg.fAccBodyHRY = getScaledValue(rosMsg.AccBodyHRY, 0.0001);
+        rosMsg.fRateBodyHRY = getScaledValue(rosMsg.RateBodyHRY, 0.0001);
+        rosMsg.fAccBodyHRZ = getScaledValue(rosMsg.AccBodyHRZ, 0.0001);
+        rosMsg.fRateBodyHRZ = getScaledValue(rosMsg.RateBodyHRZ, 0.0001);
 
-        // rosMsg.fratebodyx = getScaledValue(rosMsg.ratebodyx, 0.01);
-        // rosMsg.fratebodyy = getScaledValue(rosMsg.ratebodyy, 0.01);
-        // rosMsg.fratebodyz = getScaledValue(rosMsg.ratebodyz, 0.01);
-        // rosMsg.fratehorx = getScaledValue(rosMsg.ratehorx, 0.01);
-        // rosMsg.fratehory = getScaledValue(rosMsg.ratehory, 0.01);
-        // rosMsg.fratehorz = getScaledValue(rosMsg.ratehorz, 0.01);
+        rosMsg.fRateBodyX = getScaledValue(rosMsg.RateBodyX, 0.01);
+        rosMsg.fRateBodyY = getScaledValue(rosMsg.RateBodyY, 0.01);
+        rosMsg.fRateBodyZ = getScaledValue(rosMsg.RateBodyZ, 0.01);
+        rosMsg.fRateHorX = getScaledValue(rosMsg.RateHorX, 0.01);
+        rosMsg.fRateHorY = getScaledValue(rosMsg.RateHorY, 0.01);
+        rosMsg.fRateHorZ = getScaledValue(rosMsg.RateHorZ, 0.01);
 
-        // rosMsg.faccbodyx = getScaledValue(rosMsg.accbodyx, 0.0004);
-        // rosMsg.faccbodyy = getScaledValue(rosMsg.accbodyy, 0.0004);
-        // rosMsg.faccbodyz = getScaledValue(rosMsg.accbodyz, 0.0004);
-        // rosMsg.facchorx = getScaledValue(rosMsg.acchorx, 0.0004);
-        // rosMsg.facchory = getScaledValue(rosMsg.acchory, 0.0004);
-        // rosMsg.facchorz = getScaledValue(rosMsg.acchorz, 0.0004);
+        rosMsg.fAccBodyX = getScaledValue(rosMsg.AccBodyX, 0.0004);
+        rosMsg.fAccBodyY = getScaledValue(rosMsg.AccBodyY, 0.0004);
+        rosMsg.fAccBodyZ = getScaledValue(rosMsg.AccBodyZ, 0.0004);
+        rosMsg.fAccHorX = getScaledValue(rosMsg.AccHorX, 0.0004);
+        rosMsg.fAccHorY = getScaledValue(rosMsg.AccHorY, 0.0004);
+        rosMsg.fAccHorZ = getScaledValue(rosMsg.AccHorZ, 0.0004);
 
-        // rosMsg.faccbodyx_1 = getScaledValue(rosMsg.accbodyx_1, 0.0004);
-        // rosMsg.faccbodyy_1 = getScaledValue(rosMsg.accbodyy_1, 0.0004);
-        // rosMsg.faccbodyz_1 = getScaledValue(rosMsg.accbodyz_1, 0.0004);
-        // rosMsg.faccbodyx_2 = getScaledValue(rosMsg.accbodyx_2, 0.0004);
-        // rosMsg.faccbodyy_2 = getScaledValue(rosMsg.accbodyy_2, 0.0004);
-        // rosMsg.faccbodyz_2 = getScaledValue(rosMsg.accbodyz_2, 0.0004);
-        // rosMsg.faccbodyx_3 = getScaledValue(rosMsg.accbodyx_3, 0.0004);
-        // rosMsg.faccbodyy_3 = getScaledValue(rosMsg.accbodyy_3, 0.0004);
-        // rosMsg.faccbodyz_3 = getScaledValue(rosMsg.accbodyz_3, 0.0004);
-        // rosMsg.faccbodyx_4 = getScaledValue(rosMsg.accbodyx_4, 0.0004);
-        // rosMsg.faccbodyy_4 = getScaledValue(rosMsg.accbodyy_4, 0.0004);
-        // rosMsg.faccbodyz_4 = getScaledValue(rosMsg.accbodyz_4, 0.0004);
-        // rosMsg.faccbodyx_5 = getScaledValue(rosMsg.accbodyx_5, 0.0004);
-        // rosMsg.faccbodyy_5 = getScaledValue(rosMsg.accbodyy_5, 0.0004);
-        // rosMsg.faccbodyz_5 = getScaledValue(rosMsg.accbodyz_5, 0.0004);
-        // rosMsg.faccbodyx_6 = getScaledValue(rosMsg.accbodyx_6, 0.0004);
-        // rosMsg.faccbodyy_6 = getScaledValue(rosMsg.accbodyy_6, 0.0004);
-        // rosMsg.faccbodyz_6 = getScaledValue(rosMsg.accbodyz_6, 0.0004);
-        // rosMsg.faccbodyx_7 = getScaledValue(rosMsg.accbodyx_7, 0.0004);
-        // rosMsg.faccbodyy_7 = getScaledValue(rosMsg.accbodyy_7, 0.0004);
-        // rosMsg.faccbodyz_7 = getScaledValue(rosMsg.accbodyz_7, 0.0004);
+        rosMsg.fAccBodyX_1 = getScaledValue(rosMsg.AccBodyX_1, 0.0004);
+        rosMsg.fAccBodyY_1 = getScaledValue(rosMsg.AccBodyY_1, 0.0004);
+        rosMsg.fAccBodyZ_1 = getScaledValue(rosMsg.AccBodyZ_1, 0.0004);
+        rosMsg.fAccBodyX_2 = getScaledValue(rosMsg.AccBodyX_2, 0.0004);
+        rosMsg.fAccBodyY_2 = getScaledValue(rosMsg.AccBodyY_2, 0.0004);
+        rosMsg.fAccBodyZ_2 = getScaledValue(rosMsg.AccBodyZ_2, 0.0004);
+        rosMsg.fAccBodyX_3 = getScaledValue(rosMsg.AccBodyX_3, 0.0004);
+        rosMsg.fAccBodyY_3 = getScaledValue(rosMsg.AccBodyY_3, 0.0004);
+        rosMsg.fAccBodyZ_3 = getScaledValue(rosMsg.AccBodyZ_3, 0.0004);
+        rosMsg.fAccBodyX_4 = getScaledValue(rosMsg.AccBodyX_4, 0.0004);
+        rosMsg.fAccBodyY_4 = getScaledValue(rosMsg.AccBodyY_4, 0.0004);
+        rosMsg.fAccBodyZ_4 = getScaledValue(rosMsg.AccBodyZ_4, 0.0004);
+        rosMsg.fAccBodyX_5 = getScaledValue(rosMsg.AccBodyX_5, 0.0004);
+        rosMsg.fAccBodyY_5 = getScaledValue(rosMsg.AccBodyY_5, 0.0004);
+        rosMsg.fAccBodyZ_5 = getScaledValue(rosMsg.AccBodyZ_5, 0.0004);
+        rosMsg.fAccBodyX_6 = getScaledValue(rosMsg.AccBodyX_6, 0.0004);
+        rosMsg.fAccBodyY_6 = getScaledValue(rosMsg.AccBodyY_6, 0.0004);
+        rosMsg.fAccBodyZ_6 = getScaledValue(rosMsg.AccBodyZ_6, 0.0004);
+        rosMsg.fAccBodyX_7 = getScaledValue(rosMsg.AccBodyX_7, 0.0004);
+        rosMsg.fAccBodyY_7 = getScaledValue(rosMsg.AccBodyY_7, 0.0004);
+        rosMsg.fAccBodyZ_7 = getScaledValue(rosMsg.AccBodyZ_7, 0.0004);
+        rosMsg.fAccBodyX_8 = getScaledValue(rosMsg.AccBodyX_8, 0.0004);
+        rosMsg.fAccBodyY_8 = getScaledValue(rosMsg.AccBodyY_8, 0.0004);
+        rosMsg.fAccBodyZ_8 = getScaledValue(rosMsg.AccBodyZ_8, 0.0004);
 
-        // rosMsg.facchorx_1 = getScaledValue(rosMsg.acchorx_1, 0.0004);
-        // rosMsg.facchory_1 = getScaledValue(rosMsg.acchory_1, 0.0004);
-        // rosMsg.facchorz_1 = getScaledValue(rosMsg.acchorz_1, 0.0004);
-        // rosMsg.facchorx_2 = getScaledValue(rosMsg.acchorx_2, 0.0004);
-        // rosMsg.facchory_2 = getScaledValue(rosMsg.acchory_2, 0.0004);
-        // rosMsg.facchorz_2 = getScaledValue(rosMsg.acchorz_2, 0.0004);
-        // rosMsg.facchorx_3 = getScaledValue(rosMsg.acchorx_3, 0.0004);
-        // rosMsg.facchory_3 = getScaledValue(rosMsg.acchory_3, 0.0004);
-        // rosMsg.facchorz_3 = getScaledValue(rosMsg.acchorz_3, 0.0004);
-        // rosMsg.facchorx_4 = getScaledValue(rosMsg.acchorx_4, 0.0004);
-        // rosMsg.facchory_4 = getScaledValue(rosMsg.acchory_4, 0.0004);
-        // rosMsg.facchorz_4 = getScaledValue(rosMsg.acchorz_4, 0.0004);
-        // rosMsg.facchorx_5 = getScaledValue(rosMsg.acchorx_5, 0.0004);
-        // rosMsg.facchory_5 = getScaledValue(rosMsg.acchory_5, 0.0004);
-        // rosMsg.facchorz_5 = getScaledValue(rosMsg.acchorz_5, 0.0004);
-        // rosMsg.facchorx_6 = getScaledValue(rosMsg.acchorx_6, 0.0004);
-        // rosMsg.facchory_6 = getScaledValue(rosMsg.acchory_6, 0.0004);
-        // rosMsg.facchorz_6 = getScaledValue(rosMsg.acchorz_6, 0.0004);
-        // rosMsg.facchorx_7 = getScaledValue(rosMsg.acchorx_7, 0.0004);
-        // rosMsg.facchory_7 = getScaledValue(rosMsg.acchory_7, 0.0004);
-        // rosMsg.facchorz_7 = getScaledValue(rosMsg.acchorz_7, 0.0004);
+        rosMsg.fAccHorX_1 = getScaledValue(rosMsg.AccHorX_1, 0.0004);
+        rosMsg.fAccHorY_1 = getScaledValue(rosMsg.AccHorY_1, 0.0004);
+        rosMsg.fAccHorZ_1 = getScaledValue(rosMsg.AccHorZ_1, 0.0004);
+        rosMsg.fAccHorX_2 = getScaledValue(rosMsg.AccHorX_2, 0.0004);
+        rosMsg.fAccHorY_2 = getScaledValue(rosMsg.AccHorY_2, 0.0004);
+        rosMsg.fAccHorZ_2 = getScaledValue(rosMsg.AccHorZ_2, 0.0004);
+        rosMsg.fAccHorX_3 = getScaledValue(rosMsg.AccHorX_3, 0.0004);
+        rosMsg.fAccHorY_3 = getScaledValue(rosMsg.AccHorY_3, 0.0004);
+        rosMsg.fAccHorZ_3 = getScaledValue(rosMsg.AccHorZ_3, 0.0004);
+        rosMsg.fAccHorX_4 = getScaledValue(rosMsg.AccHorX_4, 0.0004);
+        rosMsg.fAccHorY_4 = getScaledValue(rosMsg.AccHorY_4, 0.0004);
+        rosMsg.fAccHorZ_4 = getScaledValue(rosMsg.AccHorZ_4, 0.0004);
+        rosMsg.fAccHorX_5 = getScaledValue(rosMsg.AccHorX_5, 0.0004);
+        rosMsg.fAccHorY_5 = getScaledValue(rosMsg.AccHorY_5, 0.0004);
+        rosMsg.fAccHorZ_5 = getScaledValue(rosMsg.AccHorZ_5, 0.0004);
+        rosMsg.fAccHorX_6 = getScaledValue(rosMsg.AccHorX_6, 0.0004);
+        rosMsg.fAccHorY_6 = getScaledValue(rosMsg.AccHorY_6, 0.0004);
+        rosMsg.fAccHorZ_6 = getScaledValue(rosMsg.AccHorZ_6, 0.0004);
+        rosMsg.fAccHorX_7 = getScaledValue(rosMsg.AccHorX_7, 0.0004);
+        rosMsg.fAccHorY_7 = getScaledValue(rosMsg.AccHorY_7, 0.0004);
+        rosMsg.fAccHorZ_7 = getScaledValue(rosMsg.AccHorZ_7, 0.0004);
+        rosMsg.fAccHorX_8 = getScaledValue(rosMsg.AccHorX_8, 0.0004);
+        rosMsg.fAccHorY_8 = getScaledValue(rosMsg.AccHorY_8, 0.0004);
+        rosMsg.fAccHorZ_8 = getScaledValue(rosMsg.AccHorZ_8, 0.0004);
 
-        // rosMsg.fextvelanx = getScaledValue(rosMsg.extvelanx, 0.005);
-        // rosMsg.fextvelany = getScaledValue(rosMsg.extvelany, 0.005);
-        // rosMsg.fextveldigx = getScaledValue(rosMsg.extveldigx, 0.005);
-        // rosMsg.fextveldigy = getScaledValue(rosMsg.extveldigy, 0.005);
-        // rosMsg.fextvelxcorrected = getScaledValue(rosMsg.extvelxcorrected, 0.005);
-        // rosMsg.fextvelycorrected = getScaledValue(rosMsg.extvelycorrected, 0.005);
+        rosMsg.fExtVelAnX = getScaledValue(rosMsg.ExtVelAnX, 0.005);
+        rosMsg.fExtVelAnY = getScaledValue(rosMsg.ExtVelAnY, 0.005);
+        rosMsg.fExtVelDigX = getScaledValue(rosMsg.ExtVelDigX, 0.005);
+        rosMsg.fExtVelDigY = getScaledValue(rosMsg.ExtVelDigY, 0.005);
+        rosMsg.fExtVelXCorrected = getScaledValue(rosMsg.ExtVelXCorrected, 0.005);
+        rosMsg.fExtVelYCorrected = getScaledValue(rosMsg.ExtVelYCorrected, 0.005);
 
-        // rosMsg.fextbaropressure = getScaledValue(rosMsg.extbaropressure, 0.01);
-        // rosMsg.fextbaroheight = getScaledValue(rosMsg.extbaroheight, 0.01);
-        // rosMsg.fextbaroheightcorrected = getScaledValue(rosMsg.extbaroheightcorrected, 0.01);
+        rosMsg.fExtBaroPressure = getScaledValue(rosMsg.ExtBaroPressure, 0.01);
+        rosMsg.fExtBaroHeight = getScaledValue(rosMsg.ExtBaroHeight, 0.01);
+        rosMsg.fExtBaroHeightCorrected = getScaledValue(rosMsg.ExtBaroHeightCorrected, 0.01);
 
-        // rosMsg.finvpathradius = getScaledValue(rosMsg.invpathradius, 0.0001);
-        // rosMsg.fsideslipangle = getScaledValue(rosMsg.sideslipangle, 0.01);
-        // rosMsg.fdisttrav = getScaledValue(rosMsg.disttrav, 0.01);
+        rosMsg.fInvPathRadius = getScaledValue(rosMsg.InvPathRadius, 0.0001);
+        rosMsg.fSideSlipAngle = getScaledValue(rosMsg.SideSlipAngle, 0.01);
+        rosMsg.fDistTrav = getScaledValue(rosMsg.DistTrav, 0.01);
 
-        // rosMsg.finvpathradius_1 = getScaledValue(rosMsg.invpathradius_1, 0.0001);
-        // rosMsg.fsideslipangle_1 = getScaledValue(rosMsg.sideslipangle_1, 0.01);
-        // rosMsg.fdisttrav_1 = getScaledValue(rosMsg.disttrav_1, 0.01);
-        // rosMsg.finvpathradius_2 = getScaledValue(rosMsg.invpathradius_2, 0.0001);
-        // rosMsg.fsideslipangle_2 = getScaledValue(rosMsg.sideslipangle_2, 0.01);
-        // rosMsg.fdisttrav_2 = getScaledValue(rosMsg.disttrav_2, 0.01);
-        // rosMsg.finvpathradius_3 = getScaledValue(rosMsg.invpathradius_3, 0.0001);
-        // rosMsg.fsideslipangle_3 = getScaledValue(rosMsg.sideslipangle_3, 0.01);
-        // rosMsg.fdisttrav_3 = getScaledValue(rosMsg.disttrav_3, 0.01);
-        // rosMsg.finvpathradius_4 = getScaledValue(rosMsg.invpathradius_4, 0.0001);
-        // rosMsg.fsideslipangle_4 = getScaledValue(rosMsg.sideslipangle_4, 0.01);
-        // rosMsg.fdisttrav_4 = getScaledValue(rosMsg.disttrav_4, 0.01);
-        // rosMsg.finvpathradius_5 = getScaledValue(rosMsg.invpathradius_5, 0.0001);
-        // rosMsg.fsideslipangle_5 = getScaledValue(rosMsg.sideslipangle_5, 0.01);
-        // rosMsg.fdisttrav_5 = getScaledValue(rosMsg.disttrav_5, 0.01);
-        // rosMsg.finvpathradius_6 = getScaledValue(rosMsg.invpathradius_6, 0.0001);
-        // rosMsg.fsideslipangle_6 = getScaledValue(rosMsg.sideslipangle_6, 0.01);
-        // rosMsg.fdisttrav_6 = getScaledValue(rosMsg.disttrav_6, 0.01);
-        // rosMsg.finvpathradius_7 = getScaledValue(rosMsg.invpathradius_7, 0.0001);
-        // rosMsg.fsideslipangle_7 = getScaledValue(rosMsg.sideslipangle_7, 0.01);
-        // rosMsg.fdisttrav_7 = getScaledValue(rosMsg.disttrav_7, 0.01);
+        rosMsg.fInvPathRadius_1 = getScaledValue(rosMsg.InvPathRadius_1, 0.0001);
+        rosMsg.fSideSlipAngle_1 = getScaledValue(rosMsg.SideSlipAngle_1, 0.01);
+        rosMsg.fDistTrav_1 = getScaledValue(rosMsg.DistTrav_1, 0.01);
+        rosMsg.fInvPathRadius_2 = getScaledValue(rosMsg.InvPathRadius_2, 0.0001);
+        rosMsg.fSideSlipAngle_2 = getScaledValue(rosMsg.SideSlipAngle_2, 0.01);
+        rosMsg.fDistTrav_2 = getScaledValue(rosMsg.DistTrav_2, 0.01);
+        rosMsg.fInvPathRadius_3 = getScaledValue(rosMsg.InvPathRadius_3, 0.0001);
+        rosMsg.fSideSlipAngle_3 = getScaledValue(rosMsg.SideSlipAngle_3, 0.01);
+        rosMsg.fDistTrav_3 = getScaledValue(rosMsg.DistTrav_3, 0.01);
+        rosMsg.fInvPathRadius_4 = getScaledValue(rosMsg.InvPathRadius_4, 0.0001);
+        rosMsg.fSideSlipAngle_4 = getScaledValue(rosMsg.SideSlipAngle_4, 0.01);
+        rosMsg.fDistTrav_4 = getScaledValue(rosMsg.DistTrav_4, 0.01);
+        rosMsg.fInvPathRadius_5 = getScaledValue(rosMsg.InvPathRadius_5, 0.0001);
+        rosMsg.fSideSlipAngle_5 = getScaledValue(rosMsg.SideSlipAngle_5, 0.01);
+        rosMsg.fDistTrav_5 = getScaledValue(rosMsg.DistTrav_5, 0.01);
+        rosMsg.fInvPathRadius_6 = getScaledValue(rosMsg.InvPathRadius_6, 0.0001);
+        rosMsg.fSideSlipAngle_6 = getScaledValue(rosMsg.SideSlipAngle_6, 0.01);
+        rosMsg.fDistTrav_6 = getScaledValue(rosMsg.DistTrav_6, 0.01);
+        rosMsg.fInvPathRadius_7 = getScaledValue(rosMsg.InvPathRadius_7, 0.0001);
+        rosMsg.fSideSlipAngle_7 = getScaledValue(rosMsg.SideSlipAngle_7, 0.01);
+        rosMsg.fDistTrav_7 = getScaledValue(rosMsg.DistTrav_7, 0.01);
+        rosMsg.fInvPathRadius_8 = getScaledValue(rosMsg.InvPathRadius_8, 0.0001);
+        rosMsg.fSideSlipAngle_8 = getScaledValue(rosMsg.SideSlipAngle_8, 0.01);
+        rosMsg.fDistTrav_8 = getScaledValue(rosMsg.DistTrav_8, 0.01);
 
-        // rosMsg.fsystemtemp = getScaledValue(rosMsg.systemtemp, 0.1);
-        // rosMsg.fsystemdspload = getScaledValue(rosMsg.systemdspload, 0.1);
+        rosMsg.fSystemTemp = getScaledValue(rosMsg.SystemTemp, 0.1);
+        rosMsg.fSystemDSPLoad = getScaledValue(rosMsg.SystemDSPLoad, 0.1);
 
-        // rosMsg.fgpslatabs = getScaledValue(rosMsg.gpslatabs, 0.0000001);
-        // rosMsg.fgpslonabs = getScaledValue(rosMsg.gpslonabs, 0.0000001);
-        // rosMsg.fgpslatrel = getScaledValue(rosMsg.gpslatrel, 0.01);
-        // rosMsg.fgpslonrel = getScaledValue(rosMsg.gpslonrel, 0.01);
+        rosMsg.fGPSLatAbs = getScaledValue(rosMsg.GPSLatAbs, 0.0000001);
+        rosMsg.fGPSLonAbs = getScaledValue(rosMsg.GPSLonAbs, 0.0000001);
+        rosMsg.fGPSLatRel = getScaledValue(rosMsg.GPSLatRel, 0.01);
+        rosMsg.fGPSLonRel = getScaledValue(rosMsg.GPSLonRel, 0.01);
 
-        // rosMsg.fgpsstddevlat = getScaledValue(rosMsg.gpsstddevlat, 0.001);
-        // rosMsg.fgpsstddevlon = getScaledValue(rosMsg.gpsstddevlon, 0.001);
-        // rosMsg.fgpsstddevheight = getScaledValue(rosMsg.gpsstddevheight, 0.001);
+        rosMsg.fGPSStddevLat = getScaledValue(rosMsg.GPSStddevLat, 0.001);
+        rosMsg.fGPSStddevLon = getScaledValue(rosMsg.GPSStddevLon, 0.001);
+        rosMsg.fGPSStddevHeight = getScaledValue(rosMsg.GPSStddevHeight, 0.001);
 
-        // rosMsg.fgpsvelframex = getScaledValue(rosMsg.gpsvelframex, 0.005);
-        // rosMsg.fgpsvelframey = getScaledValue(rosMsg.gpsvelframey, 0.005);
-        // rosMsg.fgpsvelframez = getScaledValue(rosMsg.gpsvelframez, 0.005);
-        // rosMsg.fgpsvellatency = getScaledValue(rosMsg.gpsvellatency, 0.001);
+        rosMsg.fGPSVelFrameX = getScaledValue(rosMsg.GPSVelFrameX, 0.005);
+        rosMsg.fGPSVelFrameY = getScaledValue(rosMsg.GPSVelFrameY, 0.005);
+        rosMsg.fGPSVelFrameZ = getScaledValue(rosMsg.GPSVelFrameZ, 0.005);
+        rosMsg.fGPSVelLatency = getScaledValue(rosMsg.GPSVelLatency, 0.001);
 
-        // rosMsg.fgpsstddevvelx = getScaledValue(rosMsg.gpsstddevvelx, 0.001);
-        // rosMsg.fgpsstddevvely = getScaledValue(rosMsg.gpsstddevvely, 0.001);
-        // rosMsg.fgpsstddevvelz = getScaledValue(rosMsg.gpsstddevvelz, 0.001);
+        rosMsg.fGPSStddevVelX = getScaledValue(rosMsg.GPSStddevVelX, 0.001);
+        rosMsg.fGPSStddevVelY = getScaledValue(rosMsg.GPSStddevVelY, 0.001);
+        rosMsg.fGPSStddevVelZ = getScaledValue(rosMsg.GPSStddevVelZ, 0.001);
 
-        // rosMsg.fgpsdiffage = getScaledValue(rosMsg.gpsdiffage, 0.1);
-        // rosMsg.fgpsreceiverload = getScaledValue(rosMsg.gpsreceiverload, 0.5);
+        rosMsg.fGPSDiffAge = getScaledValue(rosMsg.GPSDiffAge, 0.1);
+        rosMsg.fGPSReceiverLoad = getScaledValue(rosMsg.GPSReceiverLoad, 0.5);
 
-        // rosMsg.finsroll = getScaledValue(rosMsg.insroll, 0.01);
-        // rosMsg.finspitch = getScaledValue(rosMsg.inspitch, 0.01);
-        // rosMsg.finsyaw = getScaledValue(rosMsg.insyaw, 0.01);
-        // rosMsg.fgpscog = getScaledValue(rosMsg.gpscog, 0.01);
+        rosMsg.fINSRoll = getScaledValue(rosMsg.INSRoll, 0.01);
+        rosMsg.fINSPitch = getScaledValue(rosMsg.INSPitch, 0.01);
+        rosMsg.fINSYaw = getScaledValue(rosMsg.INSYaw, 0.01);
+        rosMsg.fGPSCOG = getScaledValue(rosMsg.GPSCOG, 0.01);
 
-        // rosMsg.fgpsheight = getScaledValue(rosMsg.gpsheight, 0.01);
-        // rosMsg.fundulation = getScaledValue(rosMsg.undulation, 0.01);
+        rosMsg.fGPSHeight = getScaledValue(rosMsg.GPSHeight, 0.01);
+        rosMsg.fUndulation = getScaledValue(rosMsg.Undulation, 0.01);
 
-        // rosMsg.finsheight = getScaledValue(rosMsg.insheight, 0.01);
-        // rosMsg.finsheight_1 = getScaledValue(rosMsg.insheight_1, 0.01);
-        // rosMsg.finsheight_2 = getScaledValue(rosMsg.insheight_2, 0.01);
-        // rosMsg.finsheight_3 = getScaledValue(rosMsg.insheight_3, 0.01);
-        // rosMsg.finsheight_4 = getScaledValue(rosMsg.insheight_4, 0.01);
-        // rosMsg.finsheight_5 = getScaledValue(rosMsg.insheight_5, 0.01);
-        // rosMsg.finsheight_6 = getScaledValue(rosMsg.insheight_6, 0.01);
-        // rosMsg.finsheight_7 = getScaledValue(rosMsg.insheight_7, 0.01);
+        rosMsg.fINSHeight = getScaledValue(rosMsg.INSHeight, 0.01);
+        rosMsg.fINSHeight_1 = getScaledValue(rosMsg.INSHeight_1, 0.01);
+        rosMsg.fINSHeight_2 = getScaledValue(rosMsg.INSHeight_2, 0.01);
+        rosMsg.fINSHeight_3 = getScaledValue(rosMsg.INSHeight_3, 0.01);
+        rosMsg.fINSHeight_4 = getScaledValue(rosMsg.INSHeight_4, 0.01);
+        rosMsg.fINSHeight_5 = getScaledValue(rosMsg.INSHeight_5, 0.01);
+        rosMsg.fINSHeight_6 = getScaledValue(rosMsg.INSHeight_6, 0.01);
+        rosMsg.fINSHeight_7 = getScaledValue(rosMsg.INSHeight_7, 0.01);
+        rosMsg.fINSHeight_8 = getScaledValue(rosMsg.INSHeight_8, 0.01);
 
-        // rosMsg.finslatabs = getScaledValue(rosMsg.inslatabs, 0.0000001);
-        // rosMsg.finslonabs = getScaledValue(rosMsg.inslonabs, 0.0000001);
-        // rosMsg.finslatrel = getScaledValue(rosMsg.inslatrel, 0.01);
-        // rosMsg.finslonrel = getScaledValue(rosMsg.inslonrel, 0.01);
-        // rosMsg.finslatabs_1 = getScaledValue(rosMsg.inslatabs_1, 0.0000001);
-        // rosMsg.finslonabs_1 = getScaledValue(rosMsg.inslonabs_1, 0.0000001);
-        // rosMsg.finslatrel_1 = getScaledValue(rosMsg.inslatrel_1, 0.01);
-        // rosMsg.finslonrel_1 = getScaledValue(rosMsg.inslonrel_1, 0.01);
-        // rosMsg.finslatabs_2 = getScaledValue(rosMsg.inslatabs_2, 0.0000001);
-        // rosMsg.finslonabs_2 = getScaledValue(rosMsg.inslonabs_2, 0.0000001);
-        // rosMsg.finslatrel_2 = getScaledValue(rosMsg.inslatrel_2, 0.01);
-        // rosMsg.finslonrel_2 = getScaledValue(rosMsg.inslonrel_2, 0.01);
-        // rosMsg.finslatabs_3 = getScaledValue(rosMsg.inslatabs_3, 0.0000001);
-        // rosMsg.finslonabs_3 = getScaledValue(rosMsg.inslonabs_3, 0.0000001);
-        // rosMsg.finslatrel_3 = getScaledValue(rosMsg.inslatrel_3, 0.01);
-        // rosMsg.finslonrel_3 = getScaledValue(rosMsg.inslonrel_3, 0.01);
-        // rosMsg.finslatabs_4 = getScaledValue(rosMsg.inslatabs_4, 0.0000001);
-        // rosMsg.finslonabs_4 = getScaledValue(rosMsg.inslonabs_4, 0.0000001);
-        // rosMsg.finslatrel_4 = getScaledValue(rosMsg.inslatrel_4, 0.01);
-        // rosMsg.finslonrel_4 = getScaledValue(rosMsg.inslonrel_4, 0.01);
-        // rosMsg.finslatabs_5 = getScaledValue(rosMsg.inslatabs_5, 0.0000001);
-        // rosMsg.finslonabs_5 = getScaledValue(rosMsg.inslonabs_5, 0.0000001);
-        // rosMsg.finslatrel_5 = getScaledValue(rosMsg.inslatrel_5, 0.01);
-        // rosMsg.finslonrel_5 = getScaledValue(rosMsg.inslonrel_5, 0.01);
-        // rosMsg.finslatabs_6 = getScaledValue(rosMsg.inslatabs_6, 0.0000001);
-        // rosMsg.finslonabs_6 = getScaledValue(rosMsg.inslonabs_6, 0.0000001);
-        // rosMsg.finslatrel_6 = getScaledValue(rosMsg.inslatrel_6, 0.01);
-        // rosMsg.finslonrel_6 = getScaledValue(rosMsg.inslonrel_6, 0.01);
-        // rosMsg.finslatabs_7 = getScaledValue(rosMsg.inslatabs_7, 0.0000001);
-        // rosMsg.finslonabs_7 = getScaledValue(rosMsg.inslonabs_7, 0.0000001);
-        // rosMsg.finslatrel_7 = getScaledValue(rosMsg.inslatrel_7, 0.01);
-        // rosMsg.finslonrel_7 = getScaledValue(rosMsg.inslonrel_7, 0.01);
+        rosMsg.fINSLatAbs = getScaledValue(rosMsg.INSLatAbs, 0.0000001);
+        rosMsg.fINSLonAbs = getScaledValue(rosMsg.INSLonAbs, 0.0000001);
+        rosMsg.fINSLatRel = getScaledValue(rosMsg.INSLatRel, 0.01);
+        rosMsg.fINSLonRel = getScaledValue(rosMsg.INSLonRel, 0.01);
+        rosMsg.fINSLatAbs_1 = getScaledValue(rosMsg.INSLatAbs_1, 0.0000001);
+        rosMsg.fINSLonAbs_1 = getScaledValue(rosMsg.INSLonAbs_1, 0.0000001);
+        rosMsg.fINSLatRel_1 = getScaledValue(rosMsg.INSLatRel_1, 0.01);
+        rosMsg.fINSLonRel_1 = getScaledValue(rosMsg.INSLonRel_1, 0.01);
+        rosMsg.fINSLatAbs_2 = getScaledValue(rosMsg.INSLatAbs_2, 0.0000001);
+        rosMsg.fINSLonAbs_2 = getScaledValue(rosMsg.INSLonAbs_2, 0.0000001);
+        rosMsg.fINSLatRel_2 = getScaledValue(rosMsg.INSLatRel_2, 0.01);
+        rosMsg.fINSLonRel_2 = getScaledValue(rosMsg.INSLonRel_2, 0.01);
+        rosMsg.fINSLatAbs_3 = getScaledValue(rosMsg.INSLatAbs_3, 0.0000001);
+        rosMsg.fINSLonAbs_3 = getScaledValue(rosMsg.INSLonAbs_3, 0.0000001);
+        rosMsg.fINSLatRel_3 = getScaledValue(rosMsg.INSLatRel_3, 0.01);
+        rosMsg.fINSLonRel_3 = getScaledValue(rosMsg.INSLonRel_3, 0.01);
+        rosMsg.fINSLatAbs_4 = getScaledValue(rosMsg.INSLatAbs_4, 0.0000001);
+        rosMsg.fINSLonAbs_4 = getScaledValue(rosMsg.INSLonAbs_4, 0.0000001);
+        rosMsg.fINSLatRel_4 = getScaledValue(rosMsg.INSLatRel_4, 0.01);
+        rosMsg.fINSLonRel_4 = getScaledValue(rosMsg.INSLonRel_4, 0.01);
+        rosMsg.fINSLatAbs_5 = getScaledValue(rosMsg.INSLatAbs_5, 0.0000001);
+        rosMsg.fINSLonAbs_5 = getScaledValue(rosMsg.INSLonAbs_5, 0.0000001);
+        rosMsg.fINSLatRel_5 = getScaledValue(rosMsg.INSLatRel_5, 0.01);
+        rosMsg.fINSLonRel_5 = getScaledValue(rosMsg.INSLonRel_5, 0.01);
+        rosMsg.fINSLatAbs_6 = getScaledValue(rosMsg.INSLatAbs_6, 0.0000001);
+        rosMsg.fINSLonAbs_6 = getScaledValue(rosMsg.INSLonAbs_6, 0.0000001);
+        rosMsg.fINSLatRel_6 = getScaledValue(rosMsg.INSLatRel_6, 0.01);
+        rosMsg.fINSLonRel_6 = getScaledValue(rosMsg.INSLonRel_6, 0.01);
+        rosMsg.fINSLatAbs_7 = getScaledValue(rosMsg.INSLatAbs_7, 0.0000001);
+        rosMsg.fINSLonAbs_7 = getScaledValue(rosMsg.INSLonAbs_7, 0.0000001);
+        rosMsg.fINSLatRel_7 = getScaledValue(rosMsg.INSLatRel_7, 0.01);
+        rosMsg.fINSLonRel_7 = getScaledValue(rosMsg.INSLonRel_7, 0.01);
+        rosMsg.fINSLatAbs_8 = getScaledValue(rosMsg.INSLatAbs_8, 0.0000001);
+        rosMsg.fINSLonAbs_8 = getScaledValue(rosMsg.INSLonAbs_8, 0.0000001);
+        rosMsg.fINSLatRel_8 = getScaledValue(rosMsg.INSLatRel_8, 0.01);
+        rosMsg.fINSLonRel_8 = getScaledValue(rosMsg.INSLonRel_8, 0.01);
 
-        // rosMsg.finsvelhorx = getScaledValue(rosMsg.insvelhorx, 0.005);
-        // rosMsg.finsvelhory = getScaledValue(rosMsg.insvelhory, 0.005);
-        // rosMsg.finsvelhorz = getScaledValue(rosMsg.insvelhorz, 0.005);
-        // rosMsg.finsvelframex = getScaledValue(rosMsg.insvelframex, 0.005);
-        // rosMsg.finsvelframey = getScaledValue(rosMsg.insvelframey, 0.005);
-        // rosMsg.finsvelframez = getScaledValue(rosMsg.insvelframez, 0.005);
+        rosMsg.fINSVelHorX = getScaledValue(rosMsg.INSVelHorX, 0.005);
+        rosMsg.fINSVelHorY = getScaledValue(rosMsg.INSVelHorY, 0.005);
+        rosMsg.fINSVelHorZ = getScaledValue(rosMsg.INSVelHorZ, 0.005);
+        rosMsg.fINSVelFrameX = getScaledValue(rosMsg.INSVelFrameX, 0.005);
+        rosMsg.fINSVelFrameY = getScaledValue(rosMsg.INSVelFrameY, 0.005);
+        rosMsg.fINSVelFrameZ = getScaledValue(rosMsg.INSVelFrameZ, 0.005);
 
-        // rosMsg.finsvelhorx_1 = getScaledValue(rosMsg.insvelhorx_1, 0.005);
-        // rosMsg.finsvelhory_1 = getScaledValue(rosMsg.insvelhory_1, 0.005);
-        // rosMsg.finsvelhorz_1 = getScaledValue(rosMsg.insvelhorz_1, 0.005);
-        // rosMsg.finsvelhorx_2 = getScaledValue(rosMsg.insvelhorx_2, 0.005);
-        // rosMsg.finsvelhory_2 = getScaledValue(rosMsg.insvelhory_2, 0.005);
-        // rosMsg.finsvelhorz_2 = getScaledValue(rosMsg.insvelhorz_2, 0.005);
-        // rosMsg.finsvelhorx_3 = getScaledValue(rosMsg.insvelhorx_3, 0.005);
-        // rosMsg.finsvelhory_3 = getScaledValue(rosMsg.insvelhory_3, 0.005);
-        // rosMsg.finsvelhorz_3 = getScaledValue(rosMsg.insvelhorz_3, 0.005);
-        // rosMsg.finsvelhorx_4 = getScaledValue(rosMsg.insvelhorx_4, 0.005);
-        // rosMsg.finsvelhory_4 = getScaledValue(rosMsg.insvelhory_4, 0.005);
-        // rosMsg.finsvelhorz_4 = getScaledValue(rosMsg.insvelhorz_4, 0.005);
-        // rosMsg.finsvelhorx_5 = getScaledValue(rosMsg.insvelhorx_5, 0.005);
-        // rosMsg.finsvelhory_5 = getScaledValue(rosMsg.insvelhory_5, 0.005);
-        // rosMsg.finsvelhorz_5 = getScaledValue(rosMsg.insvelhorz_5, 0.005);
-        // rosMsg.finsvelhorx_6 = getScaledValue(rosMsg.insvelhorx_6, 0.005);
-        // rosMsg.finsvelhory_6 = getScaledValue(rosMsg.insvelhory_6, 0.005);
-        // rosMsg.finsvelhorz_6 = getScaledValue(rosMsg.insvelhorz_6, 0.005);
-        // rosMsg.finsvelhorx_7 = getScaledValue(rosMsg.insvelhorx_7, 0.005);
-        // rosMsg.finsvelhory_7 = getScaledValue(rosMsg.insvelhory_7, 0.005);
-        // rosMsg.finsvelhorz_7 = getScaledValue(rosMsg.insvelhorz_7, 0.005);
+        rosMsg.fINSVelHorX_1 = getScaledValue(rosMsg.INSVelHorX_1, 0.005);
+        rosMsg.fINSVelHorY_1 = getScaledValue(rosMsg.INSVelHorY_1, 0.005);
+        rosMsg.fINSVelHorZ_1 = getScaledValue(rosMsg.INSVelHorZ_1, 0.005);
+        rosMsg.fINSVelHorX_2 = getScaledValue(rosMsg.INSVelHorX_2, 0.005);
+        rosMsg.fINSVelHorY_2 = getScaledValue(rosMsg.INSVelHorY_2, 0.005);
+        rosMsg.fINSVelHorZ_2 = getScaledValue(rosMsg.INSVelHorZ_2, 0.005);
+        rosMsg.fINSVelHorX_3 = getScaledValue(rosMsg.INSVelHorX_3, 0.005);
+        rosMsg.fINSVelHorY_3 = getScaledValue(rosMsg.INSVelHorY_3, 0.005);
+        rosMsg.fINSVelHorZ_3 = getScaledValue(rosMsg.INSVelHorZ_3, 0.005);
+        rosMsg.fINSVelHorX_4 = getScaledValue(rosMsg.INSVelHorX_4, 0.005);
+        rosMsg.fINSVelHorY_4 = getScaledValue(rosMsg.INSVelHorY_4, 0.005);
+        rosMsg.fINSVelHorZ_4 = getScaledValue(rosMsg.INSVelHorZ_4, 0.005);
+        rosMsg.fINSVelHorX_5 = getScaledValue(rosMsg.INSVelHorX_5, 0.005);
+        rosMsg.fINSVelHorY_5 = getScaledValue(rosMsg.INSVelHorY_5, 0.005);
+        rosMsg.fINSVelHorZ_5 = getScaledValue(rosMsg.INSVelHorZ_5, 0.005);
+        rosMsg.fINSVelHorX_6 = getScaledValue(rosMsg.INSVelHorX_6, 0.005);
+        rosMsg.fINSVelHorY_6 = getScaledValue(rosMsg.INSVelHorY_6, 0.005);
+        rosMsg.fINSVelHorZ_6 = getScaledValue(rosMsg.INSVelHorZ_6, 0.005);
+        rosMsg.fINSVelHorX_7 = getScaledValue(rosMsg.INSVelHorX_7, 0.005);
+        rosMsg.fINSVelHorY_7 = getScaledValue(rosMsg.INSVelHorY_7, 0.005);
+        rosMsg.fINSVelHorZ_7 = getScaledValue(rosMsg.INSVelHorZ_7, 0.005);
+        rosMsg.fINSVelHorX_8 = getScaledValue(rosMsg.INSVelHorX_8, 0.005);
+        rosMsg.fINSVelHorY_8 = getScaledValue(rosMsg.INSVelHorY_8, 0.005);
+        rosMsg.fINSVelHorZ_8 = getScaledValue(rosMsg.INSVelHorZ_8, 0.005);
 
-        // rosMsg.finsstddevlat = getScaledValue(rosMsg.insstddevlat, 0.01);
-        // rosMsg.finsstddevlong = getScaledValue(rosMsg.insstddevlong, 0.01);
-        // rosMsg.finsstddevheight = getScaledValue(rosMsg.insstddevheight, 0.01);
+        rosMsg.fINSStddevLat = getScaledValue(rosMsg.INSStddevLat, 0.01);
+        rosMsg.fINSStddevLong = getScaledValue(rosMsg.INSStddevLong, 0.01);
+        rosMsg.fINSStddevHeight = getScaledValue(rosMsg.INSStddevHeight, 0.01);
 
-        // rosMsg.finsstddevvelx = getScaledValue(rosMsg.insstddevvelx, 0.01);
-        // rosMsg.finsstddevvely = getScaledValue(rosMsg.insstddevvely, 0.01);
-        // rosMsg.finsstddevvelz = getScaledValue(rosMsg.insstddevvelz, 0.01);
-        // rosMsg.finsstddevroll = getScaledValue(rosMsg.insstddevroll, 0.01);
-        // rosMsg.finsstddevpitch = getScaledValue(rosMsg.insstddevpitch, 0.01);
-        // rosMsg.finsstddevyaw = getScaledValue(rosMsg.insstddevyaw, 0.01);
+        rosMsg.fINSStddevVelX = getScaledValue(rosMsg.INSStddevVelX, 0.01);
+        rosMsg.fINSStddevVelY = getScaledValue(rosMsg.INSStddevVelY, 0.01);
+        rosMsg.fINSStddevVelZ = getScaledValue(rosMsg.INSStddevVelZ, 0.01);
+        rosMsg.fINSStddevRoll = getScaledValue(rosMsg.INSStddevRoll, 0.01);
+        rosMsg.fINSStddevPitch = getScaledValue(rosMsg.INSStddevPitch, 0.01);
+        rosMsg.fINSStddevYaw = getScaledValue(rosMsg.INSStddevYaw, 0.01);
 
-        // rosMsg.fan1 = getScaledValue(rosMsg.an1, 0.0005);
-        // rosMsg.fan2 = getScaledValue(rosMsg.an2, 0.0005);
-        // rosMsg.fan3 = getScaledValue(rosMsg.an3, 0.0005);
-        // rosMsg.fan4 = getScaledValue(rosMsg.an4, 0.0005);
+        rosMsg.fAN1 = getScaledValue(rosMsg.AN1, 0.0005);
+        rosMsg.fAN2 = getScaledValue(rosMsg.AN2, 0.0005);
+        rosMsg.fAN3 = getScaledValue(rosMsg.AN3, 0.0005);
+        rosMsg.fAN4 = getScaledValue(rosMsg.AN4, 0.0005);
 
         // // only for >= v3.3.3
-        // rosMsg.fgpsdualantheading = getScaledValue(rosMsg.gpsdualantheading, 0.01);
-        // rosMsg.fgpsdualantpitch = getScaledValue(rosMsg.gpsdualantpitch, 0.01);
-        // rosMsg.fgpsdualantstddevheading = getScaledValue(rosMsg.gpsdualantstddevheading, 0.01);
-        // rosMsg.fgpsdualantstddevpitch = getScaledValue(rosMsg.gpsdualantstddevpitch, 0.01);
-        // rosMsg.fgpsdualantstddevheading_hr = getScaledValue(rosMsg.gpsdualantstddevheading_hr, 0.01);
-        // rosMsg.fgpsdualantstddevpitch_hr = getScaledValue(rosMsg.gpsdualantstddevpitch_hr, 0.01);
-        // rosMsg.faccbodyx_8 = getScaledValue(rosMsg.accbodyx_8, 0.0004);
-        // rosMsg.faccbodyy_8 = getScaledValue(rosMsg.accbodyy_8, 0.0004);
-        // rosMsg.faccbodyz_8 = getScaledValue(rosMsg.accbodyz_8, 0.0004);
-        // rosMsg.facchorx_8 = getScaledValue(rosMsg.acchorx_8, 0.0004);
-        // rosMsg.facchory_8 = getScaledValue(rosMsg.acchory_8, 0.0004);
-        // rosMsg.facchorz_8 = getScaledValue(rosMsg.acchorz_8, 0.0004);
-        // rosMsg.finvpathradius_8 = getScaledValue(rosMsg.invpathradius_8, 0.0001);
-        // rosMsg.fsideslipangle_8 = getScaledValue(rosMsg.sideslipangle_8, 0.01);
-        // rosMsg.fdisttrav_8 = getScaledValue(rosMsg.disttrav_8, 0.01);
-        // rosMsg.finsheight_8 = getScaledValue(rosMsg.insheight_8, 0.01);
-        // rosMsg.finslatabs_8 = getScaledValue(rosMsg.inslatabs_8, 0.0000001);
-        // rosMsg.finslonabs_8 = getScaledValue(rosMsg.inslonabs_8, 0.0000001);
-        // rosMsg.finslatrel_8 = getScaledValue(rosMsg.inslatrel_8, 0.01);
-        // rosMsg.finslonrel_8 = getScaledValue(rosMsg.inslonrel_8, 0.01);
-        // rosMsg.finsvelhorx_8 = getScaledValue(rosMsg.insvelhorx_8, 0.005);
-        // rosMsg.finsvelhory_8 = getScaledValue(rosMsg.insvelhory_8, 0.005);
-        // rosMsg.finsvelhorz_8 = getScaledValue(rosMsg.insvelhorz_8, 0.005);
-}
-
-void ADMA2ROSParser::extractNavSatFix(adma_msgs::Adma& rosMsg, sensor_msgs::NavSatFix& navRosMsg)    
-{
-        // fil status
-        // switch (rosMsg.statusgpsmode)
-        // {
-        // case 1:
-        //         // No GNSS Data
-        //         navRosMsg.status.status = sensor_msgs::NavSatStatus::STATUS_NO_FIX; 
-        //         break;
-        // case 2:
-        //         // single GNSS
-        //         navRosMsg.status.status = sensor_msgs::NavSatStatus::STATUS_FIX; 
-        //         break;
-        // case 4:
-        //         // actually DGNSS Coarse Mode, but used to distinguish here 
-        //         navRosMsg.status.status = sensor_msgs::NavSatStatus::STATUS_SBAS_FIX;
-        //         break;
-        // case 8:
-        //         // DGNSS Precise Mode
-        //         navRosMsg.status.status = sensor_msgs::NavSatStatus::STATUS_GBAS_FIX;
-        //         break;
-        // default:
-        //         break;
-        // }
-
-        // navRosMsg.altitude = rosMsg.finsheight;
-        // navRosMsg.latitude = rosMsg.finslatabs;
-        // navRosMsg.longitude = rosMsg.finslonabs;
-        // navRosMsg.position_covariance[0] = std::pow(rosMsg.finsstddevlat, 2);
-        // navRosMsg.position_covariance[4] = std::pow(rosMsg.finsstddevlong, 2);
-        // navRosMsg.position_covariance[8] = std::pow(rosMsg.finsstddevheight, 2);
-
-        // navRosMsg.position_covariance_type = sensor_msgs::NavSatFix::COVARIANCE_TYPE_DIAGONAL_KNOWN;
+        rosMsg.fGPSDualAntHeading = getScaledValue(rosMsg.GPSDualAntHeading, 0.01);
+        rosMsg.fGPSDualAntPitch = getScaledValue(rosMsg.GPSDualAntPitch, 0.01);
+        rosMsg.fGPSDualAntStdDevHeading = getScaledValue(rosMsg.GPSDualAntStdDevHeading, 0.01);
+        rosMsg.fGPSDualAntStdDevPitch = getScaledValue(rosMsg.GPSDualAntStdDevPitch, 0.01);
+        rosMsg.fGPSDualAntStdDevHeading_HR = getScaledValue(rosMsg.GPSDualAntStdDevHeading_HR, 0.01);
+        rosMsg.fGPSDualAntStdDevPitch_HR = getScaledValue(rosMsg.GPSDualAntStdDevPitch_HR, 0.01);
 }
 
 void ADMA2ROSParser::extractNavSatFix(adma_msgs::AdmaDataScaled& rosMsg, sensor_msgs::NavSatFix& navRosMsg)
@@ -559,33 +510,6 @@ void ADMA2ROSParser::extractNavSatFix(adma_msgs::AdmaDataScaled& rosMsg, sensor_
         navRosMsg.position_covariance[8] = std::pow(rosMsg.ins_stddev_height, 2);
 
         navRosMsg.position_covariance_type = sensor_msgs::NavSatFix::COVARIANCE_TYPE_DIAGONAL_KNOWN;
-}
-
-void ADMA2ROSParser::extractIMU(adma_msgs::Adma& rosMsg, sensor_msgs::Imu& imuRosMsg)
-{
-        // imuRosMsg.linear_acceleration.x = rosMsg.faccbodyhrx * 9.81;
-        // imuRosMsg.linear_acceleration.y = rosMsg.faccbodyhry * 9.81;
-        // imuRosMsg.linear_acceleration.z = rosMsg.faccbodyhrz * 9.81;
-
-        // imuRosMsg.angular_velocity.x = rosMsg.fratebodyhrx * PI / 180.0;
-        // imuRosMsg.angular_velocity.y = rosMsg.fratebodyhry * PI / 180.0;
-        // imuRosMsg.angular_velocity.z = rosMsg.fratebodyhrz * PI / 180.0;
-
-        // tf2::Quaternion q;
-        // double roll_rad = rosMsg.finsroll * PI / 180.0;
-        // double pitch_rad = rosMsg.finspitch * PI / 180.0;
-        // double yaw_rad = rosMsg.finsyaw * PI / 180.0;
-        // q.setRPY(roll_rad, pitch_rad, yaw_rad);
-        // imuRosMsg.orientation = tf2::toMsg(q);
-
-        // imuRosMsg.orientation_covariance[0] = std::pow(rosMsg.finsstddevroll * PI / 180.0, 2);
-        // imuRosMsg.orientation_covariance[4] = std::pow(rosMsg.finsstddevpitch * PI / 180.0, 2);
-        // imuRosMsg.orientation_covariance[8] = std::pow(rosMsg.finsstddevyaw * PI / 180.0, 2);
-
-        // // ADMA does not provide covariance for linear acceleration and angular velocity.
-        // // These values need to be measured at standstill each ADMA model.
-        // imuRosMsg.angular_velocity_covariance[0] = -1;
-        // imuRosMsg.linear_acceleration_covariance[0] = -1;
 }
 
 void ADMA2ROSParser::extractIMU(adma_msgs::AdmaDataScaled& rosMsg, sensor_msgs::Imu& imuRosMsg)

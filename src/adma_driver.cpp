@@ -69,18 +69,7 @@ class ADMADriver {
 
 ADMADriver::ADMADriver(ros::NodeHandle* n)
 {
-        // create ROS subscriber and publisher
-        _pubAdmaData = n->advertise<adma_msgs::Adma>("adma/data", 10);
-        _pubAdmaDataScaled = n->advertise<adma_msgs::AdmaDataScaled>("adma/data_scaled", 10);
-        _pubAdmaDataRaw = n->advertise<adma_msgs::AdmaDataRaw>("adma/data_raw", 10);
-        _pubAdmaStatus = n->advertise<adma_msgs::AdmaStatus>("adma/status", 10);
-        _pubHeading = n->advertise<std_msgs::Float64>("adma/heading", 10);
-        _pubVelocity = n->advertise<std_msgs::Float64>("adma/velocity", 10);
-        _pubNavSatFix = n->advertise<sensor_msgs::NavSatFix>("adma/fix", 10);
-        _pubImu = n->advertise<sensor_msgs::Imu>("adma/imu", 10);
-
         //define ROS parameters
-        
         ros::param::get("/adma_driver/destination_ip", _param_adma_ip);
         ros::param::get("/adma_driver/destination_port", _param_adma_port);
         ros::param::get("/adma_driver/use_performance_check", _use_performance_check);
@@ -94,6 +83,23 @@ ADMADriver::ADMADriver(ros::NodeHandle* n)
         
         ROS_INFO("Try finding ADMA at: %s:%d", _param_adma_ip.c_str(), _param_adma_port);
         ROS_INFO("Using ADMA protocol version: %s", _protocol_version.c_str());
+
+        // create ROS subscriber and publisher, based on desired protocol version
+        if(_protocol_version == "v3.3.3")
+        {
+                _pubAdmaData = n->advertise<adma_msgs::Adma>("adma/data", 10);
+        }else if (_protocol_version == "v3.3.4")
+        {
+                _pubAdmaDataScaled = n->advertise<adma_msgs::AdmaDataScaled>("adma/data_scaled", 10);
+                _pubAdmaStatus = n->advertise<adma_msgs::AdmaStatus>("adma/status", 10);
+                _pubHeading = n->advertise<std_msgs::Float64>("adma/heading", 10);
+                _pubVelocity = n->advertise<std_msgs::Float64>("adma/velocity", 10);
+                _pubNavSatFix = n->advertise<sensor_msgs::NavSatFix>("adma/fix", 10);
+                _pubImu = n->advertise<sensor_msgs::Imu>("adma/imu", 10);
+        }
+        
+        //raw data should be published always, protocol version indepent
+        _pubAdmaDataRaw = n->advertise<adma_msgs::AdmaDataRaw>("adma/data_raw", 10);
 
         _parser = new ADMA2ROSParser();
 
@@ -210,25 +216,64 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
         float weektime;
         uint32_t instimemsec;
 
-        AdmaDataV334 dataStruct;
-        memcpy(&dataStruct , &recv_buf, sizeof(dataStruct));
-        adma_msgs::AdmaDataScaled admaDataScaledMsg;
-        admaDataScaledMsg.header.frame_id = _frame_id_adma;
-        admaDataScaledMsg.header.seq = _seq;
-        admaDataScaledMsg.header.stamp.sec = curTimestamp.toSec();
-        admaDataScaledMsg.header.stamp.nsec = curTimestamp.toNSec();
-        _parser->parseV334(admaDataScaledMsg, dataStruct);
-        admaDataScaledMsg.time_msec = curTimestamp.toSec() * 1000;
-        admaDataScaledMsg.time_nsec = curTimestamp.toNSec();
+        if (_protocol_version == "v3.3.3")
+        {
+                adma_msgs::Adma admaData_rosMsg;
+                _parser->parseV333(admaData_rosMsg, recv_buf);
+                
+                admaData_rosMsg.TimeMsec = curTimestamp.toSec() * 1000;
+                admaData_rosMsg.TimeNsec = curTimestamp.toNSec();
 
-        _parser->extractNavSatFix(admaDataScaledMsg, message_fix);
-        _parser->extractIMU(admaDataScaledMsg, message_imu);
+                _pubAdmaData.publish(admaData_rosMsg);
+                weektime = admaData_rosMsg.INSTimeWeek;
+                instimemsec = admaData_rosMsg.INSTimemsec;
 
-        // read heading and velocity
-        message_heading.data = admaDataScaledMsg.ins_yaw;
-        message_velocity.data = std::sqrt(std::pow(admaDataScaledMsg.gnss_vel_frame.x, 2) + std::pow(admaDataScaledMsg.gnss_vel_frame.y, 2)) * 3.6;
+        }else if (_protocol_version == "v3.3.4")
+        {
+                // first extract V334 ros msg
+                AdmaDataV334 dataStruct;
+                memcpy(&dataStruct , &recv_buf, sizeof(dataStruct));
+                adma_msgs::AdmaDataScaled admaDataScaledMsg;
+                admaDataScaledMsg.header.frame_id = _frame_id_adma;
+                admaDataScaledMsg.header.seq = _seq;
+                admaDataScaledMsg.header.stamp.sec = curTimestamp.toSec();
+                admaDataScaledMsg.header.stamp.nsec = curTimestamp.toNSec();
+                _parser->parseV334(admaDataScaledMsg, dataStruct);
+                admaDataScaledMsg.time_msec = curTimestamp.toSec() * 1000;
+                admaDataScaledMsg.time_nsec = curTimestamp.toNSec();
 
-        // publish raw data as byte array
+                _parser->extractNavSatFix(admaDataScaledMsg, message_fix);
+                _parser->extractIMU(admaDataScaledMsg, message_imu);
+
+                // read heading and velocity
+                message_heading.data = admaDataScaledMsg.ins_yaw;
+                message_velocity.data = std::sqrt(std::pow(admaDataScaledMsg.gnss_vel_frame.x, 2) + std::pow(admaDataScaledMsg.gnss_vel_frame.y, 2)) * 3.6;
+
+                // parse status msg
+                adma_msgs::AdmaStatus statusMsg;
+                statusMsg.header.frame_id = _frame_id_adma_status;
+                statusMsg.header.seq = _seq;
+                statusMsg.header.stamp.sec = curTimestamp.toSec();
+                statusMsg.header.stamp.nsec = curTimestamp.toNSec();
+                _parser->parseV334Status(statusMsg, dataStruct);
+
+                // publish v334 specific topics
+                _pubAdmaDataScaled.publish(admaDataScaledMsg);
+                _pubAdmaStatus.publish(statusMsg);
+
+                // publish ros standard messages
+                _pubNavSatFix.publish(message_fix);
+                _pubHeading.publish(message_heading);
+                _pubVelocity.publish(message_velocity);
+                _pubImu.publish(message_imu);
+
+                weektime = admaDataScaledMsg.ins_time_week;
+                instimemsec = admaDataScaledMsg.ins_time_msec;
+        }
+
+        // protocol version indepent parsing
+
+        // create raw data as byte array
         adma_msgs::AdmaDataRaw rawDataMsg;
         rawDataMsg.size = _len;
         rawDataMsg.header.frame_id = _frame_id_data_raw;
@@ -241,37 +286,20 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
         {
                 rawDataMsg.raw_data.push_back(recv_buf[i]);
         }
-        
-        weektime = admaDataScaledMsg.ins_time_week;
-        instimemsec = admaDataScaledMsg.ins_time_msec;
 
-        // parse status msg
-        adma_msgs::AdmaStatus statusMsg;
-        statusMsg.header.frame_id = _frame_id_adma_status;
-        statusMsg.header.seq = _seq;
-        statusMsg.header.stamp.sec = curTimestamp.toSec();
-        statusMsg.header.stamp.nsec = curTimestamp.toNSec();
-        _parser->parseV334Status(statusMsg, dataStruct);
-
-        // publish adma custom messages (version specific)
+        // publish adma custom messages
         _pubAdmaDataRaw.publish(rawDataMsg);
-        _pubAdmaDataScaled.publish(admaDataScaledMsg);
-        _pubAdmaStatus.publish(statusMsg);
         if(_mode == MODE_RECORD){
                 _pubAdmaDataRecorded.publish(rawDataMsg);
         }
 
-        // publish ros standard messages
-        _pubNavSatFix.publish(message_fix);
-        _pubHeading.publish(message_heading);
-        _pubVelocity.publish(message_velocity);
-        _pubImu.publish(message_imu);
-
+        // increase message counter for ROS header
         _seq++;
 }
 
 void ADMADriver::recordedDataCB(adma_msgs::AdmaDataRaw dataMsg)
 {
+        //convert raw data (byte array) to expected char array
         std::array<char, 856> recv_buf;
         for (size_t i = 0; i < dataMsg.size; i++)
         {

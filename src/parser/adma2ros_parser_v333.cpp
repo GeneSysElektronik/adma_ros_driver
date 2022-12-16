@@ -12,523 +12,347 @@ ADMA2ROSParserV333::~ADMA2ROSParserV333()
 
 void ADMA2ROSParserV333::mapAdmaMessageToROS(adma_msgs::Adma& rosMsg, AdmaDataV333& admaData)
 {
-        // rosMsg.statuscount = admaData.statuscount;
+        rosMsg.StatusCount = admaData.statuscount;
 
-        // //fill sensor bodies
-        // rosMsg.accbodyhrx = admaData.sensorsBodyX.accHR;
-        // rosMsg.ratebodyhrx = admaData.sensorsBodyX.rateHR;
-        // rosMsg.accbodyhry = admaData.sensorsBodyY.accHR;
-        // rosMsg.ratebodyhry = admaData.sensorsBodyY.rateHR;
-        // rosMsg.accbodyhrz = admaData.sensorsBodyZ.accHR;
-        // rosMsg.ratebodyhrz = admaData.sensorsBodyZ.rateHR;
+        //fill sensor bodies
+        rosMsg.AccBodyHRX = admaData.sensorsBodyX.accHR;
+        rosMsg.RateBodyHRX = admaData.sensorsBodyX.rateHR;
+        rosMsg.AccBodyHRY = admaData.sensorsBodyY.accHR;
+        rosMsg.RateBodyHRY = admaData.sensorsBodyY.rateHR;
+        rosMsg.AccBodyHRZ = admaData.sensorsBodyZ.accHR;
+        rosMsg.RateBodyHRZ = admaData.sensorsBodyZ.rateHR;
 
-        // //fill rates
-        // rosMsg.ratebodyx = admaData.ratesBody.x;
-        // rosMsg.ratebodyy = admaData.ratesBody.y;
-        // rosMsg.ratebodyz = admaData.ratesBody.z;
-        // rosMsg.ratehorx = admaData.ratesHorizontal.x;
-        // rosMsg.ratehory = admaData.ratesHorizontal.y;
-        // rosMsg.ratehorz = admaData.ratesHorizontal.z;
+        //fill rates
+        rosMsg.RateBodyX = admaData.ratesBody.x;
+        rosMsg.RateBodyY = admaData.ratesBody.y;
+        rosMsg.RateBodyZ = admaData.ratesBody.z;
+        rosMsg.RateHorX = admaData.ratesHorizontal.x;
+        rosMsg.RateHorY = admaData.ratesHorizontal.y;
+        rosMsg.RateHorZ = admaData.ratesHorizontal.z;
 
         // //fill accelerations
-        // rosMsg.accbodyx = admaData.accBody.x;
-        // rosMsg.accbodyy = admaData.accBody.y;
-        // rosMsg.accbodyz = admaData.accBody.z;
-        // rosMsg.acchorx = admaData.accHorizontal.x;
-        // rosMsg.acchory = admaData.accHorizontal.y;
-        // rosMsg.acchorz = admaData.accHorizontal.z;
+        rosMsg.AccBodyX = admaData.accBody.x;
+        rosMsg.AccBodyY = admaData.accBody.y;
+        rosMsg.AccBodyZ = admaData.accBody.z;
+        rosMsg.AccHorX = admaData.accHorizontal.x;
+        rosMsg.AccHorY = admaData.accHorizontal.y;
+        rosMsg.AccHorZ = admaData.accHorizontal.z;
 
         // //fill POI accelerations
-        // rosMsg.accbodyx_1 = admaData.accBodyPOI1.x;
-        // rosMsg.accbodyy_1 = admaData.accBodyPOI1.y;
-        // rosMsg.accbodyz_1 = admaData.accBodyPOI1.z;
-        // rosMsg.accbodyx_2 = admaData.accBodyPOI2.x;
-        // rosMsg.accbodyy_2 = admaData.accBodyPOI2.y;
-        // rosMsg.accbodyz_2 = admaData.accBodyPOI2.z;
-        // rosMsg.accbodyx_3 = admaData.accBodyPOI3.x;
-        // rosMsg.accbodyy_3 = admaData.accBodyPOI3.y;
-        // rosMsg.accbodyz_3 = admaData.accBodyPOI3.z;
-        // rosMsg.accbodyx_4 = admaData.accBodyPOI4.x;
-        // rosMsg.accbodyy_4 = admaData.accBodyPOI4.y;
-        // rosMsg.accbodyz_4 = admaData.accBodyPOI4.z;
-        // rosMsg.accbodyx_5 = admaData.accBodyPOI5.x;
-        // rosMsg.accbodyy_5 = admaData.accBodyPOI5.y;
-        // rosMsg.accbodyz_5 = admaData.accBodyPOI5.z;
-        // rosMsg.accbodyx_6 = admaData.accBodyPOI6.x;
-        // rosMsg.accbodyy_6 = admaData.accBodyPOI6.y;
-        // rosMsg.accbodyz_6 = admaData.accBodyPOI6.z;
-        // rosMsg.accbodyx_7 = admaData.accBodyPOI7.x;
-        // rosMsg.accbodyy_7 = admaData.accBodyPOI7.y;
-        // rosMsg.accbodyz_7 = admaData.accBodyPOI7.z;
-        // rosMsg.accbodyx_8 = admaData.accBodyPOI8.x;
-        // rosMsg.accbodyy_8 = admaData.accBodyPOI8.y;
-        // rosMsg.accbodyz_8 = admaData.accBodyPOI8.z;
+        rosMsg.AccBodyX_1 = admaData.accBodyPOI1.x;
+        rosMsg.AccBodyY_1 = admaData.accBodyPOI1.y;
+        rosMsg.AccBodyZ_1 = admaData.accBodyPOI1.z;
+        rosMsg.AccBodyX_2 = admaData.accBodyPOI2.x;
+        rosMsg.AccBodyY_2 = admaData.accBodyPOI2.y;
+        rosMsg.AccBodyZ_2 = admaData.accBodyPOI2.z;
+        rosMsg.AccBodyX_3 = admaData.accBodyPOI3.x;
+        rosMsg.AccBodyY_3 = admaData.accBodyPOI3.y;
+        rosMsg.AccBodyZ_3 = admaData.accBodyPOI3.z;
+        rosMsg.AccBodyX_4 = admaData.accBodyPOI4.x;
+        rosMsg.AccBodyY_4 = admaData.accBodyPOI4.y;
+        rosMsg.AccBodyZ_4 = admaData.accBodyPOI4.z;
+        rosMsg.AccBodyX_5 = admaData.accBodyPOI5.x;
+        rosMsg.AccBodyY_5 = admaData.accBodyPOI5.y;
+        rosMsg.AccBodyZ_5 = admaData.accBodyPOI5.z;
+        rosMsg.AccBodyX_6 = admaData.accBodyPOI6.x;
+        rosMsg.AccBodyY_6 = admaData.accBodyPOI6.y;
+        rosMsg.AccBodyZ_6 = admaData.accBodyPOI6.z;
+        rosMsg.AccBodyX_7 = admaData.accBodyPOI7.x;
+        rosMsg.AccBodyY_7 = admaData.accBodyPOI7.y;
+        rosMsg.AccBodyZ_7 = admaData.accBodyPOI7.z;
+        rosMsg.AccBodyX_8 = admaData.accBodyPOI8.x;
+        rosMsg.AccBodyY_8 = admaData.accBodyPOI8.y;
+        rosMsg.AccBodyZ_8 = admaData.accBodyPOI8.z;
         
-        // rosMsg.acchorx_1 = admaData.accHorizontalPOI1.x;
-        // rosMsg.acchory_1 = admaData.accHorizontalPOI1.y;
-        // rosMsg.acchorz_1 = admaData.accHorizontalPOI1.z;
-        // rosMsg.acchorx_2 = admaData.accHorizontalPOI2.x;
-        // rosMsg.acchory_2 = admaData.accHorizontalPOI2.y;
-        // rosMsg.acchorz_2 = admaData.accHorizontalPOI2.z;
-        // rosMsg.acchorx_3 = admaData.accHorizontalPOI3.x;
-        // rosMsg.acchory_3 = admaData.accHorizontalPOI3.y;
-        // rosMsg.acchorz_3 = admaData.accHorizontalPOI3.z;
-        // rosMsg.acchorx_4 = admaData.accHorizontalPOI4.x;
-        // rosMsg.acchory_4 = admaData.accHorizontalPOI4.y;
-        // rosMsg.acchorz_4 = admaData.accHorizontalPOI4.z;
-        // rosMsg.acchorx_5 = admaData.accHorizontalPOI5.x;
-        // rosMsg.acchory_5 = admaData.accHorizontalPOI5.y;
-        // rosMsg.acchorz_5 = admaData.accHorizontalPOI5.z;
-        // rosMsg.acchorx_6 = admaData.accHorizontalPOI6.x;
-        // rosMsg.acchory_6 = admaData.accHorizontalPOI6.y;
-        // rosMsg.acchorz_6 = admaData.accHorizontalPOI6.z;
-        // rosMsg.acchorx_7 = admaData.accHorizontalPOI7.x;
-        // rosMsg.acchory_7 = admaData.accHorizontalPOI7.y;
-        // rosMsg.acchorz_7 = admaData.accHorizontalPOI7.z;
-        // rosMsg.acchorx_8 = admaData.accHorizontalPOI8.x;
-        // rosMsg.acchory_8 = admaData.accHorizontalPOI8.y;
-        // rosMsg.acchorz_8 = admaData.accHorizontalPOI8.z;
+        rosMsg.AccHorX_1 = admaData.accHorizontalPOI1.x;
+        rosMsg.AccHorY_1 = admaData.accHorizontalPOI1.y;
+        rosMsg.AccHorZ_1 = admaData.accHorizontalPOI1.z;
+        rosMsg.AccHorX_2 = admaData.accHorizontalPOI2.x;
+        rosMsg.AccHorY_2 = admaData.accHorizontalPOI2.y;
+        rosMsg.AccHorZ_2 = admaData.accHorizontalPOI2.z;
+        rosMsg.AccHorX_3 = admaData.accHorizontalPOI3.x;
+        rosMsg.AccHorY_3 = admaData.accHorizontalPOI3.y;
+        rosMsg.AccHorZ_3 = admaData.accHorizontalPOI3.z;
+        rosMsg.AccHorX_4 = admaData.accHorizontalPOI4.x;
+        rosMsg.AccHorY_4 = admaData.accHorizontalPOI4.y;
+        rosMsg.AccHorZ_4 = admaData.accHorizontalPOI4.z;
+        rosMsg.AccHorX_5 = admaData.accHorizontalPOI5.x;
+        rosMsg.AccHorY_5 = admaData.accHorizontalPOI5.y;
+        rosMsg.AccHorZ_5 = admaData.accHorizontalPOI5.z;
+        rosMsg.AccHorX_6 = admaData.accHorizontalPOI6.x;
+        rosMsg.AccHorY_6 = admaData.accHorizontalPOI6.y;
+        rosMsg.AccHorZ_6 = admaData.accHorizontalPOI6.z;
+        rosMsg.AccHorX_7 = admaData.accHorizontalPOI7.x;
+        rosMsg.AccHorY_7 = admaData.accHorizontalPOI7.y;
+        rosMsg.AccHorZ_7 = admaData.accHorizontalPOI7.z;
+        rosMsg.AccHorX_8 = admaData.accHorizontalPOI8.x;
+        rosMsg.AccHorY_8 = admaData.accHorizontalPOI8.y;
+        rosMsg.AccHorZ_8 = admaData.accHorizontalPOI8.z;
 
         // //fill external velocity
-        // rosMsg.extvelanx = admaData.extVelAnalog.x;
-        // rosMsg.extvelany = admaData.extVelAnalog.y;
-        // rosMsg.extveldigx = admaData.extveldigx;
-        // rosMsg.extveldigy = admaData.extveldigy;
-        // rosMsg.extveldigpulsesx = admaData.extveldigpulsesx;
-        // rosMsg.extveldigpulsesy = admaData.extveldigpulsesy;
-        // rosMsg.extvelxcorrected = admaData.extVelCorrected.x;
-        // rosMsg.extvelycorrected = admaData.extVelCorrected.y;
+        rosMsg.ExtVelAnX = admaData.extVelAnalog.x;
+        rosMsg.ExtVelAnY = admaData.extVelAnalog.y;
+        rosMsg.ExtVelDigX = admaData.extveldigx;
+        rosMsg.ExtVelDigY = admaData.extveldigy;
+        rosMsg.ExtVelDigPulsesX = admaData.extveldigpulsesx;
+        rosMsg.ExtVelDigPulsesY = admaData.extveldigpulsesy;
+        rosMsg.ExtVelXCorrected = admaData.extVelCorrected.x;
+        rosMsg.ExtVelYCorrected = admaData.extVelCorrected.y;
+
+        // Barometer values
+        // rosMsg.ExtBaroPressure = admaData.extbaropressure;
+        // rosMsg.ExtBaroHeight = admaData.extbaroheight;
+        // rosMsg.ExtBaroHeightCorrected = admaData.extbaroheightcorrected;
 
         // //fill miscellaneous
-        // rosMsg.invpathradius = admaData.misc.invPathRadius;
-        // rosMsg.sideslipangle = admaData.misc.sideSlipAngle;
-        // rosMsg.disttrav = admaData.misc.distanceTraveled;
+        rosMsg.InvPathRadius = admaData.misc.invPathRadius;
+        rosMsg.SideSlipAngle = admaData.misc.sideSlipAngle;
+        rosMsg.DistTrav = admaData.misc.distanceTraveled;
 
         // //fill miscellaneous POI
-        // rosMsg.invpathradius_1 = admaData.miscPOI1.invPathRadius;
-        // rosMsg.sideslipangle_1 = admaData.miscPOI1.sideSlipAngle;
-        // rosMsg.disttrav_1 = admaData.miscPOI1.distanceTraveled;
-        // rosMsg.invpathradius_2 = admaData.miscPOI2.invPathRadius;
-        // rosMsg.sideslipangle_2 = admaData.miscPOI2.sideSlipAngle;
-        // rosMsg.disttrav_2 = admaData.miscPOI2.distanceTraveled;
-        // rosMsg.invpathradius_3 = admaData.miscPOI3.invPathRadius;
-        // rosMsg.sideslipangle_3 = admaData.miscPOI3.sideSlipAngle;
-        // rosMsg.disttrav_3 = admaData.miscPOI3.distanceTraveled;
-        // rosMsg.invpathradius_4 = admaData.miscPOI4.invPathRadius;
-        // rosMsg.sideslipangle_4 = admaData.miscPOI4.sideSlipAngle;
-        // rosMsg.disttrav_4 = admaData.miscPOI4.distanceTraveled;
-        // rosMsg.invpathradius_5 = admaData.miscPOI5.invPathRadius;
-        // rosMsg.sideslipangle_5 = admaData.miscPOI5.sideSlipAngle;
-        // rosMsg.disttrav_5 = admaData.miscPOI5.distanceTraveled;
-        // rosMsg.invpathradius_6 = admaData.miscPOI6.invPathRadius;
-        // rosMsg.sideslipangle_6 = admaData.miscPOI6.sideSlipAngle;
-        // rosMsg.disttrav_6 = admaData.miscPOI6.distanceTraveled;
-        // rosMsg.invpathradius_7 = admaData.miscPOI7.invPathRadius;
-        // rosMsg.sideslipangle_7 = admaData.miscPOI7.sideSlipAngle;
-        // rosMsg.disttrav_7 = admaData.miscPOI7.distanceTraveled;
-        // rosMsg.invpathradius_8 = admaData.miscPOI8.invPathRadius;
-        // rosMsg.siderising3 = admaData.trigrising3;
-        // rosMsg.trigfalling3 = admaData.trigfalling3;
-        // rosMsg.trigrising4 = admaData.trigrising4;
-        // rosMsg.trigfalling4 = admaData.trigfalling4;
+        rosMsg.InvPathRadius_1 = admaData.miscPOI1.invPathRadius;
+        rosMsg.SideSlipAngle_1 = admaData.miscPOI1.sideSlipAngle;
+        rosMsg.DistTrav_1 = admaData.miscPOI1.distanceTraveled;
+        rosMsg.InvPathRadius_2 = admaData.miscPOI2.invPathRadius;
+        rosMsg.SideSlipAngle_2 = admaData.miscPOI2.sideSlipAngle;
+        rosMsg.DistTrav_2 = admaData.miscPOI2.distanceTraveled;
+        rosMsg.InvPathRadius_3 = admaData.miscPOI3.invPathRadius;
+        rosMsg.SideSlipAngle_3 = admaData.miscPOI3.sideSlipAngle;
+        rosMsg.DistTrav_3 = admaData.miscPOI3.distanceTraveled;
+        rosMsg.InvPathRadius_4 = admaData.miscPOI4.invPathRadius;
+        rosMsg.SideSlipAngle_4 = admaData.miscPOI4.sideSlipAngle;
+        rosMsg.DistTrav_4 = admaData.miscPOI4.distanceTraveled;
+        rosMsg.InvPathRadius_5 = admaData.miscPOI5.invPathRadius;
+        rosMsg.SideSlipAngle_5 = admaData.miscPOI5.sideSlipAngle;
+        rosMsg.DistTrav_5 = admaData.miscPOI5.distanceTraveled;
+        rosMsg.InvPathRadius_6 = admaData.miscPOI6.invPathRadius;
+        rosMsg.SideSlipAngle_6 = admaData.miscPOI6.sideSlipAngle;
+        rosMsg.DistTrav_6 = admaData.miscPOI6.distanceTraveled;
+        rosMsg.InvPathRadius_7 = admaData.miscPOI7.invPathRadius;
+        rosMsg.SideSlipAngle_7 = admaData.miscPOI7.sideSlipAngle;
+        rosMsg.DistTrav_7 = admaData.miscPOI7.distanceTraveled;
+        rosMsg.InvPathRadius_8 = admaData.miscPOI8.invPathRadius;
+        rosMsg.SideSlipAngle_8 = admaData.miscPOI8.sideSlipAngle;
+        rosMsg.DistTrav_8 = admaData.miscPOI8.distanceTraveled;
+
+        
+        // fill triggers
+        rosMsg.TrigRising1 = admaData.trigrising1;
+        rosMsg.TrigFalling1 = admaData.trigfalling1;
+        rosMsg.TrigRising2 = admaData.trigrising2;
+        rosMsg.TrigFalling2 = admaData.trigfalling2;
+        rosMsg.TrigRising3 = admaData.trigrising3;
+        rosMsg.TrigFalling3 = admaData.trigfalling3;
+        rosMsg.TrigRising4 = admaData.trigrising4;
+        rosMsg.TrigFalling4 = admaData.trigfalling4;
 
         // //fill system data
-        // rosMsg.systemta = admaData.systemta;
-        // rosMsg.systemtemp = admaData.systemtemp;
-        // rosMsg.systemtimesinceinit = admaData.systemtimesinceinit;
-        // rosMsg.systemdspload = admaData.systemdspload;
+        rosMsg.SystemTa = admaData.systemta;
+        rosMsg.SystemTemp = admaData.systemtemp;
+        rosMsg.SystemTimeSinceInit = admaData.systemtimesinceinit;
+        rosMsg.SystemDSPLoad = admaData.systemdspload;
         
         // //fill GPS position
-        // rosMsg.gpslatabs = admaData.posAbs.latitude;
-        // rosMsg.gpslonabs = admaData.posAbs.longitude;
-        // rosMsg.gpslatrel = admaData.posRel.longitude;
-        // rosMsg.gpslonrel = admaData.posRel.latitude;
+        rosMsg.GPSLatAbs = admaData.posAbs.latitude;
+        rosMsg.GPSLonAbs = admaData.posAbs.longitude;
+        rosMsg.GPSLatRel = admaData.posRel.longitude;
+        rosMsg.GPSLonRel = admaData.posRel.latitude;
 
         // // fill GPS Expected Position Error
-        // rosMsg.gpsstddevlat = admaData.gnssstddevlat;
-        // rosMsg.gpsstddevlon = admaData.gnssstddevlon;
-        // rosMsg.gpsstddevheight = admaData.gnssstddevheight;
+        rosMsg.GPSStddevLat = admaData.gnssstddevlat;
+        rosMsg.GPSStddevLon = admaData.gnssstddevlon;
+        rosMsg.GPSStddevHeight = admaData.gnssstddevheight;
 
         // //fill GPS Velocity
-        // rosMsg.gpsvelframex = admaData.gnssvelframex;
-        // rosMsg.gpsvelframey = admaData.gnssvelframey;
-        // rosMsg.gpsvelframez = admaData.gnssvelframez;
-        // rosMsg.gpsvellatency = admaData.gnssvellatency;
+        rosMsg.GPSVelFrameX = admaData.gnssvelframex;
+        rosMsg.GPSVelFrameY = admaData.gnssvelframey;
+        rosMsg.GPSVelFrameZ = admaData.gnssvelframez;
+        rosMsg.GPSVelLatency = admaData.gnssvellatency;
 
         // //fill GPS Expected Velocity error
-        // rosMsg.gpsstddevvelx = admaData.gnssStdDevVel.x;
-        // rosMsg.gpsstddevvely = admaData.gnssStdDevVel.y;
-        // rosMsg.gpsstddevvelz = admaData.gnssStdDevVel.z;
+        rosMsg.GPSStddevVelX = admaData.gnssStdDevVel.x;
+        rosMsg.GPSStddevVelY = admaData.gnssStdDevVel.y;
+        rosMsg.GPSStddevVelZ = admaData.gnssStdDevVel.z;
         
         // //fill GPS Time
-        // rosMsg.gpstimemsec = admaData.gnsstimemsec;
-        // rosMsg.gpstimeweek = admaData.gnsstimeweek;
-        // rosMsg.gpstrigger = admaData.gnsstrigger;
+        rosMsg.GPSTimemsec = admaData.gnsstimemsec;
+        rosMsg.GPSTimeWeek = admaData.gnsstimeweek;
+        rosMsg.GPSTrigger = admaData.gnsstrigger;
 
         // //fill GPS AUX data
-        // rosMsg.gpsdiffage = admaData.gnssdiffage;
-        // rosMsg.gpssatsused = admaData.gnsssatsused;
-        // rosMsg.gpssatsvisible = admaData.gnsssatsvisible;
-        // rosMsg.gpssatsdualantused = admaData.gnsssatsdualantused;
-        // rosMsg.gpssatsdualantvisible = admaData.gnsssatsdualantvisible;
-        // rosMsg.gpslogdelay = admaData.gnsslogdelay;
-        // rosMsg.gpsreceiverload = admaData.gnssreceiverload;
+        rosMsg.GPSDiffAge = admaData.gnssdiffage;
+        rosMsg.GPSStatsUsed = admaData.gnsssatsused;
+        rosMsg.GPSStatsVisible = admaData.gnsssatsvisible;
+        rosMsg.GPSSatsDualAntUsed = admaData.gnsssatsdualantused;
+        rosMsg.GPSSatsDualAntVisible = admaData.gnsssatsdualantvisible;
+        rosMsg.GPSLogDelay = admaData.gnsslogdelay;
+        rosMsg.GPSReceiverLoad = admaData.gnssreceiverload;
+        //TODO: check if basenr is string or INT
         // std::stringstream ss;
         // ss <<  admaData.gnssbasenr;
-        // rosMsg.gpsbasenr = ss.str();
+        // rosMsg.GPSBaseNr = ss.str();
 
         // //fill INS Angle and GPS COG
-        // rosMsg.insroll = admaData.insroll;
-        // rosMsg.inspitch = admaData.inspitch;
-        // rosMsg.insyaw = admaData.insyaw;
-        // rosMsg.gpscog = admaData.gnsscog;
+        rosMsg.INSRoll = admaData.insroll;
+        rosMsg.INSPitch = admaData.inspitch;
+        rosMsg.INSYaw = admaData.insyaw;
+        rosMsg.GPSCOG = admaData.gnsscog;
         
         // //fill GPS Height MSL
-        // rosMsg.gpsheight = admaData.gnssheight;
-        // rosMsg.undulation = admaData.undulation;
+        rosMsg.GPSHeight = admaData.gnssheight;
+        rosMsg.Undulation = admaData.undulation;
 
         // // GNSS DUal ant information 
-        // rosMsg.gpsdualanttimemsec = admaData.gnssDualAntTimeMsec;
-        // rosMsg.gpsdualanttimeweek = admaData.gnssDualAntTimeWeek;
-        // rosMsg.gpsdualantheading = admaData.gnssDualAntHeading;
-        // rosMsg.gpsdualantpitch = admaData.gnssDualAntPitch;
+        rosMsg.GPSDualAntTimemsec = admaData.gnssDualAntTimeMsec;
+        rosMsg.GPSDualAntTimeWeek = admaData.gnssDualAntTimeWeek;
+        rosMsg.GPSDualAntHeading = admaData.gnssDualAntHeading;
+        rosMsg.GPSDualAntPitch = admaData.gnssDualAntPitch;
 
         // //GNSS Dualant ETE
-        // rosMsg.gpsdualantstddevheading = admaData.gnssdualantstdevheading;
-        // rosMsg.gpsdualantstddevpitch = admaData.gnssdualantstddevpitch;
-        // rosMsg.gpsdualantstddevheading_hr = admaData.gnssdualantstdevheadinghr;
-        // rosMsg.gpsdualantstddevpitch_hr = admaData.gnssdualantstddevpitchhr;
+        rosMsg.GPSDualAntStdDevHeading = admaData.gnssdualantstdevheading;
+        rosMsg.GPSDualAntStdDevPitch = admaData.gnssdualantstddevpitch;
+        rosMsg.GPSDualAntStdDevHeading_HR = admaData.gnssdualantstdevheadinghr;
+        rosMsg.GPSDualAntStdDevPitch_HR = admaData.gnssdualantstddevpitchhr;
 
         // //fill INS height MSL (+ POI)
-        // rosMsg.insheight = admaData.insHeight;
-        // rosMsg.insheight_1 = admaData.insHeightPOI1;
-        // rosMsg.insheight_2 = admaData.insHeightPOI2;
-        // rosMsg.insheight_3 = admaData.insHeightPOI3;
-        // rosMsg.insheight_4 = admaData.insHeightPOI4;
-        // rosMsg.insheight_5 = admaData.insHeightPOI5;
-        // rosMsg.insheight_6 = admaData.insHeightPOI6;
-        // rosMsg.insheight_7 = admaData.insHeightPOI7;
-        // rosMsg.insheight_8 = admaData.insHeightPOI8;
+        rosMsg.INSHeight = admaData.insHeight;
+        rosMsg.INSHeight_1 = admaData.insHeightPOI1;
+        rosMsg.INSHeight_2 = admaData.insHeightPOI2;
+        rosMsg.INSHeight_3 = admaData.insHeightPOI3;
+        rosMsg.INSHeight_4 = admaData.insHeightPOI4;
+        rosMsg.INSHeight_5 = admaData.insHeightPOI5;
+        rosMsg.INSHeight_6 = admaData.insHeightPOI6;
+        rosMsg.INSHeight_7 = admaData.insHeightPOI7;
+        rosMsg.INSHeight_8 = admaData.insHeightPOI8;
 
         // //fill INS time UTC
-        // rosMsg.instimemsec = admaData.instimemsec;
-        // rosMsg.instimeweek = admaData.instimeweek;
-        // rosMsg.leapseconds = admaData.leapseconds;
+        rosMsg.INSTimemsec = admaData.instimemsec;
+        rosMsg.INSTimeWeek = admaData.instimeweek;
+        rosMsg.LeapSeconds = admaData.leapseconds;
 
         // //fill INS Position (+POI)
-        // rosMsg.inslatabs = admaData.insPosAbs.latitude;
-        // rosMsg.inslonabs = admaData.insPosAbs.longitude;
-        // rosMsg.inslatrel = admaData.insPosRel.longitude;
-        // rosMsg.inslonrel = admaData.insPosRel.latitude;
-        // rosMsg.inslatabs_1 = admaData.insPosAbsPOI1.latitude;
-        // rosMsg.inslonabs_1 = admaData.insPosAbsPOI1.longitude;
-        // rosMsg.inslatrel_1 = admaData.insPosRelPOI1.longitude;
-        // rosMsg.inslonrel_1 = admaData.insPosRelPOI1.latitude;
-        // rosMsg.inslatabs_2 = admaData.insPosAbsPOI2.latitude;
-        // rosMsg.inslonabs_2 = admaData.insPosAbsPOI2.longitude;
-        // rosMsg.inslatrel_2 = admaData.insPosRelPOI2.longitude;
-        // rosMsg.inslonrel_2 = admaData.insPosRelPOI2.latitude;
-        // rosMsg.inslatabs_3 = admaData.insPosAbsPOI3.latitude;
-        // rosMsg.inslonabs_3 = admaData.insPosAbsPOI3.longitude;
-        // rosMsg.inslatrel_3 = admaData.insPosRelPOI3.longitude;
-        // rosMsg.inslonrel_3 = admaData.insPosRelPOI3.latitude;
-        // rosMsg.inslatabs_4 = admaData.insPosAbsPOI4.latitude;
-        // rosMsg.inslonabs_4 = admaData.insPosAbsPOI4.longitude;
-        // rosMsg.inslatrel_4 = admaData.insPosRelPOI4.longitude;
-        // rosMsg.inslonrel_4 = admaData.insPosRelPOI4.latitude;
-        // rosMsg.inslatabs_5 = admaData.insPosAbsPOI5.latitude;
-        // rosMsg.inslonabs_5 = admaData.insPosAbsPOI5.longitude;
-        // rosMsg.inslatrel_5 = admaData.insPosRelPOI5.longitude;
-        // rosMsg.inslonrel_5 = admaData.insPosRelPOI5.latitude;
-        // rosMsg.inslatabs_6 = admaData.insPosAbsPOI6.latitude;
-        // rosMsg.inslonabs_6 = admaData.insPosAbsPOI6.longitude;
-        // rosMsg.inslatrel_6 = admaData.insPosRelPOI6.longitude;
-        // rosMsg.inslonrel_6 = admaData.insPosRelPOI6.latitude;
-        // rosMsg.inslatabs_7 = admaData.insPosAbsPOI7.latitude;
-        // rosMsg.inslonabs_7 = admaData.insPosAbsPOI7.longitude;
-        // rosMsg.inslatrel_7 = admaData.insPosRelPOI7.longitude;
-        // rosMsg.inslonrel_7 = admaData.insPosRelPOI7.latitude;
-        // rosMsg.inslatabs_8 = admaData.insPosAbsPOI8.latitude;
-        // rosMsg.inslonabs_8 = admaData.insPosAbsPOI8.longitude;
-        // rosMsg.inslatrel_8 = admaData.insPosRelPOI8.longitude;
-        // rosMsg.inslonrel_8 = admaData.insPosRelPOI8.latitude;
+        rosMsg.INSLatAbs = admaData.insPosAbs.latitude;
+        rosMsg.INSLonAbs = admaData.insPosAbs.longitude;
+        rosMsg.INSLatRel = admaData.insPosRel.longitude;
+        rosMsg.INSLonRel = admaData.insPosRel.latitude;
+        rosMsg.INSLatAbs_1 = admaData.insPosAbsPOI1.latitude;
+        rosMsg.INSLonAbs_1 = admaData.insPosAbsPOI1.longitude;
+        rosMsg.INSLatRel_1 = admaData.insPosRelPOI1.longitude;
+        rosMsg.INSLonRel_1 = admaData.insPosRelPOI1.latitude;
+        rosMsg.INSLatAbs_2 = admaData.insPosAbsPOI2.latitude;
+        rosMsg.INSLonAbs_2 = admaData.insPosAbsPOI2.longitude;
+        rosMsg.INSLatRel_2 = admaData.insPosRelPOI2.longitude;
+        rosMsg.INSLonRel_2 = admaData.insPosRelPOI2.latitude;
+        rosMsg.INSLatAbs_3 = admaData.insPosAbsPOI3.latitude;
+        rosMsg.INSLonAbs_3 = admaData.insPosAbsPOI3.longitude;
+        rosMsg.INSLatRel_3 = admaData.insPosRelPOI3.longitude;
+        rosMsg.INSLonRel_3 = admaData.insPosRelPOI3.latitude;
+        rosMsg.INSLatAbs_4 = admaData.insPosAbsPOI4.latitude;
+        rosMsg.INSLonAbs_4 = admaData.insPosAbsPOI4.longitude;
+        rosMsg.INSLatRel_4 = admaData.insPosRelPOI4.longitude;
+        rosMsg.INSLonRel_4 = admaData.insPosRelPOI4.latitude;
+        rosMsg.INSLatAbs_5 = admaData.insPosAbsPOI5.latitude;
+        rosMsg.INSLonAbs_5 = admaData.insPosAbsPOI5.longitude;
+        rosMsg.INSLatRel_5 = admaData.insPosRelPOI5.longitude;
+        rosMsg.INSLonRel_5 = admaData.insPosRelPOI5.latitude;
+        rosMsg.INSLatAbs_6 = admaData.insPosAbsPOI6.latitude;
+        rosMsg.INSLonAbs_6 = admaData.insPosAbsPOI6.longitude;
+        rosMsg.INSLatRel_6 = admaData.insPosRelPOI6.longitude;
+        rosMsg.INSLonRel_6 = admaData.insPosRelPOI6.latitude;
+        rosMsg.INSLatAbs_7 = admaData.insPosAbsPOI7.latitude;
+        rosMsg.INSLonAbs_7 = admaData.insPosAbsPOI7.longitude;
+        rosMsg.INSLatRel_7 = admaData.insPosRelPOI7.longitude;
+        rosMsg.INSLonRel_7 = admaData.insPosRelPOI7.latitude;
+        rosMsg.INSLatAbs_8 = admaData.insPosAbsPOI8.latitude;
+        rosMsg.INSLonAbs_8 = admaData.insPosAbsPOI8.longitude;
+        rosMsg.INSLatRel_8 = admaData.insPosRelPOI8.longitude;
+        rosMsg.INSLonRel_8 = admaData.insPosRelPOI8.latitude;
         
         // //fill ins velocity (horizontal + frame)
-        // rosMsg.insvelhorx = admaData.insVelHor.x;
-        // rosMsg.insvelhory = admaData.insVelHor.y;
-        // rosMsg.insvelhorz = admaData.insVelHor.z;
-        // rosMsg.insvelframex = admaData.insVelFrame.x;
-        // rosMsg.insvelframey = admaData.insVelFrame.y;
-        // rosMsg.insvelframez = admaData.insVelFrame.z;
+        rosMsg.INSVelHorX = admaData.insVelHor.x;
+        rosMsg.INSVelHorY = admaData.insVelHor.y;
+        rosMsg.INSVelHorZ = admaData.insVelHor.z;
+        rosMsg.INSVelFrameX = admaData.insVelFrame.x;
+        rosMsg.INSVelFrameY = admaData.insVelFrame.y;
+        rosMsg.INSVelFrameZ = admaData.insVelFrame.z;
 
         // //fill INS velocity (POI)
-        // rosMsg.insvelhorx_1 = admaData.insVelHorPOI1.x;
-        // rosMsg.insvelhory_1 = admaData.insVelHorPOI1.y;
-        // rosMsg.insvelhorz_1 = admaData.insVelHorPOI1.z;
-        // rosMsg.insvelhorx_2 = admaData.insVelHorPOI2.x;
-        // rosMsg.insvelhory_2 = admaData.insVelHorPOI2.y;
-        // rosMsg.insvelhorz_2 = admaData.insVelHorPOI2.z;
-        // rosMsg.insvelhorx_3 = admaData.insVelHorPOI3.x;
-        // rosMsg.insvelhory_3 = admaData.insVelHorPOI3.y;
-        // rosMsg.insvelhorz_3 = admaData.insVelHorPOI3.z;
-        // rosMsg.insvelhorx_4 = admaData.insVelHorPOI4.x;
-        // rosMsg.insvelhory_4 = admaData.insVelHorPOI4.y;
-        // rosMsg.insvelhorz_4 = admaData.insVelHorPOI4.z;
-        // rosMsg.insvelhorx_5 = admaData.insVelHorPOI5.x;
-        // rosMsg.insvelhory_5 = admaData.insVelHorPOI5.y;
-        // rosMsg.insvelhorz_5 = admaData.insVelHorPOI5.z;
-        // rosMsg.insvelhorx_6 = admaData.insVelHorPOI6.x;
-        // rosMsg.insvelhory_6 = admaData.insVelHorPOI6.y;
-        // rosMsg.insvelhorz_6 = admaData.insVelHorPOI6.z;
-        // rosMsg.insvelhorx_7 = admaData.insVelHorPOI7.x;
-        // rosMsg.insvelhory_7 = admaData.insVelHorPOI7.y;
-        // rosMsg.insvelhorz_7 = admaData.insVelHorPOI7.z;
-        // rosMsg.insvelhorx_8 = admaData.insVelHorPOI8.x;
-        // rosMsg.insvelhory_8 = admaData.insVelHorPOI8.y;
-        // rosMsg.insvelhorz_8 = admaData.insVelHorPOI8.z;
+        rosMsg.INSVelHorX_1 = admaData.insVelHorPOI1.x;
+        rosMsg.INSVelHorY_1 = admaData.insVelHorPOI1.y;
+        rosMsg.INSVelHorZ_1 = admaData.insVelHorPOI1.z;
+        rosMsg.INSVelHorX_2 = admaData.insVelHorPOI2.x;
+        rosMsg.INSVelHorY_2 = admaData.insVelHorPOI2.y;
+        rosMsg.INSVelHorZ_2 = admaData.insVelHorPOI2.z;
+        rosMsg.INSVelHorX_3 = admaData.insVelHorPOI3.x;
+        rosMsg.INSVelHorY_3 = admaData.insVelHorPOI3.y;
+        rosMsg.INSVelHorZ_3 = admaData.insVelHorPOI3.z;
+        rosMsg.INSVelHorX_4 = admaData.insVelHorPOI4.x;
+        rosMsg.INSVelHorY_4 = admaData.insVelHorPOI4.y;
+        rosMsg.INSVelHorZ_4 = admaData.insVelHorPOI4.z;
+        rosMsg.INSVelHorX_5 = admaData.insVelHorPOI5.x;
+        rosMsg.INSVelHorY_5 = admaData.insVelHorPOI5.y;
+        rosMsg.INSVelHorZ_5 = admaData.insVelHorPOI5.z;
+        rosMsg.INSVelHorX_6 = admaData.insVelHorPOI6.x;
+        rosMsg.INSVelHorY_6 = admaData.insVelHorPOI6.y;
+        rosMsg.INSVelHorZ_6 = admaData.insVelHorPOI6.z;
+        rosMsg.INSVelHorX_7 = admaData.insVelHorPOI7.x;
+        rosMsg.INSVelHorY_7 = admaData.insVelHorPOI7.y;
+        rosMsg.INSVelHorZ_7 = admaData.insVelHorPOI7.z;
+        rosMsg.INSVelHorX_8 = admaData.insVelHorPOI8.x;
+        rosMsg.INSVelHorY_8 = admaData.insVelHorPOI8.y;
+        rosMsg.INSVelHorZ_8 = admaData.insVelHorPOI8.z;
 
         // //fill INS Expected Position Error
-        // rosMsg.insstddevlat = admaData.insstddevlat;
-        // rosMsg.insstddevlong = admaData.insstddevlong;
-        // rosMsg.insstddevheight = admaData.insstddevheight;
+        rosMsg.INSStddevLat = admaData.insstddevlat;
+        rosMsg.INSStddevLong = admaData.insstddevlong;
+        rosMsg.INSStddevHeight = admaData.insstddevheight;
         
         // //fill INS EVE and INS ETE
-        // rosMsg.insstddevvelx = admaData.insstddevvelx;
-        // rosMsg.insstddevvely = admaData.insstddevvely;
-        // rosMsg.insstddevvelz = admaData.insstddevvelz;
-        // rosMsg.insstddevroll = admaData.insstddevroll;
-        // rosMsg.insstddevpitch = admaData.insstddevpitch;
-        // rosMsg.insstddevyaw = admaData.insstddevyaw;
+        rosMsg.INSStddevVelX = admaData.insstddevvelx;
+        rosMsg.INSStddevVelY = admaData.insstddevvely;
+        rosMsg.INSStddevVelZ = admaData.insstddevvelz;
+        rosMsg.INSStddevRoll = admaData.insstddevroll;
+        rosMsg.INSStddevPitch = admaData.insstddevpitch;
+        rosMsg.INSStddevYaw = admaData.insstddevyaw;
 
         // //fill Analog in 1
-        // rosMsg.an1 = admaData.an1;
-        // rosMsg.an2 = admaData.an2;
-        // rosMsg.an3 = admaData.an3;
-        // rosMsg.an4 = admaData.an4;
+        rosMsg.AN1 = admaData.an1;
+        rosMsg.AN2 = admaData.an2;
+        rosMsg.AN3 = admaData.an3;
+        rosMsg.AN4 = admaData.an4;
 
         // // kalman filter status
-        // rosMsg.kflatstimulated = admaData.kflatstimulated;
-        // rosMsg.kflongstimulated = admaData.kflongstimulated;
-        // rosMsg.kfsteadystate = admaData.kfsteadystate;
+        rosMsg.KFLatStimulated = admaData.kflatstimulated;
+        rosMsg.KFLongStimulated = admaData.kflongstimulated;
+        rosMsg.KFSteadyState = admaData.kfsteadystate;
 
         // // gnss receiver status and error
-        // rosMsg.gpsreceivererror = admaData.gnssreceivererror;
-        // rosMsg.gggers
-        // rosMsg.trigrising1 = admaData.trigrising1;
-        // rosMsg.trigfalling1 = admaData.trigfalling1;
-        // rosMsg.trigrising2 = admaData.trigrising2;
-        // rosMsg.trigfalling2 = admaData.trigfalling2;
-        // rosMsg.trigrising3 = admaData.trigrising3;
-        // rosMsg.trigfalling3 = admaData.trigfalling3;
-        // rosMsg.trigrising4 = admaData.trigrising4;
-        // rosMsg.trigfalling4 = admaData.trigfalling4;
-
-        // //fill system data
-        // rosMsg.systemta = admaData.systemta;
-        // rosMsg.systemtemp = admaData.systemtemp;
-        // rosMsg.systemtimesinceinit = admaData.systemtimesinceinit;
-        // rosMsg.systemdspload = admaData.systemdspload;
-        
-        // //fill GPS position
-        // rosMsg.gpslatabs = admaData.posAbs.latitude;
-        // rosMsg.gpslonabs = admaData.posAbs.longitude;
-        // rosMsg.gpslatrel = admaData.posRel.longitude;
-        // rosMsg.gpslonrel = admaData.posRel.latitude;
-
-        // // fill GPS Expected Position Error
-        // rosMsg.gpsstddevlat = admaData.gnssstddevlat;
-        // rosMsg.gpsstddevlon = admaData.gnssstddevlon;
-        // rosMsg.gpsstddevheight = admaData.gnssstddevheight;
-
-        // //fill GPS Velocity
-        // rosMsg.gpsvelframex = admaData.gnssvelframex;
-        // rosMsg.gpsvelframey = admaData.gnssvelframey;
-        // rosMsg.gpsvelframez = admaData.gnssvelframez;
-        // rosMsg.gpsvellatency = admaData.gnssvellatency;
-
-        // //fill GPS Expected Velocity error
-        // rosMsg.gpsstddevvelx = admaData.gnssStdDevVel.x;
-        // rosMsg.gpsstddevvely = admaData.gnssStdDevVel.y;
-        // rosMsg.gpsstddevvelz = admaData.gnssStdDevVel.z;
-        
-        // //fill GPS Time
-        // rosMsg.gpstimemsec = admaData.gnsstimemsec;
-        // rosMsg.gpstimeweek = admaData.gnsstimeweek;
-        // rosMsg.gpstrigger = admaData.gnsstrigger;
-
-        // //fill GPS AUX data
-        // rosMsg.gpsdiffage = admaData.gnssdiffage;
-        // rosMsg.gpssatsused = admaData.gnsssatsused;
-        // rosMsg.gpssatsvisible = admaData.gnsssatsvisible;
-        // rosMsg.gpssatsdualantused = admaData.gnsssatsdualantused;
-        // rosMsg.gpssatsdualantvisible = admaData.gnsssatsdualantvisible;
-        // rosMsg.gpslogdelay = admaData.gnsslogdelay;
-        // rosMsg.gpsreceiverload = admaData.gnssreceiverload;
-        // std::stringstream ss;
-        // ss <<  admaData.gnssbasenr;
-        // rosMsg.gpsbasenr = ss.str();
-
-        // //fill INS Angle and GPS COG
-        // rosMsg.insroll = admaData.insroll;
-        // rosMsg.inspitch = admaData.inspitch;
-        // rosMsg.insyaw = admaData.insyaw;
-        // rosMsg.gpscog = admaData.gnsscog;
-        
-        // //fill GPS Height MSL
-        // rosMsg.gpsheight = admaData.gnssheight;
-        // rosMsg.undulation = admaData.undulation;
-
-        // // GNSS DUal ant information 
-        // rosMsg.gpsdualanttimemsec = admaData.gnssDualAntTimeMsec;
-        // rosMsg.gpsdualanttimeweek = admaData.gnssDualAntTimeWeek;
-        // rosMsg.gpsdualantheading = admaData.gnssDualAntHeading;
-        // rosMsg.gpsdualantpitch = admaData.gnssDualAntPitch;
-
-        // //GNSS Dualant ETE
-        // rosMsg.gpsdualantstddevheading = admaData.gnssdualantstdevheading;
-        // rosMsg.gpsdualantstddevpitch = admaData.gnssdualantstddevpitch;
-        // rosMsg.gpsdualantstddevheading_hr = admaData.gnssdualantstdevheadinghr;
-        // rosMsg.gpsdualantstddevpitch_hr = admaData.gnssdualantstddevpitchhr;
-
-        // //fill INS height MSL (+ POI)
-        // rosMsg.insheight = admaData.insHeight;
-        // rosMsg.insheight_1 = admaData.insHeightPOI1;
-        // rosMsg.insheight_2 = admaData.insHeightPOI2;
-        // rosMsg.insheight_3 = admaData.insHeightPOI3;
-        // rosMsg.insheight_4 = admaData.insHeightPOI4;
-        // rosMsg.insheight_5 = admaData.insHeightPOI5;
-        // rosMsg.insheight_6 = admaData.insHeightPOI6;
-        // rosMsg.insheight_7 = admaData.insHeightPOI7;
-        // rosMsg.insheight_8 = admaData.insHeightPOI8;
-
-        // //fill INS time UTC
-        // rosMsg.instimemsec = admaData.instimemsec;
-        // rosMsg.instimeweek = admaData.instimeweek;
-        // rosMsg.leapseconds = admaData.leapseconds;
-
-        // //fill INS Position (+POI)
-        // rosMsg.inslatabs = admaData.insPosAbs.latitude;
-        // rosMsg.inslonabs = admaData.insPosAbs.longitude;
-        // rosMsg.inslatrel = admaData.insPosRel.longitude;
-        // rosMsg.inslonrel = admaData.insPosRel.latitude;
-        // rosMsg.inslatabs_1 = admaData.insPosAbsPOI1.latitude;
-        // rosMsg.inslonabs_1 = admaData.insPosAbsPOI1.longitude;
-        // rosMsg.inslatrel_1 = admaData.insPosRelPOI1.longitude;
-        // rosMsg.inslonrel_1 = admaData.insPosRelPOI1.latitude;
-        // rosMsg.inslatabs_2 = admaData.insPosAbsPOI2.latitude;
-        // rosMsg.inslonabs_2 = admaData.insPosAbsPOI2.longitude;
-        // rosMsg.inslatrel_2 = admaData.insPosRelPOI2.longitude;
-        // rosMsg.inslonrel_2 = admaData.insPosRelPOI2.latitude;
-        // rosMsg.inslatabs_3 = admaData.insPosAbsPOI3.latitude;
-        // rosMsg.inslonabs_3 = admaData.insPosAbsPOI3.longitude;
-        // rosMsg.inslatrel_3 = admaData.insPosRelPOI3.longitude;
-        // rosMsg.inslonrel_3 = admaData.insPosRelPOI3.latitude;
-        // rosMsg.inslatabs_4 = admaData.insPosAbsPOI4.latitude;
-        // rosMsg.inslonabs_4 = admaData.insPosAbsPOI4.longitude;
-        // rosMsg.inslatrel_4 = admaData.insPosRelPOI4.longitude;
-        // rosMsg.inslonrel_4 = admaData.insPosRelPOI4.latitude;
-        // rosMsg.inslatabs_5 = admaData.insPosAbsPOI5.latitude;
-        // rosMsg.inslonabs_5 = admaData.insPosAbsPOI5.longitude;
-        // rosMsg.inslatrel_5 = admaData.insPosRelPOI5.longitude;
-        // rosMsg.inslonrel_5 = admaData.insPosRelPOI5.latitude;
-        // rosMsg.inslatabs_6 = admaData.insPosAbsPOI6.latitude;
-        // rosMsg.inslonabs_6 = admaData.insPosAbsPOI6.longitude;
-        // rosMsg.inslatrel_6 = admaData.insPosRelPOI6.longitude;
-        // rosMsg.inslonrel_6 = admaData.insPosRelPOI6.latitude;
-        // rosMsg.inslatabs_7 = admaData.insPosAbsPOI7.latitude;
-        // rosMsg.inslonabs_7 = admaData.insPosAbsPOI7.longitude;
-        // rosMsg.inslatrel_7 = admaData.insPosRelPOI7.longitude;
-        // rosMsg.inslonrel_7 = admaData.insPosRelPOI7.latitude;
-        // rosMsg.inslatabs_8 = admaData.insPosAbsPOI8.latitude;
-        // rosMsg.inslonabs_8 = admaData.insPosAbsPOI8.longitude;
-        // rosMsg.inslatrel_8 = admaData.insPosRelPOI8.longitude;
-        // rosMsg.inslonrel_8 = admaData.insPosRelPOI8.latitude;
-        
-        // //fill ins velocity (horizontal + frame)
-        // rosMsg.insvelhorx = admaData.insVelHor.x;
-        // rosMsg.insvelhory = admaData.insVelHor.y;
-        // rosMsg.insvelhorz = admaData.insVelHor.z;
-        // rosMsg.insvelframex = admaData.insVelFrame.x;
-        // rosMsg.insvelframey = admaData.insVelFrame.y;
-        // rosMsg.insvelframez = admaData.insVelFrame.z;
-
-        // //fill INS velocity (POI)
-        // rosMsg.insvelhorx_1 = admaData.insVelHorPOI1.x;
-        // rosMsg.insvelhory_1 = admaData.insVelHorPOI1.y;
-        // rosMsg.insvelhorz_1 = admaData.insVelHorPOI1.z;
-        // rosMsg.insvelhorx_2 = admaData.insVelHorPOI2.x;
-        // rosMsg.insvelhory_2 = admaData.insVelHorPOI2.y;
-        // rosMsg.insvelhorz_2 = admaData.insVelHorPOI2.z;
-        // rosMsg.insvelhorx_3 = admaData.insVelHorPOI3.x;
-        // rosMsg.insvelhory_3 = admaData.insVelHorPOI3.y;
-        // rosMsg.insvelhorz_3 = admaData.insVelHorPOI3.z;
-        // rosMsg.insvelhorx_4 = admaData.insVelHorPOI4.x;
-        // rosMsg.insvelhory_4 = admaData.insVelHorPOI4.y;
-        // rosMsg.insvelhorz_4 = admaData.insVelHorPOI4.z;
-        // rosMsg.insvelhorx_5 = admaData.insVelHorPOI5.x;
-        // rosMsg.insvelhory_5 = admaData.insVelHorPOI5.y;
-        // rosMsg.insvelhorz_5 = admaData.insVelHorPOI5.z;
-        // rosMsg.insvelhorx_6 = admaData.insVelHorPOI6.x;
-        // rosMsg.insvelhory_6 = admaData.insVelHorPOI6.y;
-        // rosMsg.insvelhorz_6 = admaData.insVelHorPOI6.z;
-        // rosMsg.insvelhorx_7 = admaData.insVelHorPOI7.x;
-        // rosMsg.insvelhory_7 = admaData.insVelHorPOI7.y;
-        // rosMsg.insvelhorz_7 = admaData.insVelHorPOI7.z;
-        // rosMsg.insvelhorx_8 = admaData.insVelHorPOI8.x;
-        // rosMsg.insvelhory_8 = admaData.insVelHorPOI8.y;
-        // rosMsg.insvelhorz_8 = admaData.insVelHorPOI8.z;
-
-        // //fill INS Expected Position Error
-        // rosMsg.insstddevlat = admaData.insstddevlat;
-        // rosMsg.insstddevlong = admaData.insstddevlong;
-        // rosMsg.insstddevheight = admaData.insstddevheight;
-        
-        // //fill INS EVE and INS ETE
-        // rosMsg.insstddevvelx = admaData.insstddevvelx;
-        // rosMsg.insstddevvely = admaData.insstddevvely;
-        // rosMsg.insstddevvelz = admaData.insstddevvelz;
-        // rosMsg.insstddevroll = admaData.insstddevroll;
-        // rosMsg.insstddevpitch = admaData.insstddevpitch;
-        // rosMsg.insstddevyaw = admaData.insstddevyaw;
-
-        // //fill Analog in 1
-        // rosMsg.an1 = admaData.an1;
-        // rosMsg.an2 = admaData.an2;
-        // rosMsg.an3 = admaData.an3;
-        // rosMsg.an4 = admaData.an4;
-
-        // // kalman filter status
-        // rosMsg.kflatstimulated = admaData.kflatstimulated;
-        // rosMsg.kflongstimulated = admaData.kflongstimulated;
-        // rosMsg.kfsteadystate = admaData.kfsteadystate;
-
-        // // gnss receiver status and error
-        // rosMsg.gpsreceivererror = admaData.gnssreceivererror;
-        // rosMsg.gpsreceiverstatus = admaData.gnssreceiverstatus;
+        rosMsg.GPSReceiverError = admaData.gnssreceivererror;
+        rosMsg.GPSReceiverStatus = admaData.gnssreceiverstatus;
 }
 
 void ADMA2ROSParserV333::getKFStatus(adma_msgs::Adma& rosMsg, unsigned char kfStatus)
 {
-        // bool status_speed_b2 = getbit(kfStatus,5);
-        // bool status_speed_b1 = getbit(kfStatus,4);
-        // bool status_kf_steady_state = getbit(kfStatus,3);
-        // bool status_kf_long_stimulated = getbit(kfStatus,2);
-        // bool status_kf_lat_stimulated = getbit(kfStatus,1);
-        // bool status_kalmanfilter_settled = getbit(kfStatus,0);
-        // rosMsg.statuskalmanfiltersetteled = status_kalmanfilter_settled;
-        // rosMsg.statuskflatstimulated = status_kf_lat_stimulated;
-        // rosMsg.statuskflongstimulated = status_kf_long_stimulated;
-        // rosMsg.statuskfsteadystate = status_kf_steady_state;
-        // if(status_speed_b1==0 && status_speed_b2==0)
-        // {
-        //         rosMsg.statusspeed = 0;
-        // }
-        // else if(status_speed_b1==0 && status_speed_b2==1)
-        // {
-        //         rosMsg.statusspeed = 1;
-        // }
-        // else if(status_speed_b1==1 && status_speed_b2==0)
-        // {
-        //         rosMsg.statusspeed = 2;
-        // }
+        bool status_speed_b2 = getbit(kfStatus,5);
+        bool status_speed_b1 = getbit(kfStatus,4);
+        bool status_kf_steady_state = getbit(kfStatus,3);
+        bool status_kf_long_stimulated = getbit(kfStatus,2);
+        bool status_kf_lat_stimulated = getbit(kfStatus,1);
+        bool status_kalmanfilter_settled = getbit(kfStatus,0);
+        rosMsg.StatusKalmanFilterSetteled = status_kalmanfilter_settled;
+        rosMsg.StatusKFLatStimulated = status_kf_lat_stimulated;
+        rosMsg.StatusKFLongStimulated = status_kf_long_stimulated;
+        rosMsg.StatusKFSteadyState = status_kf_steady_state;
+        if(status_speed_b1==0 && status_speed_b2==0)
+        {
+                rosMsg.StatusSpeed = 0;
+        }
+        else if(status_speed_b1==0 && status_speed_b2==1)
+        {
+                rosMsg.StatusSpeed = 1;
+        }
+        else if(status_speed_b1==1 && status_speed_b2==0)
+        {
+                rosMsg.StatusSpeed = 2;
+        }
 }

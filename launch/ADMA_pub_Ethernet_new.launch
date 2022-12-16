@@ -4,7 +4,7 @@
    <arg name="destination_port" default="1040" doc="ADMA Webinterface -> Data -> Ethernet data output -> Destination Port" />
    <arg name="destination_ip" default="0.0.0.0" doc="ADMA Webinterface -> Data -> Ethernet data output -> Destination IP" />
    <arg name="use_performance_check" default="False" doc="True if you want to get additional performance logging" />
-   <arg name="protocol_version" default="v3.3.4" doc="The desired protocol version of the ADMA UDP data packets" />
+   <arg name="protocol_version" default="v3.3.3" doc="The desired protocol version of the ADMA UDP data packets" />
    <arg name="mode" default="default" doc="the desired execution mode, options are default/record/replay" />
    <arg name="frame_id_navsatfix" default="gnss_link" doc="ROS Frame-ID of NavSatFix msg" />
    <arg name="frame_id_imu" default="imu_link" doc="ROS Frame-ID of Imu msg" />
@@ -38,9 +38,10 @@
 
    <!-- arg to define the rosbag path, used for record and replay. -->
    <!-- NOTE: for record it needs just a valid destination folder, for replay it needs the full filepath (so $FOLDER/FILENAME.bag) -->
-   <arg name="rosbag_file" default="/tmp/rosbag_2022-12-16-08-30-30.bag" doc="Path to recorded rosbag" />
+   <arg name="rosbag_file" default="/tmp/rosbag" doc="Path to recorded rosbag" />
    <!-- node to record raw data, will only start if arg 'mode' is set to 'record' -->
    <node name="rosbag_record_raw_data" type="record" pkg="rosbag" args="record -o $(arg rosbag_file) /adma/data_recorded" if="$(eval arg('mode') == 'record')" />
    <!-- node to replay recorded raw data, will only start if arg 'mode' is set to 'replay' -->
    <node name="rosbag_replay_raw_data" type="play" pkg="rosbag" args="$(arg rosbag_file)" if="$(eval arg('mode') == 'replay')" required="true" />
+   
 </launch>
