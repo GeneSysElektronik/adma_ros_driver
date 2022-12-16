@@ -62,6 +62,9 @@ class ADMADriver {
 
                 ADMA2ROSParser* _parser;
 
+                // ROS sequence ID for header
+                long _seq = 0;
+
 };
 
 ADMADriver::ADMADriver(ros::NodeHandle* n)
@@ -190,15 +193,20 @@ void ADMADriver::updateLoop()
 
 void ADMADriver::parseData(std::array<char, 856> recv_buf)
 {
+        ros::Time curTimestamp = ros::Time::now();
         // prepare several ros msgs
         std_msgs::Float64 message_heading;
         std_msgs::Float64 message_velocity;
         sensor_msgs::NavSatFix message_fix;
         message_fix.header.frame_id = _frame_id_navsatfix;
-        // message_fix.header.stamp = curTimestamp;
+        message_fix.header.seq = _seq;
+        message_fix.header.stamp.sec = curTimestamp.toSec();
+        message_fix.header.stamp.nsec = curTimestamp.toNSec();
         sensor_msgs::Imu message_imu;
         message_imu.header.frame_id = _frame_id_imu;
-        // message_imu.header.stamp = curTimestamp;
+        message_imu.header.seq = _seq;
+        message_imu.header.stamp.sec = curTimestamp.toSec();
+        message_imu.header.stamp.nsec = curTimestamp.toNSec();
         float weektime;
         uint32_t instimemsec;
 
@@ -206,10 +214,12 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
         memcpy(&dataStruct , &recv_buf, sizeof(dataStruct));
         adma_msgs::AdmaDataScaled admaDataScaledMsg;
         admaDataScaledMsg.header.frame_id = _frame_id_adma;
-        // admaDataScaledMsg.header.stamp = curTimestamp;
+        admaDataScaledMsg.header.seq = _seq;
+        admaDataScaledMsg.header.stamp.sec = curTimestamp.toSec();
+        admaDataScaledMsg.header.stamp.nsec = curTimestamp.toNSec();
         _parser->parseV334(admaDataScaledMsg, dataStruct);
-        // admaDataScaledMsg.time_msec = curTimestamp.sec * 1000;
-        // admaDataScaledMsg.time_nsec = curTimestamp.nanosec;
+        admaDataScaledMsg.time_msec = curTimestamp.toSec() * 1000;
+        admaDataScaledMsg.time_nsec = curTimestamp.toNSec();
 
         _parser->extractNavSatFix(admaDataScaledMsg, message_fix);
         _parser->extractIMU(admaDataScaledMsg, message_imu);
@@ -222,8 +232,11 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
         adma_msgs::AdmaDataRaw rawDataMsg;
         rawDataMsg.size = _len;
         rawDataMsg.header.frame_id = _frame_id_data_raw;
-        // rawDataMsg.header.stamp = curTimestamp;
+        rawDataMsg.header.seq = _seq;
+        rawDataMsg.header.stamp.sec = curTimestamp.toSec();
+        rawDataMsg.header.stamp.nsec = curTimestamp.toNSec();
 
+        //fill raw data byte array
         for(int i=0; i<_len; ++i)
         {
                 rawDataMsg.raw_data.push_back(recv_buf[i]);
@@ -232,10 +245,14 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
         weektime = admaDataScaledMsg.ins_time_week;
         instimemsec = admaDataScaledMsg.ins_time_msec;
 
+        // parse status msg
         adma_msgs::AdmaStatus statusMsg;
         statusMsg.header.frame_id = _frame_id_adma_status;
-        // statusMsg.header.stamp = curTimestamp;
+        statusMsg.header.seq = _seq;
+        statusMsg.header.stamp.sec = curTimestamp.toSec();
+        statusMsg.header.stamp.nsec = curTimestamp.toNSec();
         _parser->parseV334Status(statusMsg, dataStruct);
+
         // publish adma custom messages (version specific)
         _pubAdmaDataRaw.publish(rawDataMsg);
         _pubAdmaDataScaled.publish(admaDataScaledMsg);
@@ -244,10 +261,13 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
                 _pubAdmaDataRecorded.publish(rawDataMsg);
         }
 
+        // publish ros standard messages
         _pubNavSatFix.publish(message_fix);
         _pubHeading.publish(message_heading);
         _pubVelocity.publish(message_velocity);
         _pubImu.publish(message_imu);
+
+        _seq++;
 }
 
 void ADMADriver::recordedDataCB(adma_msgs::AdmaDataRaw dataMsg)

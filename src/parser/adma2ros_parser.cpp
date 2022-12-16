@@ -529,36 +529,36 @@ void ADMA2ROSParser::extractNavSatFix(adma_msgs::Adma& rosMsg, sensor_msgs::NavS
 void ADMA2ROSParser::extractNavSatFix(adma_msgs::AdmaDataScaled& rosMsg, sensor_msgs::NavSatFix& navRosMsg)
 {
         // fil status
-        // switch (rosMsg.status.status_gnss_mode)
-        // {
-        // case 1:
-        //         // No GNSS Data
-        //         navRosMsg.status.status = sensor_msgs::NavSatStatus::STATUS_NO_FIX; 
-        //         break;
-        // case 2:
-        //         // single GNSS
-        //         navRosMsg.status.status = sensor_msgs::NavSatStatus::STATUS_FIX; 
-        //         break;
-        // case 4:
-        //         // actually DGNSS Coarse Mode, but used to distinguish here 
-        //         navRosMsg.status.status = sensor_msgs::NavSatStatus::STATUS_SBAS_FIX;
-        //         break;
-        // case 8:
-        //         // DGNSS Precise Mode
-        //         navRosMsg.status.status = sensor_msgs::NavSatStatus::STATUS_GBAS_FIX;
-        //         break;
-        // default:
-        //         break;
-        // }
+        switch (rosMsg.status.status_gnss_mode)
+        {
+        case 1:
+                // No GNSS Data
+                navRosMsg.status.status = sensor_msgs::NavSatStatus::STATUS_NO_FIX; 
+                break;
+        case 2:
+                // single GNSS
+                navRosMsg.status.status = sensor_msgs::NavSatStatus::STATUS_FIX; 
+                break;
+        case 4:
+                // actually DGNSS Coarse Mode, but used to distinguish here 
+                navRosMsg.status.status = sensor_msgs::NavSatStatus::STATUS_SBAS_FIX;
+                break;
+        case 8:
+                // DGNSS Precise Mode
+                navRosMsg.status.status = sensor_msgs::NavSatStatus::STATUS_GBAS_FIX;
+                break;
+        default:
+                break;
+        }
 
-        // navRosMsg.altitude = rosMsg.ins_height;
-        // navRosMsg.latitude = rosMsg.ins_lat_abs;
-        // navRosMsg.longitude = rosMsg.ins_long_abs;
-        // navRosMsg.position_covariance[0] = std::pow(rosMsg.ins_stddev_lat, 2);
-        // navRosMsg.position_covariance[4] = std::pow(rosMsg.ins_stddev_long, 2);
-        // navRosMsg.position_covariance[8] = std::pow(rosMsg.ins_stddev_height, 2);
+        navRosMsg.altitude = rosMsg.ins_height;
+        navRosMsg.latitude = rosMsg.ins_lat_abs;
+        navRosMsg.longitude = rosMsg.ins_long_abs;
+        navRosMsg.position_covariance[0] = std::pow(rosMsg.ins_stddev_lat, 2);
+        navRosMsg.position_covariance[4] = std::pow(rosMsg.ins_stddev_long, 2);
+        navRosMsg.position_covariance[8] = std::pow(rosMsg.ins_stddev_height, 2);
 
-        // navRosMsg.position_covariance_type = sensor_msgs::NavSatFix::COVARIANCE_TYPE_DIAGONAL_KNOWN;
+        navRosMsg.position_covariance_type = sensor_msgs::NavSatFix::COVARIANCE_TYPE_DIAGONAL_KNOWN;
 }
 
 void ADMA2ROSParser::extractIMU(adma_msgs::Adma& rosMsg, sensor_msgs::Imu& imuRosMsg)
