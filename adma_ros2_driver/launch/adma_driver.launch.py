@@ -42,7 +42,18 @@ def generate_launch_description():
                 namespace='genesys',
                 name='adma_ros2_driver',
                 parameters=[LaunchConfiguration('driver_config')],
-                arguments=['--ros-args', '--log-level', LaunchConfiguration('log_level')]
+                arguments=['--ros-args', '--log-level', LaunchConfiguration('log_level')],
+                remappings=[
+                        # left=from / right=to (so publish the origin left on the new right topic)
+                        ("adma/data", "adma/data"),
+                        ("adma/data_raw", "adma/data_raw"),
+                        ("adma/data_scaled", "adma/data_scaled"),
+                        ("adma/status", "adma/status"),
+                        ("adma/fix", "adma/fix"),
+                        ("adma/imu", "adma/imu"),
+                        ("adma/heading", "adma/heading"),
+                        ("adma/velocity", "adma/velocity")
+                ]
         )
 
         rosbag_recorder = ExecuteProcess(

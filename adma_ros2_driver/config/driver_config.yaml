@@ -4,7 +4,7 @@ genesys:
       destination_ip: '0.0.0.0'
       destination_port: 1040
       use_performance_check: False
-      protocol_version: 'v3.3.3'
+      protocol_version: 'v3.3.4'
       mode: "default" # available modes are: default/record/replay
       frame_ids:
         navsatfix: 'gnss_link'
