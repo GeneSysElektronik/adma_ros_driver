@@ -38,6 +38,7 @@ namespace genesys
                 {
                         _len = 856;
                         _pub_adma_data = this->create_publisher<adma_msgs::msg::AdmaData>("adma/data", 1);
+                        _pub_adma_data_raw = this->create_publisher<adma_msgs::msg::AdmaDataRaw>("adma/data_raw", 1);
                 }else if (_protocolversion == "v3.3.4")
                 {
                         _len = 856;
@@ -179,6 +180,19 @@ namespace genesys
 
                         _pub_adma_data_scaled->publish(admaDataScaledMsg);
 
+                        weektime = admaDataScaledMsg.ins_time_week;
+                        instimemsec = admaDataScaledMsg.ins_time_msec;
+
+                        adma_msgs::msg::AdmaStatus statusMsg;
+                        statusMsg.header.stamp = curTimestamp;
+                        statusMsg.header.frame_id = _adma_status_frame;
+                        _parser->parseV334Status(statusMsg, dataStruct);
+                        _pub_adma_status->publish(statusMsg);
+                }
+
+                // publish raw data with >= v3.3.3
+                if (_protocolversion != "v3.2")
+                {
                         // publish raw data as byte array
                         adma_msgs::msg::AdmaDataRaw rawDataMsg;
                         rawDataMsg.size = _len;
@@ -195,14 +209,6 @@ namespace genesys
                                 _pub_adma_data_recorded->publish(rawDataMsg);
                         }
 
-                        weektime = admaDataScaledMsg.ins_time_week;
-                        instimemsec = admaDataScaledMsg.ins_time_msec;
-
-                        adma_msgs::msg::AdmaStatus statusMsg;
-                        statusMsg.header.stamp = curTimestamp;
-                        statusMsg.header.frame_id = _adma_status_frame;
-                        _parser->parseV334Status(statusMsg, dataStruct);
-                        _pub_adma_status->publish(statusMsg);
                 }
 
                 // publish the messages
