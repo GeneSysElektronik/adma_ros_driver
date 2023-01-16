@@ -1,8 +1,5 @@
 # adma_ros2_driver
-
-This is a ROS2 port of the original adma_ros_driver by the user lab176344 on github you can find [here](https://github.com/lab176344/adma_ros_driver).
-
-It is implemented more "ros-like" and also supports several ADMA protocol versions (see below).
+Further Information can be found at the [GeneSys Technical Support Center](https://genesys-offenburg.de/support-center/). 
 
 ## Environment information
 This setup was implemented and tested with the following conditions:
@@ -18,35 +15,37 @@ mkdir -p ~/ros2_ws/src
 git clone -b ros_2 $REPO_URL(HTPPS/SSH)
 ```
 
-2. build workspace
+2. Build workspace
 ```bash
 cd ~/ros2_ws
+. /opt/ros/$INSTALLED_ROS_CONTRIB/setup.bash
 colcon build --symlink-install
 ```
 
-3. source workspace and launch
+3. Source workspace and launch
 ```bash
 . install/setup.bash
 ros2 launch adma_ros2_driver adma_driver.launch.py
 ```
 
 ## Parameter configuration
-To change the parameters, just modify the possible values in the `adma_ros2_driver/config/driver_config.yaml`. If you built the workspace with `colcon build --symlink-install` you can direct restart the node with the changed parameters, otherwise (built without `--symlink-install`) you need to rebuild the workspace to update the files. Same "linking" rule applies to the `launch.py` files.
-In the table below you can find some further information about the available parameters.
+For configuring the ADMA ROS Driver the according parameters in the `adma_ros2_driver/config/driver_config.yaml` file have to be modified.
+If the workspace was built with `colcon build --symlink-install`, it is possible to restart the node after changing configuration parameters directly. Otherwise (built without '--symlink-install') it is necessary to rebuild the workspace to update the files. 
+Same "linking" rule applies to the `launch.py` files. The available parameters are described in the table below.
 
 | Parameter | Possible Values | Description|
 |---|---|---|
 | destination_ip | Any IP as string | IP adress of your ADMA |
-| destination_port | any valid integer value | Port number of your ADMA |
+| destination_port | any valid integer value | Destination Port of your ADMA |
 | use_performance_check | True/False | True if you want to log informations about the performance |
 | gnss_frame | any string name | ROS frame_id of the NavSat topic |
 | imu_frame | any string name | ROS frame_id of the IMU topic |
-| protocol_version | "v3.2" / "v3.3.3" / "v3.3.4" | the protocol version of your ADMA |
+| protocol_version | "v3.2" / "v3.3.3" / "v3.3.4" | the ADMAnet protocol version of your ADMA |
 | mode | "default" / "record" / "replay" | defines if you want to use it live with ADMA (default), record raw data received from ADMA (record) or replay the recorded raw data by replaying a rosbag (replay) |
 
 ## Supported ADMA Protocol versions
 This driver node supports several protocol versions.
-To switch between those, just change the value of the `protocol_version` settings in the `config/driver_config.yaml` file (e.g. define "v3.3.3" to use version 3.3.3).
+To switch between those, the`protocol_version` parameter in the `config/driver_config.yaml` file has to be modified.(e.g. define "v3.3.3"  to use version 3.3.3) .
 * v3.2
 
         - UDP packet protocol of 768 bytes
@@ -65,10 +64,10 @@ To switch between those, just change the value of the `protocol_version` setting
         - POI's are now integrated as a object list and can be accessed by their index 
 
 ## Debugging
-For easily testing the parsing part without connecting to a real ADMA device,
-it also contains a `data_server` that sends a fixed version-based UDP packet.
+It is possible to test the ROS Driver without connecting to a real ADMA device by
+using the integrated 'data_server' to send a fixed version-based UDP packet.
 
-To work with it, simply use:
+For using the server, refer to:
 3. source workspace and launch
 ```bash
 . install/setup.bash
@@ -81,7 +80,8 @@ This repository also contains some useful tools to work with the ADMA.
 These can be found in the `adma_tools` package.
 
 ### ROS2CSV-Converter
-This tool subscribes to `/genesys/adma/data_scaled` and `/genesys/adma/status`and generates a CSV file for postprocessing. It can be used live or e.g. to convert a rosbag to CSV. You just need to execute it in an additional terminal:
+This tool subscribes to `/genesys/adma/data_scaled` and `/genesys/adma/status`and generates a CSV file for postprocessing. It can be used live or e.g. to convert a rosbag to CSV. 
+The tool can be used by executing it in an additional terminal:
 
 ```bash
 # ensure you have sourced the workspace also in this terminal
@@ -90,18 +90,19 @@ cd ~/ros2_ws
 ros2 run adma_tools ros2csv
 ```
 
-This will create a `recorded_data.csv` in the destination where you execute the `ros2 run..` command.
-If you want to use a different name, you can modify the code of `adma_tools/adma_tools/ros2csv_converter.py` line 11 (self.filename = '').
+This will create a `recorded_data.csv` in the destination where the `ros2 run..` command is executed.
+If an indivdual file naming needs to be used, the `adma_tools/adma_tools/ros2csv_converter.py` file can be adapted in line 11 (self.filename = '').
+
 ## Re-use old recorded data
 
-Since V3.3.4 you can record rosbags that also publish the raw byte data received from the ADMA by UDP. Therefore it subscribes to the topic `genesys/adma/data_recorded`. To achieve this, you need to do the following steps:
+Since V3.3.4 it is possible to record rosbags that also publish the raw byte data received from the ADMA by UDP. Therefore it subscribes to the topic `genesys/adma/data_recorded`. For recording the raw data the following steps have to be executed:
 
-1. For recording the raw data received from the live ADMA, just switch the parameter `mode` to `record`.
+1. Switching the parameter `mode` to `record`.
 
-This will add the additional topic and also start the recording of the rosbag. When you`re done, press Ctrl+C to finish the process and your rosbag will also be available.
+This will add the additional topic and also start the recording of the rosbag. The process can be closed by pressing Ctrl+C after it's finished. 
 
 ### Replay recorded rosbag
-Now you can prepare the configuration and launchfile:
+For replaying the raw data the following parameters have to be configured:
 1. switch the `mode` parameter to `replay`
 2. modify the `rosbag_file_arg` in `launch/adma_driver.launch.py` to ensure it contains the correct path to your recorded rosbag
 3. start again with `ros2 launch adma_ros2_driver adma_driver.launch.py`.
