@@ -12,6 +12,7 @@ Since it does not really use Galactic-specific code, it should also work with RO
 1. Create workspace and clone this repository
 ```bash
 mkdir -p ~/ros2_ws/src
+cd ~/ros2_ws/src
 git clone -b ros_2 $REPO_URL(HTPPS/SSH)
 ```
 
