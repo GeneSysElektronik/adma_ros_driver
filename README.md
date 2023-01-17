@@ -6,7 +6,7 @@ This setup was implemented and tested with the following conditions:
 - Ubuntu 20.04
 - ROS2 Galactic
 
-Since it does not really use Galactic-specific code, it should also work with ROS2 Foxy or even Dashing.
+Since it does not really use Galactic-specific code, it should also work with ROS2 Dashing/Foxy and Humble.
 
 ## Usage
 1. Create workspace and clone this repository
@@ -107,3 +107,6 @@ For replaying the raw data the following parameters have to be configured:
 1. switch the `mode` parameter to `replay`
 2. modify the `rosbag_file_arg` in `launch/adma_driver.launch.py` to ensure it contains the correct path to your recorded rosbag
 3. start again with `ros2 launch adma_ros2_driver adma_driver.launch.py`.
+
+### Remapping of ROS topics
+If you want to modify the topics for some reason (e.g. make it compatible to your own ros nodes), you can modify the `remappings=[..]` entries of the `launch.py`-file. Here you just have to change the value of the right string to let the driver publish to the desired topic.
