@@ -5,14 +5,14 @@
   * @date 06/08/2020
   * */
 
-#include "../include/adma_connect/adma_parse.h"
+#include "adma_ros_driver/parser/adma_parse.hpp"
 
 
 /// \file
 /// \brief  getParsedData function - entry function
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getParsedData(const std::string& local_data, adma_connect::Adma& message)
+void getParsedData(const std::string& local_data, adma_msgs::Adma& message)
 {
     getADMAStaticHeader(local_data,message);
     getADMADynamicHeader(local_data,message);
@@ -106,7 +106,7 @@ void getParsedData(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getADMAStaticHeader function - ADMA Static Header Information
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getADMAStaticHeader(const std::string& local_data, adma_connect::Adma& message)
+void getADMAStaticHeader(const std::string& local_data, adma_msgs::Adma& message)
 {
     char GeneSysID[] = {local_data[0],local_data[1],local_data[2],local_data[3]};
     char FormatID[] = {local_data[8],local_data[9],local_data[10],local_data[11]};
@@ -127,7 +127,7 @@ void getADMAStaticHeader(const std::string& local_data, adma_connect::Adma& mess
 /// \brief  getADMAStaticHeader function - ADMA Static Header Information
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getADMADynamicHeader(const std::string& local_data, adma_connect::Adma& message)
+void getADMADynamicHeader(const std::string& local_data, adma_msgs::Adma& message)
 {
     // ! ADMA Dynamic Header
     char ConfigID[] = {local_data[68],local_data[69],local_data[70],local_data[71]};
@@ -150,7 +150,7 @@ void getADMADynamicHeader(const std::string& local_data, adma_connect::Adma& mes
 /// \brief  getStatusGPS function - ADMA Status Information
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getStatusGPS(const std::string& local_data, adma_connect::Adma& message)
+void getStatusGPS(const std::string& local_data, adma_msgs::Adma& message)
 {
     unsigned char statusGPS;
     char Status_GPS[] = {local_data[96]};
@@ -193,7 +193,7 @@ void getStatusGPS(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getStatusTrigger function - ADMA GPS Trigger Information
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getStatusTrigger(const std::string& local_data, adma_connect::Adma& message)
+void getStatusTrigger(const std::string& local_data, adma_msgs::Adma& message)
 {
     unsigned char statusTriggerGps;
     char StatusTrigger[] = {local_data[97]};
@@ -228,7 +228,7 @@ void getStatusTrigger(const std::string& local_data, adma_connect::Adma& message
 /// \brief  getStatusTrigger function - ADMA GPS Trigger Information
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getEVKStatus(const std::string& local_data, adma_connect::Adma& message)
+void getEVKStatus(const std::string& local_data, adma_msgs::Adma& message)
 {
     unsigned char statusEVK;
     char StatusEVK[] = {local_data[98]};
@@ -281,7 +281,7 @@ void getEVKStatus(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getStatusCount function - ADMA Status Count
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getStatusCount(const std::string& local_data, adma_connect::Adma& message)
+void getStatusCount(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Status Count
     char Status_Count[] = {local_data[99]};
@@ -317,7 +317,7 @@ void getStatusCount(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getErrorandWarning function - ADMA Error and Warning
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getErrorandWarning(const std::string& local_data, adma_connect::Adma& message)
+void getErrorandWarning(const std::string& local_data, adma_msgs::Adma& message)
 {
     std::bitset<8> bitdataError1 = local_data[104];
     std::bitset<8> bitdataError2 = local_data[105];
@@ -353,7 +353,7 @@ void getErrorandWarning(const std::string& local_data, adma_connect::Adma& messa
 /// \brief  getSensorBodyXYZ function - ADMA Sensor Body X Y Z Acc and Rate Information
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getSensorBodyXYZ(const std::string& local_data, adma_connect::Adma& message)
+void getSensorBodyXYZ(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Sensor Body X
     char Acc_Body_HR_X[] = {local_data[112],local_data[113],local_data[114],local_data[115]};
@@ -388,7 +388,7 @@ void getSensorBodyXYZ(const std::string& local_data, adma_connect::Adma& message
 /// \brief  getRatesBodyXYZ function - ADMA Rate Body Information
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getRatesBodyXYZ(const std::string& local_data, adma_connect::Adma& message)
+void getRatesBodyXYZ(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Rates body
     char Rate_Body_X[] = {local_data[136],local_data[137]};
@@ -408,7 +408,7 @@ void getRatesBodyXYZ(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getRatesHorizontalXYZ function - ADMA Rates Horizontal
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getRatesHorizontalXYZ(const std::string& local_data, adma_connect::Adma& message)
+void getRatesHorizontalXYZ(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Rates horizontal
     char Rate_Hor_X[] = {local_data[144],local_data[145]};
@@ -428,7 +428,7 @@ void getRatesHorizontalXYZ(const std::string& local_data, adma_connect::Adma& me
 /// \brief  getAccelerationBody function - ADMA Acc Body
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getAccelerationBody(const std::string& local_data, adma_connect::Adma& message)
+void getAccelerationBody(const std::string& local_data, adma_msgs::Adma& message)
 {
 
     //! Acceleration body
@@ -449,7 +449,7 @@ void getAccelerationBody(const std::string& local_data, adma_connect::Adma& mess
 /// \brief  getAccelerationHor function - ADMA Acc Horizontal
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getAccelerationHor(const std::string& local_data, adma_connect::Adma& message)
+void getAccelerationHor(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Acceleration horizontal
     char Acceleration_Hor_X[] = {local_data[160],local_data[161]};
@@ -470,7 +470,7 @@ void getAccelerationHor(const std::string& local_data, adma_connect::Adma& messa
 /// \brief  getAccelerationBody POI1 function - ADMA Acc Body POI1
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getAccelerationBodyPOI1(const std::string& local_data, adma_connect::Adma& message)
+void getAccelerationBodyPOI1(const std::string& local_data, adma_msgs::Adma& message)
 {
     char Acceleration_Body_X_POI1[] = {local_data[168],local_data[169]};
     memcpy(&message.AccBodyX_1 , &Acceleration_Body_X_POI1, sizeof(message.AccBodyX_1));
@@ -489,7 +489,7 @@ void getAccelerationBodyPOI1(const std::string& local_data, adma_connect::Adma& 
 /// \brief  getAccelerationBody POI2 function - ADMA Acc Body POI2
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getAccelerationBodyPOI2(const std::string& local_data, adma_connect::Adma& message)
+void getAccelerationBodyPOI2(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Acceleration POI2 body
     char Acceleration_Body_X_POI2[] = {local_data[176],local_data[177]};
@@ -510,7 +510,7 @@ void getAccelerationBodyPOI2(const std::string& local_data, adma_connect::Adma& 
 /// \brief  getAccelerationBody POI3 function - ADMA Acc Body POI3
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getAccelerationBodyPOI3(const std::string& local_data, adma_connect::Adma& message)
+void getAccelerationBodyPOI3(const std::string& local_data, adma_msgs::Adma& message)
 {
 
     //! Acceleration POI3 body
@@ -533,7 +533,7 @@ void getAccelerationBodyPOI3(const std::string& local_data, adma_connect::Adma& 
 /// \brief  getAccelerationBody POI4 function - ADMA Acc Body POI4
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getAccelerationBodyPOI4(const std::string& local_data, adma_connect::Adma& message)
+void getAccelerationBodyPOI4(const std::string& local_data, adma_msgs::Adma& message)
 {
 
     //! Acceleration POI4 body
@@ -555,7 +555,7 @@ void getAccelerationBodyPOI4(const std::string& local_data, adma_connect::Adma& 
 /// \brief  getAccelerationBody POI5 function - ADMA Acc Body POI5
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getAccelerationBodyPOI5(const std::string& local_data, adma_connect::Adma& message)
+void getAccelerationBodyPOI5(const std::string& local_data, adma_msgs::Adma& message)
 {
 
     //! Acceleration POI5 body
@@ -577,7 +577,7 @@ void getAccelerationBodyPOI5(const std::string& local_data, adma_connect::Adma& 
 /// \brief  getAccelerationBody POI6 function - ADMA Acc Body POI6
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getAccelerationBodyPOI6(const std::string& local_data, adma_connect::Adma& message)
+void getAccelerationBodyPOI6(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Acceleration POI6 body
     char Acceleration_Body_X_POI6[] = {local_data[208],local_data[209]};
@@ -597,7 +597,7 @@ void getAccelerationBodyPOI6(const std::string& local_data, adma_connect::Adma& 
 /// \brief  getAccelerationBody POI7 function - ADMA Acc Body POI7
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getAccelerationBodyPOI7(const std::string& local_data, adma_connect::Adma& message)
+void getAccelerationBodyPOI7(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Acceleration POI7 body
     char Acceleration_Body_X_POI7[] = {local_data[216],local_data[217]};
@@ -618,7 +618,7 @@ void getAccelerationBodyPOI7(const std::string& local_data, adma_connect::Adma& 
 /// \brief  getAccelerationBody POI8 function - ADMA Acc Body POI8
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getAccelerationBodyPOI8(const std::string& local_data, adma_connect::Adma& message)
+void getAccelerationBodyPOI8(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Acceleration POI8 body
     char Acceleration_Body_X_POI8[] = {local_data[224],local_data[225]};
@@ -638,7 +638,7 @@ void getAccelerationBodyPOI8(const std::string& local_data, adma_connect::Adma& 
 /// \brief  getAccelerationHor POI1 function - ADMA Acc Hor POI1
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getAccelerationHorPOI1(const std::string& local_data, adma_connect::Adma& message)
+void getAccelerationHorPOI1(const std::string& local_data, adma_msgs::Adma& message)
 {
       //! Acceleration Hor. POI1 body
     char Acceleration_Hor_X_POI1[] = {local_data[232],local_data[233]};
@@ -659,7 +659,7 @@ void getAccelerationHorPOI1(const std::string& local_data, adma_connect::Adma& m
 /// \brief  getAccelerationHor POI2 function - ADMA Acc Hor POI2
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getAccelerationHorPOI2(const std::string& local_data, adma_connect::Adma& message)
+void getAccelerationHorPOI2(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Acceleration Hor. POI2 body
     char Acceleration_Hor_X_POI2[] = {local_data[240],local_data[241]};
@@ -680,7 +680,7 @@ void getAccelerationHorPOI2(const std::string& local_data, adma_connect::Adma& m
 /// \brief  getAccelerationHor POI3 function - ADMA Acc Hor POI3
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getAccelerationHorPOI3(const std::string& local_data, adma_connect::Adma& message)
+void getAccelerationHorPOI3(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Acceleration Hor. POI3 body
     char Acceleration_Hor_X_POI3[] = {local_data[248],local_data[249]};
@@ -701,7 +701,7 @@ void getAccelerationHorPOI3(const std::string& local_data, adma_connect::Adma& m
 /// \brief  getAccelerationHor POI4 function - ADMA Acc Hor POI4
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getAccelerationHorPOI4(const std::string& local_data, adma_connect::Adma& message)
+void getAccelerationHorPOI4(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Acceleration Hor. POI4 body
     char Acceleration_Hor_X_POI4[] = {local_data[256],local_data[257]};
@@ -721,7 +721,7 @@ void getAccelerationHorPOI4(const std::string& local_data, adma_connect::Adma& m
 /// \brief  getAccelerationHorPOI5 function - ADMA Acc Hor POI5
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getAccelerationHorPOI5(const std::string& local_data, adma_connect::Adma& message)
+void getAccelerationHorPOI5(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Acceleration Hor. POI5 body
     char Acceleration_Hor_X_POI5[] = {local_data[264],local_data[265]};
@@ -741,7 +741,7 @@ void getAccelerationHorPOI5(const std::string& local_data, adma_connect::Adma& m
 /// \brief  getAccelerationHorPOI6 function - ADMA Acc Hor POI6
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getAccelerationHorPOI6(const std::string& local_data, adma_connect::Adma& message)
+void getAccelerationHorPOI6(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Acceleration Hor. POI6 body
     char Acceleration_Hor_X_POI6[] = {local_data[272],local_data[273]};
@@ -761,7 +761,7 @@ void getAccelerationHorPOI6(const std::string& local_data, adma_connect::Adma& m
 /// \brief  getAccelerationHorPOI7 function - ADMA Acc Hor POI7
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getAccelerationHorPOI7(const std::string& local_data, adma_connect::Adma& message)
+void getAccelerationHorPOI7(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Acceleration Hor. POI7 body
     char Acceleration_Hor_X_POI7[] = {local_data[280],local_data[281]};
@@ -782,7 +782,7 @@ void getAccelerationHorPOI7(const std::string& local_data, adma_connect::Adma& m
 /// \brief  getAccelerationHorPOI8 function - ADMA Acc Hor POI8
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getAccelerationHorPOI8(const std::string& local_data, adma_connect::Adma& message)
+void getAccelerationHorPOI8(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Acceleration Hor. POI8 body
     char Acceleration_Hor_X_POI8[] = {local_data[288],local_data[289]};
@@ -802,7 +802,7 @@ void getAccelerationHorPOI8(const std::string& local_data, adma_connect::Adma& m
 /// \brief  getExternalVelocityAnalog function - ADMA Ext Vel Analog
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getExternalVelocityAnalog(const std::string& local_data, adma_connect::Adma& message)
+void getExternalVelocityAnalog(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! External Velocity Analalog
     char Ext_Vel_An_X[] = {local_data[296],local_data[297]};
@@ -818,7 +818,7 @@ void getExternalVelocityAnalog(const std::string& local_data, adma_connect::Adma
 /// \brief  getExternalVecovityDigPulses function - ADMA Ext Vel Dig Pulses
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getExternalVecovityDigPulses(const std::string& local_data, adma_connect::Adma& message)
+void getExternalVecovityDigPulses(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! External Velocity Digital Pulses
     char Ext_Vel_Dig_X[] = {local_data[304],local_data[305]};
@@ -840,7 +840,7 @@ void getExternalVecovityDigPulses(const std::string& local_data, adma_connect::A
 /// \brief  getExternalVelocityCorrected function - ADMA Ext Vel Corrected
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getExternalVelocityCorrected(const std::string& local_data, adma_connect::Adma& message)
+void getExternalVelocityCorrected(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! External Velocity Corrected
     char Ext_Vel_X_Corrected[] = {local_data[312],local_data[313]};
@@ -856,7 +856,7 @@ void getExternalVelocityCorrected(const std::string& local_data, adma_connect::A
 /// \brief  getBarometerPressure function - ADMA Barometer Pressure
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getBarometerPressure(const std::string& local_data, adma_connect::Adma& message)
+void getBarometerPressure(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Barometer Pressure
     char Ext_Baro_Pressue[] = {local_data[320],local_data[321],local_data[322],local_data[323]};
@@ -868,7 +868,7 @@ void getBarometerPressure(const std::string& local_data, adma_connect::Adma& mes
 /// \brief  getBarometerHeight function - ADMA Barometer Height
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getBarometerHeight(const std::string& local_data, adma_connect::Adma& message)
+void getBarometerHeight(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Barometer Height
     char Ext_Baro_Height[] = {local_data[328],local_data[329],local_data[330],local_data[331]};
@@ -885,7 +885,7 @@ void getBarometerHeight(const std::string& local_data, adma_connect::Adma& messa
 /// \brief  getMiscellaneuos function - ADMA Misc.
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getMiscellaneuos(const std::string& local_data, adma_connect::Adma& message)
+void getMiscellaneuos(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Miscellaneous
     char Inv_Path_Radius[] = {local_data[344],local_data[345]};
@@ -905,7 +905,7 @@ void getMiscellaneuos(const std::string& local_data, adma_connect::Adma& message
 /// \brief  getMiscellaneuos function - ADMA Misc. POI1
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getMiscellaneuosPOI1(const std::string& local_data, adma_connect::Adma& message)
+void getMiscellaneuosPOI1(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Miscellaneous POI 1
     char Inv_Path_Radius_POI1[] = {local_data[352],local_data[353]};
@@ -925,7 +925,7 @@ void getMiscellaneuosPOI1(const std::string& local_data, adma_connect::Adma& mes
 /// \brief  getMiscellaneuos function - ADMA Misc. POI2
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getMiscellaneuosPOI2(const std::string& local_data, adma_connect::Adma& message)
+void getMiscellaneuosPOI2(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Miscellaneous POI 2
     char Inv_Path_Radius_POI2[] = {local_data[360],local_data[361]};
@@ -945,7 +945,7 @@ void getMiscellaneuosPOI2(const std::string& local_data, adma_connect::Adma& mes
 /// \brief  getMiscellaneuos function - ADMA Misc. POI3
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getMiscellaneuosPOI3(const std::string& local_data, adma_connect::Adma& message)
+void getMiscellaneuosPOI3(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Miscellaneous POI 3
     char Inv_Path_Radius_POI3[] = {local_data[368],local_data[369]};
@@ -965,7 +965,7 @@ void getMiscellaneuosPOI3(const std::string& local_data, adma_connect::Adma& mes
 /// \brief  getMiscellaneuos function - ADMA Misc. POI4
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getMiscellaneuosPOI4(const std::string& local_data, adma_connect::Adma& message)
+void getMiscellaneuosPOI4(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Miscellaneous POI 4
     char Inv_Path_Radius_POI4[] = {local_data[376],local_data[377]};
@@ -985,7 +985,7 @@ void getMiscellaneuosPOI4(const std::string& local_data, adma_connect::Adma& mes
 /// \brief  getMiscellaneuos function - ADMA Misc. POI5
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getMiscellaneuosPOI5(const std::string& local_data, adma_connect::Adma& message)
+void getMiscellaneuosPOI5(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Miscellaneous POI 5
     char Inv_Path_Radius_POI5[] = {local_data[384],local_data[385]};
@@ -1005,7 +1005,7 @@ void getMiscellaneuosPOI5(const std::string& local_data, adma_connect::Adma& mes
 /// \brief  getMiscellaneuos function - ADMA Misc. POI6
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getMiscellaneuosPOI6(const std::string& local_data, adma_connect::Adma& message)
+void getMiscellaneuosPOI6(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Miscellaneous POI 6
     char Inv_Path_Radius_POI6[] = {local_data[392],local_data[393]};
@@ -1025,7 +1025,7 @@ void getMiscellaneuosPOI6(const std::string& local_data, adma_connect::Adma& mes
 /// \brief  getMiscellaneuos function - ADMA Misc. POI7
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getMiscellaneuosPOI7(const std::string& local_data, adma_connect::Adma& message)
+void getMiscellaneuosPOI7(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Miscellaneous POI 7
     char Inv_Path_Radius_POI7[] = {local_data[400],local_data[401]};
@@ -1046,7 +1046,7 @@ void getMiscellaneuosPOI7(const std::string& local_data, adma_connect::Adma& mes
 /// \brief  getMiscellaneuos function - ADMA Misc. POI8
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getMiscellaneuosPOI8(const std::string& local_data, adma_connect::Adma& message)
+void getMiscellaneuosPOI8(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Miscellaneous POI 8
     char Inv_Path_Radius_POI8[] = {local_data[408],local_data[409]};
@@ -1066,7 +1066,7 @@ void getMiscellaneuosPOI8(const std::string& local_data, adma_connect::Adma& mes
 /// \brief  getTriggers function - ADMA Triggers 1,2,3 and 4
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getTriggers(const std::string& local_data, adma_connect::Adma& message)
+void getTriggers(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Triggers 1 and 2
     char Trigger_Raising_1[] = {local_data[416],local_data[417]};
@@ -1092,7 +1092,7 @@ void getTriggers(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getSystemData function - ADMA System Data
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getSystemData(const std::string& local_data, adma_connect::Adma& message)
+void getSystemData(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! System Data
     char System_Ta[] = {local_data[432],local_data[433]};
@@ -1112,7 +1112,7 @@ void getSystemData(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getGPSAbs function - ADMA Absolute GPS Information
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getGPSAbs(const std::string& local_data, adma_connect::Adma& message)
+void getGPSAbs(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! GPS Position Absolute
     char GPS_Lat_Abs[] = {local_data[440],local_data[441],local_data[442],local_data[443]};
@@ -1127,7 +1127,7 @@ void getGPSAbs(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getGPSPosRel function - ADMA Relative GPS Information
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getGPSPosRel(const std::string& local_data, adma_connect::Adma& message)
+void getGPSPosRel(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! GPS Position Relative
     char GPS_Lat_Rel[] = {local_data[448],local_data[449],local_data[450],local_data[451]};
@@ -1143,7 +1143,7 @@ void getGPSPosRel(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getGPSEPE function - ADMA Position Error
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getGPSEPE(const std::string& local_data, adma_connect::Adma& message)
+void getGPSEPE(const std::string& local_data, adma_msgs::Adma& message)
 {
    //! GPS Position Error
     char GPS_Stddev_Lat[] = {local_data[456],local_data[457]};
@@ -1161,7 +1161,7 @@ void getGPSEPE(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getGPSAbs function - ADMA Velocity Frmae X Y Z
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getGPSVelFrame(const std::string& local_data, adma_connect::Adma& message)
+void getGPSVelFrame(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! GPS Velocity Frame
     char GPS_Vel_Frame_X[] = {local_data[464],local_data[465]};
@@ -1182,7 +1182,7 @@ void getGPSVelFrame(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getGPSAbs function - ADMA Expected Velocity Error
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getGPSVelEVE(const std::string& local_data, adma_connect::Adma& message)
+void getGPSVelEVE(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! GPS Velocity Error
     char GPS_Stddev_Vel_X[] = {local_data[472],local_data[473]};
@@ -1200,7 +1200,7 @@ void getGPSVelEVE(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getGPSAbs function - ADMA Expected Velocity Error
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getGPSTimeUTC(const std::string& local_data, adma_connect::Adma& message)
+void getGPSTimeUTC(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! GPS Time UTC
     char GPS_Time_msec[] = {local_data[480],local_data[481],local_data[482],local_data[483]};
@@ -1214,7 +1214,7 @@ void getGPSTimeUTC(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getGPSAbs function - ADMA Expected Velocity Error
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getGPSAuxData1(const std::string& local_data, adma_connect::Adma& message)
+void getGPSAuxData1(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! GPS Aux Data 1
     char GPS_Diff_Age[] = {local_data[488],local_data[489]};
@@ -1233,7 +1233,7 @@ void getGPSAuxData1(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getGPSAbs function - ADMA Expected Velocity Error
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getGPSAuxData2(const std::string& local_data, adma_connect::Adma& message)
+void getGPSAuxData2(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! GPS Aux Data 2
     char GPS_Log_Delay[] = {local_data[496]};
@@ -1248,7 +1248,7 @@ void getGPSAuxData2(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getGPSAbs function - ADMA Expected Velocity Error
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSAngleGPSCOG(const std::string& local_data, adma_connect::Adma& message)
+void getINSAngleGPSCOG(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Angle and GPS COG
     char INS_Roll[] = {local_data[504],local_data[505]};
@@ -1269,7 +1269,7 @@ void getINSAngleGPSCOG(const std::string& local_data, adma_connect::Adma& messag
 /// \brief  getGPSHeight function - ADMA GPS Height
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getGPSHeight(const std::string& local_data, adma_connect::Adma& message)
+void getGPSHeight(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! GPS Height (MSL)
     char GPS_Height[] = {local_data[512],local_data[513],local_data[514],local_data[515]};
@@ -1284,7 +1284,7 @@ void getGPSHeight(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getGPSDualAntTimeUTC function - ADMA GPS Dual Ant Time UTC
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getGPSDualAntTimeUTC(const std::string& local_data, adma_connect::Adma& message)
+void getGPSDualAntTimeUTC(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! GPS DualAnt Time UTC
     char GPS_DualAnt_Time_msec[] = {local_data[520],local_data[521],local_data[522],local_data[523]};
@@ -1297,7 +1297,7 @@ void getGPSDualAntTimeUTC(const std::string& local_data, adma_connect::Adma& mes
 /// \brief  getGPSDualAntAngle function - ADMA GPS Dual Ant Angle
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getGPSDualAntAngle(const std::string& local_data, adma_connect::Adma& message)
+void getGPSDualAntAngle(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! GPS DualAnt Angle
     char GPS_DualAnt_Heading[] = {local_data[528],local_data[529]};
@@ -1312,7 +1312,7 @@ void getGPSDualAntAngle(const std::string& local_data, adma_connect::Adma& messa
 /// \brief  getGPSDualAntAngleETE function - ADMA GPS Dual Ant Angle ETE
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getGPSDualAntAngleETE(const std::string& local_data, adma_connect::Adma& message)
+void getGPSDualAntAngleETE(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! GPS DualAnt Angle ETE
     char GPS_DualAnt_Stddev_Heading[] =  {local_data[536]};
@@ -1334,7 +1334,7 @@ void getGPSDualAntAngleETE(const std::string& local_data, adma_connect::Adma& me
 /// \brief  getGPSDualAntAngleETE function - ADMA GPS Dual Ant Angle ETE
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSPositionHeight(const std::string& local_data, adma_connect::Adma& message)
+void getINSPositionHeight(const std::string& local_data, adma_msgs::Adma& message)
 {
     char INS_Height[] = {local_data[544],local_data[545],local_data[546],local_data[547]};
     memcpy(&message.INSHeight , &INS_Height, sizeof(message.INSHeight));
@@ -1345,7 +1345,7 @@ void getINSPositionHeight(const std::string& local_data, adma_connect::Adma& mes
 /// \brief  getGPSDualAntAngleETE function - ADMA GPS Dual Ant Angle ETE
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSPositionPOI(const std::string& local_data, adma_connect::Adma& message)
+void getINSPositionPOI(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Position Height 1 and 2
     char INS_Height_POI1[] = {local_data[552],local_data[553],local_data[554],local_data[555]};
@@ -1381,7 +1381,7 @@ void getINSPositionPOI(const std::string& local_data, adma_connect::Adma& messag
 /// \brief  getINSTimeUTC function -ADMA INS Time UTC
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSTimeUTC(const std::string& local_data, adma_connect::Adma& message)
+void getINSTimeUTC(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Time UTC
     char INS_Time_msec[] = {local_data[584],local_data[585],local_data[586],local_data[587]};
@@ -1396,7 +1396,7 @@ void getINSTimeUTC(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getINSPositionAbs function -  ADMA INS Pos Abs
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSPositionAbs(const std::string& local_data, adma_connect::Adma& message)
+void getINSPositionAbs(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Position Abs
     char INS_Lat_Abs[] = {local_data[592],local_data[593],local_data[594],local_data[595]};
@@ -1411,7 +1411,7 @@ void getINSPositionAbs(const std::string& local_data, adma_connect::Adma& messag
 /// \brief  getINSPosRel function -  ADMA INS Pos Rel 
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSPosRel(const std::string& local_data, adma_connect::Adma& message)
+void getINSPosRel(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Position Rel 
     char INS_Lat_Rel[] = {local_data[600],local_data[601],local_data[602],local_data[603]};
@@ -1426,7 +1426,7 @@ void getINSPosRel(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getINSPosPOI1 function  ADMA INS Pos Abs and Rel POI 1
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSPosPOI1(const std::string& local_data, adma_connect::Adma& message)
+void getINSPosPOI1(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Postion Abs POI1
     char INS_Lat_Abs_POI1[] = {local_data[608],local_data[609],local_data[610],local_data[611]};
@@ -1448,7 +1448,7 @@ void getINSPosPOI1(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getINSPosPOI2 function  ADMA INS Pos Abs and Rel POI 2
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSPosPOI2(const std::string& local_data, adma_connect::Adma& message)
+void getINSPosPOI2(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Postion Abs POI2
     char INS_Lat_Abs_POI2[] = {local_data[624],local_data[625],local_data[626],local_data[627]};
@@ -1470,7 +1470,7 @@ void getINSPosPOI2(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getINSPosPOI3 function  ADMA INS Pos Abs and Rel POI 3
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSPosPOI3(const std::string& local_data, adma_connect::Adma& message)
+void getINSPosPOI3(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Postion Abs POI3
     char INS_Lat_Abs_POI3[] = {local_data[640],local_data[641],local_data[642],local_data[643]};
@@ -1492,7 +1492,7 @@ void getINSPosPOI3(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getINSPosPOI4 function  ADMA INS Pos Abs and Rel POI 4
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSPosPOI4(const std::string& local_data, adma_connect::Adma& message)
+void getINSPosPOI4(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Postion Abs POI4
     char INS_Lat_Abs_POI4[] = {local_data[656],local_data[657],local_data[658],local_data[659]};
@@ -1514,7 +1514,7 @@ void getINSPosPOI4(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getINSPosPOI5 function  ADMA INS Pos Abs and Rel POI 5
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSPosPOI5(const std::string& local_data, adma_connect::Adma& message)
+void getINSPosPOI5(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Postion Abs POI5
     char INS_Lat_Abs_POI5[] = {local_data[672],local_data[673],local_data[674],local_data[675]};
@@ -1536,7 +1536,7 @@ void getINSPosPOI5(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getINSPosPOI6 function  ADMA INS Pos Abs and Rel POI 6
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSPosPOI6(const std::string& local_data, adma_connect::Adma& message)
+void getINSPosPOI6(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Postion Abs POI6
     char INS_Lat_Abs_POI6[] = {local_data[688],local_data[689],local_data[690],local_data[691]};
@@ -1558,7 +1558,7 @@ void getINSPosPOI6(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getINSPosPOI7 function  ADMA INS Pos Abs and Rel POI 7
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSPosPOI7(const std::string& local_data, adma_connect::Adma& message)
+void getINSPosPOI7(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Postion Abs POI7
     char INS_Lat_Abs_POI7[] = {local_data[704],local_data[705],local_data[706],local_data[707]};
@@ -1580,7 +1580,7 @@ void getINSPosPOI7(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getINSPosPOI8 function - ADMA INS Pos Abs and Rel POI 8
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSPosPOI8(const std::string& local_data, adma_connect::Adma& message)
+void getINSPosPOI8(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Postion Abs POI8
     char INS_Lat_Abs_POI8[] = {local_data[720],local_data[721],local_data[722],local_data[723]};
@@ -1602,7 +1602,7 @@ void getINSPosPOI8(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getINSVelHorXYZ function - ADMA INS Vel Hor X Y Z
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSVelHorXYZ(const std::string& local_data, adma_connect::Adma& message)
+void getINSVelHorXYZ(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Velocity Horizontal
     char INS_Vel_Hor_X[] = {local_data[736],local_data[737]};
@@ -1620,7 +1620,7 @@ void getINSVelHorXYZ(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getINSVelFrameXYZ function - ADMA INS Vel Frame X Y Z
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSVelFrameXYZ(const std::string& local_data, adma_connect::Adma& message)
+void getINSVelFrameXYZ(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Velocity Frame
     char INS_Vel_Frame_X[] = {local_data[744],local_data[745]};
@@ -1638,7 +1638,7 @@ void getINSVelFrameXYZ(const std::string& local_data, adma_connect::Adma& messag
 /// \brief  getINSVelHorXYZPOS1 function - ADMA INS Vel Hor X Y Z POS1
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSVelHorXYZPOS1(const std::string& local_data, adma_connect::Adma& message)
+void getINSVelHorXYZPOS1(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Velocity Horizontal POI1
     char INS_Vel_Hor_X_POI1[] = {local_data[752],local_data[753]};
@@ -1656,7 +1656,7 @@ void getINSVelHorXYZPOS1(const std::string& local_data, adma_connect::Adma& mess
 /// \brief  getINSVelHorXYZPOS2 function - ADMA INS Vel Hor X Y Z POS2
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSVelHorXYZPOS2(const std::string& local_data, adma_connect::Adma& message)
+void getINSVelHorXYZPOS2(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Velocity Horizontal POI2
     char INS_Vel_Hor_X_POI2[] = {local_data[760],local_data[761]};
@@ -1674,7 +1674,7 @@ void getINSVelHorXYZPOS2(const std::string& local_data, adma_connect::Adma& mess
 /// \brief  getINSVelHorXYZPOS3 function - ADMA INS Vel Hor X Y Z POS3
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSVelHorXYZPOS3(const std::string& local_data, adma_connect::Adma& message)
+void getINSVelHorXYZPOS3(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Velocity Horizontal POI3
     char INS_Vel_Hor_X_POI3[] = {local_data[768],local_data[769]};
@@ -1692,7 +1692,7 @@ void getINSVelHorXYZPOS3(const std::string& local_data, adma_connect::Adma& mess
 /// \brief  getINSVelHorXYZPOS4 function - ADMA INS Vel Hor X Y Z POS4
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSVelHorXYZPOS4(const std::string& local_data, adma_connect::Adma& message)
+void getINSVelHorXYZPOS4(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Velocity Horizontal POI4
     char INS_Vel_Hor_X_POI4[] = {local_data[776],local_data[777]};
@@ -1711,7 +1711,7 @@ void getINSVelHorXYZPOS4(const std::string& local_data, adma_connect::Adma& mess
 /// \brief  getINSVelHorXYZPOS5 function - ADMA INS Vel Hor X Y Z POS5
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSVelHorXYZPOS5(const std::string& local_data, adma_connect::Adma& message)
+void getINSVelHorXYZPOS5(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Velocity Horizontal POI5
     char INS_Vel_Hor_X_POI5[] = {local_data[784],local_data[785]};
@@ -1729,7 +1729,7 @@ void getINSVelHorXYZPOS5(const std::string& local_data, adma_connect::Adma& mess
 /// \brief  getINSVelHorXYZPOS6 function - ADMA INS Vel Hor X Y Z POS6
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSVelHorXYZPOS6(const std::string& local_data, adma_connect::Adma& message)
+void getINSVelHorXYZPOS6(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Velocity Horizontal POI6
     char INS_Vel_Hor_X_POI6[] = {local_data[792],local_data[793]};
@@ -1748,7 +1748,7 @@ void getINSVelHorXYZPOS6(const std::string& local_data, adma_connect::Adma& mess
 /// \brief  getINSVelHorXYZPOS7 function - ADMA INS Vel Hor X Y Z POS7
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSVelHorXYZPOS7(const std::string& local_data, adma_connect::Adma& message)
+void getINSVelHorXYZPOS7(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Velocity Horizontal POI7
     char INS_Vel_Hor_X_POI7[] = {local_data[800],local_data[801]};
@@ -1767,7 +1767,7 @@ void getINSVelHorXYZPOS7(const std::string& local_data, adma_connect::Adma& mess
 /// \brief  getINSVelHorXYZPOS8 function - ADMA INS Vel Hor X Y Z POS8
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSVelHorXYZPOS8(const std::string& local_data, adma_connect::Adma& message)
+void getINSVelHorXYZPOS8(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS Velocity Horizontal POI8
     char INS_Vel_Hor_X_POI8[] = {local_data[808],local_data[809]};
@@ -1785,7 +1785,7 @@ void getINSVelHorXYZPOS8(const std::string& local_data, adma_connect::Adma& mess
 /// \brief  getINSEPE function - ADMA INS SEPE
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getINSEPE(const std::string& local_data, adma_connect::Adma& message)
+void getINSEPE(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS EPE
     char INS_Stddev_Lat[] = {local_data[816],local_data[817]};
@@ -1802,7 +1802,7 @@ void getINSEPE(const std::string& local_data, adma_connect::Adma& message)
 /// \file
 /// \brief  getINSEVEandETE function - ADMA INS EVE and ETE
 /// \param  message ADMA Message to be loaded
-void getINSEVEandETE(const std::string& local_data, adma_connect::Adma& message)
+void getINSEVEandETE(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! INS EVE and INS ETE
     char INS_Stddev_Vel_X[] = {local_data[824]};
@@ -1829,7 +1829,7 @@ void getINSEVEandETE(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getAnalog function - ADMA Analog
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getAnalog(const std::string& local_data, adma_connect::Adma& message)
+void getAnalog(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Analog In 1
     char AN1[] = {local_data[832],local_data[833]};
@@ -1850,7 +1850,7 @@ void getAnalog(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getKalmanFilter function - ADMA Kalman Filter
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getKalmanFilter(const std::string& local_data, adma_connect::Adma& message)
+void getKalmanFilter(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! Kalman Filer Status
     char KF_Lat_stimulated[] = {local_data[840]};
@@ -1865,7 +1865,7 @@ void getKalmanFilter(const std::string& local_data, adma_connect::Adma& message)
 /// \brief  getGNSSReceiver function - ADMA GPS Error Status
 /// \param  local_data ADMA string
 /// \param  message ADMA Message to be loaded
-void getGNSSReceiver(const std::string& local_data, adma_connect::Adma& message)
+void getGNSSReceiver(const std::string& local_data, adma_msgs::Adma& message)
 {
     //! GPS Receiver Error
     char GPS_Receiver_Error[] = {local_data[848],local_data[849],local_data[850],local_data[851]};
