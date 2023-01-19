@@ -1,3 +1,5 @@
+std_msgs/Header header
+
 # adma static header
 string genesysid
 string headerversion

@@ -125,28 +125,26 @@ namespace genesys
 
         void ADMADriver::parseData(std::array<char, 856> recv_buf)
         {
-                builtin_interfaces::msg::Time curTimestamp = this->get_clock()->now();
-                                                
                 // prepare several ros msgs
                 sensor_msgs::msg::NavSatFix message_fix;
-                message_fix.header.stamp = curTimestamp;
                 message_fix.header.frame_id = _gnss_frame;
                 std_msgs::msg::Float64 message_heading;
                 std_msgs::msg::Float64 message_velocity;
                 sensor_msgs::msg::Imu message_imu;
                 message_imu.header.frame_id = _imu_frame;
-                message_imu.header.stamp = curTimestamp;
                 float weektime;
-                uint32_t instimemsec;
+                //offset between UNIX and GNSS (in ms)
+                unsigned long offset_gps_unix = 315964800000;
+                unsigned long timestamp;
 
                 // read Adma msg from UDP data packet
                 if (_protocolversion == "v3.2" || _protocolversion == "v3.3.3")
                 {
                         adma_msgs::msg::AdmaData admaData_rosMsg;
                         _parser->mapAdmaMessageToROS(admaData_rosMsg, recv_buf);
-                        
-                        admaData_rosMsg.timemsec = curTimestamp.sec * 1000;
-                        admaData_rosMsg.timensec = curTimestamp.nanosec;
+                        timestamp = admaData_rosMsg.instimemsec + offset_gps_unix;
+                        admaData_rosMsg.timemsec = timestamp;
+                        admaData_rosMsg.timensec = timestamp * 1000000;
                         
                         // read NavSatFix out of AdmaData
                         _parser->extractNavSatFix(admaData_rosMsg, message_fix);
@@ -157,19 +155,22 @@ namespace genesys
 
                         // read IMU
                         _parser->extractIMU(admaData_rosMsg, message_imu);
+                        admaData_rosMsg.header.stamp.sec = timestamp / 1000;
+                        admaData_rosMsg.header.stamp.nanosec = timestamp * 1000000;
                         _pub_adma_data->publish(admaData_rosMsg);
                         weektime = admaData_rosMsg.instimeweek;
-                        instimemsec = admaData_rosMsg.instimemsec;
                 }else if (_protocolversion == "v3.3.4")
                 {
                         AdmaDataV334 dataStruct;
                         memcpy(&dataStruct , &recv_buf, sizeof(dataStruct));
                         adma_msgs::msg::AdmaDataScaled admaDataScaledMsg;
                         admaDataScaledMsg.header.frame_id = _adma_frame;
-                        admaDataScaledMsg.header.stamp = curTimestamp;
                         _parser->parseV334(admaDataScaledMsg, dataStruct);
-                        admaDataScaledMsg.time_msec = curTimestamp.sec * 1000;
-                        admaDataScaledMsg.time_nsec = curTimestamp.nanosec;
+                        timestamp = admaDataScaledMsg.ins_time_msec + offset_gps_unix;
+                        admaDataScaledMsg.time_msec = timestamp;
+                        admaDataScaledMsg.time_nsec = timestamp * 1000000;
+                        admaDataScaledMsg.header.stamp.sec = timestamp / 1000;
+                        admaDataScaledMsg.header.stamp.nanosec = timestamp * 1000000;
 
                         _parser->extractNavSatFix(admaDataScaledMsg, message_fix);
                         _parser->extractIMU(admaDataScaledMsg, message_imu);
@@ -181,10 +182,10 @@ namespace genesys
                         _pub_adma_data_scaled->publish(admaDataScaledMsg);
 
                         weektime = admaDataScaledMsg.ins_time_week;
-                        instimemsec = admaDataScaledMsg.ins_time_msec;
 
                         adma_msgs::msg::AdmaStatus statusMsg;
-                        statusMsg.header.stamp = curTimestamp;
+                        statusMsg.header.stamp.sec = timestamp / 1000;
+                        statusMsg.header.stamp.nanosec = timestamp * 1000000;
                         statusMsg.header.frame_id = _adma_status_frame;
                         _parser->parseV334Status(statusMsg, dataStruct);
                         _pub_adma_status->publish(statusMsg);
@@ -196,7 +197,8 @@ namespace genesys
                         // publish raw data as byte array
                         adma_msgs::msg::AdmaDataRaw rawDataMsg;
                         rawDataMsg.size = _len;
-                        rawDataMsg.header.stamp = curTimestamp;
+                        rawDataMsg.header.stamp.sec = timestamp / 1000;
+                        rawDataMsg.header.stamp.nanosec = timestamp * 1000000;
                         rawDataMsg.header.frame_id = _raw_data_frame;
 
                         for(int i=0; i<_len; ++i)
@@ -212,6 +214,10 @@ namespace genesys
                 }
 
                 // publish the messages
+                message_fix.header.stamp.sec = timestamp / 1000;
+                message_fix.header.stamp.nanosec = timestamp * 1000000;
+                message_imu.header.stamp.sec = timestamp / 1000;
+                message_imu.header.stamp.nanosec = timestamp * 1000000;
                 _pub_navsat_fix->publish(message_fix);
                 _pub_heading->publish(message_heading);
                 _pub_velocity->publish(message_velocity);
@@ -221,7 +227,7 @@ namespace genesys
 
                 if (_performance_check)
                 {
-                        RCLCPP_INFO(get_logger(), "%f ", ((grab_time * 1000) - (instimemsec + 1592697600000)));
+                        RCLCPP_INFO(get_logger(), "%f ", ((grab_time * 1000) - (timestamp)));
                 }
         }
 
