@@ -199,20 +199,20 @@ void ADMADriver::updateLoop()
 
 void ADMADriver::parseData(std::array<char, 856> recv_buf)
 {
-        ros::Time curTimestamp = ros::Time::now();
+        //ros::Time curTimestamp = ros::Time::now();
         // prepare several ros msgs
         std_msgs::Float64 message_heading;
         std_msgs::Float64 message_velocity;
         sensor_msgs::NavSatFix message_fix;
         message_fix.header.frame_id = _frame_id_navsatfix;
         message_fix.header.seq = _seq;
-        message_fix.header.stamp.sec = curTimestamp.toSec();
-        message_fix.header.stamp.nsec = curTimestamp.toNSec();
+        // message_fix.header.stamp.sec = curTimestamp.toSec();
+        // message_fix.header.stamp.nsec = curTimestamp.toNSec();
         sensor_msgs::Imu message_imu;
         message_imu.header.frame_id = _frame_id_imu;
         message_imu.header.seq = _seq;
-        message_imu.header.stamp.sec = curTimestamp.toSec();
-        message_imu.header.stamp.nsec = curTimestamp.toNSec();
+        // message_imu.header.stamp.sec = curTimestamp.toSec();
+        // message_imu.header.stamp.nsec = curTimestamp.toNSec();
         float weektime;
         uint32_t instimemsec;
 
@@ -220,13 +220,14 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
         {
                 adma_msgs::Adma admaData_rosMsg;
                 _parser->parseV333(admaData_rosMsg, recv_buf);
-                
-                admaData_rosMsg.TimeMsec = curTimestamp.toSec() * 1000;
-                admaData_rosMsg.TimeNsec = curTimestamp.toNSec();
+                instimemsec = admaData_rosMsg.INSTimemsec;
+                // admaData_rosMsg.TimeMsec = curTimestamp.toSec() * 1000;
+                // admaData_rosMsg.TimeNsec = curTimestamp.toNSec();
+                admaData_rosMsg.TimeMsec = instimemsec;
+                admaData_rosMsg.TimeNsec = instimemsec * 1000000;                
 
                 _pubAdmaData.publish(admaData_rosMsg);
                 weektime = admaData_rosMsg.INSTimeWeek;
-                instimemsec = admaData_rosMsg.INSTimemsec;
 
         }else if (_protocol_version == "v3.3.4")
         {
@@ -236,11 +237,11 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
                 adma_msgs::AdmaDataScaled admaDataScaledMsg;
                 admaDataScaledMsg.header.frame_id = _frame_id_adma;
                 admaDataScaledMsg.header.seq = _seq;
-                admaDataScaledMsg.header.stamp.sec = curTimestamp.toSec();
-                admaDataScaledMsg.header.stamp.nsec = curTimestamp.toNSec();
+                // admaDataScaledMsg.header.stamp.sec = curTimestamp.toSec();
+                // admaDataScaledMsg.header.stamp.nsec = curTimestamp.toNSec();
                 _parser->parseV334(admaDataScaledMsg, dataStruct);
-                admaDataScaledMsg.time_msec = curTimestamp.toSec() * 1000;
-                admaDataScaledMsg.time_nsec = curTimestamp.toNSec();
+                // admaDataScaledMsg.time_msec = curTimestamp.toSec() * 1000;
+                // admaDataScaledMsg.time_nsec = curTimestamp.toNSec();
 
                 _parser->extractNavSatFix(admaDataScaledMsg, message_fix);
                 _parser->extractIMU(admaDataScaledMsg, message_imu);
@@ -248,13 +249,19 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
                 // read heading and velocity
                 message_heading.data = admaDataScaledMsg.ins_yaw;
                 message_velocity.data = std::sqrt(std::pow(admaDataScaledMsg.gnss_vel_frame.x, 2) + std::pow(admaDataScaledMsg.gnss_vel_frame.y, 2)) * 3.6;
-
+                instimemsec = admaDataScaledMsg.ins_time_msec;
+                admaDataScaledMsg.header.stamp.sec = instimemsec / 1000;
+                admaDataScaledMsg.header.stamp.nsec = instimemsec * 1000000;
+                admaDataScaledMsg.time_msec = instimemsec;
+                admaDataScaledMsg.time_nsec = instimemsec * 1000000;
                 // parse status msg
                 adma_msgs::AdmaStatus statusMsg;
                 statusMsg.header.frame_id = _frame_id_adma_status;
                 statusMsg.header.seq = _seq;
-                statusMsg.header.stamp.sec = curTimestamp.toSec();
-                statusMsg.header.stamp.nsec = curTimestamp.toNSec();
+                // statusMsg.header.stamp.sec = curTimestamp.toSec();
+                // statusMsg.header.stamp.nsec = curTimestamp.toNSec();
+                statusMsg.header.stamp.sec = instimemsec / 1000;
+                statusMsg.header.stamp.nsec = instimemsec * 1000000;
                 _parser->parseV334Status(statusMsg, dataStruct);
 
                 // publish v334 specific topics
@@ -262,13 +269,17 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
                 _pubAdmaStatus.publish(statusMsg);
 
                 // publish ros standard messages
+                message_fix.header.stamp.sec = instimemsec / 1000;
+                message_fix.header.stamp.nsec = instimemsec * 1000000;
+                message_imu.header.stamp.sec = instimemsec / 1000;
+                message_imu.header.stamp.nsec = instimemsec * 1000000;
                 _pubNavSatFix.publish(message_fix);
                 _pubHeading.publish(message_heading);
                 _pubVelocity.publish(message_velocity);
                 _pubImu.publish(message_imu);
 
                 weektime = admaDataScaledMsg.ins_time_week;
-                instimemsec = admaDataScaledMsg.ins_time_msec;
+                
         }
 
         // protocol version indepent parsing
@@ -278,8 +289,10 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
         rawDataMsg.size = _len;
         rawDataMsg.header.frame_id = _frame_id_data_raw;
         rawDataMsg.header.seq = _seq;
-        rawDataMsg.header.stamp.sec = curTimestamp.toSec();
-        rawDataMsg.header.stamp.nsec = curTimestamp.toNSec();
+        rawDataMsg.header.stamp.sec = instimemsec / 1000;
+        rawDataMsg.header.stamp.nsec = instimemsec * 1000000;
+        // rawDataMsg.header.stamp.sec = curTimestamp.toSec();
+        // rawDataMsg.header.stamp.nsec = curTimestamp.toNSec();
 
         //fill raw data byte array
         for(int i=0; i<_len; ++i)
