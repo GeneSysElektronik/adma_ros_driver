@@ -211,6 +211,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
         float weektime;
         //offset between UNIX and GNSS (in ms)
         unsigned long offset_gps_unix = 315964800000;
+        uint32_t week_to_msec = 604800000;
         unsigned long timestamp;
 
         if (_protocol_version == "v3.3.3")
@@ -218,6 +219,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
                 adma_msgs::Adma admaData_rosMsg;
                 _parser->parseV333(admaData_rosMsg, recv_buf);
                 timestamp = admaData_rosMsg.INSTimemsec + offset_gps_unix;
+                timestamp += admaData_rosMsg.INSTimeWeek * week_to_msec;
                 admaData_rosMsg.TimeMsec = timestamp;
                 admaData_rosMsg.TimeNsec = timestamp * 1000000;                
 
@@ -241,6 +243,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
                 message_heading.data = admaDataScaledMsg.ins_yaw;
                 message_velocity.data = std::sqrt(std::pow(admaDataScaledMsg.gnss_vel_frame.x, 2) + std::pow(admaDataScaledMsg.gnss_vel_frame.y, 2)) * 3.6;
                 timestamp = admaDataScaledMsg.ins_time_msec + offset_gps_unix;
+                timestamp += admaDataScaledMsg.ins_time_week * week_to_msec;
                 admaDataScaledMsg.header.stamp.sec = timestamp / 1000;
                 admaDataScaledMsg.header.stamp.nsec = timestamp * 1000000;
                 admaDataScaledMsg.time_msec = timestamp;
