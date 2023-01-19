@@ -135,6 +135,7 @@ namespace genesys
                 float weektime;
                 //offset between UNIX and GNSS (in ms)
                 unsigned long offset_gps_unix = 315964800000;
+                uint32_t week_to_msec = 604800000;
                 unsigned long timestamp;
 
                 // read Adma msg from UDP data packet
@@ -143,6 +144,7 @@ namespace genesys
                         adma_msgs::msg::AdmaData admaData_rosMsg;
                         _parser->mapAdmaMessageToROS(admaData_rosMsg, recv_buf);
                         timestamp = admaData_rosMsg.instimemsec + offset_gps_unix;
+                        timestamp += admaData_rosMsg.instimeweek * week_to_msec;
                         admaData_rosMsg.timemsec = timestamp;
                         admaData_rosMsg.timensec = timestamp * 1000000;
                         
@@ -167,6 +169,7 @@ namespace genesys
                         admaDataScaledMsg.header.frame_id = _adma_frame;
                         _parser->parseV334(admaDataScaledMsg, dataStruct);
                         timestamp = admaDataScaledMsg.ins_time_msec + offset_gps_unix;
+                        timestamp += admaDataScaledMsg.ins_time_week * week_to_msec;
                         admaDataScaledMsg.time_msec = timestamp;
                         admaDataScaledMsg.time_nsec = timestamp * 1000000;
                         admaDataScaledMsg.header.stamp.sec = timestamp / 1000;
