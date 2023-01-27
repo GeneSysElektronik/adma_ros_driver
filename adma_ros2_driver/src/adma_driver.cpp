@@ -130,7 +130,7 @@ namespace genesys
                 // prepare several ros msgs
                 sensor_msgs::msg::NavSatFix message_fix;
                 message_fix.header.stamp = curTimestamp;
-                message_fix.header.frame_id = _gnss_frame;
+                message_fix.header.frame_id = _imu_frame;
                 std_msgs::msg::Float64 message_heading;
                 std_msgs::msg::Float64 message_velocity;
                 sensor_msgs::msg::Imu message_imu;
