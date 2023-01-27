@@ -5,7 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <math.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
 using namespace std;
 
@@ -1251,7 +1251,7 @@ void getgpsauxdata2(const std::string& local_data, adma_msgs::msg::AdmaData& mes
     char gps_receiver_load[] = {local_data[497]};
     memcpy(&message.gpsreceiverload , &gps_receiver_load, sizeof(message.gpsreceiverload));
     message.fgpsreceiverload = message.gpsreceiverload * 0.5;  
-    char gps_basenr[] = {local_data[498],local_data[499],local_data[500],local_data[501]};
+    std::string gps_basenr({local_data[498],local_data[499],local_data[500],local_data[501]});
     memcpy(&message.gpsbasenr , &gps_basenr, sizeof(message.gpsbasenr));  
 }
 /// \file
