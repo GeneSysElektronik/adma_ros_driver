@@ -10,7 +10,7 @@ bool getbit(unsigned char byte, int position) // position in range 0-7
     return (byte >> position) & 0x1;
 }
 
-float getScaledValue(int32_t rawValue, float lsbFactor)
+double getScaledValue(int32_t rawValue, double lsbFactor)
 {
     return rawValue * lsbFactor;
 }
