@@ -378,7 +378,7 @@ void ADMA2ROSParserV334::mapPOI(adma_msgs::AdmaDataScaled& rosMsg, AdmaDataV334&
                 newPOI.dist_trav = getScaledValue(curMisc.distanceTraveled, 0.01);
                 newPOI.ins_height = getScaledValue(curINSHeight, 0.01);
                 newPOI.ins_lat_abs = getScaledValue(curINSPosition.pos_abs.latitude, 0.0000001);
-                newPOI.ins_lon_abs = getScaledValue(curINSPosition.pos_abs.longitude, 0.0000001);
+                newPOI.ins_long_abs = getScaledValue(curINSPosition.pos_abs.longitude, 0.0000001);
                 newPOI.ins_pos_rel_x = getScaledValue(curINSPosition.pos_rel_x, 0.01);
                 newPOI.ins_pos_rel_y = getScaledValue(curINSPosition.pos_rel_y, 0.01);
                 newPOI.ins_vel_hor.x = getScaledValue(curINSVelHor.x, 0.005);

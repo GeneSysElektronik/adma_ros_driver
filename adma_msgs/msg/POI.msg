@@ -18,7 +18,7 @@ float64 ins_height
 
 # ins position absolute (in deg)
 float64 ins_lat_abs
-float64 ins_lon_abs
+float64 ins_long_abs
 
 # ins position relative (in m)
 float64 ins_pos_rel_x
