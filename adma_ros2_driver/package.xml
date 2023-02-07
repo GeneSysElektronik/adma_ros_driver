@@ -3,7 +3,7 @@
   <name>adma_ros2_driver</name>
   <version>0.0.0</version>
   <description>adma_ros_driver originally from https://github.com/lab176344/adma_ros_driver.git</description>
-  <maintainer email="gjorgji.nikolovski@alumni.fh-aachen.de">Gjorgji Nikolovski</maintainer>
+  <maintainer email="rico.schillings@hs-offenburg.de">Rico Schillings</maintainer>
   <license>Apache 2.0</license>
    
   <buildtool_depend>ament_cmake</buildtool_depend>
@@ -17,6 +17,9 @@
   <depend>tf2_geometry_msgs</depend>
   <!-- adma dependencies -->
   <depend>adma_msgs</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_cmake_clange_format</test_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

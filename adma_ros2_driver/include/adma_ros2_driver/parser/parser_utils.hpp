@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-const double PI=3.1415926535897932384626433832795028841971;
+const double PI = 3.1415926535897932384626433832795028841971;
 
 bool getbit(unsigned char byte, int position);
-double getScaledValue(int32_t rawValue, double lsbFactor);
+double getScaledValue(int32_t raw_value, double lsb_factor);

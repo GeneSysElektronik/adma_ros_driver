@@ -1,398 +1,406 @@
 #include "adma_ros2_driver/parser/adma2ros_parser_v334.hpp"
+
 #include "adma_ros2_driver/parser/parser_utils.hpp"
 
-ADMA2ROSParserV334::ADMA2ROSParserV334()
+ADMA2ROSParserV334::ADMA2ROSParserV334() {}
+
+void ADMA2ROSParserV334::mapAdmaMessageToROS(
+  adma_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & adma_data)
 {
+  mapAdmaHeader(ros_msg, adma_data);
+  mapErrorWarningBytes(ros_msg.error_warning, adma_data);
+  mapStatusBitfields(ros_msg.status, adma_data);
+  mapUnscaledData(ros_msg, adma_data);
+  mapScaledData(ros_msg, adma_data);
+  mapPOI(ros_msg, adma_data);
 }
 
-void ADMA2ROSParserV334::mapAdmaMessageToROS(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& admaData)
+void ADMA2ROSParserV334::mapStatusToROS(
+  adma_msgs::msg::AdmaStatus & ros_msg, AdmaDataV334 & adma_data)
 {
-        mapAdmaHeader(rosMsg, admaData);
-        mapErrorWarningBytes(rosMsg.error_warning, admaData);
-        mapStatusBitfields(rosMsg.status, admaData);
-        mapUnscaledData(rosMsg, admaData);
-        mapScaledData(rosMsg, admaData);
-        mapPOI(rosMsg, admaData);
+  mapStatusBytes(ros_msg.status_bytes, adma_data);
+  mapErrorWarningBytes(ros_msg.error_warnings_bytes, adma_data);
+  mapErrorWarningBitfields(ros_msg.error_warnings, adma_data);
 }
 
-void ADMA2ROSParserV334::mapStatusToROS(adma_msgs::msg::AdmaStatus& rosMsg, AdmaDataV334& admaData)
+void ADMA2ROSParserV334::mapAdmaHeader(
+  adma_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & adma_data)
 {
-        mapStatusBytes(rosMsg.status_bytes, admaData);
-        mapErrorWarningBytes(rosMsg.error_warnings_bytes, admaData);
-        mapErrorWarningBitfields(rosMsg.error_warnings, admaData);
+  // fill static header information
+  AdmaStaticHeader static_header = adma_data.staticHeader;
+  ros_msg.genesys_id = static_header.genesysid;
+  std::stringstream ss;
+  ss << int(static_header.headerversion[0]) << int(static_header.headerversion[1])
+     << int(static_header.headerversion[2]) << int(static_header.headerversion[3]);
+  ros_msg.header_version = ss.str();
+  ss.clear();
+  ss.str("");
+  ros_msg.format_id = static_header.formatid;
+  //TODO: this value is parsed wrong?!
+  ss << int(static_header.formatversion[0]) << int(static_header.formatversion[1])
+     << int(static_header.formatversion[2]) << int(static_header.formatversion[3]);
+  ros_msg.format_version = ss.str();
+  ros_msg.serial_number = static_header.serialno;
+
+  // fill dynamic header information
+  AdmaDynamicHeader dynamic_header = adma_data.dynamicHeader;
+  ros_msg.config_id = dynamic_header.configid;
+  ros_msg.config_format = dynamic_header.configformat;
+  ros_msg.config_version = dynamic_header.configversion;
+  ros_msg.config_size = dynamic_header.configsize;
+  ros_msg.byte_offset = dynamic_header.byteoffset;
+  ros_msg.slice_size = dynamic_header.slicesize;
+  ros_msg.slice_data = dynamic_header.slicedata;
 }
 
-void ADMA2ROSParserV334::mapAdmaHeader(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& admaData)
+void ADMA2ROSParserV334::mapStatusBytes(
+  adma_msgs::msg::ByteStatus & ros_msg_byte_status, AdmaDataV334 & adma_data)
 {
-        // fill static header information
-        AdmaStaticHeader staticHeader = admaData.staticHeader;
-        rosMsg.genesys_id = staticHeader.genesysid;
-        std::stringstream ss;
-        ss <<  int(staticHeader.headerversion[0]) << int(staticHeader.headerversion[1]) << int(staticHeader.headerversion[2]) << int(staticHeader.headerversion[3]);
-        rosMsg.header_version = ss.str();
-        ss.clear();
-        ss.str("");
-        rosMsg.format_id = staticHeader.formatid;
-        //TODO: this value is parsed wrong?!        
-        ss <<  int(staticHeader.formatversion[0]) << int(staticHeader.formatversion[1]) << int(staticHeader.formatversion[2]) << int(staticHeader.formatversion[3]);
-        rosMsg.format_version = ss.str();
-        rosMsg.serial_number = staticHeader.serialno;
-
-        // fill dynamic header information
-        AdmaDynamicHeader dynamicHeader = admaData.dynamicHeader;
-        rosMsg.config_id = dynamicHeader.configid;
-        rosMsg.config_format = dynamicHeader.configformat;
-        rosMsg.config_version = dynamicHeader.configversion;
-        rosMsg.config_size = dynamicHeader.configsize;
-        rosMsg.byte_offset = dynamicHeader.byteoffset;
-        rosMsg.slice_size = dynamicHeader.slicesize;
-        rosMsg.slice_data = dynamicHeader.slicedata;
+  ros_msg_byte_status.status_byte_0 = adma_data.gnssStatus;
+  ros_msg_byte_status.status_byte_1 = adma_data.signalInStatus;
+  ros_msg_byte_status.status_byte_2 = adma_data.miscStatus;
+  ros_msg_byte_status.status_count = adma_data.statuscount;
+  ros_msg_byte_status.status_byte_4 = adma_data.kfStatus;
+  ros_msg_byte_status.status_byte_5 = adma_data.statusRobot;
 }
 
-void ADMA2ROSParserV334::mapStatusBytes(adma_msgs::msg::ByteStatus& rosMsgByteStatus, AdmaDataV334& admaData)
+void ADMA2ROSParserV334::mapStatusBitfields(
+  adma_msgs::msg::Status & ros_msg_status, AdmaDataV334 & adma_data)
 {
-        rosMsgByteStatus.status_byte_0 = admaData.gnssStatus;
-        rosMsgByteStatus.status_byte_1 = admaData.signalInStatus;
-        rosMsgByteStatus.status_byte_2 = admaData.miscStatus;
-        rosMsgByteStatus.status_count = admaData.statuscount;
-        rosMsgByteStatus.status_byte_4 = admaData.kfStatus;
-        rosMsgByteStatus.status_byte_5 = admaData.statusRobot;
+  // status_byte_0
+  unsigned char gnss_status = adma_data.gnssStatus;
+  /* status gnss mode */
+  std::bitset<8> gnss_status_byte = adma_data.gnssStatus;
+  std::bitset<4> status_gnss_mode;
+  status_gnss_mode[0] = gnss_status_byte[0];
+  status_gnss_mode[1] = gnss_status_byte[1];
+  status_gnss_mode[2] = gnss_status_byte[2];
+  status_gnss_mode[3] = gnss_status_byte[3];
+  ros_msg_status.status_gnss_mode = status_gnss_mode.to_ulong();
+  bool standstill_c = getbit(gnss_status, 4);
+  bool status_skidding = getbit(gnss_status, 5);
+  bool status_external_vel = getbit(gnss_status, 7);
+
+  /* status stand still */
+  ros_msg_status.status_standstill = standstill_c;
+  /* status skidding */
+  ros_msg_status.status_skidding = status_skidding;
+  /* status external velocity slip */
+  ros_msg_status.status_external_vel_out = status_external_vel;
+
+  // status_byte_1
+  unsigned char gnss_trigger_status = adma_data.signalInStatus;
+  bool status_trig_gnss = getbit(gnss_trigger_status, 0);
+  bool status_signal_in3 = getbit(gnss_trigger_status, 1);
+  bool status_signal_in2 = getbit(gnss_trigger_status, 2);
+  bool status_signal_in1 = getbit(gnss_trigger_status, 3);
+  bool status_alignment = getbit(gnss_trigger_status, 4);
+  bool status_ahrs_ins = getbit(gnss_trigger_status, 5);
+  bool status_dead_reckoning = getbit(gnss_trigger_status, 6);
+  bool status_synclock = getbit(gnss_trigger_status, 7);
+  /* status statustriggnss */
+  ros_msg_status.status_trig_gnss = status_trig_gnss;
+  /* status statussignalin3 */
+  ros_msg_status.status_signal_in3 = status_signal_in3;
+  /* status statussignalin2 */
+  ros_msg_status.status_signal_in2 = status_signal_in2;
+  /* status statussignalin1 */
+  ros_msg_status.status_signal_in1 = status_signal_in1;
+  /* status statusalignment */
+  ros_msg_status.status_alignment = status_alignment;
+  /* status statusahrsins */
+  ros_msg_status.status_ahrs_ins = status_ahrs_ins;
+  /* status statusdeadreckoning */
+  ros_msg_status.status_dead_reckoning = status_dead_reckoning;
+  /* status statussynclock */
+  ros_msg_status.status_synclock = status_synclock;
+
+  // status_byte_2
+  unsigned char evk_status = adma_data.miscStatus;
+  bool status_evk_activ = getbit(evk_status, 0);
+  bool status_evk_estimates = getbit(evk_status, 1);
+  bool status_heading_executed = getbit(evk_status, 2);
+  bool status_configuration_changed = getbit(evk_status, 3);
+  /* status statustriggnss */
+  ros_msg_status.status_evk_activ = status_evk_activ;
+  /* status status_evk_estimates */
+  ros_msg_status.status_evk_estimates = status_evk_estimates;
+  /* status status_heading_executed */
+  ros_msg_status.status_heading_executed = status_heading_executed;
+  /* status status_configuration_changed */
+  ros_msg_status.status_config_changed = status_configuration_changed;
+  /* status tilt */
+  std::bitset<8> evk_status_byte = adma_data.miscStatus;
+  std::bitset<2> status_tilt;
+  status_tilt[0] = evk_status_byte[4];
+  status_tilt[1] = evk_status_byte[5];
+  ros_msg_status.status_tilt = status_tilt.to_ulong();
+  /* status pos */
+  std::bitset<2> status_pos;
+  status_pos[0] = evk_status_byte[6];
+  status_pos[1] = evk_status_byte[7];
+  ros_msg_status.status_pos = status_pos.to_ulong();
+
+  ros_msg_status.status_count = adma_data.statuscount;
+
+  // status_byte_4
+  unsigned char kf_status = adma_data.kfStatus;
+  bool status_kalmanfilter_settled = getbit(kf_status, 0);
+  bool status_kf_lat_stimulated = getbit(kf_status, 1);
+  bool status_kf_long_stimulated = getbit(kf_status, 2);
+  bool status_kf_steady_state = getbit(kf_status, 3);
+  ros_msg_status.status_kalmanfilter_settled = status_kalmanfilter_settled;
+  ros_msg_status.status_kf_lat_stimulated = status_kf_lat_stimulated;
+  ros_msg_status.status_kf_long_stimulated = status_kf_long_stimulated;
+  ros_msg_status.status_kf_steady_state = status_kf_steady_state;
+
+  std::bitset<8> kf_status_byte = adma_data.kfStatus;
+  std::bitset<2> status_speed;
+  status_speed[0] = kf_status_byte[4];
+  status_speed[1] = kf_status_byte[5];
+  ros_msg_status.status_speed = status_speed.to_ulong();
+
+  // status_byte_5
+  std::bitset<8> bit_status_robot = adma_data.statusRobot;
+  std::bitset<4> status_robot;
+  for (size_t i = 0; i < 4; i++) {
+    status_robot[i] = bit_status_robot[i];
+  }
+  ros_msg_status.status_robot = status_robot.to_ulong();
 }
 
-void ADMA2ROSParserV334::mapStatusBitfields(adma_msgs::msg::Status& rosMsgStatus, AdmaDataV334& admaData)
+void ADMA2ROSParserV334::mapErrorWarningBytes(
+  adma_msgs::msg::ByteErrorWarning & ros_msg_byte_error_warning, AdmaDataV334 & adma_data)
 {
-        // status_byte_0
-        unsigned char gnssStatus = admaData.gnssStatus;
-        /* status gnss mode */
-        std::bitset<8> gnssStatusByte = admaData.gnssStatus;
-        std::bitset<4> status_gnss_mode;
-        status_gnss_mode[0] = gnssStatusByte[0];
-        status_gnss_mode[1] = gnssStatusByte[1];
-        status_gnss_mode[2] = gnssStatusByte[2];
-        status_gnss_mode[3] = gnssStatusByte[3];
-        rosMsgStatus.status_gnss_mode = status_gnss_mode.to_ulong();
-        bool standstill_c = getbit(gnssStatus,4);
-        bool status_skidding = getbit(gnssStatus,5);
-        bool status_external_vel = getbit(gnssStatus,7);
-
-        /* status stand still */
-        rosMsgStatus.status_standstill = standstill_c;
-        /* status skidding */
-        rosMsgStatus.status_skidding = status_skidding;
-        /* status external velocity slip */
-        rosMsgStatus.status_external_vel_out = status_external_vel;
-
-        // status_byte_1
-        unsigned char gnssTriggerStatus = admaData.signalInStatus;
-        bool status_trig_gnss = getbit(gnssTriggerStatus,0);
-        bool status_signal_in3 = getbit(gnssTriggerStatus,1);
-        bool status_signal_in2 = getbit(gnssTriggerStatus,2);
-        bool status_signal_in1 = getbit(gnssTriggerStatus,3);
-        bool status_alignment = getbit(gnssTriggerStatus,4);
-        bool status_ahrs_ins = getbit(gnssTriggerStatus,5);
-        bool status_dead_reckoning = getbit(gnssTriggerStatus,6);
-        bool status_synclock = getbit(gnssTriggerStatus,7);
-        /* status statustriggnss */
-        rosMsgStatus.status_trig_gnss = status_trig_gnss;
-        /* status statussignalin3 */
-        rosMsgStatus.status_signal_in3 = status_signal_in3;
-        /* status statussignalin2 */
-        rosMsgStatus.status_signal_in2 = status_signal_in2;
-        /* status statussignalin1 */
-        rosMsgStatus.status_signal_in1 = status_signal_in1;
-        /* status statusalignment */
-        rosMsgStatus.status_alignment = status_alignment;
-        /* status statusahrsins */
-        rosMsgStatus.status_ahrs_ins = status_ahrs_ins;
-        /* status statusdeadreckoning */
-        rosMsgStatus.status_dead_reckoning = status_dead_reckoning;
-        /* status statussynclock */
-        rosMsgStatus.status_synclock = status_synclock;
-
-        // status_byte_2
-        unsigned char evkStatus = admaData.miscStatus;
-        bool status_evk_activ = getbit(evkStatus,0);
-        bool status_evk_estimates = getbit(evkStatus,1);
-        bool status_heading_executed = getbit(evkStatus,2);
-        bool status_configuration_changed = getbit(evkStatus,3);
-        /* status statustriggnss */
-        rosMsgStatus.status_evk_activ = status_evk_activ;
-        /* status status_evk_estimates */
-        rosMsgStatus.status_evk_estimates = status_evk_estimates;
-        /* status status_heading_executed */
-        rosMsgStatus.status_heading_executed = status_heading_executed;
-        /* status status_configuration_changed */
-        rosMsgStatus.status_config_changed = status_configuration_changed;
-        /* status tilt */
-        std::bitset<8> evkStatusByte = admaData.miscStatus;
-        std::bitset<2> status_tilt;
-        status_tilt[0] = evkStatusByte[4];
-        status_tilt[1] = evkStatusByte[5];
-        rosMsgStatus.status_tilt = status_tilt.to_ulong();
-        /* status pos */
-        std::bitset<2> status_pos;
-        status_pos[0] = evkStatusByte[6];
-        status_pos[1] = evkStatusByte[7];
-        rosMsgStatus.status_pos = status_pos.to_ulong();
-
-        rosMsgStatus.status_count = admaData.statuscount;
-
-        // status_byte_4
-        unsigned char kfStatus = admaData.kfStatus;
-        bool status_kalmanfilter_settled = getbit(kfStatus,0);
-        bool status_kf_lat_stimulated = getbit(kfStatus,1);
-        bool status_kf_long_stimulated = getbit(kfStatus,2);
-        bool status_kf_steady_state = getbit(kfStatus,3);
-        rosMsgStatus.status_kalmanfilter_settled = status_kalmanfilter_settled;
-        rosMsgStatus.status_kf_lat_stimulated = status_kf_lat_stimulated;
-        rosMsgStatus.status_kf_long_stimulated = status_kf_long_stimulated;
-        rosMsgStatus.status_kf_steady_state = status_kf_steady_state;
-
-        std::bitset<8> kfStatusByte = admaData.kfStatus;
-        std::bitset<2> status_speed;
-        status_speed[0] = kfStatusByte[4];
-        status_speed[1] = kfStatusByte[5];
-        rosMsgStatus.status_speed = status_speed.to_ulong();
-
-        // status_byte_5
-        std::bitset<8> bitStatusRobot = admaData.statusRobot;
-        std::bitset<4> statusRobot;
-        for(size_t i=0;i<4;i++)
-        {
-                statusRobot[i] = bitStatusRobot[i];
-        }
-        rosMsgStatus.status_robot = statusRobot.to_ulong();
-
+  ros_msg_byte_error_warning.error_1 = adma_data.dataError1;
+  ros_msg_byte_error_warning.error_2 = adma_data.dataError2;
+  ros_msg_byte_error_warning.warn_1 = adma_data.dataWarn1;
+  ros_msg_byte_error_warning.error_3 = adma_data.dataError3;
 }
 
-void ADMA2ROSParserV334::mapErrorWarningBytes(adma_msgs::msg::ByteErrorWarning& rosMsgByteErrorWarning, AdmaDataV334& admaData)
+void ADMA2ROSParserV334::mapErrorWarningBitfields(
+  adma_msgs::msg::ErrorWarning & ros_msg_error_warning, AdmaDataV334 & adma_data)
 {
-        rosMsgByteErrorWarning.error_1 = admaData.dataError1;
-        rosMsgByteErrorWarning.error_2 = admaData.dataError2;
-        rosMsgByteErrorWarning.warn_1 = admaData.dataWarn1;
-        rosMsgByteErrorWarning.error_3 = admaData.dataError3;
+  unsigned char error_byte_0 = adma_data.dataError1;
+  ros_msg_error_warning.error_gyro_hw = getbit(error_byte_0, 0);
+  ros_msg_error_warning.error_accel_hw = getbit(error_byte_0, 1);
+  ros_msg_error_warning.error_ext_speed_hw = getbit(error_byte_0, 2);
+  ros_msg_error_warning.error_gnss_hw = getbit(error_byte_0, 3);
+  ros_msg_error_warning.error_data_bus_checksum = getbit(error_byte_0, 4);
+  ros_msg_error_warning.error_eeprom = getbit(error_byte_0, 5);
+  ros_msg_error_warning.error_xmit = getbit(error_byte_0, 6);
+  ros_msg_error_warning.error_cmd = getbit(error_byte_0, 7);
+
+  unsigned char error_byte_1 = adma_data.dataError2;
+  ros_msg_error_warning.error_data_bus = getbit(error_byte_1, 0);
+  ros_msg_error_warning.error_can_bus = getbit(error_byte_1, 1);
+  ros_msg_error_warning.error_num = getbit(error_byte_1, 3);
+  ros_msg_error_warning.error_temp_warning = getbit(error_byte_1, 4);
+  ros_msg_error_warning.error_reduced_accuracy = getbit(error_byte_1, 5);
+  ros_msg_error_warning.error_range_max = getbit(error_byte_1, 6);
+
+  unsigned char warn_byte_1 = adma_data.dataWarn1;
+  ros_msg_error_warning.warn_gnss_no_solution = getbit(warn_byte_1, 0);
+  ros_msg_error_warning.warn_gnss_vel_ignored = getbit(warn_byte_1, 1);
+  ros_msg_error_warning.warn_gnss_pos_ignored = getbit(warn_byte_1, 2);
+  ros_msg_error_warning.warn_gnss_unable_to_cfg = getbit(warn_byte_1, 3);
+  ros_msg_error_warning.warn_speed_off = getbit(warn_byte_1, 4);
+  ros_msg_error_warning.warn_gnss_dualant_ignored = getbit(warn_byte_1, 5);
+
+  unsigned char error_byte_2 = adma_data.dataError3;
+  ros_msg_error_warning.error_hw_sticky = getbit(error_byte_2, 0);
 }
 
-void ADMA2ROSParserV334::mapErrorWarningBitfields(adma_msgs::msg::ErrorWarning& rosMsgErrorWarning, AdmaDataV334& admaData)
+void ADMA2ROSParserV334::mapUnscaledData(
+  adma_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & adma_data)
 {
-        unsigned char error_byte_0 = admaData.dataError1;
-        rosMsgErrorWarning.error_gyro_hw = getbit(error_byte_0,0);
-        rosMsgErrorWarning.error_accel_hw = getbit(error_byte_0,1);
-        rosMsgErrorWarning.error_ext_speed_hw = getbit(error_byte_0,2);
-        rosMsgErrorWarning.error_gnss_hw = getbit(error_byte_0,3);
-        rosMsgErrorWarning.error_data_bus_checksum = getbit(error_byte_0,4);
-        rosMsgErrorWarning.error_eeprom = getbit(error_byte_0,5);
-        rosMsgErrorWarning.error_xmit = getbit(error_byte_0,6);
-        rosMsgErrorWarning.error_cmd = getbit(error_byte_0,7);
-
-        unsigned char error_byte_1 = admaData.dataError2;
-        rosMsgErrorWarning.error_data_bus = getbit(error_byte_1,0);
-        rosMsgErrorWarning.error_can_bus = getbit(error_byte_1,1);
-        rosMsgErrorWarning.error_num = getbit(error_byte_1,3);
-        rosMsgErrorWarning.error_temp_warning = getbit(error_byte_1,4);
-        rosMsgErrorWarning.error_reduced_accuracy = getbit(error_byte_1,5);
-        rosMsgErrorWarning.error_range_max = getbit(error_byte_1,6);
-
-        unsigned char warn_byte_1 = admaData.dataWarn1;
-        rosMsgErrorWarning.warn_gnss_no_solution = getbit(warn_byte_1,0);
-        rosMsgErrorWarning.warn_gnss_vel_ignored = getbit(warn_byte_1,1);
-        rosMsgErrorWarning.warn_gnss_pos_ignored = getbit(warn_byte_1,2);
-        rosMsgErrorWarning.warn_gnss_unable_to_cfg = getbit(warn_byte_1,3);
-        rosMsgErrorWarning.warn_speed_off = getbit(warn_byte_1,4);
-        rosMsgErrorWarning.warn_gnss_dualant_ignored = getbit(warn_byte_1,5);
-
-        unsigned char error_byte_2 = admaData.dataError3;
-        rosMsgErrorWarning.error_hw_sticky = getbit(error_byte_2,0);
+  //fill external velocity
+  ros_msg.ext_vel_dig_pulses_x = adma_data.extveldigpulsesx;
+  ros_msg.ext_vel_dig_pulses_y = adma_data.extveldigpulsesy;
+  // fill triggers
+  ros_msg.trig_rising_1 = adma_data.trigrising1;
+  ros_msg.trig_falling_1 = adma_data.trigfalling1;
+  ros_msg.trig_rising_2 = adma_data.trigrising2;
+  ros_msg.trig_falling_2 = adma_data.trigfalling2;
+  ros_msg.trig_rising_3 = adma_data.trigrising3;
+  ros_msg.trig_falling_3 = adma_data.trigfalling3;
+  ros_msg.trig_rising_4 = adma_data.trigrising4;
+  ros_msg.trig_falling_4 = adma_data.trigfalling4;
+  //fill system data
+  ros_msg.system_ta = adma_data.systemta;
+  ros_msg.system_time_since_init = adma_data.systemtimesinceinit;
+  //fill GNSS time
+  ros_msg.gnss_time_msec = adma_data.gnsstimemsec;
+  ros_msg.gnss_time_week = adma_data.gnsstimeweek;
+  ros_msg.gnss_trigger = adma_data.gnsstrigger;
+  //fill GPS AUX data
+  ros_msg.gnss_sats_used = adma_data.gnsssatsused;
+  ros_msg.gnss_sats_visible = adma_data.gnsssatsvisible;
+  ros_msg.gnss_sats_dualant_used = adma_data.gnsssatsdualantused;
+  ros_msg.gnss_sats_dualant_visible = adma_data.gnsssatsdualantvisible;
+  ros_msg.gnss_log_delay = adma_data.gnsslogdelay;
+  std::stringstream ss;
+  ss << adma_data.gnssbasenr;
+  ros_msg.gnss_base_nr = ss.str();
+  // GNSS Dual ant information
+  ros_msg.gnss_dualant_time_msec = adma_data.gnssDualAntTimeMsec;
+  ros_msg.gnss_dualant_time_week = adma_data.gnssDualAntTimeWeek;
+  //fill INS time UTC
+  ros_msg.ins_time_msec = adma_data.instimemsec;
+  ros_msg.ins_time_week = adma_data.instimeweek;
+  ros_msg.leap_seconds = adma_data.leapseconds;
+  // kalman filter status
+  ros_msg.kf_lat_stimulated = adma_data.kflatstimulated;
+  ros_msg.kf_long_stimulated = adma_data.kflongstimulated;
+  ros_msg.kf_steady_state = adma_data.kfsteadystate;
+  // gnss receiver status and error
+  ros_msg.gnss_receiver_error = adma_data.gnssreceivererror;
+  ros_msg.gnss_receiver_status = adma_data.gnssreceiverstatus;
 }
 
-void ADMA2ROSParserV334::mapUnscaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& admaData)
+void ADMA2ROSParserV334::mapScaledData(
+  adma_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & adma_data)
 {
-        //fill external velocity
-        rosMsg.ext_vel_dig_pulses_x = admaData.extveldigpulsesx;
-        rosMsg.ext_vel_dig_pulses_y = admaData.extveldigpulsesy;
-        // fill triggers
-        rosMsg.trig_rising_1 = admaData.trigrising1;
-        rosMsg.trig_falling_1 = admaData.trigfalling1;
-        rosMsg.trig_rising_2 = admaData.trigrising2;
-        rosMsg.trig_falling_2 = admaData.trigfalling2;
-        rosMsg.trig_rising_3 = admaData.trigrising3;
-        rosMsg.trig_falling_3 = admaData.trigfalling3;
-        rosMsg.trig_rising_4 = admaData.trigrising4;
-        rosMsg.trig_falling_4 = admaData.trigfalling4;
-        //fill system data
-        rosMsg.system_ta = admaData.systemta;
-        rosMsg.system_time_since_init = admaData.systemtimesinceinit;
-        //fill GNSS time
-        rosMsg.gnss_time_msec = admaData.gnsstimemsec;
-        rosMsg.gnss_time_week = admaData.gnsstimeweek;
-        rosMsg.gnss_trigger = admaData.gnsstrigger;
-        //fill GPS AUX data
-        rosMsg.gnss_sats_used = admaData.gnsssatsused;
-        rosMsg.gnss_sats_visible = admaData.gnsssatsvisible;
-        rosMsg.gnss_sats_dualant_used = admaData.gnsssatsdualantused;
-        rosMsg.gnss_sats_dualant_visible = admaData.gnsssatsdualantvisible;
-        rosMsg.gnss_log_delay = admaData.gnsslogdelay;
-        std::stringstream ss;
-        ss <<  admaData.gnssbasenr;
-        rosMsg.gnss_base_nr = ss.str();
-        // GNSS Dual ant information 
-        rosMsg.gnss_dualant_time_msec = admaData.gnssDualAntTimeMsec;
-        rosMsg.gnss_dualant_time_week = admaData.gnssDualAntTimeWeek;
-        //fill INS time UTC
-        rosMsg.ins_time_msec = admaData.instimemsec;
-        rosMsg.ins_time_week = admaData.instimeweek;
-        rosMsg.leap_seconds = admaData.leapseconds;
-        // kalman filter status
-        rosMsg.kf_lat_stimulated = admaData.kflatstimulated;
-        rosMsg.kf_long_stimulated = admaData.kflongstimulated;
-        rosMsg.kf_steady_state = admaData.kfsteadystate;
-        // gnss receiver status and error
-        rosMsg.gnss_receiver_error = admaData.gnssreceivererror;
-        rosMsg.gnss_receiver_status = admaData.gnssreceiverstatus;
+  ros_msg.acc_body_hr.x = getScaledValue(adma_data.sensorsBodyX.accHR, 0.0001);
+  ros_msg.acc_body_hr.y = getScaledValue(adma_data.sensorsBodyY.accHR, 0.0001);
+  ros_msg.acc_body_hr.z = getScaledValue(adma_data.sensorsBodyZ.accHR, 0.0001);
+  ros_msg.rate_body_hr.x = getScaledValue(adma_data.sensorsBodyX.rateHR, 0.0001);
+  ros_msg.rate_body_hr.y = getScaledValue(adma_data.sensorsBodyY.rateHR, 0.0001);
+  ros_msg.rate_body_hr.z = getScaledValue(adma_data.sensorsBodyZ.rateHR, 0.0001);
+  ros_msg.rate_body.x = getScaledValue(adma_data.ratesBody.x, 0.01);
+  ros_msg.rate_body.y = getScaledValue(adma_data.ratesBody.y, 0.01);
+  ros_msg.rate_body.z = getScaledValue(adma_data.ratesBody.z, 0.01);
+  ros_msg.rate_hor.x = getScaledValue(adma_data.ratesHorizontal.x, 0.01);
+  ros_msg.rate_hor.y = getScaledValue(adma_data.ratesHorizontal.y, 0.01);
+  ros_msg.rate_hor.z = getScaledValue(adma_data.ratesHorizontal.z, 0.01);
+  ros_msg.acc_body.x = getScaledValue(adma_data.accBody.x, 0.0004);
+  ros_msg.acc_body.y = getScaledValue(adma_data.accBody.y, 0.0004);
+  ros_msg.acc_body.z = getScaledValue(adma_data.accBody.z, 0.0004);
+  ros_msg.acc_hor.x = getScaledValue(adma_data.accHorizontal.x, 0.0004);
+  ros_msg.acc_hor.y = getScaledValue(adma_data.accHorizontal.y, 0.0004);
+  ros_msg.acc_hor.z = getScaledValue(adma_data.accHorizontal.z, 0.0004);
+
+  ros_msg.ext_vel_an_x = getScaledValue(adma_data.extVelAnalog.x, 0.005);
+  ros_msg.ext_vel_an_y = getScaledValue(adma_data.extVelAnalog.y, 0.005);
+  ros_msg.ext_vel_dig_x = getScaledValue(adma_data.extveldigx, 0.005);
+  ros_msg.ext_vel_dig_y = getScaledValue(adma_data.extveldigy, 0.005);
+  ros_msg.ext_vel_x_corrected = getScaledValue(adma_data.extVelCorrected.x, 0.005);
+  ros_msg.ext_vel_y_corrected = getScaledValue(adma_data.extVelCorrected.y, 0.005);
+
+  ros_msg.inv_path_radius = getScaledValue(adma_data.misc.invPathRadius, 0.0001);
+  ros_msg.side_slip_angle = getScaledValue(adma_data.misc.sideSlipAngle, 0.01);
+  ros_msg.dist_trav = getScaledValue(adma_data.misc.distanceTraveled, 0.01);
+
+  ros_msg.system_temp = getScaledValue(adma_data.systemtemp, 0.1);
+  ros_msg.system_dsp_load = getScaledValue(adma_data.systemdspload, 0.1);
+
+  ros_msg.gnss_lat_abs = getScaledValue(adma_data.posAbs.latitude, 0.0000001);
+  ros_msg.gnss_long_abs = getScaledValue(adma_data.posAbs.longitude, 0.0000001);
+  ros_msg.gnss_pos_rel_x = getScaledValue(adma_data.posRel.latitude, 0.01);
+  ros_msg.gnss_pos_rel_y = getScaledValue(adma_data.posRel.longitude, 0.01);
+
+  ros_msg.gnss_stddev_lat = getScaledValue(adma_data.gnssstddevlat, 0.001);
+  ros_msg.gnss_stddev_long = getScaledValue(adma_data.gnssstddevlon, 0.001);
+  ros_msg.gnss_stddev_height = getScaledValue(adma_data.gnssstddevheight, 0.001);
+
+  ros_msg.gnss_vel_frame.x = getScaledValue(adma_data.gnssvelframex, 0.005);
+  ros_msg.gnss_vel_frame.y = getScaledValue(adma_data.gnssvelframey, 0.005);
+  ros_msg.gnss_vel_frame.z = getScaledValue(adma_data.gnssvelframez, 0.005);
+  ros_msg.gnss_vel_latency = getScaledValue(adma_data.gnssvellatency, 0.001);
+
+  ros_msg.gnss_stddev_vel.x = getScaledValue(adma_data.gnssStdDevVel.x, 0.001);
+  ros_msg.gnss_stddev_vel.y = getScaledValue(adma_data.gnssStdDevVel.y, 0.001);
+  ros_msg.gnss_stddev_vel.z = getScaledValue(adma_data.gnssStdDevVel.z, 0.001);
+
+  ros_msg.gnss_diffage = getScaledValue(adma_data.gnssdiffage, 0.1);
+  ros_msg.gnss_receiver_load = getScaledValue(adma_data.gnssreceiverload, 0.5);
+
+  ros_msg.ins_roll = getScaledValue(adma_data.insroll, 0.01);
+  ros_msg.ins_pitch = getScaledValue(adma_data.inspitch, 0.01);
+  ros_msg.ins_yaw = getScaledValue(adma_data.insyaw, 0.01);
+  ros_msg.gnss_cog = getScaledValue(adma_data.gnsscog, 0.01);
+
+  ros_msg.gnss_height = getScaledValue(adma_data.gnssheight, 0.01);
+  ros_msg.undulation = getScaledValue(adma_data.undulation, 0.01);
+
+  ros_msg.ins_height = getScaledValue(adma_data.insHeight, 0.01);
+
+  ros_msg.ins_lat_abs = getScaledValue(adma_data.insPos.pos_abs.latitude, 0.0000001);
+  ros_msg.ins_long_abs = getScaledValue(adma_data.insPos.pos_abs.longitude, 0.0000001);
+  ros_msg.ins_pos_rel_x = getScaledValue(adma_data.insPos.pos_rel_x, 0.01);
+  ros_msg.ins_pos_rel_y = getScaledValue(adma_data.insPos.pos_rel_y, 0.01);
+
+  ros_msg.ins_vel_hor.x = getScaledValue(adma_data.insVelHor.x, 0.005);
+  ros_msg.ins_vel_hor.y = getScaledValue(adma_data.insVelHor.y, 0.005);
+  ros_msg.ins_vel_hor.z = getScaledValue(adma_data.insVelHor.z, 0.005);
+  ros_msg.ins_vel_frame.x = getScaledValue(adma_data.insVelFrame.x, 0.005);
+  ros_msg.ins_vel_frame.y = getScaledValue(adma_data.insVelFrame.y, 0.005);
+  ros_msg.ins_vel_frame.z = getScaledValue(adma_data.insVelFrame.z, 0.005);
+
+  ros_msg.ins_stddev_lat = getScaledValue(adma_data.insstddevlat, 0.01);
+  ros_msg.ins_stddev_long = getScaledValue(adma_data.insstddevlong, 0.01);
+  ros_msg.ins_stddev_height = getScaledValue(adma_data.insstddevheight, 0.01);
+
+  ros_msg.ins_stddev_vel.x = getScaledValue(adma_data.insstddevvelx, 0.01);
+  ros_msg.ins_stddev_vel.y = getScaledValue(adma_data.insstddevvely, 0.01);
+  ros_msg.ins_stddev_vel.z = getScaledValue(adma_data.insstddevvelz, 0.01);
+  ros_msg.ins_stddev_roll = getScaledValue(adma_data.insstddevroll, 0.01);
+  ros_msg.ins_stddev_pitch = getScaledValue(adma_data.insstddevpitch, 0.01);
+  ros_msg.ins_stddev_yaw = getScaledValue(adma_data.insstddevyaw, 0.01);
+
+  ros_msg.an1 = getScaledValue(adma_data.an1, 0.0005);
+  ros_msg.an2 = getScaledValue(adma_data.an2, 0.0005);
+  ros_msg.an3 = getScaledValue(adma_data.an3, 0.0005);
+  ros_msg.an4 = getScaledValue(adma_data.an4, 0.0005);
+
+  ros_msg.gnss_dualant_heading = getScaledValue(adma_data.gnssDualAntHeading, 0.01);
+  ros_msg.gnss_dualant_pitch = getScaledValue(adma_data.gnssDualAntPitch, 0.01);
+  ros_msg.gnss_dualant_stddev_heading = getScaledValue(adma_data.gnssdualantstdevheading, 0.01);
+  ros_msg.gnss_dualant_stddev_pitch = getScaledValue(adma_data.gnssdualantstddevpitch, 0.01);
+  ros_msg.gnss_dualant_stddev_heading_hr =
+    getScaledValue(adma_data.gnssdualantstdevheadinghr, 0.01);
+  ros_msg.gnss_dualant_stddev_pitch_hr = getScaledValue(adma_data.gnssdualantstddevpitchhr, 0.01);
 }
 
-void ADMA2ROSParserV334::mapScaledData(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& admaData)
+void ADMA2ROSParserV334::mapPOI(adma_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & adma_data)
 {
-        rosMsg.acc_body_hr.x = getScaledValue(admaData.sensorsBodyX.accHR, 0.0001);
-        rosMsg.acc_body_hr.y = getScaledValue(admaData.sensorsBodyY.accHR, 0.0001);
-        rosMsg.acc_body_hr.z = getScaledValue(admaData.sensorsBodyZ.accHR, 0.0001);
-        rosMsg.rate_body_hr.x = getScaledValue(admaData.sensorsBodyX.rateHR, 0.0001);
-        rosMsg.rate_body_hr.y = getScaledValue(admaData.sensorsBodyY.rateHR, 0.0001);
-        rosMsg.rate_body_hr.z = getScaledValue(admaData.sensorsBodyZ.rateHR, 0.0001);
-        rosMsg.rate_body.x = getScaledValue(admaData.ratesBody.x, 0.01);
-        rosMsg.rate_body.y = getScaledValue(admaData.ratesBody.y, 0.01);
-        rosMsg.rate_body.z = getScaledValue(admaData.ratesBody.z, 0.01);
-        rosMsg.rate_hor.x = getScaledValue(admaData.ratesHorizontal.x, 0.01);
-        rosMsg.rate_hor.y = getScaledValue(admaData.ratesHorizontal.y, 0.01);
-        rosMsg.rate_hor.z = getScaledValue(admaData.ratesHorizontal.z, 0.01);
-        rosMsg.acc_body.x = getScaledValue(admaData.accBody.x, 0.0004);
-        rosMsg.acc_body.y = getScaledValue(admaData.accBody.y, 0.0004);
-        rosMsg.acc_body.z = getScaledValue(admaData.accBody.z, 0.0004);
-        rosMsg.acc_hor.x = getScaledValue(admaData.accHorizontal.x, 0.0004);
-        rosMsg.acc_hor.y = getScaledValue(admaData.accHorizontal.y, 0.0004);
-        rosMsg.acc_hor.z = getScaledValue(admaData.accHorizontal.z, 0.0004);
+  std::array<adma_msgs::msg::POI, 8> pois;
+  for (size_t i = 0; i < 8; i++) {
+    adma_msgs::msg::POI new_poi;
 
-        rosMsg.ext_vel_an_x = getScaledValue(admaData.extVelAnalog.x, 0.005);
-        rosMsg.ext_vel_an_y = getScaledValue(admaData.extVelAnalog.y, 0.005);
-        rosMsg.ext_vel_dig_x = getScaledValue(admaData.extveldigx, 0.005);
-        rosMsg.ext_vel_dig_y = getScaledValue(admaData.extveldigy, 0.005);
-        rosMsg.ext_vel_x_corrected = getScaledValue(admaData.extVelCorrected.x, 0.005);
-        rosMsg.ext_vel_y_corrected = getScaledValue(admaData.extVelCorrected.y, 0.005);
+    Vector3 cur_acc_body = adma_data.accBodyPOI[i];
+    Vector3 cur_acc_horizontal = adma_data.accHorizontalPOI[i];
+    Miscellaneous cur_misc = adma_data.miscPOI[i];
+    int32_t cur_ins_height = adma_data.insHeightPOI[i];
+    INSPosition cur_ins_position = adma_data.insPosPOI[i];
+    Vector3 cur_ins_vel_hor = adma_data.insVelHorPOI[i];
 
-        rosMsg.inv_path_radius = getScaledValue(admaData.misc.invPathRadius, 0.0001);
-        rosMsg.side_slip_angle = getScaledValue(admaData.misc.sideSlipAngle, 0.01);
-        rosMsg.dist_trav = getScaledValue(admaData.misc.distanceTraveled, 0.01);
+    new_poi.acc_body.x = getScaledValue(cur_acc_body.x, 0.0004);
+    new_poi.acc_body.y = getScaledValue(cur_acc_body.y, 0.0004);
+    new_poi.acc_body.z = getScaledValue(cur_acc_body.z, 0.0004);
+    new_poi.acc_hor.x = getScaledValue(cur_acc_horizontal.x, 0.0004);
+    new_poi.acc_hor.y = getScaledValue(cur_acc_horizontal.y, 0.0004);
+    new_poi.acc_hor.z = getScaledValue(cur_acc_horizontal.z, 0.0004);
+    new_poi.inv_path_radius = getScaledValue(cur_misc.invPathRadius, 0.0001);
+    new_poi.side_slip_angle = getScaledValue(cur_misc.sideSlipAngle, 0.01);
+    new_poi.dist_trav = getScaledValue(cur_misc.distanceTraveled, 0.01);
+    new_poi.ins_height = getScaledValue(cur_ins_height, 0.01);
+    new_poi.ins_lat_abs = getScaledValue(cur_ins_position.pos_abs.latitude, 0.0000001);
+    new_poi.ins_lon_abs = getScaledValue(cur_ins_position.pos_abs.longitude, 0.0000001);
+    new_poi.ins_pos_rel_x = getScaledValue(cur_ins_position.pos_rel_x, 0.01);
+    new_poi.ins_pos_rel_y = getScaledValue(cur_ins_position.pos_rel_y, 0.01);
+    new_poi.ins_vel_hor.x = getScaledValue(cur_ins_vel_hor.x, 0.005);
+    new_poi.ins_vel_hor.y = getScaledValue(cur_ins_vel_hor.y, 0.005);
+    new_poi.ins_vel_hor.z = getScaledValue(cur_ins_vel_hor.z, 0.005);
+    pois[i] = new_poi;
+  }
 
-        rosMsg.system_temp = getScaledValue(admaData.systemtemp, 0.1);
-        rosMsg.system_dsp_load = getScaledValue(admaData.systemdspload, 0.1);
-
-        rosMsg.gnss_lat_abs = getScaledValue(admaData.posAbs.latitude, 0.0000001);
-        rosMsg.gnss_long_abs = getScaledValue(admaData.posAbs.longitude, 0.0000001);
-        rosMsg.gnss_pos_rel_x = getScaledValue(admaData.posRel.latitude, 0.01);
-        rosMsg.gnss_pos_rel_y = getScaledValue(admaData.posRel.longitude, 0.01);
-
-        rosMsg.gnss_stddev_lat = getScaledValue(admaData.gnssstddevlat, 0.001);
-        rosMsg.gnss_stddev_long = getScaledValue(admaData.gnssstddevlon, 0.001);
-        rosMsg.gnss_stddev_height = getScaledValue(admaData.gnssstddevheight, 0.001);
-
-        rosMsg.gnss_vel_frame.x = getScaledValue(admaData.gnssvelframex, 0.005);
-        rosMsg.gnss_vel_frame.y = getScaledValue(admaData.gnssvelframey, 0.005);
-        rosMsg.gnss_vel_frame.z = getScaledValue(admaData.gnssvelframez, 0.005);
-        rosMsg.gnss_vel_latency = getScaledValue(admaData.gnssvellatency, 0.001);
-
-        rosMsg.gnss_stddev_vel.x = getScaledValue(admaData.gnssStdDevVel.x, 0.001);
-        rosMsg.gnss_stddev_vel.y = getScaledValue(admaData.gnssStdDevVel.y, 0.001);
-        rosMsg.gnss_stddev_vel.z = getScaledValue(admaData.gnssStdDevVel.z, 0.001);
-
-        rosMsg.gnss_diffage = getScaledValue(admaData.gnssdiffage, 0.1);
-        rosMsg.gnss_receiver_load = getScaledValue(admaData.gnssreceiverload, 0.5);
-
-        rosMsg.ins_roll = getScaledValue(admaData.insroll, 0.01);
-        rosMsg.ins_pitch = getScaledValue(admaData.inspitch, 0.01);
-        rosMsg.ins_yaw = getScaledValue(admaData.insyaw, 0.01);
-        rosMsg.gnss_cog = getScaledValue(admaData.gnsscog, 0.01);
-
-        rosMsg.gnss_height = getScaledValue(admaData.gnssheight, 0.01);
-        rosMsg.undulation = getScaledValue(admaData.undulation, 0.01);
-
-        rosMsg.ins_height = getScaledValue(admaData.insHeight, 0.01);
-
-        rosMsg.ins_lat_abs = getScaledValue(admaData.insPos.pos_abs.latitude, 0.0000001);
-        rosMsg.ins_long_abs = getScaledValue(admaData.insPos.pos_abs.longitude, 0.0000001);
-        rosMsg.ins_pos_rel_x = getScaledValue(admaData.insPos.pos_rel_x, 0.01);
-        rosMsg.ins_pos_rel_y = getScaledValue(admaData.insPos.pos_rel_y, 0.01);
-        
-        rosMsg.ins_vel_hor.x = getScaledValue(admaData.insVelHor.x, 0.005);
-        rosMsg.ins_vel_hor.y = getScaledValue(admaData.insVelHor.y, 0.005);
-        rosMsg.ins_vel_hor.z = getScaledValue(admaData.insVelHor.z, 0.005);
-        rosMsg.ins_vel_frame.x = getScaledValue(admaData.insVelFrame.x, 0.005);
-        rosMsg.ins_vel_frame.y = getScaledValue(admaData.insVelFrame.y, 0.005);
-        rosMsg.ins_vel_frame.z = getScaledValue(admaData.insVelFrame.z, 0.005);
-
-        rosMsg.ins_stddev_lat = getScaledValue(admaData.insstddevlat, 0.01);
-        rosMsg.ins_stddev_long = getScaledValue(admaData.insstddevlong, 0.01);
-        rosMsg.ins_stddev_height = getScaledValue(admaData.insstddevheight, 0.01);
-
-        rosMsg.ins_stddev_vel.x = getScaledValue(admaData.insstddevvelx, 0.01);
-        rosMsg.ins_stddev_vel.y = getScaledValue(admaData.insstddevvely, 0.01);
-        rosMsg.ins_stddev_vel.z = getScaledValue(admaData.insstddevvelz, 0.01);
-        rosMsg.ins_stddev_roll = getScaledValue(admaData.insstddevroll, 0.01);
-        rosMsg.ins_stddev_pitch = getScaledValue(admaData.insstddevpitch, 0.01);
-        rosMsg.ins_stddev_yaw = getScaledValue(admaData.insstddevyaw, 0.01);
-
-        rosMsg.an1 = getScaledValue(admaData.an1, 0.0005);
-        rosMsg.an2 = getScaledValue(admaData.an2, 0.0005);
-        rosMsg.an3 = getScaledValue(admaData.an3, 0.0005);
-        rosMsg.an4 = getScaledValue(admaData.an4, 0.0005);
-
-        rosMsg.gnss_dualant_heading = getScaledValue(admaData.gnssDualAntHeading, 0.01);
-        rosMsg.gnss_dualant_pitch = getScaledValue(admaData.gnssDualAntPitch, 0.01);
-        rosMsg.gnss_dualant_stddev_heading = getScaledValue(admaData.gnssdualantstdevheading, 0.01);
-        rosMsg.gnss_dualant_stddev_pitch = getScaledValue(admaData.gnssdualantstddevpitch, 0.01);
-        rosMsg.gnss_dualant_stddev_heading_hr = getScaledValue(admaData.gnssdualantstdevheadinghr, 0.01);
-        rosMsg.gnss_dualant_stddev_pitch_hr = getScaledValue(admaData.gnssdualantstddevpitchhr, 0.01);
-}
-
-void ADMA2ROSParserV334::mapPOI(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& admaData)
-{
-        std::array<adma_msgs::msg::POI, 8> pois;
-        for (size_t i = 0; i < 8; i++)
-        {
-                adma_msgs::msg::POI newPOI;
-
-                Vector3 curAccBody = admaData.accBodyPOI[i];
-                Vector3 curAccHorizontal = admaData.accHorizontalPOI[i];
-                Miscellaneous curMisc = admaData.miscPOI[i];
-                int32_t curINSHeight = admaData.insHeightPOI[i];
-                INSPosition curINSPosition = admaData.insPosPOI[i];
-                Vector3 curINSVelHor = admaData.insVelHorPOI[i];
-
-                newPOI.acc_body.x = getScaledValue(curAccBody.x, 0.0004);
-                newPOI.acc_body.y = getScaledValue(curAccBody.y, 0.0004);
-                newPOI.acc_body.z = getScaledValue(curAccBody.z, 0.0004);
-                newPOI.acc_hor.x = getScaledValue(curAccHorizontal.x, 0.0004);
-                newPOI.acc_hor.y = getScaledValue(curAccHorizontal.y, 0.0004);
-                newPOI.acc_hor.z = getScaledValue(curAccHorizontal.z, 0.0004);
-                newPOI.inv_path_radius = getScaledValue(curMisc.invPathRadius, 0.0001);
-                newPOI.side_slip_angle = getScaledValue(curMisc.sideSlipAngle, 0.01);
-                newPOI.dist_trav = getScaledValue(curMisc.distanceTraveled, 0.01);
-                newPOI.ins_height = getScaledValue(curINSHeight, 0.01);
-                newPOI.ins_lat_abs = getScaledValue(curINSPosition.pos_abs.latitude, 0.0000001);
-                newPOI.ins_lon_abs = getScaledValue(curINSPosition.pos_abs.longitude, 0.0000001);
-                newPOI.ins_pos_rel_x = getScaledValue(curINSPosition.pos_rel_x, 0.01);
-                newPOI.ins_pos_rel_y = getScaledValue(curINSPosition.pos_rel_y, 0.01);
-                newPOI.ins_vel_hor.x = getScaledValue(curINSVelHor.x, 0.005);
-                newPOI.ins_vel_hor.y = getScaledValue(curINSVelHor.y, 0.005);
-                newPOI.ins_vel_hor.z = getScaledValue(curINSVelHor.z, 0.005);
-                pois[i] = newPOI;
-        }
-
-        rosMsg.poi_1 = pois[0];
-        rosMsg.poi_2 = pois[1];
-        rosMsg.poi_3 = pois[2];
-        rosMsg.poi_4 = pois[3];
-        rosMsg.poi_5 = pois[4];
-        rosMsg.poi_6 = pois[5];
-        rosMsg.poi_7 = pois[6];
-        rosMsg.poi_8 = pois[7];
+  ros_msg.poi_1 = pois[0];
+  ros_msg.poi_2 = pois[1];
+  ros_msg.poi_3 = pois[2];
+  ros_msg.poi_4 = pois[3];
+  ros_msg.poi_5 = pois[4];
+  ros_msg.poi_6 = pois[5];
+  ros_msg.poi_7 = pois[6];
+  ros_msg.poi_8 = pois[7];
 }

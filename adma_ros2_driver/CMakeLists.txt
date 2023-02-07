@@ -9,7 +9,7 @@ if(NOT CMAKE_CXX_STANDARD)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options() #(-Wall -Wextra) #-Wpedantic)
+  add_compile_options() # (-Wall -Wextra) #-Wpedantic)
 endif()
 
 find_package(ament_cmake REQUIRED)
@@ -25,7 +25,6 @@ find_package(adma_msgs REQUIRED)
 include_directories(include)
 
 add_library(${PROJECT_NAME}_node SHARED
-  src/parser/adma_parse_deprecated.cpp
   src/parser/adma2ros_parser.cpp
   src/parser/adma2ros_parser_v32.cpp
   src/parser/adma2ros_parser_v333.cpp
@@ -70,8 +69,12 @@ install(DIRECTORY include/
 install(DIRECTORY launch config
   DESTINATION share/${PROJECT_NAME})
 
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
 ament_export_include_directories(include)
 ament_export_libraries(${PROJECT_NAME}_node)
 
 ament_package()
-

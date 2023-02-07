@@ -13,5 +13,5 @@ genesys:
     ros__parameters:
       ip_address: '127.0.0.1'
       port: 1040
-      frequence: 20
+      frequency: 20
       protocol_version: 'v3.3.4'

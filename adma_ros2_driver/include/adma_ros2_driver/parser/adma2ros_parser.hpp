@@ -1,10 +1,10 @@
 #pragma once
 
-#include <memory>
 #include <iostream>
-
-#include <sensor_msgs/msg/nav_sat_fix.hpp>
+#include <memory>
 #include <sensor_msgs/msg/imu.hpp>
+#include <sensor_msgs/msg/nav_sat_fix.hpp>
+
 #include "adma_msgs/msg/adma_data.hpp"
 #include "adma_msgs/msg/adma_data_scaled.hpp"
 #include "adma_ros2_driver/data/adma_data_v32.hpp"
@@ -12,31 +12,34 @@
 #include "adma_ros2_driver/parser/adma2ros_parser_v333.hpp"
 #include "adma_ros2_driver/parser/adma2ros_parser_v334.hpp"
 
-
 class ADMA2ROSParser
 {
-        public:
-                ADMA2ROSParser(std::string version);
-                ~ADMA2ROSParser(){};
-                void mapAdmaMessageToROS(adma_msgs::msg::AdmaData& rosMsg, std::array<char, 856>& recvData);
-                void extractNavSatFix(adma_msgs::msg::AdmaData& rosMsg, sensor_msgs::msg::NavSatFix& navRosMsg);
-                void extractNavSatFix(adma_msgs::msg::AdmaDataScaled& rosMsg, sensor_msgs::msg::NavSatFix& navRosMsg); 
-                void extractIMU(adma_msgs::msg::AdmaData& rosMsg, sensor_msgs::msg::Imu& imuRosMsg);
-                void extractIMU(adma_msgs::msg::AdmaDataScaled& rosMsg, sensor_msgs::msg::Imu& imuRosMsg);
-                void parseV334(adma_msgs::msg::AdmaDataScaled& rosMsg, AdmaDataV334& localData);
-                void parseV334Status(adma_msgs::msg::AdmaStatus& rosMsg, AdmaDataV334& localData);
-                void parseScaledData(adma_msgs::msg::AdmaData& rosMsg);
-        private:
-                template <typename AdmaDataHeaderStruct>
-                void parseStaticHeader(adma_msgs::msg::AdmaData& rosMsg, AdmaDataHeaderStruct& staticHeader);
-                template <typename AdmaDataHeaderStruct>
-                void parseDynamicHeader(adma_msgs::msg::AdmaData& rosMsg, AdmaDataHeaderStruct& dynamicHeader);
-                void getstatusgps(adma_msgs::msg::AdmaData& rosMsg, unsigned char gpsStatus);
-                void getstatustrigger(adma_msgs::msg::AdmaData& rosMsg, unsigned char gpsTriggerStatus);
-                void getevkstatus(adma_msgs::msg::AdmaData& rosMsg, unsigned char evkStatus);
-                void geterrorandwarning(adma_msgs::msg::AdmaData& rosMsg, unsigned char admaData[4]);
-                ADMA2ROSParserV32 _parserV32;
-                ADMA2ROSParserV333 _parserV333;
-                ADMA2ROSParserV334 _parserV334;
-                std::string _version;
+public:
+  ADMA2ROSParser(std::string version);
+  ~ADMA2ROSParser() {}
+  void mapAdmaMessageToROS(adma_msgs::msg::AdmaData & ros_msg, std::array<char, 856> & recv_data);
+  void extractNavSatFix(
+    adma_msgs::msg::AdmaData & ros_msg, sensor_msgs::msg::NavSatFix & nav_ros_msg);
+  void extractNavSatFix(
+    adma_msgs::msg::AdmaDataScaled & ros_msg, sensor_msgs::msg::NavSatFix & nav_ros_msg);
+  void extractIMU(adma_msgs::msg::AdmaData & ros_msg, sensor_msgs::msg::Imu & imu_ros_msg);
+  void extractIMU(adma_msgs::msg::AdmaDataScaled & ros_msg, sensor_msgs::msg::Imu & imu_ros_msg);
+  void parseV334(adma_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & local_data);
+  void parseV334Status(adma_msgs::msg::AdmaStatus & ros_msg, AdmaDataV334 & local_data);
+  void parseScaledData(adma_msgs::msg::AdmaData & ros_msg);
+
+private:
+  template <typename AdmaDataHeaderStruct>
+  void parseStaticHeader(adma_msgs::msg::AdmaData & ros_msg, AdmaDataHeaderStruct & static_header);
+  template <typename AdmaDataHeaderStruct>
+  void parseDynamicHeader(
+    adma_msgs::msg::AdmaData & ros_msg, AdmaDataHeaderStruct & dynamic_header);
+  void getStatusGPS(adma_msgs::msg::AdmaData & ros_msg, unsigned char gps_status);
+  void getStatusTrigger(adma_msgs::msg::AdmaData & ros_msg, unsigned char gps_trigger_status);
+  void getEVKStatus(adma_msgs::msg::AdmaData & ros_msg, unsigned char evk_status);
+  void getErrorandWarning(adma_msgs::msg::AdmaData & ros_msg, unsigned char adma_data[4]);
+  ADMA2ROSParserV32 parserV32_;
+  ADMA2ROSParserV333 parserV333_;
+  ADMA2ROSParserV334 parserV334_;
+  std::string version_;
 };
