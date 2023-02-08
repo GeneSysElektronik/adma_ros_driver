@@ -1,6 +1,6 @@
 import rclpy
 from rclpy.node import Node
-from adma_msgs.msg import AdmaDataScaled, AdmaStatus
+from adma_ros_driver_msgs.msg import AdmaDataScaled, AdmaStatus
 import message_filters
 
 class Ros2CSVConverter(Node):

@@ -12,7 +12,7 @@ ADMA2ROSParser::ADMA2ROSParser(std::string version)
 }
 
 void ADMA2ROSParser::mapAdmaMessageToROS(
-  adma_msgs::msg::AdmaData & ros_msg, std::array<char, 856> & recv_data)
+  adma_ros_driver_msgs::msg::AdmaData & ros_msg, std::array<char, 856> & recv_data)
 {
   if (version_ == "v3.2") {
     AdmaDataV32 adma_data;
@@ -43,20 +43,21 @@ void ADMA2ROSParser::mapAdmaMessageToROS(
   parseScaledData(ros_msg);
 }
 
-void ADMA2ROSParser::parseV334(adma_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & recv_data)
+void ADMA2ROSParser::parseV334(
+  adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & recv_data)
 {
   parserV334_.mapAdmaMessageToROS(ros_msg, recv_data);
 }
 
 void ADMA2ROSParser::parseV334Status(
-  adma_msgs::msg::AdmaStatus & ros_msg, AdmaDataV334 & local_data)
+  adma_ros_driver_msgs::msg::AdmaStatus & ros_msg, AdmaDataV334 & local_data)
 {
   parserV334_.mapStatusToROS(ros_msg, local_data);
 }
 
 template <typename AdmaDataHeaderStruct>
 void ADMA2ROSParser::parseStaticHeader(
-  adma_msgs::msg::AdmaData & ros_msg, AdmaDataHeaderStruct & static_header)
+  adma_ros_driver_msgs::msg::AdmaData & ros_msg, AdmaDataHeaderStruct & static_header)
 {
   // fill static header information
   ros_msg.genesysid = static_header.genesysid;
@@ -76,7 +77,7 @@ void ADMA2ROSParser::parseStaticHeader(
 
 template <typename AdmaDataHeaderStruct>
 void ADMA2ROSParser::parseDynamicHeader(
-  adma_msgs::msg::AdmaData & ros_msg, AdmaDataHeaderStruct & dynamic_header)
+  adma_ros_driver_msgs::msg::AdmaData & ros_msg, AdmaDataHeaderStruct & dynamic_header)
 {
   // fill dynamic header information
   ros_msg.configid = dynamic_header.configid;
@@ -92,7 +93,8 @@ void ADMA2ROSParser::parseDynamicHeader(
 /// \brief  getstatusgps function - adma status information
 /// \param  ros_msg ros message to fill with content
 /// \param  gps_status byte with gps states
-void ADMA2ROSParser::getStatusGPS(adma_msgs::msg::AdmaData & ros_msg, unsigned char gps_status)
+void ADMA2ROSParser::getStatusGPS(
+  adma_ros_driver_msgs::msg::AdmaData & ros_msg, unsigned char gps_status)
 {
   bool status_external_vel = getbit(gps_status, 7);
   bool status_skidding = getbit(gps_status, 5);
@@ -125,7 +127,7 @@ void ADMA2ROSParser::getStatusGPS(adma_msgs::msg::AdmaData & ros_msg, unsigned c
 /// \param  ros_msg ros message to fill with content
 /// \param  gps_trigger_status byte with gps trigger states
 void ADMA2ROSParser::getStatusTrigger(
-  adma_msgs::msg::AdmaData & ros_msg, unsigned char gps_trigger_status)
+  adma_ros_driver_msgs::msg::AdmaData & ros_msg, unsigned char gps_trigger_status)
 {
   bool status_synclock = getbit(gps_trigger_status, 7);
   bool status_dead_reckoning = getbit(gps_trigger_status, 6);
@@ -157,7 +159,8 @@ void ADMA2ROSParser::getStatusTrigger(
 /// \brief  getstatustrigger function - adma gps trigger information
 /// \param  ros_msg ros message to fill with content
 /// \param  evk_status byte with evk states
-void ADMA2ROSParser::getEVKStatus(adma_msgs::msg::AdmaData & ros_msg, unsigned char evk_status)
+void ADMA2ROSParser::getEVKStatus(
+  adma_ros_driver_msgs::msg::AdmaData & ros_msg, unsigned char evk_status)
 {
   bool status_pos_b2 = getbit(evk_status, 7);
   bool status_pos_b1 = getbit(evk_status, 6);
@@ -198,7 +201,7 @@ void ADMA2ROSParser::getEVKStatus(adma_msgs::msg::AdmaData & ros_msg, unsigned c
 /// \param  ros_msg ros message to fill with content
 /// \param  ew_bytes array of bytes with several error and warnings
 void ADMA2ROSParser::getErrorandWarning(
-  adma_msgs::msg::AdmaData & ros_msg, unsigned char ew_bytes[4])
+  adma_ros_driver_msgs::msg::AdmaData & ros_msg, unsigned char ew_bytes[4])
 {
   std::bitset<8> bitdataerror1 = ew_bytes[0];
   std::bitset<8> bitdataerror2 = ew_bytes[1];
@@ -233,7 +236,7 @@ void ADMA2ROSParser::getErrorandWarning(
 /// \file
 /// \brief  pareScaledData function - fills scaled values with LSB factor
 /// \param  ros_msg ros message to fill with content
-void ADMA2ROSParser::parseScaledData(adma_msgs::msg::AdmaData & ros_msg)
+void ADMA2ROSParser::parseScaledData(adma_ros_driver_msgs::msg::AdmaData & ros_msg)
 {
   ros_msg.faccbodyhrx = getScaledValue(ros_msg.accbodyhrx, 0.0001);
   ros_msg.fratebodyhrx = getScaledValue(ros_msg.ratebodyhrx, 0.0001);
@@ -483,7 +486,7 @@ void ADMA2ROSParser::parseScaledData(adma_msgs::msg::AdmaData & ros_msg)
 }
 
 void ADMA2ROSParser::extractNavSatFix(
-  adma_msgs::msg::AdmaData & ros_msg, sensor_msgs::msg::NavSatFix & nav_ros_msg)
+  adma_ros_driver_msgs::msg::AdmaData & ros_msg, sensor_msgs::msg::NavSatFix & nav_ros_msg)
 {
   // fil status
   switch (ros_msg.statusgpsmode) {
@@ -519,7 +522,7 @@ void ADMA2ROSParser::extractNavSatFix(
 }
 
 void ADMA2ROSParser::extractNavSatFix(
-  adma_msgs::msg::AdmaDataScaled & ros_msg, sensor_msgs::msg::NavSatFix & nav_ros_msg)
+  adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, sensor_msgs::msg::NavSatFix & nav_ros_msg)
 {
   // fil status
   switch (ros_msg.status.status_gnss_mode) {
@@ -555,7 +558,7 @@ void ADMA2ROSParser::extractNavSatFix(
 }
 
 void ADMA2ROSParser::extractIMU(
-  adma_msgs::msg::AdmaData & ros_msg, sensor_msgs::msg::Imu & imu_ros_msg)
+  adma_ros_driver_msgs::msg::AdmaData & ros_msg, sensor_msgs::msg::Imu & imu_ros_msg)
 {
   imu_ros_msg.linear_acceleration.x = ros_msg.faccbodyhrx * 9.81;
   imu_ros_msg.linear_acceleration.y = ros_msg.faccbodyhry * 9.81;
@@ -583,7 +586,7 @@ void ADMA2ROSParser::extractIMU(
 }
 
 void ADMA2ROSParser::extractIMU(
-  adma_msgs::msg::AdmaDataScaled & ros_msg, sensor_msgs::msg::Imu & imu_ros_msg)
+  adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, sensor_msgs::msg::Imu & imu_ros_msg)
 {
   imu_ros_msg.linear_acceleration.x = ros_msg.acc_body_hr.x * 9.81;
   imu_ros_msg.linear_acceleration.y = ros_msg.acc_body_hr.y * 9.81;

@@ -7,7 +7,7 @@
 ADMA2ROSParserV32::ADMA2ROSParserV32() {}
 
 void ADMA2ROSParserV32::mapAdmaMessageToROS(
-  adma_msgs::msg::AdmaData & ros_msg, AdmaDataV32 & adma_data)
+  adma_ros_driver_msgs::msg::AdmaData & ros_msg, AdmaDataV32 & adma_data)
 {
   ros_msg.statuscount = adma_data.statuscount;
 

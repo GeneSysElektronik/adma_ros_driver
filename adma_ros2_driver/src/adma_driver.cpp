@@ -35,17 +35,20 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
   RCLCPP_INFO(get_logger(), "Working with: %s", protocol_version_.c_str());
   if (protocol_version_ == "v3.2") {
     len_ = 768;
-    pub_adma_data_ = this->create_publisher<adma_msgs::msg::AdmaData>("adma/data", 1);
+    pub_adma_data_ = this->create_publisher<adma_ros_driver_msgs::msg::AdmaData>("adma/data", 1);
   } else if (protocol_version_ == "v3.3.3") {
     len_ = 856;
-    pub_adma_data_ = this->create_publisher<adma_msgs::msg::AdmaData>("adma/data", 1);
-    pub_adma_data_raw_ = this->create_publisher<adma_msgs::msg::AdmaDataRaw>("adma/data_raw", 1);
+    pub_adma_data_ = this->create_publisher<adma_ros_driver_msgs::msg::AdmaData>("adma/data", 1);
+    pub_adma_data_raw_ =
+      this->create_publisher<adma_ros_driver_msgs::msg::AdmaDataRaw>("adma/data_raw", 1);
   } else if (protocol_version_ == "v3.3.4") {
     len_ = 856;
-    pub_adma_data_raw_ = this->create_publisher<adma_msgs::msg::AdmaDataRaw>("adma/data_raw", 1);
+    pub_adma_data_raw_ =
+      this->create_publisher<adma_ros_driver_msgs::msg::AdmaDataRaw>("adma/data_raw", 1);
     pub_adma_data_scaled_ =
-      this->create_publisher<adma_msgs::msg::AdmaDataScaled>("adma/data_scaled", 1);
-    pub_adma_status_ = this->create_publisher<adma_msgs::msg::AdmaStatus>("adma/status", 1);
+      this->create_publisher<adma_ros_driver_msgs::msg::AdmaDataScaled>("adma/data_scaled", 1);
+    pub_adma_status_ =
+      this->create_publisher<adma_ros_driver_msgs::msg::AdmaStatus>("adma/status", 1);
   }
   parser_ = new ADMA2ROSParser(protocol_version_);
 
@@ -58,12 +61,12 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
     // when recording we receive data from UDP and publish it to the recording topic
     RCLCPP_INFO(get_logger(), " publish recording topic..");
     pub_adma_data_recorded_ =
-      this->create_publisher<adma_msgs::msg::AdmaDataRaw>("adma/data_recorded", 1);
+      this->create_publisher<adma_ros_driver_msgs::msg::AdmaDataRaw>("adma/data_recorded", 1);
     initializeUDP(param_address);
     updateLoop();
   } else if (mode_ == MODE_REPLAY) {
     // if we use recorded data, create desired subscriber and no UDP connection is required
-    sub_raw_data_ = this->create_subscription<adma_msgs::msg::AdmaDataRaw>(
+    sub_raw_data_ = this->create_subscription<adma_ros_driver_msgs::msg::AdmaDataRaw>(
       "adma/data_recorded", 10,
       std::bind(&ADMADriver::recordedDataCB, this, std::placeholders::_1));
   } else if (mode_ == MODE_DEFAULT) {
@@ -123,11 +126,11 @@ void ADMADriver::initializeUDP(std::string adma_address)
   }
 }
 
-void ADMADriver::recordedDataCB(adma_msgs::msg::AdmaDataRaw data_msg)
+void ADMADriver::recordedDataCB(adma_ros_driver_msgs::msg::AdmaDataRaw::SharedPtr data_msg)
 {
   std::array<char, 856> recv_buf;
-  for (size_t i = 0; i < data_msg.size; i++) {
-    recv_buf[i] = data_msg.raw_data[i];
+  for (size_t i = 0; i < data_msg->size; i++) {
+    recv_buf[i] = data_msg->raw_data[i];
   }
   parseData(recv_buf);
 }
@@ -149,7 +152,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
 
   // read Adma msg from UDP data packet
   if (protocol_version_ == "v3.2" || protocol_version_ == "v3.3.3") {
-    adma_msgs::msg::AdmaData admaData_ros_msg;
+    adma_ros_driver_msgs::msg::AdmaData admaData_ros_msg;
     parser_->mapAdmaMessageToROS(admaData_ros_msg, recv_buf);
     timestamp = admaData_ros_msg.instimemsec + offset_gps_unix;
     timestamp += admaData_ros_msg.instimeweek * week_to_msec;
@@ -175,7 +178,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
   } else if (protocol_version_ == "v3.3.4") {
     AdmaDataV334 data_struct;
     memcpy(&data_struct, &recv_buf, sizeof(data_struct));
-    adma_msgs::msg::AdmaDataScaled adma_data_scaled_msg;
+    adma_ros_driver_msgs::msg::AdmaDataScaled adma_data_scaled_msg;
     adma_data_scaled_msg.header.frame_id = adma_frame_;
     parser_->parseV334(adma_data_scaled_msg, data_struct);
     timestamp = adma_data_scaled_msg.ins_time_msec + offset_gps_unix;
@@ -199,7 +202,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
 
     weektime = adma_data_scaled_msg.ins_time_week;
 
-    adma_msgs::msg::AdmaStatus status_msg;
+    adma_ros_driver_msgs::msg::AdmaStatus status_msg;
     status_msg.header.stamp.sec = timestamp / 1000;
     status_msg.header.stamp.nanosec = timestamp * 1000000;
     status_msg.header.frame_id = adma_status_frame_;
@@ -210,7 +213,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
   // publish raw data with >= v3.3.3
   if (protocol_version_ != "v3.2") {
     // publish raw data as byte array
-    adma_msgs::msg::AdmaDataRaw raw_data_msg;
+    adma_ros_driver_msgs::msg::AdmaDataRaw raw_data_msg;
     raw_data_msg.size = len_;
     raw_data_msg.header.stamp.sec = timestamp / 1000;
     raw_data_msg.header.stamp.nanosec = timestamp * 1000000;

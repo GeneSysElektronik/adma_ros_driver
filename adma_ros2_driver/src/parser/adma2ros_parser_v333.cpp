@@ -7,7 +7,7 @@ ADMA2ROSParserV333::ADMA2ROSParserV333() {}
 ADMA2ROSParserV333::~ADMA2ROSParserV333() {}
 
 void ADMA2ROSParserV333::mapAdmaMessageToROS(
-  adma_msgs::msg::AdmaData & ros_msg, AdmaDataV333 & adma_data)
+  adma_ros_driver_msgs::msg::AdmaData & ros_msg, AdmaDataV333 & adma_data)
 {
   ros_msg.statuscount = adma_data.statuscount;
 
@@ -321,7 +321,8 @@ void ADMA2ROSParserV333::mapAdmaMessageToROS(
   ros_msg.gpsreceiverstatus = adma_data.gnssreceiverstatus;
 }
 
-void ADMA2ROSParserV333::getKFStatus(adma_msgs::msg::AdmaData & ros_msg, unsigned char kf_status)
+void ADMA2ROSParserV333::getKFStatus(
+  adma_ros_driver_msgs::msg::AdmaData & ros_msg, unsigned char kf_status)
 {
   bool status_speed_b2 = getbit(kf_status, 5);
   bool status_speed_b1 = getbit(kf_status, 4);

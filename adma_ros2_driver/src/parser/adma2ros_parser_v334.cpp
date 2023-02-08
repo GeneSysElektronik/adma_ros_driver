@@ -5,7 +5,7 @@
 ADMA2ROSParserV334::ADMA2ROSParserV334() {}
 
 void ADMA2ROSParserV334::mapAdmaMessageToROS(
-  adma_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & adma_data)
+  adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & adma_data)
 {
   mapAdmaHeader(ros_msg, adma_data);
   mapErrorWarningBytes(ros_msg.error_warning, adma_data);
@@ -16,7 +16,7 @@ void ADMA2ROSParserV334::mapAdmaMessageToROS(
 }
 
 void ADMA2ROSParserV334::mapStatusToROS(
-  adma_msgs::msg::AdmaStatus & ros_msg, AdmaDataV334 & adma_data)
+  adma_ros_driver_msgs::msg::AdmaStatus & ros_msg, AdmaDataV334 & adma_data)
 {
   mapStatusBytes(ros_msg.status_bytes, adma_data);
   mapErrorWarningBytes(ros_msg.error_warnings_bytes, adma_data);
@@ -24,7 +24,7 @@ void ADMA2ROSParserV334::mapStatusToROS(
 }
 
 void ADMA2ROSParserV334::mapAdmaHeader(
-  adma_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & adma_data)
+  adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & adma_data)
 {
   // fill static header information
   AdmaStaticHeader static_header = adma_data.staticHeader;
@@ -54,7 +54,7 @@ void ADMA2ROSParserV334::mapAdmaHeader(
 }
 
 void ADMA2ROSParserV334::mapStatusBytes(
-  adma_msgs::msg::ByteStatus & ros_msg_byte_status, AdmaDataV334 & adma_data)
+  adma_ros_driver_msgs::msg::ByteStatus & ros_msg_byte_status, AdmaDataV334 & adma_data)
 {
   ros_msg_byte_status.status_byte_0 = adma_data.gnssStatus;
   ros_msg_byte_status.status_byte_1 = adma_data.signalInStatus;
@@ -65,7 +65,7 @@ void ADMA2ROSParserV334::mapStatusBytes(
 }
 
 void ADMA2ROSParserV334::mapStatusBitfields(
-  adma_msgs::msg::Status & ros_msg_status, AdmaDataV334 & adma_data)
+  adma_ros_driver_msgs::msg::Status & ros_msg_status, AdmaDataV334 & adma_data)
 {
   // status_byte_0
   unsigned char gnss_status = adma_data.gnssStatus;
@@ -170,7 +170,8 @@ void ADMA2ROSParserV334::mapStatusBitfields(
 }
 
 void ADMA2ROSParserV334::mapErrorWarningBytes(
-  adma_msgs::msg::ByteErrorWarning & ros_msg_byte_error_warning, AdmaDataV334 & adma_data)
+  adma_ros_driver_msgs::msg::ByteErrorWarning & ros_msg_byte_error_warning,
+  AdmaDataV334 & adma_data)
 {
   ros_msg_byte_error_warning.error_1 = adma_data.dataError1;
   ros_msg_byte_error_warning.error_2 = adma_data.dataError2;
@@ -179,7 +180,7 @@ void ADMA2ROSParserV334::mapErrorWarningBytes(
 }
 
 void ADMA2ROSParserV334::mapErrorWarningBitfields(
-  adma_msgs::msg::ErrorWarning & ros_msg_error_warning, AdmaDataV334 & adma_data)
+  adma_ros_driver_msgs::msg::ErrorWarning & ros_msg_error_warning, AdmaDataV334 & adma_data)
 {
   unsigned char error_byte_0 = adma_data.dataError1;
   ros_msg_error_warning.error_gyro_hw = getbit(error_byte_0, 0);
@@ -212,7 +213,7 @@ void ADMA2ROSParserV334::mapErrorWarningBitfields(
 }
 
 void ADMA2ROSParserV334::mapUnscaledData(
-  adma_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & adma_data)
+  adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & adma_data)
 {
   //fill external velocity
   ros_msg.ext_vel_dig_pulses_x = adma_data.extveldigpulsesx;
@@ -259,7 +260,7 @@ void ADMA2ROSParserV334::mapUnscaledData(
 }
 
 void ADMA2ROSParserV334::mapScaledData(
-  adma_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & adma_data)
+  adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & adma_data)
 {
   ros_msg.acc_body_hr.x = getScaledValue(adma_data.sensorsBodyX.accHR, 0.0001);
   ros_msg.acc_body_hr.y = getScaledValue(adma_data.sensorsBodyY.accHR, 0.0001);
@@ -362,11 +363,12 @@ void ADMA2ROSParserV334::mapScaledData(
   ros_msg.gnss_dualant_stddev_pitch_hr = getScaledValue(adma_data.gnssdualantstddevpitchhr, 0.01);
 }
 
-void ADMA2ROSParserV334::mapPOI(adma_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & adma_data)
+void ADMA2ROSParserV334::mapPOI(
+  adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & adma_data)
 {
-  std::array<adma_msgs::msg::POI, 8> pois;
+  std::array<adma_ros_driver_msgs::msg::POI, 8> pois;
   for (size_t i = 0; i < 8; i++) {
-    adma_msgs::msg::POI new_poi;
+    adma_ros_driver_msgs::msg::POI new_poi;
 
     Vector3 cur_acc_body = adma_data.accBodyPOI[i];
     Vector3 cur_acc_horizontal = adma_data.accHorizontalPOI[i];

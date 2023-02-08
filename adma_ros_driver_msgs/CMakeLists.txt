@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(adma_msgs)
+project(adma_ros_driver_msgs)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS YES)
 
@@ -19,7 +19,7 @@ find_package(rosidl_default_generators REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 
-rosidl_generate_interfaces(adma_msgs
+rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/AdmaDataDelta.msg"
   "msg/AdmaData.msg"
   "msg/AdmaDataRaw.msg"
