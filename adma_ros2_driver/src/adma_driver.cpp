@@ -194,8 +194,8 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
     // read heading and velocity
     message_heading.data = adma_data_scaled_msg.ins_yaw;
     message_velocity.data = std::sqrt(
-                              std::pow(adma_data_scaled_msg.gnss_vel_frame.x, 2) +
-                              std::pow(adma_data_scaled_msg.gnss_vel_frame.y, 2)) *
+                              std::pow(adma_data_scaled_msg.ins_vel_frame.x, 2) +
+                              std::pow(adma_data_scaled_msg.ins_vel_frame.y, 2)) *
                             3.6;
 
     pub_adma_data_scaled_->publish(adma_data_scaled_msg);
