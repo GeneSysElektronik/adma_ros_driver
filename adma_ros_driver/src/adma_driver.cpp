@@ -241,7 +241,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
 
                 // read heading and velocity
                 message_heading.data = admaDataScaledMsg.ins_yaw;
-                message_velocity.data = std::sqrt(std::pow(admaDataScaledMsg.gnss_vel_frame.x, 2) + std::pow(admaDataScaledMsg.gnss_vel_frame.y, 2)) * 3.6;
+                message_velocity.data = std::sqrt(std::pow(admaDataScaledMsg.ins_vel_frame.x, 2) + std::pow(admaDataScaledMsg.ins_vel_frame.y, 2)) * 3.6;
                 timestamp = admaDataScaledMsg.ins_time_msec + offset_gps_unix;
                 timestamp += admaDataScaledMsg.ins_time_week * week_to_msec;
                 admaDataScaledMsg.header.stamp.sec = timestamp / 1000;
