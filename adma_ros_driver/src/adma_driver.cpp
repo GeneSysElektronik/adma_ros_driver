@@ -2,10 +2,10 @@
 #include <std_msgs/Float64.h>
 #include <sensor_msgs/NavSatFix.h>
 #include <sensor_msgs/Imu.h>
-#include <adma_msgs/Adma.h>
-#include <adma_msgs/AdmaDataScaled.h>
-#include <adma_msgs/AdmaDataRaw.h>
-#include <adma_msgs/AdmaStatus.h>
+#include <adma_ros_driver_msgs/Adma.h>
+#include <adma_ros_driver_msgs/AdmaDataScaled.h>
+#include <adma_ros_driver_msgs/AdmaDataRaw.h>
+#include <adma_ros_driver_msgs/AdmaStatus.h>
 #include <netdb.h>
 #include <arpa/inet.h>
 #include "../include/adma_ros_driver/parser/adma2ros_parser.hpp"
@@ -24,7 +24,7 @@ class ADMADriver {
                void initializeUDP();
                 void updateLoop();
                 void parseData(std::array<char, 856> recv_buf);
-                void recordedDataCB(adma_msgs::AdmaDataRaw dataMsg);
+                void recordedDataCB(adma_ros_driver_msgs::AdmaDataRaw dataMsg);
 
         private:
                 ros::Publisher _pubAdmaData;
@@ -87,11 +87,11 @@ ADMADriver::ADMADriver(ros::NodeHandle* n)
         // create ROS subscriber and publisher, based on desired protocol version
         if(_protocol_version == "v3.3.3")
         {
-                _pubAdmaData = n->advertise<adma_msgs::Adma>("adma/data", 10);
+                _pubAdmaData = n->advertise<adma_ros_driver_msgs::Adma>("adma/data", 10);
         }else if (_protocol_version == "v3.3.4")
         {
-                _pubAdmaDataScaled = n->advertise<adma_msgs::AdmaDataScaled>("adma/data_scaled", 10);
-                _pubAdmaStatus = n->advertise<adma_msgs::AdmaStatus>("adma/status", 10);
+                _pubAdmaDataScaled = n->advertise<adma_ros_driver_msgs::AdmaDataScaled>("adma/data_scaled", 10);
+                _pubAdmaStatus = n->advertise<adma_ros_driver_msgs::AdmaStatus>("adma/status", 10);
                 _pubHeading = n->advertise<std_msgs::Float64>("adma/heading", 10);
                 _pubVelocity = n->advertise<std_msgs::Float64>("adma/velocity", 10);
                 _pubNavSatFix = n->advertise<sensor_msgs::NavSatFix>("adma/fix", 10);
@@ -99,7 +99,7 @@ ADMADriver::ADMADriver(ros::NodeHandle* n)
         }
         
         //raw data should be published always, protocol version indepent
-        _pubAdmaDataRaw = n->advertise<adma_msgs::AdmaDataRaw>("adma/data_raw", 10);
+        _pubAdmaDataRaw = n->advertise<adma_ros_driver_msgs::AdmaDataRaw>("adma/data_raw", 10);
 
         _parser = new ADMA2ROSParser();
 
@@ -107,7 +107,7 @@ ADMADriver::ADMADriver(ros::NodeHandle* n)
         {
                 // when recording we receive data from UDP and publish it to the recording topic
                 ROS_INFO(" publish recording topic..");
-                _pubAdmaDataRecorded = n->advertise<adma_msgs::AdmaDataRaw>("adma/data_recorded", 10);
+                _pubAdmaDataRecorded = n->advertise<adma_ros_driver_msgs::AdmaDataRaw>("adma/data_recorded", 10);
                 initializeUDP();
                 updateLoop();
         }
@@ -216,7 +216,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
 
         if (_protocol_version == "v3.3.3")
         {
-                adma_msgs::Adma admaData_rosMsg;
+                adma_ros_driver_msgs::Adma admaData_rosMsg;
                 _parser->parseV333(admaData_rosMsg, recv_buf);
                 timestamp = admaData_rosMsg.INSTimemsec + offset_gps_unix;
                 timestamp += admaData_rosMsg.INSTimeWeek * week_to_msec;
@@ -231,7 +231,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
                 // first extract V334 ros msg
                 AdmaDataV334 dataStruct;
                 memcpy(&dataStruct , &recv_buf, sizeof(dataStruct));
-                adma_msgs::AdmaDataScaled admaDataScaledMsg;
+                adma_ros_driver_msgs::AdmaDataScaled admaDataScaledMsg;
                 admaDataScaledMsg.header.frame_id = _frame_id_adma;
                 admaDataScaledMsg.header.seq = _seq;
                 _parser->parseV334(admaDataScaledMsg, dataStruct);
@@ -249,7 +249,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
                 admaDataScaledMsg.time_msec = timestamp;
                 admaDataScaledMsg.time_nsec = timestamp * 1000000;
                 // parse status msg
-                adma_msgs::AdmaStatus statusMsg;
+                adma_ros_driver_msgs::AdmaStatus statusMsg;
                 statusMsg.header.frame_id = _frame_id_adma_status;
                 statusMsg.header.seq = _seq;
                 statusMsg.header.stamp.sec = timestamp / 1000;
@@ -277,7 +277,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
         // protocol version indepent parsing
 
         // create raw data as byte array
-        adma_msgs::AdmaDataRaw rawDataMsg;
+        adma_ros_driver_msgs::AdmaDataRaw rawDataMsg;
         rawDataMsg.size = _len;
         rawDataMsg.header.frame_id = _frame_id_data_raw;
         rawDataMsg.header.seq = _seq;
@@ -300,7 +300,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
         _seq++;
 }
 
-void ADMADriver::recordedDataCB(adma_msgs::AdmaDataRaw dataMsg)
+void ADMADriver::recordedDataCB(adma_ros_driver_msgs::AdmaDataRaw dataMsg)
 {
         //convert raw data (byte array) to expected char array
         std::array<char, 856> recv_buf;

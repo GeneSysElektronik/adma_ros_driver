@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>adma_msgs</name>
+  <name>adma_ros_driver_msgs</name>
   <version>0.0.0</version>
-  <description>The adma_msgs package</description>
+  <description>Collection of several ROS msgs for the adma_ros_driver package</description>
 
   <maintainer email="ricoschillings@gmail.com">Rico Schillings</maintainer>
   <license>BSD</license>

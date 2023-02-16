@@ -13,7 +13,7 @@
 #include <boost/asio.hpp>
 #include <iostream>
 #include <fstream>
-#include "adma_msgs/Adma.h"
+#include "adma_ros_driver_msgs/Adma.h"
 #include <adma_ros_driver/parser/adma_parse.hpp>
 #include <std_msgs/String.h>
 
@@ -56,7 +56,7 @@ int main(int argc, char **argv)
   const boost::asio::ip::address address = boost::asio::ip::address::from_string(ip_adress_ADMA);
 
   /* Initiliaze publisher */
-  ros::Publisher  publisher_  = nh.advertise<adma_msgs::Adma>("adma_data",1);
+  ros::Publisher  publisher_  = nh.advertise<adma_ros_driver_msgs::Adma>("adma_data",1);
   ros::Publisher  raw_publisher_  = nh.advertise<std_msgs::String>("raw_adma_data",1);
 
   /* Initilaize loop rate */
@@ -83,7 +83,7 @@ int main(int argc, char **argv)
     /* Load the messages on the publisers */
     std_msgs::String msg_raw_adma;
     msg_raw_adma.data = local_data;
-    adma_msgs::Adma message;
+    adma_ros_driver_msgs::Adma message;
     getParsedData(local_data, message);
     
     /* publish the ADMA message */
