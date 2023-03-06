@@ -1,11 +1,11 @@
 <launch> 
 
    <!-- parameters-->
-   <arg name="destination_port" default="1040" doc="ADMA Webinterface -> Data -> Ethernet data output -> Destination Port" />
-   <arg name="destination_ip" default="0.0.0.0" doc="ADMA Webinterface -> Data -> Ethernet data output -> Destination IP" />
+   <arg name="destination_port" default="11021" doc="ADMA Webinterface -> Data -> Ethernet data output -> Destination Port" />
+   <arg name="destination_ip" default="192.168.88.255" doc="ADMA Webinterface -> Data -> Ethernet data output -> Destination IP" />
    <arg name="use_performance_check" default="False" doc="True if you want to get additional performance logging" />
-   <arg name="protocol_version" default="v3.3.3" doc="The desired protocol version of the ADMA UDP data packets" />
-   <arg name="mode" default="replay" doc="the desired execution mode, options are default/record/replay" />
+   <arg name="protocol_version" default="v3.3.4" doc="The desired protocol version of the ADMA UDP data packets" />
+   <arg name="mode" default="default" doc="the desired execution mode, options are default/record/replay" />
    <arg name="frame_id_navsatfix" default="gnss_link" doc="ROS Frame-ID of NavSatFix msg" />
    <arg name="frame_id_imu" default="imu_link" doc="ROS Frame-ID of Imu msg" />
    <arg name="frame_id_adma" default="adma" doc="ROS Frame-ID of ADMA data msg" />
