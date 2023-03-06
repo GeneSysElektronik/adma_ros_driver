@@ -15,7 +15,7 @@ Since it does not really use Noetic-specific code, it should also work with ROS1
 ```bash
 mkdir -p ~/ros1_ws/src
 cd ~/ros1_ws/src
-git clone -b ros_1_master $REPO_URL(HTPPS/SSH)
+git clone -b ros1_master $REPO_URL(HTPPS/SSH)
 ```
 
 2. Build workspace
