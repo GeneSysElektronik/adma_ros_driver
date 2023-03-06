@@ -13,7 +13,8 @@ Since it does not really use Noetic-specific code, it should also work with ROS1
 ## Usage
 1. Create workspace and clone this repository
 ```bash
-mkdir -p ~/ros_ws/src
+mkdir -p ~/ros1_ws/src
+cd ~/ros1_ws/src
 git clone -b ros_1_master $REPO_URL(HTPPS/SSH)
 ```
 
@@ -26,7 +27,7 @@ catkin_make
 
 3. Source workspace and launch
 ```bash
-source devel/setup.bash
+source ~/ros1_ws/devel/setup.bash
 roslaunch adma_ros_driver ADMA_pub_Ethernet_new.launch
 ```
 
