@@ -1,5 +1,5 @@
 #include <netdb.h>
-
+#include <fstream>
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
 
@@ -20,5 +20,10 @@ private:
   int port_;
   unsigned short frequency_;
   std::string protocol_version_;
+
+  std::string gsdbFilePath_;
+  std::fstream gsdbFile_;
+  unsigned long msgCounter_;
+  unsigned long protocolLength_;
 };
 }  // end namespace genesys
