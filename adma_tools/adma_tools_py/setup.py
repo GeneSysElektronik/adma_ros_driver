@@ -1,6 +1,6 @@
 from setuptools import setup
 import glob
-package_name = 'adma_tools'
+package_name = 'adma_tools_py'
 
 setup(
     name=package_name,
@@ -15,12 +15,11 @@ setup(
     zip_safe=True,
     maintainer='rschilli',
     maintainer_email='rico.schillings@hs-offenburg.de',
-    description='tool collection for working with ADMA and ROS2',
+    description='python tool collection for working with ADMA and ROS2',
     license='MIT',
     entry_points={
         'console_scripts': [
-            'ros2csv = adma_tools.ros2csv_converter:main',
-            'bag2gsdb = adma_tools.bag2gsdb_converter:main'
+            'ros2csv = adma_tools_py.ros2csv_converter:main'
         ],
     },
 )
