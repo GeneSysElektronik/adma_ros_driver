@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>adma_tools_cpp</name>
+  <version>0.1.0</version>
+  <description>CPP tool collection for the ADMA</description>
+  <maintainer email="rico.schillings@hs-offenburg.de">Rico Schillings</maintainer>
+  <license>Apache 2.0</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <build_depend>roscpp</build_depend>
+  <build_depend>adma_ros_driver_msgs</build_depend>
+  
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>adma_ros_driver_msgs</exec_depend>
+
+  <build_export_depend>roscpp</build_export_depend>
+  <build_export_depend>adma_ros_driver_msgs</build_export_depend>
+</package>

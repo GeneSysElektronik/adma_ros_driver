@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(adma_tools)
+project(adma_tools_py)
 
 # # Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -103,7 +103,7 @@ catkin_python_setup()
 catkin_package(
 
   # INCLUDE_DIRS include
-  # LIBRARIES adma_tools
+  # LIBRARIES adma_tools_py
   # CATKIN_DEPENDS rospy
   # DEPENDS system_lib
 )

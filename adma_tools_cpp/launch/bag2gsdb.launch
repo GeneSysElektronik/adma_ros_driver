@@ -1,0 +1,13 @@
+<launch> 
+
+   <!-- arg to define the rosbag path, used for record and replay. -->
+   <!-- NOTE: for record it needs just a valid destination folder, for replay it needs the full filepath (so $FOLDER/FILENAME.bag) -->
+   <arg name="rosbag_file" default="/workspaces/genesys_ros1/230202_ONL_ABP_ALL.bag" doc="Path to recorded rosbag" />
+   <!-- node to replay recorded raw data, will kill everything when replay is done -->
+   <node name="rosbag_replay_raw_data" type="play" pkg="rosbag" args="$(arg rosbag_file)" required="true"/>
+   <node name="bag2gsdb" type="bag2gsdb_converter" pkg="adma_tools_cpp" output="screen">
+      <param name="/rosbag_path" type="string" value="$(arg rosbag_file)"/>
+      <!-- <remap from="adma/data_recorded" to="adma/data_raw"/> -->
+   </node>
+   
+</launch>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>adma_tools</name>
+  <name>adma_tools_py</name>
   <version>0.0.0</version>
   <description>The adma_tools package</description>
 

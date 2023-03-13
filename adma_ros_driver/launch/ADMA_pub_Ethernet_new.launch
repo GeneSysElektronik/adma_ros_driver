@@ -1,8 +1,8 @@
 <launch> 
 
    <!-- parameters-->
-   <arg name="destination_port" default="11021" doc="ADMA Webinterface -> Data -> Ethernet data output -> Destination Port" />
-   <arg name="destination_ip" default="192.168.88.255" doc="ADMA Webinterface -> Data -> Ethernet data output -> Destination IP" />
+   <arg name="destination_port" default="1040" doc="ADMA Webinterface -> Data -> Ethernet data output -> Destination Port" />
+   <arg name="destination_ip" default="localhost" doc="ADMA Webinterface -> Data -> Ethernet data output -> Destination IP" />
    <arg name="use_performance_check" default="False" doc="True if you want to get additional performance logging" />
    <arg name="protocol_version" default="v3.3.4" doc="The desired protocol version of the ADMA UDP data packets" />
    <arg name="mode" default="default" doc="the desired execution mode, options are default/record/replay" />
@@ -36,6 +36,11 @@
       <remap from="adma/imu" to="adma/imu"/>
    </node>
 
+   <!-- arg to activate the gsdb logging (ADMA-PP)-->
+   <arg name="log_gsdb" default="True" doc="True if you want to create a gsdb logfile for post-processing" />
+   <node name="bag2gsdb" type="bag2gsdb_converter" pkg="adma_tools_cpp" output="screen">
+      <remap from="adma/data_recorded" to="adma/data_raw"/>
+   </node>
    <!-- arg to define the rosbag path, used for record and replay. -->
    <!-- NOTE: for record it needs just a valid destination folder, for replay it needs the full filepath (so $FOLDER/FILENAME.bag) -->
    <arg name="rosbag_file" default="/workspaces/genesys_ros1/230202_ONL_ABP_ALL.bag" doc="Path to recorded rosbag" />
