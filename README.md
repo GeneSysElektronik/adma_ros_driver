@@ -64,6 +64,14 @@ To switch between those, the`protocol_version` parameter in the `config/driver_c
         - this also uses several standard-ROS msgs like Vector3 to represent XYZ coordinates instead of having 3 individual attributes
         - POI's are now integrated as a object list and can be accessed by their index 
 
+## ADMA Postprocessing
+The driver logs per default the received raw data into a `*.gsdb` file. This logfile can be used afterwards for the ADMA PP tool.
+The destination where it will create this logfile is the folder of the terminal where you launch your driver. The logfile will be named with the timestamp of the launch time.
+
+If you don't want to create this log file (e.g. caused by limited memory) you can disable it easily by setting the `log_gsdb_arg` of the `adma_driver.launch.py` to False. THis will not start the additional gsdb-logger.
+
+This tool is mode-indepent, so it will work with `default` as also `record`.
+If you already have recorded ros2 bag files, you can also convert them to gsdb file for PP. Please refer to te `Tools` section below.
 ## Debugging
 It is possible to test the ROS Driver without connecting to a real ADMA device by
 using the integrated 'data_server' to send a fixed version-based UDP packet.

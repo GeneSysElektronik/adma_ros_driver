@@ -33,7 +33,9 @@ def generate_launch_description():
         if mode == 'replay':
                 replay_arg = DeclareLaunchArgument('replay_mode', default_value='True')
         rosbag_file_arg = DeclareLaunchArgument('rosbag_file', default_value='/home/rschilli/ros2_ws/genesys/rosbag2_2022_12_09-18_31_51/')
-        
+
+        ### parameter for GSDB logging, used for ADMA-PP ####
+        log_gsdb_arg = DeclareLaunchArgument('log_gsdb', default_value='True')
 
         adma_driver = Node(
                 package='adma_ros2_driver',
@@ -69,6 +71,18 @@ def generate_launch_description():
                 on_exit=[LogInfo(msg=["Rosbag replay done. Stopping everything..."]),
                 Shutdown(reason='launch is shutting down')],
         )
+
+        gsdb_logger = Node(
+                package='adma_tools_cpp',
+                executable='bag2gsdb_converter',
+                output='screen',
+                namespace='genesys',
+                name='bag2gsdb',
+                remappings=[
+                        ("adma/data_recorded", "adma/data_raw")
+                ],
+                condition=IfCondition(LaunchConfiguration('log_gsdb'))
+        )
         
         return LaunchDescription([
                 # # args
@@ -77,8 +91,10 @@ def generate_launch_description():
                 record_raw_data_arg,
                 replay_arg,
                 rosbag_file_arg,
+                log_gsdb_arg,
                 # #  nodes
                 adma_driver,
                 rosbag_recorder,
                 rosbag_player,
+                gsdb_logger
         ])

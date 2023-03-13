@@ -10,9 +10,21 @@ Bag2GSDBConverter::Bag2GSDBConverter(const rclcpp::NodeOptions &options)
 : Node("bag2gsdb", options),
 msgCounter_(0)
 {
-        filePath_ = declare_parameter("rosbag_path", "output.gsdb");
-        //create a file next to the *db3 rosbag file
-        gdsbFile_ = std::ofstream(filePath_ + "/raw_data.gsdb");
+        filePath_ = declare_parameter("rosbag_path", "");
+        if(filePath_.empty()){
+                // if no filename was defined, create a new file with timestamp as name to prevent overwriting files..
+                auto now = std::chrono::system_clock::now();
+                auto in_time_t = std::chrono::system_clock::to_time_t(now);
+                std::stringstream datetime;
+                datetime << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d-%H-%M-%S");
+                filePath_ = datetime.str() + ".gsdb";
+                
+        }else{
+                //otherwise create a file next to the *db3 rosbag file
+                filePath_ = filePath_ + "/raw_data.gsdb";
+        }
+        gdsbFile_ = std::ofstream(filePath_);
+        
         subRawData_ = create_subscription<adma_ros_driver_msgs::msg::AdmaDataRaw>(
                 "/genesys/adma/data_recorded", 10, std::bind(&Bag2GSDBConverter::rawDataCallback,
                 this, std::placeholders::_1));
