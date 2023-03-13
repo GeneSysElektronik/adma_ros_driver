@@ -1,8 +1,8 @@
 genesys:
   adma_ros2_driver:
     ros__parameters:
-      destination_ip: '0.0.0.0'
-      destination_port: 1040
+      destination_ip: '192.168.88.255'
+      destination_port: 11021
       use_performance_check: False
       protocol_version: 'v3.3.4'
       mode: "default" # available modes are: default/record/replay
