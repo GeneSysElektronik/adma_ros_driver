@@ -59,6 +59,20 @@ To switch between those, the`protocol_version` parameter in the `adma_ros_driver
         - this also uses several standard-ROS msgs like Vector3 to represent XYZ coordinates instead of having 3 individual attributes
         - POI's are now integrated as a object list and can be accessed by their index 
 
+## ADMA Postprocessing
+The driver logs per default the received raw data into a `*.gsdb` file. This logfile can be used afterwards for the ADMA PP tool.
+The destination where it will create this logfile is the folder of the terminal where you launch your driver. The logfile will be named with the timestamp of the launch time.
+
+If you don't want to create this log file (e.g. caused by limited memory) you can disable it easily by setting the `log_gsdb_arg` of the `adma_ros_driver/launch/ADMA_pub_Ethernet_new.launch` to False. This will not start the additional gsdb-logger.
+
+This tool is mode-indepent, so it will work with `default` as also `record`.
+If you already have recorded rosbag files, you can also convert them to gsdb file for PP. Therefore you can use the `adma_tools_cpp/launch/bag2gsdb.launch` file. Here you just need to define the desired rosbag file (absolute path) and the launch-file will start the replay as also the converter. In this case the converter creates the `.gsdb` file next to the defined rosbag.
+
+```bash
+source ~/ros1_ws/devel/setup.bash
+roslaunch adma_tools_cpp bag2gsdb.launch
+```
+
 ## Mode
 
 Since V3.3.3 it is possible to record rosbags that also publish the raw byte data received from the ADMA by UDP. Therefore it subscribes to the topic `genesys/adma/data_recorded`. For recording the raw data the following steps have to be executed:
