@@ -78,21 +78,38 @@ ros2 launch adma_ros2_driver adma_driver_debugging.launch.py
 
 ## Tools
 This repository also contains some useful tools to work with the ADMA.
-These can be found in the `adma_tools` package.
+These can be found in the `adma_tools` folder and are in separated packages based on their implementation language
+(`adma_tools_cpp`/ `adma_tools_py`).
 
 ### ROS2CSV-Converter
-This tool subscribes to `/genesys/adma/data_scaled` and `/genesys/adma/status`and generates a CSV file for postprocessing. It can be used live or e.g. to convert a rosbag to CSV. 
+This tool subscribes to `/genesys/adma/data_scaled` and `/genesys/adma/status` and generates a CSV file for postprocessing. It can be used live or e.g. to convert a rosbag to CSV. 
 The tool can be used by executing it in an additional terminal:
 
 ```bash
 # ensure you have sourced the workspace also in this terminal
 cd ~/ros2_ws
 . install/setup.bash
-ros2 run adma_tools ros2csv
+ros2 run adma_tools_py ros2csv
 ```
 
 This will create a `recorded_data.csv` in the destination where the `ros2 run..` command is executed.
-If an indivdual file naming needs to be used, the `adma_tools/adma_tools/ros2csv_converter.py` file can be adapted in line 11 (self.filename = '').
+If an individual file naming needs to be used, the `adma_tools_py/adma_tools_py/ros2csv_converter.py` file can be adapted in line 11 (self.filename = '').
+
+
+### BAG2GSDB-Converter
+This tool subscribes to the `/genesys/adma/data_recorded` topic and generates a `*.gsdb` file that can be used for the ADMA-PostProcessing application.
+
+```bash
+# ensure you have sourced the workspace also in this terminal
+cd ~/ros2_ws
+. install/setup.bash
+ros2 launch adma_tools_cpp bag2gsdb.launch.py
+```
+In the launch-file you have to define the path to the desired ros2 bag folder (the one where the `metadata.yaml` and `$FILE.db3` is located). The tool will create the `raw_data.gsdb` file inside the folder next to these files.
+The launchfile will start both, ros2 bag play and the converter tool and stops everything when the replay of the bagfile is done.
+Additionally you can inject the `replay_rate` in the launchfile to speed-up the converting process.
+
+NOTE: Increasing the replay_rate depends on the computer performance so it may can lead to missing messages. Therefore the converter prints at the end a log to the console how many messages where written to the defined file. This value you can compare with the value that is defined in the `metadata.yaml` (look for the topic `/genesys/adma/data_recorded` and then the `message_count` entry). All messages where written when those values are the same (1 less is also ok..). 
 
 ## Re-use old recorded data
 
