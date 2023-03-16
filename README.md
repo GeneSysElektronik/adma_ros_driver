@@ -42,7 +42,7 @@ Same "linking" rule applies to the `launch.py` files. The available parameters a
 | gnss_frame | any string name | ROS frame_id of the NavSat topic |
 | imu_frame | any string name | ROS frame_id of the IMU topic |
 | protocol_version | "v3.2" / "v3.3.3" / "v3.3.4" | the ADMAnet protocol version of your ADMA |
-| mode | "default" / "record" / "replay" | defines if you want to use it live with ADMA (default), record raw data received from ADMA (record) or replay the recorded raw data by replaying a rosbag (replay) |
+| mode | "default" / "replay" | defines if you want to use it live with ADMA (default) or replay the recorded data by replaying a rosbag (replay) |
 
 ## Supported ADMA Protocol versions
 This driver node supports several protocol versions.
@@ -68,21 +68,12 @@ To switch between those, the`protocol_version` parameter in the `config/driver_c
 The driver logs per default the received raw data into a `*.gsdb` file. This logfile can be used afterwards for the ADMA PP tool.
 The destination where it will create this logfile is the folder of the terminal where you launch your driver. The logfile will be named with the timestamp of the launch time.
 
-If you don't want to create this log file (e.g. caused by limited memory) you can disable it easily by setting the `log_gsdb_arg` of the `adma_driver.launch.py` to False. THis will not start the additional gsdb-logger.
+If you don't want to create this log file (e.g. caused by limited memory) you can disable it easily by setting the `log_gsdb_arg` of the `adma_driver.launch.py` to False. This will not start the additional gsdb-logger.
 
-This tool is mode-indepent, so it will work with `default` as also `record`.
+This tool is mode-indepent, so it will work with `default` as also `replay`.
 If you already have recorded ros2 bag files, you can also convert them to gsdb file for PP. Please refer to te `Tools` section below.
-## Debugging
-It is possible to test the ROS Driver without connecting to a real ADMA device by
-using the integrated 'data_server' to send a fixed version-based UDP packet.
 
-For using the server, refer to:
-3. source workspace and launch
-```bash
-. install/setup.bash
-ros2 launch adma_ros2_driver adma_driver_debugging.launch.py
-# for changing config, you can modify the separate 'driver_config_debug.yaml' file
-```
+If you like to record a rosbag additionaly, you can set the `record_rosbag` argument in the `adma_driver.launch.py` true and optionally define the desired topics to record (list `recorded_topics`).
 
 ## Tools
 This repository also contains some useful tools to work with the ADMA.
@@ -105,7 +96,7 @@ If an individual file naming needs to be used, the `adma_tools_py/adma_tools_py/
 
 
 ### BAG2GSDB-Converter
-This tool subscribes to the `/genesys/adma/data_recorded` topic and generates a `*.gsdb` file that can be used for the ADMA-PostProcessing application.
+This tool subscribes to the `/genesys/adma/data_recorded` topic and generates a `*.gsdb` file that can be used for the ADMA-PostProcessing application. Its primary for the deprecated rosbags with the mentioned topic.
 
 ```bash
 # ensure you have sourced the workspace also in this terminal
@@ -119,13 +110,10 @@ Additionally you can inject the `replay_rate` in the launchfile to speed-up the 
 
 NOTE: Increasing the replay_rate depends on the computer performance so it may can lead to missing messages. Therefore the converter prints at the end a log to the console how many messages where written to the defined file. This value you can compare with the value that is defined in the `metadata.yaml` (look for the topic `/genesys/adma/data_recorded` and then the `message_count` entry). All messages where written when those values are the same (1 less is also ok..). 
 
-## Re-use old recorded data
+## Re-use old recorded data (ROSBAG & GSDB)
 
-Since V3.3.4 it is possible to record rosbags that also publish the raw byte data received from the ADMA by UDP. Therefore it subscribes to the topic `genesys/adma/data_recorded`. For recording the raw data the following steps have to be executed:
-
-1. Switching the parameter `mode` to `record`.
-
-This will add the additional topic and also start the recording of the rosbag. The process can be closed by pressing Ctrl+C after it's finished. 
+Since V3.3.4 it was possible to record rosbags that also publish the raw byte data received from the ADMA by UDP. Therefore it subscribes to the topic `genesys/adma/data_recorded`.
+With the latest Release, this raw data recording was replaced with the `*.gsdb` file that can also be used for ADMA-PP without ROS2. 
 
 ### Replay recorded rosbag
 For replaying the raw data the following parameters have to be configured:
@@ -133,5 +121,10 @@ For replaying the raw data the following parameters have to be configured:
 2. modify the `rosbag_file_arg` in `launch/adma_driver.launch.py` to ensure it contains the correct path to your recorded rosbag
 3. start again with `ros2 launch adma_ros2_driver adma_driver.launch.py`.
 
+### Replay recorded GSDB files
+To replay those files, you have 2 options: 
+1. use the specific launch file of the converter tool (see description in Tools above)
+2. use the new `gsdb_replay.launch.py` file as also the associated `gsdb_replay_config.yaml`.
+This will start the data_server to load the GSDB-file and stream it by UDP as also the adma_driver to re-process the raw data. If you additionaly want to convert the GSDB to a rosbag, you can set the responsive flag in the launch file to `True`.
 ### Remapping of ROS topics
 If you want to modify the topics for some reason (e.g. make it compatible to your own ros nodes), you can modify the `remappings=[..]` entries of the `launch.py`-file. Here you just have to change the value of the right string to let the driver publish to the desired topic.

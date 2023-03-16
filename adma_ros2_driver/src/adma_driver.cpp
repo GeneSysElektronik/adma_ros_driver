@@ -57,14 +57,8 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
   pub_heading_ = this->create_publisher<std_msgs::msg::Float64>("adma/heading", 1);
   pub_velocity_ = this->create_publisher<std_msgs::msg::Float64>("adma/velocity", 1);
 
-  if (mode_ == MODE_RECORD) {
-    // when recording we receive data from UDP and publish it to the recording topic
-    RCLCPP_INFO(get_logger(), " publish recording topic..");
-    pub_adma_data_recorded_ =
-      this->create_publisher<adma_ros_driver_msgs::msg::AdmaDataRaw>("adma/data_recorded", 1);
-    initializeUDP(param_address);
-    updateLoop();
-  } else if (mode_ == MODE_REPLAY) {
+  // deprecated mode, only for usage with old recorded rosbags
+  if (mode_ == MODE_REPLAY) {
     // if we use recorded data, create desired subscriber and no UDP connection is required
     sub_raw_data_ = this->create_subscription<adma_ros_driver_msgs::msg::AdmaDataRaw>(
       "adma/data_recorded", 10,
@@ -223,9 +217,6 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
       raw_data_msg.raw_data.push_back(recv_buf[i]);
     }
     pub_adma_data_raw_->publish(raw_data_msg);
-    if (mode_ == MODE_RECORD) {
-      pub_adma_data_recorded_->publish(raw_data_msg);
-    }
   }
 
   // publish the messages

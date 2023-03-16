@@ -13,7 +13,6 @@
 #include "adma_ros_driver_msgs/msg/adma_status.hpp"
 
 #define MODE_DEFAULT "default"
-#define MODE_RECORD "record"
 #define MODE_REPLAY "replay"
 
 #pragma once
@@ -51,7 +50,6 @@ private:
   // publisher
   rclcpp::Publisher<adma_ros_driver_msgs::msg::AdmaData>::SharedPtr pub_adma_data_;
   rclcpp::Publisher<adma_ros_driver_msgs::msg::AdmaDataRaw>::SharedPtr pub_adma_data_raw_;
-  rclcpp::Publisher<adma_ros_driver_msgs::msg::AdmaDataRaw>::SharedPtr pub_adma_data_recorded_;
   rclcpp::Publisher<adma_ros_driver_msgs::msg::AdmaDataScaled>::SharedPtr pub_adma_data_scaled_;
   rclcpp::Publisher<adma_ros_driver_msgs::msg::AdmaStatus>::SharedPtr pub_adma_status_;
   rclcpp::Publisher<sensor_msgs::msg::NavSatFix>::SharedPtr pub_navsat_fix_;

@@ -6,8 +6,8 @@
 
 #include <rclcpp_components/register_node_macro.hpp>
 /**
- * @brief This helper class can "simulate" the ADMA to send its message stream.
- * can be used to validate the correct parsing of the driver node
+ * @brief This helper class can replay raw ADMA data (GSDB file) and send it via UDP
+ * to re-process the data with ROS
  */
 namespace genesys
 {
