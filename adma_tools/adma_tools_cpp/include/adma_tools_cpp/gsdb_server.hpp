@@ -5,11 +5,13 @@
 
 namespace genesys
 {
-class DataServer : public rclcpp::Node
+namespace tools
+{
+class GSDBServer : public rclcpp::Node
 {
 public:
-  explicit DataServer(const rclcpp::NodeOptions & options);
-  virtual ~DataServer();
+  explicit GSDBServer(const rclcpp::NodeOptions & options);
+  virtual ~GSDBServer();
 
 private:
   void updateLoop();
@@ -26,4 +28,5 @@ private:
   unsigned long msgCounter_;
   unsigned long protocolLength_;
 };
+}  // end namespace tools
 }  // end namespace genesys

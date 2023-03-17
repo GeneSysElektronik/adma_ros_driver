@@ -46,7 +46,7 @@ def generate_launch_description():
         if mode == 'replay':
                 replay_arg = DeclareLaunchArgument('replay_mode', default_value='True')
                 raw_data_topic = '/genesys/adma/data_recorded'
-                rosbag_file_arg = DeclareLaunchArgument('rosbag_path', default_value='/home/rschilli/Documents/GeneSys/rosbags_ros2/ROS2_Arbeitsplatzs')
+                rosbag_file_arg = DeclareLaunchArgument('rosbag_path', default_value='/home/rschilli/Documents/GeneSys/rosbags_ros2/ROS2_Arbeitsplatz')
 
         adma_driver = Node(
                 package='adma_ros2_driver',

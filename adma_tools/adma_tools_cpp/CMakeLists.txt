@@ -21,6 +21,7 @@ include_directories(include)
 
 add_library(${PROJECT_NAME}_node SHARED
   src/bag2gsdb_converter.cpp
+  src/gsdb_server.cpp
 )
 
 ament_target_dependencies(${PROJECT_NAME}_node
@@ -34,6 +35,11 @@ rclcpp_components_register_node(${PROJECT_NAME}_node
   EXECUTABLE bag2gsdb_converter
 )
 
+rclcpp_components_register_node(${PROJECT_NAME}_node
+  PLUGIN "genesys::tools::GSDBServer"
+  EXECUTABLE gsdb_server
+)
+
 install(TARGETS ${PROJECT_NAME}_node
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
@@ -45,7 +51,7 @@ install(DIRECTORY include/
   DESTINATION include)
 
 # install additional files of folders
-install(DIRECTORY launch
+install(DIRECTORY launch config
   DESTINATION share/${PROJECT_NAME})
 
 if(BUILD_TESTING)

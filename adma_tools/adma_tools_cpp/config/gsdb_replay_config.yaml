@@ -12,9 +12,10 @@ genesys:
         adma: 'adma'
         adma_status: 'adma_status'
         raw_data: 'data_raw'
-  data_server:
+  gsdb_server:
     ros__parameters:
       ip_address: '127.0.0.1'
       port: 1040
       frequency: 100
       protocol_version: 'v3.3.4'
+      gsdb_file: '/home/rschilli/Documents/GeneSys/rosbags_ros2/ROS2_Arbeitsplatz/raw_data.gsdb'

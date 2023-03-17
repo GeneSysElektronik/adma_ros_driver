@@ -1,4 +1,4 @@
-#include "adma_ros2_driver/adma_data_server.hpp"
+#include "adma_tools_cpp/gsdb_server.hpp"
 
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -11,8 +11,10 @@
  */
 namespace genesys
 {
-DataServer::DataServer(const rclcpp::NodeOptions & options)
-: Node("data_server", options), 
+namespace tools
+{
+GSDBServer::GSDBServer(const rclcpp::NodeOptions & options)
+: Node("gsdb_server", options), 
 send_socket_fd_(-1), 
 socket_address_(), 
 address_length_(4),
@@ -52,13 +54,13 @@ msgCounter_(0)
   updateLoop();
 }
 
-DataServer::~DataServer() 
+GSDBServer::~GSDBServer() 
 { 
   ::shutdown(send_socket_fd_, SHUT_RDWR); 
   RCLCPP_INFO(get_logger(), "GSDB file streaming done.. Read %ld messages from file", msgCounter_);
 }
 
-void DataServer::updateLoop()
+void GSDBServer::updateLoop()
 {
   char buffer[856];
   while (rclcpp::ok()) {
@@ -74,5 +76,6 @@ void DataServer::updateLoop()
   }
   
 }
+}  // end namespace tools
 }  // end namespace genesys
-RCLCPP_COMPONENTS_REGISTER_NODE(genesys::DataServer)
+RCLCPP_COMPONENTS_REGISTER_NODE(genesys::tools::GSDBServer)
