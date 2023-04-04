@@ -12,9 +12,6 @@
 #include "adma_ros_driver_msgs/msg/adma_data_scaled.hpp"
 #include "adma_ros_driver_msgs/msg/adma_status.hpp"
 
-#define MODE_DEFAULT "default"
-#define MODE_REPLAY "replay"
-
 #pragma once
 
 namespace genesys
@@ -29,7 +26,6 @@ private:
   void initializeUDP(std::string adma_address);
   void updateLoop();
   void parseData(std::array<char, 856> recv_buf);
-  void recordedDataCB(adma_ros_driver_msgs::msg::AdmaDataRaw::SharedPtr data_msg);
 
   // Socket file descriptor for receiving from adma
   int rcv_sock_fd_;
@@ -43,8 +39,6 @@ private:
   size_t len_ = 0;
   /** \brief Check the timings */
   bool performance_check_ = true;
-  // the mode this driver node is used
-  std::string mode_;
   std::string protocol_version_;
 
   // publisher
@@ -56,9 +50,6 @@ private:
   rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr pub_imu_;
   rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr pub_heading_;
   rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr pub_velocity_;
-
-  // subscriber
-  rclcpp::Subscription<adma_ros_driver_msgs::msg::AdmaDataRaw>::SharedPtr sub_raw_data_;
 
   // frame_ids for the ros msgs
   std::string gnss_frame_;

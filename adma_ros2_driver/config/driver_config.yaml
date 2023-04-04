@@ -5,7 +5,6 @@ genesys:
       destination_port: 11021
       use_performance_check: False
       protocol_version: 'v3.3.4'
-      mode: 'default' # available modes are: default/replay
       frame_ids:
         navsatfix: 'gnss_link'
         imu: 'imu_link'

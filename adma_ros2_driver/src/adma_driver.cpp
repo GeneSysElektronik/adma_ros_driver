@@ -20,8 +20,6 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
   adma_port_(0)
 {
   std::string param_address = this->declare_parameter("destination_ip", "0.0.0.0");
-  mode_ = this->declare_parameter("mode", "default");
-  RCLCPP_INFO(get_logger(), "Working mode: %s", mode_.c_str());
   adma_port_ = this->declare_parameter("destination_port", 1040);
 
   performance_check_ = this->declare_parameter("use_performance_check", false);
@@ -57,16 +55,8 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
   pub_heading_ = this->create_publisher<std_msgs::msg::Float64>("adma/heading", 1);
   pub_velocity_ = this->create_publisher<std_msgs::msg::Float64>("adma/velocity", 1);
 
-  // deprecated mode, only for usage with old recorded rosbags
-  if (mode_ == MODE_REPLAY) {
-    // if we use recorded data, create desired subscriber and no UDP connection is required
-    sub_raw_data_ = this->create_subscription<adma_ros_driver_msgs::msg::AdmaDataRaw>(
-      "adma/data_recorded", 10,
-      std::bind(&ADMADriver::recordedDataCB, this, std::placeholders::_1));
-  } else if (mode_ == MODE_DEFAULT) {
-    initializeUDP(param_address);
-    updateLoop();
-  }
+  initializeUDP(param_address);
+  updateLoop();
 }
 
 ADMADriver::~ADMADriver()
@@ -118,15 +108,6 @@ void ADMADriver::initializeUDP(std::string adma_address)
     throw rclcpp::exceptions::InvalidParameterValueException(
       "Could not bind UDP socket with: \"" + adma_address + ":" + rcv_port_str + "\"");
   }
-}
-
-void ADMADriver::recordedDataCB(adma_ros_driver_msgs::msg::AdmaDataRaw::SharedPtr data_msg)
-{
-  std::array<char, 856> recv_buf;
-  for (size_t i = 0; i < data_msg->size; i++) {
-    recv_buf[i] = data_msg->raw_data[i];
-  }
-  parseData(recv_buf);
 }
 
 void ADMADriver::parseData(std::array<char, 856> recv_buf)

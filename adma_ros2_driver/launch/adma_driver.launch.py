@@ -14,7 +14,7 @@ def generate_launch_description():
         driver_config = PathJoinSubstitution([FindPackageShare('adma_ros2_driver'), 'config', 'driver_config.yaml'])
         driver_config_arg = DeclareLaunchArgument('driver_config', default_value=driver_config)
         log_level_arg = DeclareLaunchArgument('log_level', default_value='INFO')
-        rosbag_file_arg = DeclareLaunchArgument('rosbag_path', default_value='')
+        rosbag_file_arg = DeclareLaunchArgument('rosbag_path', default_value='./')
 
         ### parameter for GSDB logging, used for ADMA-PP ####
         log_gsdb_arg = DeclareLaunchArgument('log_gsdb', default_value='True')
@@ -33,20 +33,6 @@ def generate_launch_description():
                 '/genesys/adma/heading',
                 '/genesys/adma/velocity'
         ]
-
-        ### parameter for replaying rosbags ###
-        # read specific params of previos loaded config file
-        driver_config_file = os.path.join(get_package_share_directory('adma_ros2_driver') , 'config', 'driver_config.yaml')
-        with open(driver_config_file) as f:
-                parameters = yaml.load(f, Loader=yaml.FullLoader)
-        # extract mode
-        mode = parameters['genesys']['adma_ros2_driver']['ros__parameters']['mode']
-        # If mode = replay then it will use this arg to start the rosbag play
-        replay_arg = DeclareLaunchArgument('replay_mode', default_value='False')
-        if mode == 'replay':
-                replay_arg = DeclareLaunchArgument('replay_mode', default_value='True')
-                raw_data_topic = '/genesys/adma/data_recorded'
-                rosbag_file_arg = DeclareLaunchArgument('rosbag_path', default_value='/home/rschilli/Documents/GeneSys/rosbags_ros2/ROS2_Arbeitsplatz')
 
         adma_driver = Node(
                 package='adma_ros2_driver',
@@ -75,14 +61,6 @@ def generate_launch_description():
                 condition=IfCondition(LaunchConfiguration('record_rosbag'))
         )
 
-        rosbag_player = ExecuteProcess(
-                cmd=['ros2', 'bag', 'play', LaunchConfiguration('rosbag_path')],
-                output='screen',
-                condition=IfCondition(LaunchConfiguration('replay_mode')),
-                on_exit=[LogInfo(msg=["Rosbag replay done. Stopping everything..."]),
-                Shutdown(reason='launch is shutting down')],
-        )
-
         gsdb_logger = Node(
                 package='adma_tools_cpp',
                 executable='bag2gsdb_converter',
@@ -103,12 +81,10 @@ def generate_launch_description():
                 driver_config_arg,
                 log_level_arg,
                 record_ros_bag_arg,
-                replay_arg,
                 rosbag_file_arg,
                 log_gsdb_arg,
                 # #  nodes
                 adma_driver,
                 rosbag_recorder,
-                rosbag_player,
                 gsdb_logger
         ])
