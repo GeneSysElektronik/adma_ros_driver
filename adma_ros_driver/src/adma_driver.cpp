@@ -10,11 +10,6 @@
 #include <arpa/inet.h>
 #include "../include/adma_ros_driver/parser/adma2ros_parser.hpp"
 
-// definition of some constants
-#define MODE_DEFAULT "default"
-#define MODE_RECORD "record"
-#define MODE_REPLAY "replay"
-
 class ADMADriver {
 
         public:
@@ -24,25 +19,21 @@ class ADMADriver {
                void initializeUDP();
                 void updateLoop();
                 void parseData(std::array<char, 856> recv_buf);
-                void recordedDataCB(adma_ros_driver_msgs::AdmaDataRaw dataMsg);
 
         private:
                 ros::Publisher _pubAdmaData;
                 ros::Publisher _pubAdmaDataScaled;
                 ros::Publisher _pubAdmaDataRaw;
-                ros::Publisher _pubAdmaDataRecorded;
                 ros::Publisher _pubAdmaStatus;
                 ros::Publisher _pubHeading;
                 ros::Publisher _pubVelocity;
                 ros::Publisher _pubNavSatFix;
                 ros::Publisher _pubImu;
-                ros::Subscriber _subDataRaw;
                 // ROS parameters
                 std::string _param_adma_ip;
                 int _param_adma_port;
                 bool _use_performance_check;
                 std::string _protocol_version;
-                std::string _mode;
                 std::string _frame_id_navsatfix;
                 std::string _frame_id_imu;
                 std::string _frame_id_adma;
@@ -74,7 +65,6 @@ ADMADriver::ADMADriver(ros::NodeHandle* n)
         ros::param::get("/adma_driver/destination_port", _param_adma_port);
         ros::param::get("/adma_driver/use_performance_check", _use_performance_check);
         ros::param::get("/adma_driver/protocol_version", _protocol_version);
-        ros::param::get("/adma_driver/mode", _mode);
         ros::param::get("/adma_driver/frame_id_navsatfix", _frame_id_navsatfix);
         ros::param::get("/adma_driver/frame_id_imu", _frame_id_imu);
         ros::param::get("/adma_driver/frame_id_adma", _frame_id_adma);
@@ -102,23 +92,9 @@ ADMADriver::ADMADriver(ros::NodeHandle* n)
         _pubAdmaDataRaw = n->advertise<adma_ros_driver_msgs::AdmaDataRaw>("adma/data_raw", 10);
 
         _parser = new ADMA2ROSParser();
-
-        if(_mode == MODE_RECORD)
-        {
-                // when recording we receive data from UDP and publish it to the recording topic
-                ROS_INFO(" publish recording topic..");
-                _pubAdmaDataRecorded = n->advertise<adma_ros_driver_msgs::AdmaDataRaw>("adma/data_recorded", 10);
-                initializeUDP();
-                updateLoop();
-        }
-        else if(_mode == MODE_REPLAY)
-        {
-                // if we use recorded data, create desired subscriber and no UDP connection is required
-                _subDataRaw = n->subscribe("adma/data_recorded", 10, &ADMADriver::recordedDataCB, this);
-        }else if(_mode == MODE_DEFAULT){
-                initializeUDP();
-                updateLoop();
-        }
+        
+        initializeUDP();
+        updateLoop();
 }
 
 void ADMADriver::initializeUDP()
@@ -292,24 +268,9 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
 
         // publish adma custom messages
         _pubAdmaDataRaw.publish(rawDataMsg);
-        if(_mode == MODE_RECORD){
-                _pubAdmaDataRecorded.publish(rawDataMsg);
-        }
 
         // increase message counter for ROS header
         _seq++;
-}
-
-void ADMADriver::recordedDataCB(adma_ros_driver_msgs::AdmaDataRaw dataMsg)
-{
-        //convert raw data (byte array) to expected char array
-        std::array<char, 856> recv_buf;
-        for (size_t i = 0; i < dataMsg.size; i++)
-        {
-                recv_buf[i] = dataMsg.raw_data[i];
-        }
-        parseData(recv_buf);
-
 }
 
 int main(int argc, char **argv)

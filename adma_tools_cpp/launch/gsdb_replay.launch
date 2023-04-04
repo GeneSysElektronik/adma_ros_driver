@@ -1,0 +1,28 @@
+<launch> 
+
+   <!-- parameters for GSDB server -->
+   <arg name="port" default="1040" doc="local port for GSDB UDP server" />
+   <arg name="ip_address" default="localhost" doc="local address for GSDB UDP server" />
+   <arg name="frequency" default="100" doc="frequency in Hz to send UDP packets" />
+   <arg name="protocol_version" default="v3.3.4" doc="The desired protocol version of the ADMA UDP data packets" />
+   <arg name="gsdb_file" default="/home/rschilli/Documents/230202_ONL_ABP_ALL.gsdb" doc="the desired GSDB file to replay" />
+   
+
+   <!-- parameters for ADMA driver -->
+   <include file="$(find adma_ros_driver)/launch/ADMA_pub_Ethernet.launch">
+      <arg name="destination_port" default="1040" doc="ADMA Webinterface -> Data -> Ethernet data output -> Destination Port" />
+      <arg name="destination_ip" default="localhost" doc="ADMA Webinterface -> Data -> Ethernet data output -> Destination IP" />
+      <arg name="record_rosbag" default="true" doc="True if you want to create a rosbag" />
+      <arg name="log_gsdb" default="false" doc="True if you want to create a gsdb logfile for post-processing" />
+   </include>
+   
+   <!-- start ADMA Driver node -->
+   <node name="gsdbserver" type="gsdb_server" pkg="adma_tools_cpp" output="screen" required="True">
+      <!-- add parameters -->
+      <param name="/port" type="int" value="$(arg port)"/>
+      <param name="/ip_address" type="string" value="$(arg ip_address)"/>
+      <param name="/frequency" type="int" value="$(arg frequency)"/>
+      <param name="/protocol_version" type="string" value="$(arg protocol_version)"/>
+      <param name="/gsdb_file" type="string" value="$(arg gsdb_file)"/>
+   </node>   
+</launch>

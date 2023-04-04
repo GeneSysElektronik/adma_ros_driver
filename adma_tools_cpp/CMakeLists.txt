@@ -42,3 +42,13 @@ target_link_libraries(bag2gsdb_converter
   ${PROJECT_NAME}
   ${catkin_LIBRARIES}
 )
+
+add_executable(gsdb_server
+  src/gsdb_server.cpp
+)
+
+add_dependencies(gsdb_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME})
+target_link_libraries(gsdb_server
+  ${PROJECT_NAME}
+  ${catkin_LIBRARIES}
+)
