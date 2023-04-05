@@ -105,7 +105,7 @@ If an individual file naming needs to be used, the `adma_tools_py/adma_tools_py/
 
 
 ### BAG2GSDB-Converter
-This tool subscribes to the `/genesys/adma/data_recorded` topic and generates a `*.gsdb`. By remapping it is also possible to subscribe to the `/genesys/adma/data_raw` topic. 
+This tool subscribes to the `/genesys/adma/data_raw` topic and generates a `*.gsdb`. By remapping it is also possible to subscribe to the `/genesys/adma/data_recorded` topic (e.g. if you already have recorded rosbags with the deprecated `data_recorded` topic). 
 
 ```bash
 # ensure you have sourced the workspace also in this terminal
@@ -119,7 +119,7 @@ Additionally you can inject the `replay_rate` in the launchfile to speed-up the 
 
 NOTE: Increasing the replay_rate depends on the computer performance. It might lead to data losses. 
 Therefore at the end of every process a log is output that contains the amount of received messages. 
-This value can be compared with the value that is defined in the `metadata.yaml` (`message_count` entry at the `/genesys/adma/data_recorded` topic). 
+This value can be compared with the value that is defined in the `metadata.yaml` (`message_count` entry at the `/genesys/adma/data_recorded` / `/genesys/adma/data_raw` topic). 
 
 ![Rosbag Replay](https://user-images.githubusercontent.com/105273302/230113644-8de6f0a6-aa27-4371-835d-bbb5a706c202.jpg)
 

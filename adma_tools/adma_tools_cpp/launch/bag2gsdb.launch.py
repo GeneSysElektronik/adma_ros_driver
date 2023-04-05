@@ -19,7 +19,11 @@ def generate_launch_description():
                 name='bag2gsdb',
                 parameters=[{
                 'rosbag_path': LaunchConfiguration('rosbag_path')
-                }]
+                }],
+                remappings=[
+                        # left=from / right=to (so publish the origin left on the new right topic)
+                        ("adma/data_raw", "adma/data_recorded"),
+                ]
         )
 
         rosbag_player = ExecuteProcess(

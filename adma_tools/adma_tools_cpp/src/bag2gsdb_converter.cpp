@@ -26,7 +26,7 @@ msgCounter_(0)
         gdsbFile_ = std::ofstream(filePath_);
         
         subRawData_ = create_subscription<adma_ros_driver_msgs::msg::AdmaDataRaw>(
-                "/genesys/adma/data_recorded", 10, std::bind(&Bag2GSDBConverter::rawDataCallback,
+                "/genesys/adma/data_raw", 10, std::bind(&Bag2GSDBConverter::rawDataCallback,
                 this, std::placeholders::_1));
 }
 
