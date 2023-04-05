@@ -22,7 +22,7 @@ def generate_launch_description():
                 }],
                 remappings=[
                         # left=from / right=to (so publish the origin left on the new right topic)
-                        ("adma/data_raw", "adma/data_recorded"),
+                        # ("adma/data_raw", "adma/data_recorded"),
                 ]
         )
 
