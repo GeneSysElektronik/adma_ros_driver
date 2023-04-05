@@ -72,15 +72,17 @@ To switch between those, the`protocol_version` parameter in the `config/driver_c
 The ADMA ROS driver is able to output two different file formats. 
 
 ### GeneSys Binary Raw Data (.gsdb)
-The ADMA ROS driver is automatically saving the raw binary ADMA data as `*.gsdb` file in the directory of the executed terminal. This data format can be used as shown in the graphic `Integration of GSDB in the GeneSys Toolchain`. 
+The ADMA ROS driver is automatically saving the raw binary ADMA data as `*.gsdb` file in the directory of the executed terminal. The .gsdb data format is completly integrated in the GeneSys toolchain as shown in the following graphic.
+
+![Integration of GSDB in the GeneSys Toolchain](https://user-images.githubusercontent.com/105273302/230074686-9b17826a-16d4-4f6a-83f7-8cd19daad914.jpg)
 
 We recommend to always log .gsdb files for support purposes and for being able to reprocess the raw data with new ROS driver updates. If not needed, the logging can be disabled in the 
 `adma_driver.launch.py` by setting `log_gsdb_arg` to False. 
 
 ### Rosbag 
-For additionally recording a rosbag file, the `record_rosbag` argument in the `adma_driver.launch.py` have to be set to True. By adapting the list `recorded_topics`, the ROS topics getting written to 
-the bag file can be chosen. 
+For additionally recording a rosbag file, the `record_rosbag` argument in the `adma_driver.launch.py` have to be set to True. By adapting the list `recorded_topics`, the ROS topics getting written to the bag file can be chosen. 
 
+![Online](https://user-images.githubusercontent.com/105273302/230114010-a0ac709a-d661-4f85-8706-973f8e96820c.jpg)
 
 ## Tools
 Additional Tools can be found in the `adma_tools` folder and are separated based on their implementation language (`adma_tools_cpp`/ `adma_tools_py`).
@@ -98,6 +100,8 @@ ros2 run adma_tools_py ros2csv
 
 This will create a `recorded_data.csv` in the destination where the `ros2 run adma_tools_py ros2csv` command is executed.
 If an individual file naming needs to be used, the `adma_tools_py/adma_tools_py/ros2csv_converter.py` file can be adapted (self.filename = '').
+
+![Convert CSV](https://user-images.githubusercontent.com/105273302/230113444-051bd497-82c2-4ae9-b0ee-10c916006a9a.jpg)
 
 
 ### BAG2GSDB-Converter
@@ -117,6 +121,8 @@ NOTE: Increasing the replay_rate depends on the computer performance. It might l
 Therefore at the end of every process a log is output that contains the amount of received messages. 
 This value can be compared with the value that is defined in the `metadata.yaml` (`message_count` entry at the `/genesys/adma/data_recorded` topic). 
 
+![Rosbag Replay](https://user-images.githubusercontent.com/105273302/230113644-8de6f0a6-aa27-4371-835d-bbb5a706c202.jpg)
+
 ### Replay recorded GSDB files
 For reprocessing .gsdb files, the path to the desired .gsdb file has to be configured in the `gsdb_replay_config.yaml` at the parameter `gsdb_file`. After that, the `gsdb_replay.launch.py` tool can be launched.
 The tool creates a .db3 file in the location where the tool was launched via terminal.  
@@ -124,5 +130,4 @@ The tool creates a .db3 file in the location where the tool was launched via ter
 ```bash
 ros2 launch adma_tools_cpp gsdb_replay.launch.py
 ```
-
-All ROS Execution Possibilities are shown in the graphic `ROS Execution Possibilities`.
+![GSDB Replay](https://user-images.githubusercontent.com/105273302/230113700-73885377-8fa8-4456-91e6-786bbe50ad6b.jpg)
