@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import rospy
-from adma_msgs.msg import AdmaDataScaled, AdmaStatus
+from adma_ros_driver_msgs.msg import AdmaDataScaled, AdmaStatus
 import message_filters
 
 class Ros2CSVConverter():
@@ -62,42 +62,42 @@ class Ros2CSVConverter():
             {admaMsg.poi_1.acc_body.x}, {admaMsg.poi_1.acc_body.y}, {admaMsg.poi_1.acc_body.z},\
             {admaMsg.poi_1.acc_hor.x}, {admaMsg.poi_1.acc_hor.y}, {admaMsg.poi_1.acc_hor.z},\
             {admaMsg.poi_1.inv_path_radius}, {admaMsg.poi_1.side_slip_angle}, {admaMsg.poi_1.dist_trav}, {admaMsg.poi_1.ins_height},\
-            {admaMsg.poi_1.ins_lat_abs}, {admaMsg.poi_1.ins_lon_abs}, {admaMsg.poi_1.ins_pos_rel_x}, {admaMsg.poi_1.ins_pos_rel_y},\
+            {admaMsg.poi_1.ins_lat_abs}, {admaMsg.poi_1.ins_long_abs}, {admaMsg.poi_1.ins_pos_rel_x}, {admaMsg.poi_1.ins_pos_rel_y},\
             {admaMsg.poi_1.ins_vel_hor.x}, {admaMsg.poi_1.ins_vel_hor.y}, {admaMsg.poi_1.ins_vel_hor.z},\
             {admaMsg.poi_2.acc_body.x}, {admaMsg.poi_2.acc_body.y}, {admaMsg.poi_2.acc_body.z},\
             {admaMsg.poi_2.acc_hor.x}, {admaMsg.poi_2.acc_hor.y}, {admaMsg.poi_2.acc_hor.z},\
             {admaMsg.poi_2.inv_path_radius}, {admaMsg.poi_2.side_slip_angle}, {admaMsg.poi_2.dist_trav}, {admaMsg.poi_2.ins_height},\
-            {admaMsg.poi_2.ins_lat_abs}, {admaMsg.poi_2.ins_lon_abs}, {admaMsg.poi_2.ins_pos_rel_x}, {admaMsg.poi_2.ins_pos_rel_y},\
+            {admaMsg.poi_2.ins_lat_abs}, {admaMsg.poi_2.ins_long_abs}, {admaMsg.poi_2.ins_pos_rel_x}, {admaMsg.poi_2.ins_pos_rel_y},\
             {admaMsg.poi_2.ins_vel_hor.x}, {admaMsg.poi_2.ins_vel_hor.y}, {admaMsg.poi_2.ins_vel_hor.z},\
             {admaMsg.poi_3.acc_body.x}, {admaMsg.poi_3.acc_body.y}, {admaMsg.poi_3.acc_body.z},\
             {admaMsg.poi_3.acc_hor.x}, {admaMsg.poi_3.acc_hor.y}, {admaMsg.poi_3.acc_hor.z},\
             {admaMsg.poi_3.inv_path_radius}, {admaMsg.poi_3.side_slip_angle}, {admaMsg.poi_3.dist_trav}, {admaMsg.poi_3.ins_height},\
-            {admaMsg.poi_3.ins_lat_abs}, {admaMsg.poi_3.ins_lon_abs}, {admaMsg.poi_3.ins_pos_rel_x}, {admaMsg.poi_3.ins_pos_rel_y},\
+            {admaMsg.poi_3.ins_lat_abs}, {admaMsg.poi_3.ins_long_abs}, {admaMsg.poi_3.ins_pos_rel_x}, {admaMsg.poi_3.ins_pos_rel_y},\
             {admaMsg.poi_3.ins_vel_hor.x}, {admaMsg.poi_3.ins_vel_hor.y}, {admaMsg.poi_3.ins_vel_hor.z},\
             {admaMsg.poi_4.acc_body.x}, {admaMsg.poi_4.acc_body.y}, {admaMsg.poi_4.acc_body.z},\
             {admaMsg.poi_4.acc_hor.x}, {admaMsg.poi_4.acc_hor.y}, {admaMsg.poi_4.acc_hor.z},\
             {admaMsg.poi_4.inv_path_radius}, {admaMsg.poi_4.side_slip_angle}, {admaMsg.poi_4.dist_trav}, {admaMsg.poi_4.ins_height},\
-            {admaMsg.poi_4.ins_lat_abs}, {admaMsg.poi_4.ins_lon_abs}, {admaMsg.poi_4.ins_pos_rel_x}, {admaMsg.poi_4.ins_pos_rel_y},\
+            {admaMsg.poi_4.ins_lat_abs}, {admaMsg.poi_4.ins_long_abs}, {admaMsg.poi_4.ins_pos_rel_x}, {admaMsg.poi_4.ins_pos_rel_y},\
             {admaMsg.poi_4.ins_vel_hor.x}, {admaMsg.poi_4.ins_vel_hor.y}, {admaMsg.poi_4.ins_vel_hor.z},\
             {admaMsg.poi_5.acc_body.x}, {admaMsg.poi_5.acc_body.y}, {admaMsg.poi_5.acc_body.z},\
             {admaMsg.poi_5.acc_hor.x}, {admaMsg.poi_5.acc_hor.y}, {admaMsg.poi_5.acc_hor.z},\
             {admaMsg.poi_5.inv_path_radius}, {admaMsg.poi_5.side_slip_angle}, {admaMsg.poi_5.dist_trav}, {admaMsg.poi_5.ins_height},\
-            {admaMsg.poi_5.ins_lat_abs}, {admaMsg.poi_5.ins_lon_abs}, {admaMsg.poi_5.ins_pos_rel_x}, {admaMsg.poi_5.ins_pos_rel_y},\
+            {admaMsg.poi_5.ins_lat_abs}, {admaMsg.poi_5.ins_long_abs}, {admaMsg.poi_5.ins_pos_rel_x}, {admaMsg.poi_5.ins_pos_rel_y},\
             {admaMsg.poi_5.ins_vel_hor.x}, {admaMsg.poi_5.ins_vel_hor.y}, {admaMsg.poi_5.ins_vel_hor.z},\
             {admaMsg.poi_6.acc_body.x}, {admaMsg.poi_6.acc_body.y}, {admaMsg.poi_6.acc_body.z},\
             {admaMsg.poi_6.acc_hor.x}, {admaMsg.poi_6.acc_hor.y}, {admaMsg.poi_6.acc_hor.z},\
             {admaMsg.poi_6.inv_path_radius}, {admaMsg.poi_6.side_slip_angle}, {admaMsg.poi_6.dist_trav}, {admaMsg.poi_6.ins_height},\
-            {admaMsg.poi_6.ins_lat_abs}, {admaMsg.poi_6.ins_lon_abs}, {admaMsg.poi_6.ins_pos_rel_x}, {admaMsg.poi_6.ins_pos_rel_y},\
+            {admaMsg.poi_6.ins_lat_abs}, {admaMsg.poi_6.ins_long_abs}, {admaMsg.poi_6.ins_pos_rel_x}, {admaMsg.poi_6.ins_pos_rel_y},\
             {admaMsg.poi_6.ins_vel_hor.x}, {admaMsg.poi_6.ins_vel_hor.y}, {admaMsg.poi_6.ins_vel_hor.z},\
             {admaMsg.poi_7.acc_body.x}, {admaMsg.poi_7.acc_body.y}, {admaMsg.poi_7.acc_body.z},\
             {admaMsg.poi_7.acc_hor.x}, {admaMsg.poi_7.acc_hor.y}, {admaMsg.poi_7.acc_hor.z},\
             {admaMsg.poi_7.inv_path_radius}, {admaMsg.poi_7.side_slip_angle}, {admaMsg.poi_7.dist_trav}, {admaMsg.poi_7.ins_height},\
-            {admaMsg.poi_7.ins_lat_abs}, {admaMsg.poi_7.ins_lon_abs}, {admaMsg.poi_7.ins_pos_rel_x}, {admaMsg.poi_7.ins_pos_rel_y},\
+            {admaMsg.poi_7.ins_lat_abs}, {admaMsg.poi_7.ins_long_abs}, {admaMsg.poi_7.ins_pos_rel_x}, {admaMsg.poi_7.ins_pos_rel_y},\
             {admaMsg.poi_7.ins_vel_hor.x}, {admaMsg.poi_7.ins_vel_hor.y}, {admaMsg.poi_7.ins_vel_hor.z},\
             {admaMsg.poi_8.acc_body.x}, {admaMsg.poi_8.acc_body.y}, {admaMsg.poi_8.acc_body.z},\
             {admaMsg.poi_8.acc_hor.x}, {admaMsg.poi_8.acc_hor.y}, {admaMsg.poi_8.acc_hor.z},\
             {admaMsg.poi_8.inv_path_radius}, {admaMsg.poi_8.side_slip_angle}, {admaMsg.poi_8.dist_trav}, {admaMsg.poi_8.ins_height},\
-            {admaMsg.poi_8.ins_lat_abs}, {admaMsg.poi_8.ins_lon_abs}, {admaMsg.poi_8.ins_pos_rel_x}, {admaMsg.poi_8.ins_pos_rel_y},\
+            {admaMsg.poi_8.ins_lat_abs}, {admaMsg.poi_8.ins_long_abs}, {admaMsg.poi_8.ins_pos_rel_x}, {admaMsg.poi_8.ins_pos_rel_y},\
             {admaMsg.poi_8.ins_vel_hor.x}, {admaMsg.poi_8.ins_vel_hor.y}, {admaMsg.poi_8.ins_vel_hor.z},\
             {admaMsg.status.status_gnss_mode}, {admaMsg.status.status_standstill}, {admaMsg.status.status_skidding}, {admaMsg.status.status_external_vel_out},\
             {admaMsg.status.status_trig_gnss}, {admaMsg.status.status_signal_in3}, {admaMsg.status.status_signal_in2}, {admaMsg.status.status_signal_in1},\
