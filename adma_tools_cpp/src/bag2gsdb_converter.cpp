@@ -12,6 +12,8 @@ class Bag2GSDBConverter
                 void rawDataCallback(adma_ros_driver_msgs::AdmaDataRaw newMsg);
 
                 ros::Subscriber subRawData_;
+                std::string bagfilePath_;
+                std::string logPath_;
                 std::string filePath_;
                 std::ofstream gdsbFile_;
                 unsigned long msgCounter_;
@@ -19,19 +21,20 @@ class Bag2GSDBConverter
 
 Bag2GSDBConverter::Bag2GSDBConverter(ros::NodeHandle* n)
 {
-        ros::param::get("/bag2gsdb/rosbag_path", filePath_);
-        if(filePath_.empty()){
+        ros::param::get("/bag2gsdb/rosbag_path", bagfilePath_);
+        ros::param::get("/bag2gsdb/log_path", logPath_);
+        if(bagfilePath_.empty()){
                 // if no filename was defined, create a new file with timestamp as name to prevent overwriting files..
                 auto now = std::chrono::system_clock::now();
                 auto in_time_t = std::chrono::system_clock::to_time_t(now);
                 std::stringstream datetime;
                 datetime << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d-%H-%M-%S");
-                filePath_ = datetime.str() + ".gsdb";
+                filePath_ = logPath_ + "/" + datetime.str() + ".gsdb";
                 
         }else{
                 //otherwise create a file next to the *db3 rosbag file
-                filePath_.replace(filePath_.find(".bag"), sizeof(".bag") - 1, ".gsdb");
-                
+                bagfilePath_.replace(bagfilePath_.find(".bag"), sizeof(".bag") - 1, ".gsdb");
+                filePath_ = bagfilePath_;
         }
         ROS_INFO("writing gsdb log to: %s", filePath_.c_str());
         gdsbFile_ = std::ofstream(filePath_);

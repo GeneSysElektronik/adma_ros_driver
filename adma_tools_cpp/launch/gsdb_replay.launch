@@ -6,7 +6,6 @@
    <arg name="frequency" default="100" doc="frequency in Hz to send UDP packets" />
    <arg name="protocol_version" default="v3.3.4" doc="The desired protocol version of the ADMA UDP data packets" />
    <arg name="gsdb_file" default="/home/rschilli/Documents/230202_ONL_ABP_ALL.gsdb" doc="the desired GSDB file to replay" />
-   
 
    <!-- parameters for ADMA driver -->
    <include file="$(find adma_ros_driver)/launch/ADMA_pub_Ethernet.launch">
@@ -14,6 +13,7 @@
       <arg name="destination_ip" default="localhost" doc="ADMA Webinterface -> Data -> Ethernet data output -> Destination IP" />
       <arg name="record_rosbag" default="true" doc="True if you want to create a rosbag" />
       <arg name="log_gsdb" default="false" doc="True if you want to create a gsdb logfile for post-processing" />
+      <arg name="log_path" default="/home/$(env USER)/" doc="folder path to write files" />
    </include>
    
    <!-- start ADMA Driver node -->

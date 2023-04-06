@@ -11,6 +11,8 @@
    <arg name="frame_id_adma" default="adma" doc="ROS Frame-ID of ADMA data msg" />
    <arg name="frame_id_adma_status" default="adma_status" doc="ROS Frame-ID of ADMA Status msg" />
    <arg name="frame_id_data_raw" default="data_raw" doc="ROS Frame-ID of ADMA raw data msg" />
+   <!-- define path to write GSDB/BAG files -->
+   <arg name="log_path" default="/home/$(env USER)/" doc="folder path to write files" />
    
    <!-- start ADMA Driver node -->
    <node name="adma_driver" type="driver_new" pkg="adma_ros_driver" output="screen">
@@ -39,10 +41,11 @@
    <!-- arg to activate the gsdb logging (ADMA-PP)-->
    <arg name="log_gsdb" default="true" doc="True if you want to create a gsdb logfile for post-processing" />
    <node name="bag2gsdb" type="bag2gsdb_converter" pkg="adma_tools_cpp" output="screen" if="$(arg log_gsdb)">
+      <param name="/log_path" type="string" value="$(arg log_path)"/>
       <remap from="adma/data_recorded" to="adma/data_raw"/>
    </node>
    <!-- arg to activate rosbag recording -->
    <arg name="record_rosbag" default="false" doc="True if you want to create a rosbag" />
-   <node name="rosbag_record_raw_data" type="record" pkg="rosbag" args="record -a" if="$(arg record_rosbag)" />
+   <node name="rosbag_record_raw_data" type="record" pkg="rosbag" args="record -a -o $(arg log_path)" if="$(arg record_rosbag)" />
    
 </launch>
