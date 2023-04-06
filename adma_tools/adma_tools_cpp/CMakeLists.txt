@@ -15,19 +15,26 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
 find_package(adma_ros_driver_msgs REQUIRED)
+find_package(adma_ros2_driver REQUIRED)
 
 include_directories(include)
 
 add_library(${PROJECT_NAME}_node SHARED
   src/bag2gsdb_converter.cpp
   src/gsdb_server.cpp
+  src/gsda_server.cpp
 )
 
 ament_target_dependencies(${PROJECT_NAME}_node
   rclcpp
   rclcpp_components
+  sensor_msgs
+  std_msgs
   adma_ros_driver_msgs
+  adma_ros2_driver
 )
 
 rclcpp_components_register_node(${PROJECT_NAME}_node
@@ -38,6 +45,11 @@ rclcpp_components_register_node(${PROJECT_NAME}_node
 rclcpp_components_register_node(${PROJECT_NAME}_node
   PLUGIN "genesys::tools::GSDBServer"
   EXECUTABLE gsdb_server
+)
+
+rclcpp_components_register_node(${PROJECT_NAME}_node
+  PLUGIN "genesys::tools::GSDAServer"
+  EXECUTABLE gsda_server
 )
 
 install(TARGETS ${PROJECT_NAME}_node
