@@ -53,12 +53,23 @@ void GSDAServer::updateLoop()
 {
 
   // define messages to publish
+  //TODO: inject frame_id as ROS params like its done in driver node
   adma_ros_driver_msgs::msg::AdmaDataScaled dataScaledMsg;
+  dataScaledMsg.header.frame_id = "adma";
   adma_ros_driver_msgs::msg::AdmaStatus stateMsg;
+  stateMsg.header.frame_id = "adma_status";
   std_msgs::msg::Float64 velMsg;
   std_msgs::msg::Float64 headingMsg;
   sensor_msgs::msg::Imu imuMsg;
+  imuMsg.header.frame_id = "imu_link";
   sensor_msgs::msg::NavSatFix navsatfixMsg;
+  navsatfixMsg.header.frame_id = "gnss_link";
+
+  //offset between UNIX and GNSS (in ms)
+  unsigned long offset_gps_unix = 315964800000;
+  uint32_t week_to_msec = 604800000;
+  unsigned long timestamp;
+
   while(rclcpp::ok())
   {
     //iterate through gsda file
@@ -77,9 +88,19 @@ void GSDAServer::updateLoop()
           row.push_back(word);
       
       fillDataScaledMsg(dataScaledMsg, row);
+      timestamp = dataScaledMsg.ins_time_msec + offset_gps_unix;
+      timestamp += dataScaledMsg.ins_time_week * week_to_msec;
+      dataScaledMsg.time_msec = timestamp;
+      dataScaledMsg.time_nsec = timestamp * 1000000;
+      dataScaledMsg.header.stamp.sec = timestamp / 1000;
+      dataScaledMsg.header.stamp.nanosec = timestamp * 1000000;
       // extract separate msgs
       parser_->extractNavSatFix(dataScaledMsg, navsatfixMsg);
+      navsatfixMsg.header.stamp.sec = timestamp / 1000;
+      navsatfixMsg.header.stamp.nanosec = timestamp * 1000000;
       parser_->extractIMU(dataScaledMsg, imuMsg);
+      imuMsg.header.stamp.sec = timestamp / 1000;
+      imuMsg.header.stamp.nanosec = timestamp * 1000000;
       // read heading and velocity
       headingMsg.data = dataScaledMsg.ins_yaw;
       velMsg.data = std::sqrt(
@@ -87,6 +108,8 @@ void GSDAServer::updateLoop()
                       std::pow(dataScaledMsg.ins_vel_frame.y, 2)) *
                     3.6;
       //TODO: handle status/error
+      stateMsg.header.stamp.sec = timestamp / 1000;
+      stateMsg.header.stamp.nanosec = timestamp * 1000000;
 
       pub_adma_data_scaled_->publish(dataScaledMsg);
       pub_adma_status_->publish(stateMsg);
@@ -109,6 +132,12 @@ void GSDAServer::fillDataScaledMsg(adma_ros_driver_msgs::msg::AdmaDataScaled& da
   //TODO: add all data fields
   dataScaledMsg.ins_lat_abs = std::stod(row[9]);
   dataScaledMsg.ins_long_abs = std::stod(row[10]);
+  dataScaledMsg.ins_height = std::stod(row[11]);
+  dataScaledMsg.ins_stddev_lat = std::stod(row[12]);
+  dataScaledMsg.ins_stddev_long = std::stod(row[13]);
+  dataScaledMsg.ins_stddev_height = std::stod(row[14]);
+  dataScaledMsg.ins_time_msec = std::stod(row[15]);
+  dataScaledMsg.ins_time_week = std::stod(row[16]);
 }
 
 }  // end namespace tools
