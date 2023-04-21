@@ -21,7 +21,10 @@ public:
 
 private:
   void updateLoop();
-  void fillDataScaledMsg(adma_ros_driver_msgs::msg::AdmaDataScaled& dataScaledMsg, std::vector<std::string>row);
+  void fillDataScaledMsg(adma_ros_driver_msgs::msg::AdmaDataScaled& dataScaledMsg);
+  void readLine();
+  void extractHeader();
+  double readValue(std::string dataName);
 
   unsigned short frequency_;
 
@@ -32,7 +35,7 @@ private:
   std::vector<std::vector<std::string>> content;
 	std::vector<std::string> row;
 	std::string line, word;
-
+  std::map<std::string, int> indexMap_;
 
   rclcpp::Publisher<adma_ros_driver_msgs::msg::AdmaDataScaled>::SharedPtr pub_adma_data_scaled_;
   rclcpp::Publisher<adma_ros_driver_msgs::msg::AdmaStatus>::SharedPtr pub_adma_status_;
