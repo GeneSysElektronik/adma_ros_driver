@@ -32,3 +32,12 @@
 *.app
 
 adma_tools/adma_tools/__pycache__/
+.vs/slnx.sqlite
+.vs/adma_ros_driver/v17/.wsuo
+.vs/adma_ros_driver/FileContentIndex/read.lock
+.vs/adma_ros_driver/FileContentIndex/365d0862-3e1a-4ed5-ac66-1bf3ab1e06d4.vsidx
+.vs/ProjectSettings.json
+.vs/CMakeWorkspaceSettings.json
+.vs/VSWorkspaceState.json
+.vs/adma_ros_driver/v17/Browse.VC.db
+.vs/adma_ros_driver/FileContentIndex/8c31cab9-c325-4aac-99c8-cb485d5b9945.vsidx
