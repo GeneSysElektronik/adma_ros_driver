@@ -1,7 +1,7 @@
 #include <iostream>
 #include "../../include/adma_ros_driver/parser/adma2ros_parser.hpp"
 #include "../../include/adma_ros_driver/parser/parser_utils.hpp"
-// #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 ADMA2ROSParser::ADMA2ROSParser()
         :_parserV333(),
@@ -514,27 +514,27 @@ void ADMA2ROSParser::extractNavSatFix(adma_ros_driver_msgs::AdmaDataScaled& rosM
 
 void ADMA2ROSParser::extractIMU(adma_ros_driver_msgs::AdmaDataScaled& rosMsg, sensor_msgs::Imu& imuRosMsg)
 {
-        // imuRosMsg.linear_acceleration.x = rosMsg.acc_body_hr.x * 9.81;
-        // imuRosMsg.linear_acceleration.y = rosMsg.acc_body_hr.y * 9.81;
-        // imuRosMsg.linear_acceleration.z = rosMsg.acc_body_hr.z * 9.81;
+        imuRosMsg.linear_acceleration.x = rosMsg.acc_body_hr.x * 9.81;
+        imuRosMsg.linear_acceleration.y = rosMsg.acc_body_hr.y * 9.81;
+        imuRosMsg.linear_acceleration.z = rosMsg.acc_body_hr.z * 9.81;
 
-        // imuRosMsg.angular_velocity.x = rosMsg.rate_body_hr.x * PI / 180.0;
-        // imuRosMsg.angular_velocity.y = rosMsg.rate_body_hr.y * PI / 180.0;
-        // imuRosMsg.angular_velocity.z = rosMsg.rate_body_hr.z * PI / 180.0;
+        imuRosMsg.angular_velocity.x = rosMsg.rate_body_hr.x * PI / 180.0;
+        imuRosMsg.angular_velocity.y = rosMsg.rate_body_hr.y * PI / 180.0;
+        imuRosMsg.angular_velocity.z = rosMsg.rate_body_hr.z * PI / 180.0;
 
-        // tf2::Quaternion q;
-        // double roll_rad = rosMsg.ins_roll * PI / 180.0;
-        // double pitch_rad = rosMsg.ins_pitch * PI / 180.0;
-        // double yaw_rad = rosMsg.ins_yaw * PI / 180.0;
-        // q.setRPY(roll_rad, pitch_rad, yaw_rad);
-        // imuRosMsg.orientation = tf2::toMsg(q);
+        tf2::Quaternion q;
+        double roll_rad = rosMsg.ins_roll * PI / 180.0;
+        double pitch_rad = rosMsg.ins_pitch * PI / 180.0;
+        double yaw_rad = rosMsg.ins_yaw * PI / 180.0;
+        q.setRPY(roll_rad, pitch_rad, yaw_rad);
+        imuRosMsg.orientation = tf2::toMsg(q);
 
-        // imuRosMsg.orientation_covariance[0] = std::pow(rosMsg.ins_stddev_roll * PI / 180.0, 2);
-        // imuRosMsg.orientation_covariance[4] = std::pow(rosMsg.ins_stddev_pitch * PI / 180.0, 2);
-        // imuRosMsg.orientation_covariance[8] = std::pow(rosMsg.ins_stddev_yaw * PI / 180.0, 2);
+        imuRosMsg.orientation_covariance[0] = std::pow(rosMsg.ins_stddev_roll * PI / 180.0, 2);
+        imuRosMsg.orientation_covariance[4] = std::pow(rosMsg.ins_stddev_pitch * PI / 180.0, 2);
+        imuRosMsg.orientation_covariance[8] = std::pow(rosMsg.ins_stddev_yaw * PI / 180.0, 2);
 
-        // // ADMA does not provide covariance for linear acceleration and angular velocity.
-        // // These values need to be measured at standstill each ADMA model.
-        // imuRosMsg.angular_velocity_covariance[0] = -1;
-        // imuRosMsg.linear_acceleration_covariance[0] = -1;
+        // ADMA does not provide covariance for linear acceleration and angular velocity.
+        // These values need to be measured at standstill each ADMA model.
+        imuRosMsg.angular_velocity_covariance[0] = -1;
+        imuRosMsg.linear_acceleration_covariance[0] = -1;
 }
