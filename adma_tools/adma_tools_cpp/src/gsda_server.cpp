@@ -6,6 +6,7 @@
 #include <string>
 
 #include <rclcpp_components/register_node_macro.hpp>
+#include <adma_ros2_driver/parser/parser_utils.hpp>
 
 /**
  * @brief This helper class can replay post-processed ADMA data (GSDA file) and publish the data to ROS
@@ -109,7 +110,8 @@ void GSDAServer::updateLoop()
                       std::pow(dataScaledMsg.ins_vel_frame.x, 2) +
                       std::pow(dataScaledMsg.ins_vel_frame.y, 2)) *
                     3.6;
-      //TODO: handle status/error
+      
+      extractBytes(stateMsg, dataScaledMsg);
       stateMsg.header.stamp.sec = timestamp / 1000;
       stateMsg.header.stamp.nanosec = timestamp * 1000000;
 
@@ -157,6 +159,162 @@ double GSDAServer::readValue(std::string dataName)
     }
   }
   return 0.0;  
+}
+
+void GSDAServer::extractBytes(adma_ros_driver_msgs::msg::AdmaStatus &stateMsg, adma_ros_driver_msgs::msg::AdmaDataScaled& dataScaledMsg)
+{
+  // read values
+  unsigned char gnssStatus = readValue("State0");
+  unsigned char signalInStatus = readValue("State1");
+  unsigned char miscStatus = readValue("State2");
+  unsigned char kfStatus = readValue("State3");
+  unsigned char statusRobot = readValue("State4");
+  unsigned char error1 = readValue("Error0");
+  unsigned char error2 = readValue("Error1");
+  unsigned char warn1 = readValue("Error2");
+  unsigned char error3 = readValue("Error3");
+
+  // fill bytes
+  stateMsg.status_bytes.status_byte_0 = gnssStatus;
+  stateMsg.status_bytes.status_byte_1 = signalInStatus;
+  stateMsg.status_bytes.status_byte_2 = miscStatus;
+  // stateMsg.status_bytes.status_count = ?;
+  stateMsg.status_bytes.status_byte_4 = kfStatus;
+  stateMsg.status_bytes.status_byte_5 = statusRobot;
+
+  stateMsg.error_warnings_bytes.error_1 = error1;
+  stateMsg.error_warnings_bytes.error_2 = error2;
+  stateMsg.error_warnings_bytes.warn_1 = warn1;
+  stateMsg.error_warnings_bytes.error_3 = error3;
+  dataScaledMsg.error_warning.error_1 = error1;
+  dataScaledMsg.error_warning.error_2 = error2;
+  dataScaledMsg.error_warning.warn_1 = warn1;
+  dataScaledMsg.error_warning.error_3 = error3;
+
+  // extract bits from bytes
+  // status_byte_0
+  /* status gnss mode */
+  std::bitset<8> gnss_status_byte = gnssStatus;
+  std::bitset<4> status_gnss_mode;
+  status_gnss_mode[0] = gnss_status_byte[0];
+  status_gnss_mode[1] = gnss_status_byte[1];
+  status_gnss_mode[2] = gnss_status_byte[2];
+  status_gnss_mode[3] = gnss_status_byte[3];
+  dataScaledMsg.status.status_gnss_mode = status_gnss_mode.to_ulong();
+  bool standstill_c = getbit(gnssStatus, 4);
+  bool status_skidding = getbit(gnssStatus, 5);
+  bool status_external_vel = getbit(gnssStatus, 7);
+  /* status stand still */
+  dataScaledMsg.status.status_standstill = standstill_c;
+  /* status skidding */
+  dataScaledMsg.status.status_skidding = status_skidding;
+  /* status external velocity slip */
+  dataScaledMsg.status.status_external_vel_out = status_external_vel;
+
+  // status_byte_1
+  bool status_trig_gnss = getbit(signalInStatus, 0);
+  bool status_signal_in3 = getbit(signalInStatus, 1);
+  bool status_signal_in2 = getbit(signalInStatus, 2);
+  bool status_signal_in1 = getbit(signalInStatus, 3);
+  bool status_alignment = getbit(signalInStatus, 4);
+  bool status_ahrs_ins = getbit(signalInStatus, 5);
+  bool status_dead_reckoning = getbit(signalInStatus, 6);
+  bool status_synclock = getbit(signalInStatus, 7);
+  /* status statustriggnss */
+  dataScaledMsg.status.status_trig_gnss = status_trig_gnss;
+  /* status statussignalin3 */
+  dataScaledMsg.status.status_signal_in3 = status_signal_in3;
+  /* status statussignalin2 */
+  dataScaledMsg.status.status_signal_in2 = status_signal_in2;
+  /* status statussignalin1 */
+  dataScaledMsg.status.status_signal_in1 = status_signal_in1;
+  /* status statusalignment */
+  dataScaledMsg.status.status_alignment = status_alignment;
+  /* status statusahrsins */
+  dataScaledMsg.status.status_ahrs_ins = status_ahrs_ins;
+  /* status statusdeadreckoning */
+  dataScaledMsg.status.status_dead_reckoning = status_dead_reckoning;
+  /* status statussynclock */
+  dataScaledMsg.status.status_synclock = status_synclock;
+
+  // status_byte_2
+  bool status_evk_activ = getbit(miscStatus, 0);
+  bool status_evk_estimates = getbit(miscStatus, 1);
+  bool status_heading_executed = getbit(miscStatus, 2);
+  bool status_configuration_changed = getbit(miscStatus, 3);
+  /* status statustriggnss */
+  dataScaledMsg.status.status_evk_activ = status_evk_activ;
+  /* status status_evk_estimates */
+  dataScaledMsg.status.status_evk_estimates = status_evk_estimates;
+  /* status status_heading_executed */
+  dataScaledMsg.status.status_heading_executed = status_heading_executed;
+  /* status status_configuration_changed */
+  dataScaledMsg.status.status_config_changed = status_configuration_changed;
+  /* status tilt */
+  std::bitset<8> evk_status_byte = miscStatus;
+  std::bitset<2> status_tilt;
+  status_tilt[0] = evk_status_byte[4];
+  status_tilt[1] = evk_status_byte[5];
+  dataScaledMsg.status.status_tilt = status_tilt.to_ulong();
+  /* status pos */
+  std::bitset<2> status_pos;
+  status_pos[0] = evk_status_byte[6];
+  status_pos[1] = evk_status_byte[7];
+  dataScaledMsg.status.status_pos = status_pos.to_ulong();
+
+  // dataScaledMsg.status.status_count = adma_data.statuscount;
+
+  // status_byte_4
+  unsigned char kf_status = kfStatus;
+  bool status_kalmanfilter_settled = getbit(kf_status, 0);
+  bool status_kf_lat_stimulated = getbit(kf_status, 1);
+  bool status_kf_long_stimulated = getbit(kf_status, 2);
+  bool status_kf_steady_state = getbit(kf_status, 3);
+  dataScaledMsg.status.status_kalmanfilter_settled = status_kalmanfilter_settled;
+  dataScaledMsg.status.status_kf_lat_stimulated = status_kf_lat_stimulated;
+  dataScaledMsg.status.status_kf_long_stimulated = status_kf_long_stimulated;
+  dataScaledMsg.status.status_kf_steady_state = status_kf_steady_state;
+
+  std::bitset<8> kf_status_byte = kfStatus;
+  std::bitset<2> status_speed;
+  status_speed[0] = kf_status_byte[4];
+  status_speed[1] = kf_status_byte[5];
+  dataScaledMsg.status.status_speed = status_speed.to_ulong();
+
+  // status_byte_5
+  std::bitset<8> bit_status_robot = statusRobot;
+  std::bitset<4> status_robot;
+  for (size_t i = 0; i < 4; i++) {
+    status_robot[i] = bit_status_robot[i];
+  }
+  dataScaledMsg.status.status_robot = status_robot.to_ulong();
+
+
+  // extract error/warning bits from bytes
+  stateMsg.error_warnings.error_gyro_hw = getbit(error1, 0);
+  stateMsg.error_warnings.error_accel_hw = getbit(error1, 1);
+  stateMsg.error_warnings.error_ext_speed_hw = getbit(error1, 2);
+  stateMsg.error_warnings.error_gnss_hw = getbit(error1, 3);
+  stateMsg.error_warnings.error_data_bus_checksum = getbit(error1, 4);
+  stateMsg.error_warnings.error_eeprom = getbit(error1, 5);
+  stateMsg.error_warnings.error_xmit = getbit(error1, 6);
+  stateMsg.error_warnings.error_cmd = getbit(error1, 7);
+
+  stateMsg.error_warnings.error_data_bus = getbit(error2, 0);
+  stateMsg.error_warnings.error_can_bus = getbit(error2, 1);
+  stateMsg.error_warnings.error_num = getbit(error2, 3);
+  stateMsg.error_warnings.error_temp_warning = getbit(error2, 4);
+  stateMsg.error_warnings.error_reduced_accuracy = getbit(error2, 5);
+  stateMsg.error_warnings.error_range_max = getbit(error2, 6);
+
+  stateMsg.error_warnings.warn_gnss_no_solution = getbit(warn1, 0);
+  stateMsg.error_warnings.warn_gnss_vel_ignored = getbit(warn1, 1);
+  stateMsg.error_warnings.warn_gnss_pos_ignored = getbit(warn1, 2);
+  stateMsg.error_warnings.warn_gnss_unable_to_cfg = getbit(warn1, 3);
+  stateMsg.error_warnings.warn_speed_off = getbit(warn1, 4);
+  stateMsg.error_warnings.warn_gnss_dualant_ignored = getbit(warn1, 5);
+
+  stateMsg.error_warnings.error_hw_sticky = getbit(error3, 0);
 }
 
 void GSDAServer::fillDataScaledMsg(adma_ros_driver_msgs::msg::AdmaDataScaled& dataScaledMsg)
@@ -521,300 +679,6 @@ void GSDAServer::fillDataScaledMsg(adma_ros_driver_msgs::msg::AdmaDataScaled& da
     dataScaledMsg.kf_long_stimulated = readValue("KF_Long_stimulated");
     dataScaledMsg.kf_steady_state = readValue("KF_Steady-State");
 
-  // poi 1
-  // dataScaledMsg.poi_1.acc_body.x = std::stod(row[17]);
-  // dataScaledMsg.poi_1.acc_body.y = std::stod(row[18]);
-  // dataScaledMsg.poi_1.acc_body.z = std::stod(row[19]);
-
-  // dataScaledMsg.poi_1.acc_hor.x = std::stod(row[20]);
-  // dataScaledMsg.poi_1.acc_hor.y = std::stod(row[21]);
-  // dataScaledMsg.poi_1.acc_hor.z = std::stod(row[22]);
-
-  // dataScaledMsg.poi_1.inv_path_radius = std::stod(row[23]);
-  // dataScaledMsg.poi_1.side_slip_angle = std::stod(row[24]);
-  // dataScaledMsg.poi_1.dist_trav = std::stod(row[25]);
-
-  // dataScaledMsg.poi_1.ins_lat_abs = std::stod(row[26]);
-  // dataScaledMsg.poi_1.ins_lon_abs = std::stod(row[27]);
-  // dataScaledMsg.poi_1.ins_height = std::stod(row[28]);
-
-  // dataScaledMsg.poi_1.ins_pos_rel_x = std::stod(row[29]);
-  // dataScaledMsg.poi_1.ins_pos_rel_y = std::stod(row[30]);
-
-  // dataScaledMsg.poi_1.ins_vel_hor.x = std::stod(row[31]);
-  // dataScaledMsg.poi_1.ins_vel_hor.y = std::stod(row[32]);
-  // dataScaledMsg.poi_1.ins_vel_hor.z = std::stod(row[33]);
-
-  // // poi 2
-  // dataScaledMsg.poi_2.acc_body.x = std::stod(row[34]);
-  // dataScaledMsg.poi_2.acc_body.y = std::stod(row[35]);
-  // dataScaledMsg.poi_2.acc_body.z = std::stod(row[36]);
-
-  // dataScaledMsg.poi_2.acc_hor.x = std::stod(row[37]);
-  // dataScaledMsg.poi_2.acc_hor.y = std::stod(row[38]);
-  // dataScaledMsg.poi_2.acc_hor.z = std::stod(row[39]);
-
-  // dataScaledMsg.poi_2.inv_path_radius = std::stod(row[40]);
-  // dataScaledMsg.poi_2.side_slip_angle = std::stod(row[41]);
-  // dataScaledMsg.poi_2.dist_trav = std::stod(row[42]);
-
-  // dataScaledMsg.poi_2.ins_lat_abs = std::stod(row[43]);
-  // dataScaledMsg.poi_2.ins_lon_abs = std::stod(row[44]);
-  // dataScaledMsg.poi_2.ins_height = std::stod(row[45]);
-
-  // dataScaledMsg.poi_2.ins_pos_rel_x = std::stod(row[46]);
-  // dataScaledMsg.poi_2.ins_pos_rel_y = std::stod(row[47]);
-
-  // dataScaledMsg.poi_2.ins_vel_hor.x = std::stod(row[48]);
-  // dataScaledMsg.poi_2.ins_vel_hor.y = std::stod(row[49]);
-  // dataScaledMsg.poi_2.ins_vel_hor.z = std::stod(row[50]);
-
-  // // poi 3
-  // dataScaledMsg.poi_3.acc_body.x = std::stod(row[51]);
-  // dataScaledMsg.poi_3.acc_body.y = std::stod(row[52]);
-  // dataScaledMsg.poi_3.acc_body.z = std::stod(row[53]);
-
-  // dataScaledMsg.poi_3.acc_hor.x = std::stod(row[54]);
-  // dataScaledMsg.poi_3.acc_hor.y = std::stod(row[55]);
-  // dataScaledMsg.poi_3.acc_hor.z = std::stod(row[56]);
-
-  // dataScaledMsg.poi_3.inv_path_radius = std::stod(row[57]);
-  // dataScaledMsg.poi_3.side_slip_angle = std::stod(row[58]);
-  // dataScaledMsg.poi_3.dist_trav = std::stod(row[59]);
-
-  // dataScaledMsg.poi_3.ins_lat_abs = std::stod(row[60]);
-  // dataScaledMsg.poi_3.ins_lon_abs = std::stod(row[61]);
-  // dataScaledMsg.poi_3.ins_height = std::stod(row[62]);
-
-  // dataScaledMsg.poi_3.ins_pos_rel_x = std::stod(row[63]);
-  // dataScaledMsg.poi_3.ins_pos_rel_y = std::stod(row[64]);
-
-  // dataScaledMsg.poi_3.ins_vel_hor.x = std::stod(row[65]);
-  // dataScaledMsg.poi_3.ins_vel_hor.y = std::stod(row[66]);
-  // dataScaledMsg.poi_3.ins_vel_hor.z = std::stod(row[67]);
-
-  // // poi 4
-  // dataScaledMsg.poi_4.acc_body.x = std::stod(row[68]);
-  // dataScaledMsg.poi_4.acc_body.y = std::stod(row[69]);
-  // dataScaledMsg.poi_4.acc_body.z = std::stod(row[70]);
-
-  // dataScaledMsg.poi_4.acc_hor.x = std::stod(row[71]);
-  // dataScaledMsg.poi_4.acc_hor.y = std::stod(row[72]);
-  // dataScaledMsg.poi_4.acc_hor.z = std::stod(row[73]);
-
-  // dataScaledMsg.poi_4.inv_path_radius = std::stod(row[74]);
-  // dataScaledMsg.poi_4.side_slip_angle = std::stod(row[75]);
-  // dataScaledMsg.poi_4.dist_trav = std::stod(row[76]);
-
-  // dataScaledMsg.poi_4.ins_lat_abs = std::stod(row[77]);
-  // dataScaledMsg.poi_4.ins_lon_abs = std::stod(row[78]);
-  // dataScaledMsg.poi_4.ins_height = std::stod(row[79]);
-
-  // dataScaledMsg.poi_4.ins_pos_rel_x = std::stod(row[80]);
-  // dataScaledMsg.poi_4.ins_pos_rel_y = std::stod(row[81]);
-
-  // dataScaledMsg.poi_4.ins_vel_hor.x = std::stod(row[82]);
-  // dataScaledMsg.poi_4.ins_vel_hor.y = std::stod(row[83]);
-  // dataScaledMsg.poi_4.ins_vel_hor.z = std::stod(row[84]);
-
-  // // poi 5
-  // dataScaledMsg.poi_5.acc_body.x = std::stod(row[85]);
-  // dataScaledMsg.poi_5.acc_body.y = std::stod(row[86]);
-  // dataScaledMsg.poi_5.acc_body.z = std::stod(row[87]);
-
-  // dataScaledMsg.poi_5.acc_hor.x = std::stod(row[88]);
-  // dataScaledMsg.poi_5.acc_hor.y = std::stod(row[89]);
-  // dataScaledMsg.poi_5.acc_hor.z = std::stod(row[90]);
-
-  // dataScaledMsg.poi_5.inv_path_radius = std::stod(row[91]);
-  // dataScaledMsg.poi_5.side_slip_angle = std::stod(row[92]);
-  // dataScaledMsg.poi_5.dist_trav = std::stod(row[93]);
-
-  // dataScaledMsg.poi_5.ins_lat_abs = std::stod(row[94]);
-  // dataScaledMsg.poi_5.ins_lon_abs = std::stod(row[95]);
-  // dataScaledMsg.poi_5.ins_height = std::stod(row[96]);
-
-  // dataScaledMsg.poi_5.ins_pos_rel_x = std::stod(row[97]);
-  // dataScaledMsg.poi_5.ins_pos_rel_y = std::stod(row[98]);
-
-  // dataScaledMsg.poi_5.ins_vel_hor.x = std::stod(row[99]);
-  // dataScaledMsg.poi_5.ins_vel_hor.y = std::stod(row[100]);
-  // dataScaledMsg.poi_5.ins_vel_hor.z = std::stod(row[101]);
-
-  // // poi 6
-  // dataScaledMsg.poi_6.acc_body.x = std::stod(row[102]);
-  // dataScaledMsg.poi_6.acc_body.y = std::stod(row[103]);
-  // dataScaledMsg.poi_6.acc_body.z = std::stod(row[104]);
-
-  // dataScaledMsg.poi_6.acc_hor.x = std::stod(row[105]);
-  // dataScaledMsg.poi_6.acc_hor.y = std::stod(row[106]);
-  // dataScaledMsg.poi_6.acc_hor.z = std::stod(row[107]);
-
-  // dataScaledMsg.poi_6.inv_path_radius = std::stod(row[108]);
-  // dataScaledMsg.poi_6.side_slip_angle = std::stod(row[109]);
-  // dataScaledMsg.poi_6.dist_trav = std::stod(row[110]);
-
-  // dataScaledMsg.poi_6.ins_lat_abs = std::stod(row[111]);
-  // dataScaledMsg.poi_6.ins_lon_abs = std::stod(row[112]);
-  // dataScaledMsg.poi_6.ins_height = std::stod(row[113]);
-
-  // dataScaledMsg.poi_6.ins_pos_rel_x = std::stod(row[114]);
-  // dataScaledMsg.poi_6.ins_pos_rel_y = std::stod(row[115]);
-
-  // dataScaledMsg.poi_6.ins_vel_hor.x = std::stod(row[116]);
-  // dataScaledMsg.poi_6.ins_vel_hor.y = std::stod(row[117]);
-  // dataScaledMsg.poi_6.ins_vel_hor.z = std::stod(row[118]);
-
-  // // poi 7
-  // dataScaledMsg.poi_7.acc_body.x = std::stod(row[119]);
-  // dataScaledMsg.poi_7.acc_body.y = std::stod(row[120]);
-  // dataScaledMsg.poi_7.acc_body.z = std::stod(row[121]);
-
-  // dataScaledMsg.poi_7.acc_hor.x = std::stod(row[122]);
-  // dataScaledMsg.poi_7.acc_hor.y = std::stod(row[123]);
-  // dataScaledMsg.poi_7.acc_hor.z = std::stod(row[124]);
-
-  // dataScaledMsg.poi_7.inv_path_radius = std::stod(row[125]);
-  // dataScaledMsg.poi_7.side_slip_angle = std::stod(row[126]);
-  // dataScaledMsg.poi_7.dist_trav = std::stod(row[127]);
-
-  // dataScaledMsg.poi_7.ins_lat_abs = std::stod(row[128]);
-  // dataScaledMsg.poi_7.ins_lon_abs = std::stod(row[129]);
-  // dataScaledMsg.poi_7.ins_height = std::stod(row[130]);
-
-  // dataScaledMsg.poi_7.ins_pos_rel_x = std::stod(row[131]);
-  // dataScaledMsg.poi_7.ins_pos_rel_y = std::stod(row[132]);
-
-  // dataScaledMsg.poi_7.ins_vel_hor.x = std::stod(row[133]);
-  // dataScaledMsg.poi_7.ins_vel_hor.y = std::stod(row[134]);
-  // dataScaledMsg.poi_7.ins_vel_hor.z = std::stod(row[135]);
-
-  // // poi 8
-  // dataScaledMsg.poi_8.acc_body.x = std::stod(row[136]);
-  // dataScaledMsg.poi_8.acc_body.y = std::stod(row[137]);
-  // dataScaledMsg.poi_8.acc_body.z = std::stod(row[138]);
-
-  // dataScaledMsg.poi_8.acc_hor.x = std::stod(row[139]);
-  // dataScaledMsg.poi_8.acc_hor.y = std::stod(row[140]);
-  // dataScaledMsg.poi_8.acc_hor.z = std::stod(row[141]);
-
-  // dataScaledMsg.poi_8.inv_path_radius = std::stod(row[142]);
-  // dataScaledMsg.poi_8.side_slip_angle = std::stod(row[143]);
-  // dataScaledMsg.poi_8.dist_trav = std::stod(row[144]);
-
-  // dataScaledMsg.poi_8.ins_lat_abs = std::stod(row[145]);
-  // dataScaledMsg.poi_8.ins_lon_abs = std::stod(row[146]);
-  // dataScaledMsg.poi_8.ins_height = std::stod(row[147]);
-
-  // dataScaledMsg.poi_8.ins_pos_rel_x = std::stod(row[148]);
-  // dataScaledMsg.poi_8.ins_pos_rel_y = std::stod(row[149]);
-
-  // dataScaledMsg.poi_8.ins_vel_hor.x = std::stod(row[150]);
-  // dataScaledMsg.poi_8.ins_vel_hor.y = std::stod(row[151]);
-  // dataScaledMsg.poi_8.ins_vel_hor.z = std::stod(row[152]);
-
-  // // accels
-  // dataScaledMsg.acc_body.x = std::stod(row[153]);
-  // dataScaledMsg.acc_body.y = std::stod(row[154]);
-  // dataScaledMsg.acc_body.z = std::stod(row[155]);
-
-  // dataScaledMsg.acc_hor.x = std::stod(row[156]);
-  // dataScaledMsg.acc_hor.y = std::stod(row[157]);
-  // dataScaledMsg.acc_hor.z = std::stod(row[158]);
-
-  // dataScaledMsg.acc_body_hr.x = std::stod(row[159]);
-  // dataScaledMsg.acc_body_hr.y = std::stod(row[160]);
-  // dataScaledMsg.acc_body_hr.z = std::stod(row[161]);
-
-  // // rates
-  // dataScaledMsg.rate_body.x = std::stod(row[162]);
-  // dataScaledMsg.rate_body.y = std::stod(row[163]);
-  // dataScaledMsg.rate_body.z = std::stod(row[164]);
-
-  // dataScaledMsg.rate_hor.x = std::stod(row[165]);
-  // dataScaledMsg.rate_hor.y = std::stod(row[166]);
-  // dataScaledMsg.rate_hor.z = std::stod(row[167]);
-
-  // dataScaledMsg.rate_body_hr.x = std::stod(row[168]);
-  // dataScaledMsg.rate_body_hr.y = std::stod(row[169]);
-  // dataScaledMsg.rate_body_hr.z = std::stod(row[170]);
-
-  // // ext vel
-  // dataScaledMsg.ext_vel_x_corrected = std::stod(row[171]);
- 
-  // // system data
-  // dataScaledMsg.system_ta = std::stoul(row[172]);
-  // dataScaledMsg.system_temp = std::stod(row[173]);
-  // dataScaledMsg.system_dsp_load = std::stod(row[174]);
-  // dataScaledMsg.system_time_since_init = std::stoul(row[175]);
- 
-  // // aux
-  // dataScaledMsg.inv_path_radius = std::stod(row[176]);
-  // dataScaledMsg.side_slip_angle = std::stod(row[177]);
-  // dataScaledMsg.dist_trav = std::stod(row[178]);
- 
-  // // gnss data
-  // dataScaledMsg.gnss_lat_abs = std::stod(row[179]);
-  // dataScaledMsg.gnss_long_abs = std::stod(row[180]);
-  // dataScaledMsg.gnss_height = std::stod(row[181]);
-  // dataScaledMsg.gnss_pos_rel_x = std::stod(row[182]);
-  // dataScaledMsg.gnss_pos_rel_y = std::stod(row[183]);
-  // dataScaledMsg.gnss_stddev_lat = std::stod(row[184]);
-  // dataScaledMsg.gnss_stddev_long = std::stod(row[185]);
-  // dataScaledMsg.gnss_stddev_height = std::stod(row[186]);
-  // dataScaledMsg.gnss_vel_frame.x = std::stod(row[187]);
-  // dataScaledMsg.gnss_vel_frame.y = std::stod(row[188]);
-  // dataScaledMsg.gnss_vel_frame.z = std::stod(row[189]);
-  // dataScaledMsg.gnss_vel_latency = std::stod(row[190]);
-  // dataScaledMsg.gnss_stddev_vel.x = std::stod(row[191]);
-  // dataScaledMsg.gnss_stddev_vel.y = std::stod(row[192]);
-  // dataScaledMsg.gnss_stddev_vel.z = std::stod(row[193]);
-  // dataScaledMsg.gnss_log_delay = std::stod(row[194]);
-  // dataScaledMsg.gnss_diffage = std::stod(row[195]);
-  // dataScaledMsg.gnss_sats_visible = std::stod(row[196]);
-  // dataScaledMsg.gnss_time_msec = std::stoul(row[197]);
-  // dataScaledMsg.gnss_time_week = std::stoul(row[198]);
-  // dataScaledMsg.gnss_dualant_heading = std::stod(row[199]);
-  // dataScaledMsg.gnss_dualant_stddev_heading = std::stod(row[200]);
-  // dataScaledMsg.gnss_dualant_pitch = std::stod(row[201]);
-  // dataScaledMsg.gnss_dualant_stddev_pitch = std::stod(row[202]);
-  // dataScaledMsg.gnss_dualant_time_msec = std::stoul(row[203]);
-
-  // // ins channels
-  // // angles
-  // dataScaledMsg.ins_roll = std::stod(row[204]);
-  // dataScaledMsg.ins_pitch = std::stod(row[205]);
-  // dataScaledMsg.ins_yaw = std::stod(row[206]);
-  // dataScaledMsg.gnss_cog = std::stod(row[207]);
-
-  // dataScaledMsg.ins_stddev_roll = std::stod(row[208]);
-  // dataScaledMsg.ins_stddev_pitch = std::stod(row[209]);
-  // dataScaledMsg.ins_stddev_yaw = std::stod(row[210]);
-
-  // // rel pos
-  // dataScaledMsg.ins_pos_rel_x = std::stod(row[211]);
-  // dataScaledMsg.ins_pos_rel_y = std::stod(row[212]);
-
-  // // velocities
-  // // frame
-  // dataScaledMsg.ins_vel_frame.x = std::stod(row[213]);
-  // dataScaledMsg.ins_vel_frame.y = std::stod(row[214]);
-  // dataScaledMsg.ins_vel_frame.z = std::stod(row[215]);
-
-  // // horizontal
-  // dataScaledMsg.ins_vel_hor.x = std::stod(row[216]);
-  // dataScaledMsg.ins_vel_hor.y = std::stod(row[217]);
-  // dataScaledMsg.ins_vel_hor.z = std::stod(row[218]);
-
-  // // stddev
-  // dataScaledMsg.ins_stddev_vel.x = std::stod(row[219]);
-  // dataScaledMsg.ins_stddev_vel.y = std::stod(row[220]);
-  // dataScaledMsg.ins_stddev_vel.z = std::stod(row[221]);
-
-  // // kf 
-  // dataScaledMsg.kf_lat_stimulated = std::stoul(row[222]);
-  // dataScaledMsg.kf_long_stimulated = std::stoul(row[223]);
-  // dataScaledMsg.kf_steady_state = std::stoul(row[224]);
 }
 
 }  // end namespace tools

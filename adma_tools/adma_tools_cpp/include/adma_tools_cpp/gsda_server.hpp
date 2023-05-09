@@ -25,6 +25,7 @@ private:
   void readLine();
   void extractHeader();
   double readValue(std::string dataName);
+  void extractBytes(adma_ros_driver_msgs::msg::AdmaStatus &stateMsg, adma_ros_driver_msgs::msg::AdmaDataScaled& dataScaledMsg);
 
   unsigned short frequency_;
 
