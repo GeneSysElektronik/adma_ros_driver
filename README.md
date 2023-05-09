@@ -7,6 +7,7 @@ This setup was implemented and tested with the following conditions:
 - ROS2 Galactic
 
 Since it does not really use Galactic-specific code, it should also work with ROS2 Dashing/Foxy and Humble.
+It does **NOT** work on Linux 16.04 in combination with ROS2 Ardent. 
 
 ## Usage
 1. Create workspace and clone this repository
