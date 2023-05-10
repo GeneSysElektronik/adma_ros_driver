@@ -150,7 +150,11 @@ void GSDAServer::extractHeader()
 {
   for(int i = 0; i < row.size(); i++)
   {
-    indexMap_.insert({row[i], i});
+    std::string channelName = row[i];
+    if (channelName.rfind("% ", 0) == 0) {
+      channelName.erase(0,2);
+    }
+    indexMap_.insert({channelName, i});
   }
 }
 
@@ -179,6 +183,7 @@ int GSDAServer::readByteValue(std::string dataName)
       return std::stoi(row[index].c_str());
     }
   }
+  RCLCPP_WARN(get_logger(), "Channelname %s not found in GSDA File..", dataName.c_str());
   return 0;  
 }
 
