@@ -102,6 +102,13 @@ void GSDAServer::updateLoop()
       navsatfixMsg.header.stamp.sec = timestamp / 1000;
       navsatfixMsg.header.stamp.nanosec = timestamp * 1000000;
       parser_->extractIMU(dataScaledMsg, imuMsg);
+      // ADMA PP doesnt provide "hr" channels so use normal body rate/acc for IMU
+      imuMsg.linear_acceleration.x = dataScaledMsg.acc_body.x * 9.81;
+      imuMsg.linear_acceleration.y = dataScaledMsg.acc_body.y * 9.81;
+      imuMsg.linear_acceleration.z = dataScaledMsg.acc_body.z * 9.81;
+      imuMsg.angular_velocity.x = dataScaledMsg.rate_body.x * PI / 180.0;
+      imuMsg.angular_velocity.y = dataScaledMsg.rate_body.y * PI / 180.0;
+      imuMsg.angular_velocity.z = dataScaledMsg.rate_body.z * PI / 180.0;
       imuMsg.header.stamp.sec = timestamp / 1000;
       imuMsg.header.stamp.nanosec = timestamp * 1000000;
       // read heading and velocity
@@ -161,18 +168,32 @@ double GSDAServer::readValue(std::string dataName)
   return 0.0;  
 }
 
+int GSDAServer::readByteValue(std::string dataName)
+{
+  auto it = indexMap_.find(dataName);
+  if(it != indexMap_.end())
+  {
+    int index = (*it).second;
+    if(index <= row.size())
+    {
+      return std::stoi(row[index].c_str());
+    }
+  }
+  return 0;  
+}
+
 void GSDAServer::extractBytes(adma_ros_driver_msgs::msg::AdmaStatus &stateMsg, adma_ros_driver_msgs::msg::AdmaDataScaled& dataScaledMsg)
 {
   // read values
-  unsigned char gnssStatus = readValue("State0");
-  unsigned char signalInStatus = readValue("State1");
-  unsigned char miscStatus = readValue("State2");
-  unsigned char kfStatus = readValue("State3");
-  unsigned char statusRobot = readValue("State4");
-  unsigned char error1 = readValue("Error0");
-  unsigned char error2 = readValue("Error1");
-  unsigned char warn1 = readValue("Error2");
-  unsigned char error3 = readValue("Error3");
+  unsigned char gnssStatus = (unsigned char) readByteValue("State0");
+  unsigned char signalInStatus = (unsigned char) readByteValue("State1");
+  unsigned char miscStatus = (unsigned char) readByteValue("State2");
+  unsigned char kfStatus = (unsigned char) readByteValue("State3");
+  unsigned char statusRobot = (unsigned char) readByteValue("State4");
+  unsigned char error1 = (unsigned char) readByteValue("Error0");
+  unsigned char error2 = (unsigned char) readByteValue("Error1");
+  unsigned char warn1 = (unsigned char) readByteValue("Error2");
+  unsigned char error3 = (unsigned char) readByteValue("Error3");
 
   // fill bytes
   stateMsg.status_bytes.status_byte_0 = gnssStatus;
