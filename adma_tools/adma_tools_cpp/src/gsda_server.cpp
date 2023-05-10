@@ -362,9 +362,9 @@ void GSDAServer::fillDataScaledMsg(adma_ros_driver_msgs::msg::AdmaDataScaled& da
     dataScaledMsg.poi_1.acc_hor.z = readValue("Acc_Hor_Z_POI1");
 
     // Auxiliary
-    dataScaledMsg.poi_1.inv_path_radius = readValue("Acc_Hor_X_POI1");
-    dataScaledMsg.poi_1.side_slip_angle = readValue("Acc_Hor_Y_POI1");
-    dataScaledMsg.poi_1.dist_trav = readValue("Acc_Hor_Z_POI1");
+    dataScaledMsg.poi_1.inv_path_radius = readValue("Inv_Path_Radius_POI1");
+    dataScaledMsg.poi_1.side_slip_angle = readValue("Side_Slip_Angle_POI1");
+    dataScaledMsg.poi_1.dist_trav = readValue("Dist_Trav_POI1");
 
     // ins Position
     dataScaledMsg.poi_1.ins_lat_abs = readValue("INS_Lat_Abs_POI1");
@@ -392,9 +392,9 @@ void GSDAServer::fillDataScaledMsg(adma_ros_driver_msgs::msg::AdmaDataScaled& da
     dataScaledMsg.poi_2.acc_hor.z = readValue("Acc_Hor_Z_POI2");
 
     // Auxiliary
-    dataScaledMsg.poi_2.inv_path_radius = readValue("Acc_Hor_X_POI2");
-    dataScaledMsg.poi_2.side_slip_angle = readValue("Acc_Hor_Y_POI2");
-    dataScaledMsg.poi_2.dist_trav = readValue("Acc_Hor_Z_POI2");
+    dataScaledMsg.poi_2.inv_path_radius = readValue("Inv_Path_Radius_POI2");
+    dataScaledMsg.poi_2.side_slip_angle = readValue("Side_Slip_Angle_POI2");
+    dataScaledMsg.poi_2.dist_trav = readValue("Dist_Trav_POI2");
 
     // ins Position
     dataScaledMsg.poi_2.ins_lat_abs = readValue("INS_Lat_Abs_POI2");
