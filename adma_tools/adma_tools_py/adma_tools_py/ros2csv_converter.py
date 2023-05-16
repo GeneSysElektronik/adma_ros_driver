@@ -120,92 +120,92 @@ class Ros2CSVConverter(Node):
             file = open(self.filename,"w")
             file.write(f"genesys_id, header_version, format_id, format_version, serial_number, alias,\
             config_id, config_format, config_version, config_size, byte_offset, slice_size, slice_data,\
-            acc_body_hr_x, acc_body_hr_y, acc_body_hr_z,\
-            rate_body_hr_x, rate_body_hr_y, rate_body_hr_z,\
-            rate_body_x, rate_body_y, rate_body_z,\
-            rate_hor_x, rate_hor_y, rate_hor_z,\
-            acc_body_x, acc_body_y, acc_body_z,\
-            acc_hor_x, acc_hor_y, acc_hor_z,\
-            ext_vel_an_x, ext_vel_an_y,\
-            ext_vel_dig_x, ext_vel_dig_y, ext_vel_dig_pulses_x, ext_vel_dig_pulses_y, ext_vel_x_corrected, ext_vel_y_corrected,\
-            inv_path_radius, side_slip_angle, dist_trav,\
-            trig_rising_1, trig_falling_1, trig_rising_2, trig_falling_2, trig_rising_3, trig_falling_3, trig_rising_4, trig_falling_4,\
-            system_ta, system_temp, system_time_since_init, system_dsp_load,\
-            gnss_lat_abs, gnss_long_abs, gnss_pos_rel_x, gnss_pos_rel_y,\
-            gnss_stddev_lat, gnss_stddev_long, gnss_stddev_height,\
-            gnss_vel_frame_x, gnss_vel_frame_y, gnss_vel_frame_z, gnss_vel_latency,\
-            gnss_stddev_vel_x, gnss_stddev_vel_y, gnss_stddev_vel_z,\
-            gnss_time_msec, gnss_time_week, gnss_trigger,\
-            gnss_diffage, gnss_sats_used, gnss_sats_visible, gnss_sats_dualant_used, gnss_sats_dualant_visible,\
-            gnss_log_delay, gnss_receiver_load, gnss_base_nr,\
-            ins_roll, ins_pitch, ins_yaw, gnss_cog,\
-            gnss_height, undulation, gnss_dualant_time_msec, gnss_dualant_time_week,\
-            gnss_dualant_heading, gnss_dualant_pitch,\
-            gnss_dualant_stddev_heading, gnss_dualant_stddev_pitch, gnss_dualant_stddev_heading_hr, gnss_dualant_stddev_pitch_hr,\
-            ins_height, ins_time_msec, ins_time_week, leap_seconds,\
-            ins_lat_abs, ins_long_abs, ins_pos_rel_x, ins_pos_rel_y,\
-            ins_vel_hor_x, ins_vel_hor_y, ins_vel_hor_z,\
-            ins_vel_frame_x, ins_vel_frame_y, ins_vel_frame_z,\
-            ins_stddev_lat, ins_stddev_long, ins_stddev_height,\
-            ins_stddev_vel_x, ins_stddev_vel_y, ins_stddev_vel_z,\
-            ins_stddev_roll, ins_stddev_pitch, ins_stddev_yaw,\
-            an1, an2, an3, an4,\
-            gnss_receiver_error, gnss_receiver_status,\
-            time_msec, time_nsec,\
-            poi_1_acc_body_x, poi_1_acc_body_y, poi_1_acc_body_z,\
-            poi_1_acc_hor_x, poi_1_acc_hor_y, poi_1_acc_hor_z,\
-            poi_1_inv_path_radius, poi_1_side_slip_angle, poi_1_dist_trav, poi_1_ins_height,\
-            poi_1_ins_lat_abs, poi_1_ins_long_abs, poi_1_ins_pos_rel_x, poi_1_ins_pos_rel_y,\
-            poi_1_ins_vel_hor_x, poi_1_ins_vel_hor_y, poi_1_ins_vel_hor_z,\
-            poi_2_acc_body_x, poi_2_acc_body_y, poi_2_acc_body_z,\
-            poi_2_acc_hor_x, poi_2_acc_hor_y, poi_2_acc_hor_z,\
-            poi_2_inv_path_radius, poi_2_side_slip_angle, poi_2_dist_trav, poi_2_ins_height,\
-            poi_2_ins_lat_abs, poi_2_ins_long_abs, poi_2_ins_pos_rel_x, poi_2_ins_pos_rel_y,\
-            poi_2_ins_vel_hor_x, poi_2_ins_vel_hor_y, poi_2_ins_vel_hor_z,\
-            poi_3_acc_body_x, poi_3_acc_body_y, poi_3_acc_body_z,\
-            poi_3_acc_hor_x, poi_3_acc_hor_y, poi_3_acc_hor_z,\
-            poi_3_inv_path_radius, poi_3_side_slip_angle, poi_3_dist_trav, poi_3_ins_height,\
-            poi_3_ins_lat_abs, poi_3_ins_long_abs, poi_3_ins_pos_rel_x, poi_3_ins_pos_rel_y,\
-            poi_3_ins_vel_hor_x, poi_3_ins_vel_hor_y, poi_3_ins_vel_hor_z,\
-            poi_4_acc_body_x, poi_4_acc_body_y, poi_4_acc_body_z,\
-            poi_4_acc_hor_x, poi_4_acc_hor_y, poi_4_acc_hor_z,\
-            poi_4_inv_path_radius, poi_4_side_slip_angle, poi_4_dist_trav, poi_4_ins_height,\
-            poi_4_ins_lat_abs, poi_4_ins_long_abs, poi_4_ins_pos_rel_x, poi_4_ins_pos_rel_y,\
-            poi_4_ins_vel_hor_x, poi_4_ins_vel_hor_y, poi_4_ins_vel_hor_z,\
-            poi_5_acc_body_x, poi_5_acc_body_y, poi_5_acc_body_z,\
-            poi_5_acc_hor_x, poi_5_acc_hor_y, poi_5_acc_hor_z,\
-            poi_5_inv_path_radius, poi_5_side_slip_angle, poi_5_dist_trav, poi_5_ins_height,\
-            poi_5_ins_lat_abs, poi_5_ins_long_abs, poi_5_ins_pos_rel_x, poi_5_ins_pos_rel_y,\
-            poi_5_ins_vel_hor_x, poi_5_ins_vel_hor_y, poi_5_ins_vel_hor_z,\
-            poi_6_acc_body_x, poi_6_acc_body_y, poi_6_acc_body_z,\
-            poi_6_acc_hor_x, poi_6_acc_hor_y, poi_6_acc_hor_z,\
-            poi_6_inv_path_radius, poi_6_side_slip_angle, poi_6_dist_trav, poi_6_ins_height,\
-            poi_6_ins_lat_abs, poi_6_ins_long_abs, poi_6_ins_pos_rel_x, poi_6_ins_pos_rel_y,\
-            poi_6_ins_vel_hor_x, poi_6_ins_vel_hor_y, poi_6_ins_vel_hor_z,\
-            poi_7_acc_body_x, poi_7_acc_body_y, poi_7_acc_body_z,\
-            poi_7_acc_hor_x, poi_7_acc_hor_y, poi_7_acc_hor_z,\
-            poi_7_inv_path_radius, poi_7_side_slip_angle, poi_7_dist_trav, poi_7_ins_height,\
-            poi_7_ins_lat_abs, poi_7_ins_long_abs, poi_7_ins_pos_rel_x, poi_7_ins_pos_rel_y,\
-            poi_7_ins_vel_hor_x, poi_7_ins_vel_hor_y, poi_7_ins_vel_hor_z,\
-            poi_8_acc_body_x, poi_8_acc_body_y, poi_8_acc_body_z,\
-            poi_8_acc_hor_x, poi_8_acc_hor_y, poi_8_acc_hor_z,\
-            poi_8_inv_path_radius, poi_8_side_slip_angle, poi_8_dist_trav, poi_8_ins_height,\
-            poi_8_ins_lat_abs, poi_8_ins_long_abs, poi_8_ins_pos_rel_x, poi_8_ins_pos_rel_y,\
-            poi_8_ins_vel_hor_x, poi_8_ins_vel_hor_y, poi_8_ins_vel_hor_z,\
-            status_gnss_mode, status_standstill, status_skidding, status_external_vel_out,\
-            status_trig_gnss, status_signal_in3, status_signal_in2, status_signal_in1,\
-            status_alignment, status_ahrs_ins, status_dead_reckoning, status_synclock,\
-            status_evk_activ, status_evk_estimates, status_heading_executed, status_config_changed,\
-            status_tilt, status_pos, status_count,\
-            status_kalmanfilter_settled, status_kf_lat_stimulated, status_kf_long_stimulated, status_kf_steady_state,\
-            status_speed, status_robot,\
-            error_gyro_hw, error_accel_hw, error_ext_speed_hw, error_gnss_hw,\
-            error_data_bus_checksum, error_eeprom, error_xmit, error_cmd,\
-            error_data_bus, error_can_bus, error_num,\
-            error_temp_warning, error_reduced_accuracy, error_range_max,\
-            warn_gnss_no_solution, warn_gnss_vel_ignored, warn_gnss_pos_ignored, warn_gnss_unable_to_cfg,\
-            warn_speed_off, warn_gnss_dualant_ignored,\
-            error_hw_sticky\
+            Acc_Body_HR_X, Acc_Body_HR_Y, Acc_Body_HR_Z,\
+            Rate_Body_HR_X, Rate_Body_HR_Y, Rate_Body_HR_Z,\
+            Rate_Body_X, Rate_Body_Y, Rate_Body_Z,\
+            Rate_Hor_X, Rate_Hor_Y, Rate_Hor_Z,\
+            Acc_Body_X, Acc_Body_Y, Acc_Body_Z,\
+            Acc_Hor_X, Acc_Hor_Y, Acc_Hor_Z,\
+            Ext_Vel_An_X, Ext_Vel_An_Y,\
+            Ext_Vel_Dig_X, Ext_Vel_Dig_Y, Ext_Vel_Dig_Pulses_X, Ext_Vel_Dig_Pulses_Y, Ext_Vel_X_Corrected, Ext_Vel_Y_Corrected,\
+            Inv_Path_Radius, Side_Slip_Angle, Dist_Trav,\
+            Trig_Rising_1, Trig_Falling_1, Trig_Rising_2, Trig_Falling_2, Trig_Rising_3, Trig_Falling_3, Trig_Rising_4, Trig_Falling_4,\
+            System_Ta, System_Temp, System_Time_Since_Init, System_Dsp_Load,\
+            GNSS_Lat_Abs, GNSS_Long_Abs, GNSS_Pos_Rel_X, GNSS_Pos_Rel_Y,\
+            GNSS_Stddev_Lat, GNSS_Stddev_Long, GNSS_Stddev_Height,\
+            GNSS_Vel_Frame_X, GNSS_Vel_Frame_Y, GNSS_Vel_Frame_Z, GNSS_Vel_Latency,\
+            GNSS_Stddev_Vel_X, GNSS_Stddev_Vel_Y, GNSS_Stddev_Vel_Z,\
+            GNSS_Time_msec, GNSS_Time_Week, GNSS_Trigger,\
+            GNSS_Diffage, GNSS_Sats_Used, GNSS_Sats_Visible, GNSS_Sats_Dualant_Used, GNSS_Sats_Dualant_Visible,\
+            GNSS_Log_Delay, GNSS_Receiver_Load, GNSS_BaseNr,\
+            INS_Roll, INS_Pitch, INS_Yaw, GNSS_COG,\
+            GNSS_Height, Undulation, GNSS_Dualant_Time_msec, GNSS_Dualant_Time_Week,\
+            GNSS_Dualant_Heading, GNSS_Dualant_Pitch,\
+            GNSS_Dualant_Stddev_Heading, GNSS_Dualant_Stddev_Pitch, GNSS_Dualant_Stddev_Heading_HR, GNSS_Dualant_Stddev_Pitch_HR,\
+            INS_Height, INS_Time_msec, INS_Time_week, Leap_Seconds,\
+            INS_Lat_Abs, INS_Long_Abs, INS_Pos_Rel_X, INS_Pos_Rel_Y,\
+            INS_Vel_Hor_X, INS_Vel_Hor_Y, INS_Vel_Hor_Z,\
+            INS_Vel_Frame_X, INS_Vel_Frame_Y, INS_Vel_Frame_Z,\
+            INS_Stddev_Lat, INS_Stddev_Long, INS_Stddev_Height,\
+            INS_Stddev_Vel_X, INS_Stddev_Vel_Y, INS_Stddev_Vel_Z,\
+            INS_Stddev_Roll, INS_Stddev_Pitch, INS_Stddev_Yaw,\
+            AN1, AN2, AN3, AN4,\
+            GNSS_Receiver_Error, GNSS_Receiver_Status,\
+            Time_msec, Time_nsec,\
+            Acc_Body_X_POI1, Acc_Body_Y_POI1, Acc_Body_Z_POI1,\
+            Acc_Hor_X_POI1, Acc_Hor_Y_POI1, Acc_Hor_Z_POI1,\
+            Inv_Path_Radius_POI1, Side_Slip_Angle_POI1, Dist_Trav_POI1, INS_Height_POI1,\
+            INS_Lat_Abs_POI1, INS_Long_Abs_POI1, INS_Pos_Rel_X_POI1, INS_Pos_Rel_Y_POI1,\
+            INS_Vel_Hor_X_POI1, INS_Vel_Hor_Y_POI1, INS_Vel_Hor_Z_POI1,\
+            Acc_Body_X_POI2, Acc_Body_Y_POI2, Acc_Body_Z_POI2,\
+            Acc_Hor_X_POI2, Acc_Hor_Y_POI2, Acc_Hor_Z_POI2,\
+            Inv_Path_Radius_POI2, Side_Slip_Angle_POI2, Dist_Trav_POI2, INS_Height_POI2,\
+            INS_Lat_Abs_POI2, INS_Long_Abs_POI2, INS_Pos_Rel_X_POI2, INS_Pos_Rel_Y_POI2,\
+            INS_Vel_Hor_X_POI2, INS_Vel_Hor_Y_POI2, INS_Vel_Hor_Z_POI2,\
+            Acc_Body_X_POI3, Acc_Body_Y_POI3, Acc_Body_Z_POI3,\
+            Acc_Hor_X_POI3, Acc_Hor_Y_POI3, Acc_Hor_Z_POI3,\
+            Inv_Path_Radius_POI3, Side_Slip_Angle_POI3, Dist_Trav_POI3, INS_Height_POI3,\
+            INS_Lat_Abs_POI3, INS_Long_Abs_POI3, INS_Pos_Rel_X_POI3, INS_Pos_Rel_Y_POI3,\
+            INS_Vel_Hor_X_POI3, INS_Vel_Hor_Y_POI3, INS_Vel_Hor_Z_POI3,\
+            Acc_Body_X_POI4, Acc_Body_Y_POI4, Acc_Body_Z_POI4,\
+            Acc_Hor_X_POI4, Acc_Hor_Y_POI4, Acc_Hor_Z_POI4,\
+            Inv_Path_Radius_POI4, Side_Slip_Angle_POI4, Dist_Trav_POI4, INS_Height_POI4,\
+            INS_Lat_Abs_POI4, INS_Long_Abs_POI4, INS_Pos_Rel_X_POI4, INS_Pos_Rel_Y_POI4,\
+            INS_Vel_Hor_X_POI4, INS_Vel_Hor_Y_POI4, INS_Vel_Hor_Z_POI4,\
+            Acc_Body_X_POI5, Acc_Body_Y_POI5, Acc_Body_Z_POI5,\
+            Acc_Hor_X_POI5, Acc_Hor_Y_POI5, Acc_Hor_Z_POI5,\
+            Inv_Path_Radius_POI5, Side_Slip_Angle_POI5, Dist_Trav_POI5, INS_Height_POI5,\
+            INS_Lat_Abs_POI5, INS_Long_Abs_POI5, INS_Pos_Rel_X_POI5, INS_Pos_Rel_Y_POI5,\
+            INS_Vel_Hor_X_POI5, INS_Vel_Hor_Y_POI5, INS_Vel_Hor_Z_POI5,\
+            Acc_Body_X_POI6, Acc_Body_Y_POI6, Acc_Body_Z_POI6,\
+            Acc_Hor_X_POI6, Acc_Hor_Y_POI6, Acc_Hor_Z_POI6,\
+            Inv_Path_Radius_POI6, Side_Slip_Angle_POI6, Dist_Trav_POI6, INS_Height_POI6,\
+            INS_Lat_Abs_POI6, INS_Long_Abs_POI6, INS_Pos_Rel_X_POI6, INS_Pos_Rel_Y_POI6,\
+            INS_Vel_Hor_X_POI6, INS_Vel_Hor_Y_POI6, INS_Vel_Hor_Z_POI6,\
+            Acc_Body_X_POI7, Acc_Body_Y_POI7, Acc_Body_Z_POI7,\
+            Acc_Hor_X_POI7, Acc_Hor_Y_POI7, Acc_Hor_Z_POI7,\
+            Inv_Path_Radius_POI7, Side_Slip_Angle_POI7, Dist_Trav_POI7, INS_Height_POI7,\
+            INS_Lat_Abs_POI7, INS_Long_Abs_POI7, INS_Pos_Rel_X_POI7, INS_Pos_Rel_Y_POI7,\
+            INS_Vel_Hor_X_POI7, INS_Vel_Hor_Y_POI7, INS_Vel_Hor_Z_POI7,\
+            Acc_Body_X_POI8, Acc_Body_Y_POI8, Acc_Body_Z_POI8,\
+            Acc_Hor_X_POI8, Acc_Hor_Y_POI8, Acc_Hor_Z_POI8,\
+            Inv_Path_Radius_POI8, Side_Slip_Angle_POI8, Dist_Trav_POI8, INS_Height_POI8,\
+            INS_Lat_Abs_POI8, INS_Long_Abs_POI8, INS_Pos_Rel_X_POI8, INS_Pos_Rel_Y_POI8,\
+            INS_Vel_Hor_X_POI8, INS_Vel_Hor_Y_POI8, INS_Vel_Hor_Z_POI8,\
+            Status_GNSS_Mode, Status_Standstill, Status_Skidding, Status_External_Vel_Out,\
+            Status_Trig_GNSS, Status_Signal_IN3, Status_Signal_IN2, Status_Signal_IN1,\
+            Status_Alignment, Status_AHRS_INS, Status_Dead_Reckoning, Status_SyncLock,\
+            Status_EVK_Activ, Status_EVK_Estimates, Status_Heading_Executed, Status_Config_Changed,\
+            Status_Tilt, Status_Pos, Status_Count,\
+            Status_Kalmanfilter_Settled, Status_KF_Lat_Stimulated, Status_KF_Long_Stimulated, Status_KF_steady_state,\
+            Status_Speed, Status_Robot,\
+            Error_Gyro_HW, Error_Accel_HW, Error_Ext_Speed_HW, Error_GNSS_HW,\
+            Error_Data_Bus_Checksum, Error_Eeprom, Error_Xmit, Error_Cmd,\
+            Error_Data_Bus, Error_CAN_Bus, Error_Num,\
+            Error_Temp_Warning, Error_Reduced_Accuracy, Error_Range_Max,\
+            Warn_GNSS_No_Solution, Warn_GNSS_Vel_Ignored, Warn_GNSS_Pos_Ignored, Warn_GNSS_Unable_To_Cfg,\
+            Warn_Speed_Off, Warn_GNSS_Dualant_Ignored,\
+            Error_HW_Sticky\
             ")                                                        
 
         self.i += 1
