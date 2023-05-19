@@ -67,10 +67,20 @@ void ADMA2ROSParserV334::mapStatusBytes(
 void ADMA2ROSParserV334::mapStatusBitfields(
   adma_ros_driver_msgs::msg::Status & ros_msg_status, AdmaDataV334 & adma_data)
 {
+  mapStatusBit0(ros_msg_status, adma_data.gnssStatus);
+  mapStatusBit1(ros_msg_status, adma_data.signalInStatus);
+  mapStatusBit2(ros_msg_status, adma_data.miscStatus);
+  ros_msg_status.status_count = adma_data.statuscount;
+  mapStatusBit4(ros_msg_status, adma_data.kfStatus);
+  mapStatusBit5(ros_msg_status, adma_data.statusRobot);
+}
+
+void ADMA2ROSParserV334::mapStatusBit0(adma_ros_driver_msgs::msg::Status & ros_msg_status, unsigned char status_byte)
+{
   // status_byte_0
-  unsigned char gnss_status = adma_data.gnssStatus;
+  unsigned char gnss_status = status_byte;
   /* status gnss mode */
-  std::bitset<8> gnss_status_byte = adma_data.gnssStatus;
+  std::bitset<8> gnss_status_byte = status_byte;
   std::bitset<4> status_gnss_mode;
   status_gnss_mode[0] = gnss_status_byte[0];
   status_gnss_mode[1] = gnss_status_byte[1];
@@ -87,9 +97,12 @@ void ADMA2ROSParserV334::mapStatusBitfields(
   ros_msg_status.status_skidding = status_skidding;
   /* status external velocity slip */
   ros_msg_status.status_external_vel_out = status_external_vel;
+}
 
+void ADMA2ROSParserV334::mapStatusBit1(adma_ros_driver_msgs::msg::Status & ros_msg_status, unsigned char status_byte)
+{
   // status_byte_1
-  unsigned char gnss_trigger_status = adma_data.signalInStatus;
+  unsigned char gnss_trigger_status = status_byte;
   bool status_trig_gnss = getbit(gnss_trigger_status, 0);
   bool status_signal_in3 = getbit(gnss_trigger_status, 1);
   bool status_signal_in2 = getbit(gnss_trigger_status, 2);
@@ -114,9 +127,12 @@ void ADMA2ROSParserV334::mapStatusBitfields(
   ros_msg_status.status_dead_reckoning = status_dead_reckoning;
   /* status statussynclock */
   ros_msg_status.status_synclock = status_synclock;
+}
 
+void ADMA2ROSParserV334::mapStatusBit2(adma_ros_driver_msgs::msg::Status & ros_msg_status, unsigned char status_byte)
+{
   // status_byte_2
-  unsigned char evk_status = adma_data.miscStatus;
+  unsigned char evk_status = status_byte;
   bool status_evk_activ = getbit(evk_status, 0);
   bool status_evk_estimates = getbit(evk_status, 1);
   bool status_heading_executed = getbit(evk_status, 2);
@@ -130,7 +146,7 @@ void ADMA2ROSParserV334::mapStatusBitfields(
   /* status status_configuration_changed */
   ros_msg_status.status_config_changed = status_configuration_changed;
   /* status tilt */
-  std::bitset<8> evk_status_byte = adma_data.miscStatus;
+  std::bitset<8> evk_status_byte = status_byte;
   std::bitset<2> status_tilt;
   status_tilt[0] = evk_status_byte[4];
   status_tilt[1] = evk_status_byte[5];
@@ -140,11 +156,12 @@ void ADMA2ROSParserV334::mapStatusBitfields(
   status_pos[0] = evk_status_byte[6];
   status_pos[1] = evk_status_byte[7];
   ros_msg_status.status_pos = status_pos.to_ulong();
+}
 
-  ros_msg_status.status_count = adma_data.statuscount;
-
+void ADMA2ROSParserV334::mapStatusBit4(adma_ros_driver_msgs::msg::Status & ros_msg_status, unsigned char status_byte)
+{
   // status_byte_4
-  unsigned char kf_status = adma_data.kfStatus;
+  unsigned char kf_status = status_byte;
   bool status_kalmanfilter_settled = getbit(kf_status, 0);
   bool status_kf_lat_stimulated = getbit(kf_status, 1);
   bool status_kf_long_stimulated = getbit(kf_status, 2);
@@ -154,14 +171,17 @@ void ADMA2ROSParserV334::mapStatusBitfields(
   ros_msg_status.status_kf_long_stimulated = status_kf_long_stimulated;
   ros_msg_status.status_kf_steady_state = status_kf_steady_state;
 
-  std::bitset<8> kf_status_byte = adma_data.kfStatus;
+  std::bitset<8> kf_status_byte = status_byte;
   std::bitset<2> status_speed;
   status_speed[0] = kf_status_byte[4];
   status_speed[1] = kf_status_byte[5];
   ros_msg_status.status_speed = status_speed.to_ulong();
+}
 
+void ADMA2ROSParserV334::mapStatusBit5(adma_ros_driver_msgs::msg::Status & ros_msg_status, unsigned char status_byte)
+{
   // status_byte_5
-  std::bitset<8> bit_status_robot = adma_data.statusRobot;
+  std::bitset<8> bit_status_robot = status_byte;
   std::bitset<4> status_robot;
   for (size_t i = 0; i < 4; i++) {
     status_robot[i] = bit_status_robot[i];
@@ -182,34 +202,47 @@ void ADMA2ROSParserV334::mapErrorWarningBytes(
 void ADMA2ROSParserV334::mapErrorWarningBitfields(
   adma_ros_driver_msgs::msg::ErrorWarning & ros_msg_error_warning, AdmaDataV334 & adma_data)
 {
-  unsigned char error_byte_0 = adma_data.dataError1;
-  ros_msg_error_warning.error_gyro_hw = getbit(error_byte_0, 0);
-  ros_msg_error_warning.error_accel_hw = getbit(error_byte_0, 1);
-  ros_msg_error_warning.error_ext_speed_hw = getbit(error_byte_0, 2);
-  ros_msg_error_warning.error_gnss_hw = getbit(error_byte_0, 3);
-  ros_msg_error_warning.error_data_bus_checksum = getbit(error_byte_0, 4);
-  ros_msg_error_warning.error_eeprom = getbit(error_byte_0, 5);
-  ros_msg_error_warning.error_xmit = getbit(error_byte_0, 6);
-  ros_msg_error_warning.error_cmd = getbit(error_byte_0, 7);
+  mapErrorBit0(ros_msg_error_warning, adma_data.dataError1);
+  mapErrorBit1(ros_msg_error_warning, adma_data.dataError2);
+  mapWarningBit0(ros_msg_error_warning, adma_data.dataWarn1);
+  mapErrorBit2(ros_msg_error_warning, adma_data.dataError3);
+}
 
-  unsigned char error_byte_1 = adma_data.dataError2;
-  ros_msg_error_warning.error_data_bus = getbit(error_byte_1, 0);
-  ros_msg_error_warning.error_can_bus = getbit(error_byte_1, 1);
-  ros_msg_error_warning.error_num = getbit(error_byte_1, 3);
-  ros_msg_error_warning.error_temp_warning = getbit(error_byte_1, 4);
-  ros_msg_error_warning.error_reduced_accuracy = getbit(error_byte_1, 5);
-  ros_msg_error_warning.error_range_max = getbit(error_byte_1, 6);
+void ADMA2ROSParserV334::mapErrorBit0(adma_ros_driver_msgs::msg::ErrorWarning & ros_msg_error_warning, unsigned char error_byte)
+{
+  ros_msg_error_warning.error_gyro_hw = getbit(error_byte, 0);
+  ros_msg_error_warning.error_accel_hw = getbit(error_byte, 1);
+  ros_msg_error_warning.error_ext_speed_hw = getbit(error_byte, 2);
+  ros_msg_error_warning.error_gnss_hw = getbit(error_byte, 3);
+  ros_msg_error_warning.error_data_bus_checksum = getbit(error_byte, 4);
+  ros_msg_error_warning.error_eeprom = getbit(error_byte, 5);
+  ros_msg_error_warning.error_xmit = getbit(error_byte, 6);
+  ros_msg_error_warning.error_cmd = getbit(error_byte, 7);
+}
 
-  unsigned char warn_byte_1 = adma_data.dataWarn1;
-  ros_msg_error_warning.warn_gnss_no_solution = getbit(warn_byte_1, 0);
-  ros_msg_error_warning.warn_gnss_vel_ignored = getbit(warn_byte_1, 1);
-  ros_msg_error_warning.warn_gnss_pos_ignored = getbit(warn_byte_1, 2);
-  ros_msg_error_warning.warn_gnss_unable_to_cfg = getbit(warn_byte_1, 3);
-  ros_msg_error_warning.warn_speed_off = getbit(warn_byte_1, 4);
-  ros_msg_error_warning.warn_gnss_dualant_ignored = getbit(warn_byte_1, 5);
+void ADMA2ROSParserV334::mapErrorBit1(adma_ros_driver_msgs::msg::ErrorWarning & ros_msg_error_warning, unsigned char error_byte)
+{
+  ros_msg_error_warning.error_data_bus = getbit(error_byte, 0);
+  ros_msg_error_warning.error_can_bus = getbit(error_byte, 1);
+  ros_msg_error_warning.error_num = getbit(error_byte, 3);
+  ros_msg_error_warning.error_temp_warning = getbit(error_byte, 4);
+  ros_msg_error_warning.error_reduced_accuracy = getbit(error_byte, 5);
+  ros_msg_error_warning.error_range_max = getbit(error_byte, 6);
+}
 
-  unsigned char error_byte_2 = adma_data.dataError3;
-  ros_msg_error_warning.error_hw_sticky = getbit(error_byte_2, 0);
+void ADMA2ROSParserV334::mapWarningBit0(adma_ros_driver_msgs::msg::ErrorWarning & ros_msg_error_warning, unsigned char warning_byte)
+{
+  ros_msg_error_warning.warn_gnss_no_solution = getbit(warning_byte, 0);
+  ros_msg_error_warning.warn_gnss_vel_ignored = getbit(warning_byte, 1);
+  ros_msg_error_warning.warn_gnss_pos_ignored = getbit(warning_byte, 2);
+  ros_msg_error_warning.warn_gnss_unable_to_cfg = getbit(warning_byte, 3);
+  ros_msg_error_warning.warn_speed_off = getbit(warning_byte, 4);
+  ros_msg_error_warning.warn_gnss_dualant_ignored = getbit(warning_byte, 5);
+}
+
+void ADMA2ROSParserV334::mapErrorBit2(adma_ros_driver_msgs::msg::ErrorWarning & ros_msg_error_warning, unsigned char error_byte)
+{
+  ros_msg_error_warning.error_hw_sticky = getbit(error_byte, 0);
 }
 
 void ADMA2ROSParserV334::mapUnscaledData(

@@ -31,7 +31,7 @@
 *.out
 *.app
 
-adma_tools/adma_tools/__pycache__/
+__pycache__
 .vs/slnx.sqlite
 .vs/adma_ros_driver/v17/.wsuo
 .vs/adma_ros_driver/FileContentIndex/read.lock

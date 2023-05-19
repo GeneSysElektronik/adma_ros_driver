@@ -200,14 +200,14 @@ void GSDAServer::extractBytes(adma_ros_driver_msgs::msg::AdmaStatus &stateMsg, a
   unsigned char warn1 = (unsigned char) readByteValue("Error2");
   unsigned char error3 = (unsigned char) readByteValue("Error3");
 
-  // fill bytes
+  // fill status bytes
   stateMsg.status_bytes.status_byte_0 = gnssStatus;
   stateMsg.status_bytes.status_byte_1 = signalInStatus;
   stateMsg.status_bytes.status_byte_2 = miscStatus;
   // stateMsg.status_bytes.status_count = ?;
   stateMsg.status_bytes.status_byte_4 = kfStatus;
   stateMsg.status_bytes.status_byte_5 = statusRobot;
-
+  //fill error/warning bytes
   stateMsg.error_warnings_bytes.error_1 = error1;
   stateMsg.error_warnings_bytes.error_2 = error2;
   stateMsg.error_warnings_bytes.warn_1 = warn1;
@@ -217,130 +217,17 @@ void GSDAServer::extractBytes(adma_ros_driver_msgs::msg::AdmaStatus &stateMsg, a
   dataScaledMsg.error_warning.warn_1 = warn1;
   dataScaledMsg.error_warning.error_3 = error3;
 
-  // extract bits from bytes
-  // status_byte_0
-  /* status gnss mode */
-  std::bitset<8> gnss_status_byte = gnssStatus;
-  std::bitset<4> status_gnss_mode;
-  status_gnss_mode[0] = gnss_status_byte[0];
-  status_gnss_mode[1] = gnss_status_byte[1];
-  status_gnss_mode[2] = gnss_status_byte[2];
-  status_gnss_mode[3] = gnss_status_byte[3];
-  dataScaledMsg.status.status_gnss_mode = status_gnss_mode.to_ulong();
-  bool standstill_c = getbit(gnssStatus, 4);
-  bool status_skidding = getbit(gnssStatus, 5);
-  bool status_external_vel = getbit(gnssStatus, 7);
-  /* status stand still */
-  dataScaledMsg.status.status_standstill = standstill_c;
-  /* status skidding */
-  dataScaledMsg.status.status_skidding = status_skidding;
-  /* status external velocity slip */
-  dataScaledMsg.status.status_external_vel_out = status_external_vel;
+  // parse SEW bits of bytes
+  parser_->parserV334_.mapStatusBit0(dataScaledMsg.status, gnssStatus);
+  parser_->parserV334_.mapStatusBit1(dataScaledMsg.status, signalInStatus);
+  parser_->parserV334_.mapStatusBit2(dataScaledMsg.status, miscStatus);
+  parser_->parserV334_.mapStatusBit4(dataScaledMsg.status, kfStatus);
+  parser_->parserV334_.mapStatusBit5(dataScaledMsg.status, statusRobot);
 
-  // status_byte_1
-  bool status_trig_gnss = getbit(signalInStatus, 0);
-  bool status_signal_in3 = getbit(signalInStatus, 1);
-  bool status_signal_in2 = getbit(signalInStatus, 2);
-  bool status_signal_in1 = getbit(signalInStatus, 3);
-  bool status_alignment = getbit(signalInStatus, 4);
-  bool status_ahrs_ins = getbit(signalInStatus, 5);
-  bool status_dead_reckoning = getbit(signalInStatus, 6);
-  bool status_synclock = getbit(signalInStatus, 7);
-  /* status statustriggnss */
-  dataScaledMsg.status.status_trig_gnss = status_trig_gnss;
-  /* status statussignalin3 */
-  dataScaledMsg.status.status_signal_in3 = status_signal_in3;
-  /* status statussignalin2 */
-  dataScaledMsg.status.status_signal_in2 = status_signal_in2;
-  /* status statussignalin1 */
-  dataScaledMsg.status.status_signal_in1 = status_signal_in1;
-  /* status statusalignment */
-  dataScaledMsg.status.status_alignment = status_alignment;
-  /* status statusahrsins */
-  dataScaledMsg.status.status_ahrs_ins = status_ahrs_ins;
-  /* status statusdeadreckoning */
-  dataScaledMsg.status.status_dead_reckoning = status_dead_reckoning;
-  /* status statussynclock */
-  dataScaledMsg.status.status_synclock = status_synclock;
-
-  // status_byte_2
-  bool status_evk_activ = getbit(miscStatus, 0);
-  bool status_evk_estimates = getbit(miscStatus, 1);
-  bool status_heading_executed = getbit(miscStatus, 2);
-  bool status_configuration_changed = getbit(miscStatus, 3);
-  /* status statustriggnss */
-  dataScaledMsg.status.status_evk_activ = status_evk_activ;
-  /* status status_evk_estimates */
-  dataScaledMsg.status.status_evk_estimates = status_evk_estimates;
-  /* status status_heading_executed */
-  dataScaledMsg.status.status_heading_executed = status_heading_executed;
-  /* status status_configuration_changed */
-  dataScaledMsg.status.status_config_changed = status_configuration_changed;
-  /* status tilt */
-  std::bitset<8> evk_status_byte = miscStatus;
-  std::bitset<2> status_tilt;
-  status_tilt[0] = evk_status_byte[4];
-  status_tilt[1] = evk_status_byte[5];
-  dataScaledMsg.status.status_tilt = status_tilt.to_ulong();
-  /* status pos */
-  std::bitset<2> status_pos;
-  status_pos[0] = evk_status_byte[6];
-  status_pos[1] = evk_status_byte[7];
-  dataScaledMsg.status.status_pos = status_pos.to_ulong();
-
-  // dataScaledMsg.status.status_count = adma_data.statuscount;
-
-  // status_byte_4
-  unsigned char kf_status = kfStatus;
-  bool status_kalmanfilter_settled = getbit(kf_status, 0);
-  bool status_kf_lat_stimulated = getbit(kf_status, 1);
-  bool status_kf_long_stimulated = getbit(kf_status, 2);
-  bool status_kf_steady_state = getbit(kf_status, 3);
-  dataScaledMsg.status.status_kalmanfilter_settled = status_kalmanfilter_settled;
-  dataScaledMsg.status.status_kf_lat_stimulated = status_kf_lat_stimulated;
-  dataScaledMsg.status.status_kf_long_stimulated = status_kf_long_stimulated;
-  dataScaledMsg.status.status_kf_steady_state = status_kf_steady_state;
-
-  std::bitset<8> kf_status_byte = kfStatus;
-  std::bitset<2> status_speed;
-  status_speed[0] = kf_status_byte[4];
-  status_speed[1] = kf_status_byte[5];
-  dataScaledMsg.status.status_speed = status_speed.to_ulong();
-
-  // status_byte_5
-  std::bitset<8> bit_status_robot = statusRobot;
-  std::bitset<4> status_robot;
-  for (size_t i = 0; i < 4; i++) {
-    status_robot[i] = bit_status_robot[i];
-  }
-  dataScaledMsg.status.status_robot = status_robot.to_ulong();
-
-
-  // extract error/warning bits from bytes
-  stateMsg.error_warnings.error_gyro_hw = getbit(error1, 0);
-  stateMsg.error_warnings.error_accel_hw = getbit(error1, 1);
-  stateMsg.error_warnings.error_ext_speed_hw = getbit(error1, 2);
-  stateMsg.error_warnings.error_gnss_hw = getbit(error1, 3);
-  stateMsg.error_warnings.error_data_bus_checksum = getbit(error1, 4);
-  stateMsg.error_warnings.error_eeprom = getbit(error1, 5);
-  stateMsg.error_warnings.error_xmit = getbit(error1, 6);
-  stateMsg.error_warnings.error_cmd = getbit(error1, 7);
-
-  stateMsg.error_warnings.error_data_bus = getbit(error2, 0);
-  stateMsg.error_warnings.error_can_bus = getbit(error2, 1);
-  stateMsg.error_warnings.error_num = getbit(error2, 3);
-  stateMsg.error_warnings.error_temp_warning = getbit(error2, 4);
-  stateMsg.error_warnings.error_reduced_accuracy = getbit(error2, 5);
-  stateMsg.error_warnings.error_range_max = getbit(error2, 6);
-
-  stateMsg.error_warnings.warn_gnss_no_solution = getbit(warn1, 0);
-  stateMsg.error_warnings.warn_gnss_vel_ignored = getbit(warn1, 1);
-  stateMsg.error_warnings.warn_gnss_pos_ignored = getbit(warn1, 2);
-  stateMsg.error_warnings.warn_gnss_unable_to_cfg = getbit(warn1, 3);
-  stateMsg.error_warnings.warn_speed_off = getbit(warn1, 4);
-  stateMsg.error_warnings.warn_gnss_dualant_ignored = getbit(warn1, 5);
-
-  stateMsg.error_warnings.error_hw_sticky = getbit(error3, 0);
+  parser_->parserV334_.mapErrorBit0(stateMsg.error_warnings, error1);
+  parser_->parserV334_.mapErrorBit1(stateMsg.error_warnings, error2);
+  parser_->parserV334_.mapWarningBit0(stateMsg.error_warnings, warn1);
+  parser_->parserV334_.mapErrorBit2(stateMsg.error_warnings, error3);
 }
 
 void GSDAServer::fillDataScaledMsg(adma_ros_driver_msgs::msg::AdmaDataScaled& dataScaledMsg)
