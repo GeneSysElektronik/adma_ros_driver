@@ -570,7 +570,7 @@ void GSDAServer::fillDataScaledMsg(adma_ros_driver_msgs::msg::AdmaDataScaled& da
     dataScaledMsg.ins_pos_rel_x = readValue("INS_Pos_Rel_X");
     dataScaledMsg.ins_pos_rel_y = readValue("INS_Pos_Rel_Y");
     dataScaledMsg.ins_time_msec = readValue("INS_Time_msec");
-    dataScaledMsg.ins_time_week = readValue("INS_Time_week");
+    dataScaledMsg.ins_time_week = readValue("INS_Time_Week");
 
     // ins frame velocities
     dataScaledMsg.ins_vel_frame.x = readValue("INS_Vel_Frame_X");
