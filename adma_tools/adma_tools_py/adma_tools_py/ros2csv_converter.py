@@ -127,22 +127,22 @@ class Ros2CSVConverter(Node):
             Acc_Body_X, Acc_Body_Y, Acc_Body_Z,\
             Acc_Hor_X, Acc_Hor_Y, Acc_Hor_Z,\
             Ext_Vel_An_X, Ext_Vel_An_Y,\
-            Ext_Vel_Dig_X, Ext_Vel_Dig_Y, Ext_Vel_Dig_Pulses_X, Ext_Vel_Dig_Pulses_Y, Ext_Vel_X_Corrected, Ext_Vel_Y_Corrected,\
+            Ext_Vel_Dig_X, Ext_Vel_Dig_Y, Ext_Vel_Dig_Pulses_X, Ext_Vel_Dig_Pulses_Y, Ext_Vel_X_corrected, Ext_Vel_Y_corrected,\
             Inv_Path_Radius, Side_Slip_Angle, Dist_Trav,\
             Trig_Rising_1, Trig_Falling_1, Trig_Rising_2, Trig_Falling_2, Trig_Rising_3, Trig_Falling_3, Trig_Rising_4, Trig_Falling_4,\
-            System_Ta, System_Temp, System_Time_Since_Init, System_Dsp_Load,\
+            System_Ta, System_Temp, System_TimeSinceInit, System_DSP_Load,\
             GNSS_Lat_Abs, GNSS_Long_Abs, GNSS_Pos_Rel_X, GNSS_Pos_Rel_Y,\
             GNSS_Stddev_Lat, GNSS_Stddev_Long, GNSS_Stddev_Height,\
             GNSS_Vel_Frame_X, GNSS_Vel_Frame_Y, GNSS_Vel_Frame_Z, GNSS_Vel_Latency,\
             GNSS_Stddev_Vel_X, GNSS_Stddev_Vel_Y, GNSS_Stddev_Vel_Z,\
             GNSS_Time_msec, GNSS_Time_Week, GNSS_Trigger,\
-            GNSS_Diffage, GNSS_Sats_Used, GNSS_Sats_Visible, GNSS_Sats_Dualant_Used, GNSS_Sats_Dualant_Visible,\
+            GNSS_DiffAge, GNSS_Sats_Used, GNSS_Sats_Visible, GNSS_Sats_DualAnt_Used, GNSS_Sats_DualAnt_Visible,\
             GNSS_Log_Delay, GNSS_Receiver_Load, GNSS_BaseNr,\
             INS_Roll, INS_Pitch, INS_Yaw, GNSS_COG,\
-            GNSS_Height, Undulation, GNSS_Dualant_Time_msec, GNSS_Dualant_Time_Week,\
-            GNSS_Dualant_Heading, GNSS_Dualant_Pitch,\
-            GNSS_Dualant_Stddev_Heading, GNSS_Dualant_Stddev_Pitch, GNSS_Dualant_Stddev_Heading_HR, GNSS_Dualant_Stddev_Pitch_HR,\
-            INS_Height, INS_Time_msec, INS_Time_week, Leap_Seconds,\
+            GNSS_Height, Undulation, GNSS_DualAnt_Time_msec, GNSS_DualAnt_Time_Week,\
+            GNSS_DualAnt_Heading, GNSS_DualAnt_Pitch,\
+            GNSS_DualAnt_Stddev_Heading, GNSS_DualAnt_Stddev_Pitch, GNSS_DualAnt_Stddev_Heading_HR, GNSS_DualAnt_Stddev_Pitch_HR,\
+            INS_Height, INS_Time_msec, INS_Time_Week, Leap_Seconds,\
             INS_Lat_Abs, INS_Long_Abs, INS_Pos_Rel_X, INS_Pos_Rel_Y,\
             INS_Vel_Hor_X, INS_Vel_Hor_Y, INS_Vel_Hor_Z,\
             INS_Vel_Frame_X, INS_Vel_Frame_Y, INS_Vel_Frame_Z,\
@@ -194,17 +194,17 @@ class Ros2CSVConverter(Node):
             INS_Vel_Hor_X_POI8, INS_Vel_Hor_Y_POI8, INS_Vel_Hor_Z_POI8,\
             Status_GNSS_Mode, Status_Standstill, Status_Skidding, Status_External_Vel_Out,\
             Status_Trig_GNSS, Status_Signal_IN3, Status_Signal_IN2, Status_Signal_IN1,\
-            Status_Alignment, Status_AHRS_INS, Status_Dead_Reckoning, Status_SyncLock,\
-            Status_EVK_Activ, Status_EVK_Estimates, Status_Heading_Executed, Status_Config_Changed,\
+            Status_Alignment, Status_AHRS_INS, Status_Dead_reckoning, Status_SyncLock,\
+            Status_EVK_activ, Status_EVK_Estimates, Status_Heading_executed, Status_Config_Changed,\
             Status_Tilt, Status_Pos, Status_Count,\
-            Status_Kalmanfilter_Settled, Status_KF_Lat_Stimulated, Status_KF_Long_Stimulated, Status_KF_steady_state,\
+            Status_Kalmanfilter_settled, Status_KF_Lat_stimulated, Status_KF_Long_stimulated, Status_KF_steady_state,\
             Status_Speed, Status_Robot,\
             Error_Gyro_HW, Error_Accel_HW, Error_Ext_Speed_HW, Error_GNSS_HW,\
             Error_Data_Bus_Checksum, Error_Eeprom, Error_Xmit, Error_Cmd,\
             Error_Data_Bus, Error_CAN_Bus, Error_Num,\
             Error_Temp_Warning, Error_Reduced_Accuracy, Error_Range_Max,\
-            Warn_GNSS_No_Solution, Warn_GNSS_Vel_Ignored, Warn_GNSS_Pos_Ignored, Warn_GNSS_Unable_To_Cfg,\
-            Warn_Speed_Off, Warn_GNSS_Dualant_Ignored,\
+            Warn_GNSS_no_solution, Warn_GNSS_Vel_ignored, Warn_GNSS_Pos_ignored, Warn_GNSS_unable_to_cfg,\
+            Warn_speed_off, Warn_GNSS_DualAnt_ignored,\
             Error_HW_Sticky\
             ")                                                        
 
