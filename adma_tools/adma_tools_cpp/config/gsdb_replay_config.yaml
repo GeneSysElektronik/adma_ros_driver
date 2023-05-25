@@ -17,4 +17,4 @@ genesys:
       port: 1040
       frequency: 100
       protocol_version: 'v3.3.4'
-      gsdb_file: '/home/rschilli/Documents/GeneSys/rosbags_ros2/ROS2_Arbeitsplatz/raw_data.gsdb'
+      gsdb_file: '/home/$USER/$ROS2_WS/data/raw_data.gsdb'

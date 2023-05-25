@@ -9,7 +9,7 @@ from ament_index_python.packages import get_package_share_directory
 import yaml
 def generate_launch_description():
 
-        gsda_path = PathJoinSubstitution('/home/rschilli/Documents/GeneSys/raw_data_60seconds_out_for.gsda')
+        gsda_path = PathJoinSubstitution('/home/$USER/$ROS2_WS/data/$FILENAME.gsda')
         gsda_path_arg = DeclareLaunchArgument('gsda_file', default_value=gsda_path)
         frequency_arg = DeclareLaunchArgument('frequency', default_value='100')
         log_level_arg = DeclareLaunchArgument('log_level', default_value='INFO')
