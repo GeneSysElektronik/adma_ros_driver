@@ -21,7 +21,7 @@ msgCounter_(0)
 {
   // read ros parameters
   frequency_ = this->declare_parameter("frequency", 100);
-  gsdaFilePath_ = declare_parameter("gsda_file", "/home/rschilli/Documents/GeneSys/raw_data_60seconds_out_for.gsda");
+  gsdaFilePath_ = declare_parameter("gsda_file", "/home/$USER/$ROS2_WS/data/$FILENAME.gsda");
   gsdaFile_ = std::fstream(gsdaFilePath_);
   if(gsdaFile_)
   {

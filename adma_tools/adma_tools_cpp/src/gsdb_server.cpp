@@ -25,7 +25,7 @@ msgCounter_(0)
   std::string ip_address = this->declare_parameter("ip_address", "localhost");
   port_ = this->declare_parameter("port", 1040);
   protocol_version_ = this->declare_parameter("protocol_version", "v3.3.4");
-  gsdbFilePath_ = declare_parameter("gsdb_file", "/home/rschilli/Documents/GeneSys/rosbags_ros2/ROS2_Arbeitsplatz/raw_data.gsdb");
+  gsdbFilePath_ = declare_parameter("gsdb_file", "/home/$USER/$ROS2_WS/data/$FILENAME.gsdb");
   gsdbFile_ = std::fstream(gsdbFilePath_);
   if(gsdbFile_)
   {

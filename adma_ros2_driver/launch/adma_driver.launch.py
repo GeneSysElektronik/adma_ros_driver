@@ -1,12 +1,9 @@
 from launch import LaunchDescription
 from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
-from launch.actions import DeclareLaunchArgument, ExecuteProcess, LogInfo, Shutdown
+from launch.actions import DeclareLaunchArgument, ExecuteProcess
 from launch.conditions import IfCondition
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
-import os
-from ament_index_python.packages import get_package_share_directory
-import yaml
 
 def generate_launch_description():
 

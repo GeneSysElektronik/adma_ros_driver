@@ -1,0 +1,5 @@
+genesys:
+  gsda_server:
+    ros__parameters:
+      frequency: 100
+      gsda_file: '/home/$USER/$ROS2_WS/data/$FILENAME.gsda'
