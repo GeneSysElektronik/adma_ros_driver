@@ -23,8 +23,7 @@ class Ros2CSVConverter(Node):
             file = open(self.filename,"a")
 
             file.write("\n")
-            file.write(f"{admaMsg.genesys_id}, {admaMsg.header_version}, {admaMsg.format_id}, {admaMsg.format_version},{admaMsg.serial_number}, {admaMsg.alias},\
-            {admaMsg.config_id}, {admaMsg.config_format}, {admaMsg.config_version}, {admaMsg.config_size},{admaMsg.byte_offset}, {admaMsg.slice_size}, {admaMsg.slice_data},\
+            file.write(f"{admaMsg.serial_number},\
             {admaMsg.acc_body_hr.x}, {admaMsg.acc_body_hr.y}, {admaMsg.acc_body_hr.z},\
             {admaMsg.rate_body_hr.x}, {admaMsg.rate_body_hr.y}, {admaMsg.rate_body_hr.z},\
             {admaMsg.rate_body.x}, {admaMsg.rate_body.y}, {admaMsg.rate_body.z},\
@@ -118,8 +117,7 @@ class Ros2CSVConverter(Node):
         else:
             #define headers
             file = open(self.filename,"w")
-            file.write(f"genesys_id, header_version, format_id, format_version, serial_number, alias,\
-            config_id, config_format, config_version, config_size, byte_offset, slice_size, slice_data,\
+            file.write(f"serial_number,\
             Acc_Body_HR_X, Acc_Body_HR_Y, Acc_Body_HR_Z,\
             Rate_Body_HR_X, Rate_Body_HR_Y, Rate_Body_HR_Z,\
             Rate_Body_X, Rate_Body_Y, Rate_Body_Z,\
