@@ -36,18 +36,24 @@ For configuring the ADMA ROS Driver the according parameters in the `adma_ros2_d
 If the workspace was built with `colcon build --symlink-install`, it is possible to restart the node after changing configuration parameters directly. Otherwise (built without '--symlink-install') it is necessary to rebuild the workspace to update the files. 
 Same "linking" rule applies to the `launch.py` files. The available parameters are described in the table below.
 
-| Parameter | Possible Values | Description|
-|---|---|---|
-| destination_ip | IP as String | IP address of your ADMA |
-| destination_port | Port as Integer | Destination Port of your ADMA |
-| use_performance_check | True / False | True if you want to log informations about the performance |
-| gnss_frame | name as string | ROS frame_id of the NavSat topic |
-| imu_frame | name as string | ROS frame_id of the IMU topic |
-| protocol_version | "v3.2" / "v3.3.3" / "v3.3.4" | the ADMAnet protocol version of your ADMA |
-
 ### Launch File
 #### Topic Remapping
 It is possible to remap ROS topics in the driver to new namings by editing the `remappings=[..]` entries of the `launch.py`-file. 
+
+#### Parameters
+| Parameter | Possible Values | Description| Location |
+|---|---|---|---|
+| destination_ip | IP as String | IP address of your ADMA | driver_config.yaml |
+| destination_port | Port as Integer | Destination Port of your ADMA | driver_config.yaml |
+| use_performance_check | True / False | True if you want to log informations about the performance | driver_config.yaml |
+| gnss_frame | name as string | ROS frame_id of the NavSat topic | driver_config.yaml |
+| imu_frame | name as string | ROS frame_id of the IMU topic | driver_config.yaml |
+| protocol_version | "v3.2" / "v3.3.3" / "v3.3.4" | the ADMAnet protocol version of your ADMA | driver_config.yaml |
+| frame_ids | BOOL | Define the ROS topic names |  driver_config.yaml |
+| log_gsdb | BOOL | Enable creating a GSDB file for logging the raw data |  adma_driver.launch.py |
+| record_rosbag | BOOL | Enable logging a rosbag file |  adma_driver.launch.py |
+| recorded_topics | ADMA topics as Strings | List of ADMA ROS Topics, that shall be logged into the rosbag |  adma_driver.launch.py |
+| remappings | Topic names as Strings | List of ADMA topics and the names they shall get remapped to |  adma_driver.launch.py |
 
 ## Supported ADMA Protocol versions
 This driver node supports several protocol versions.
@@ -72,10 +78,12 @@ To switch between those, the`protocol_version` parameter in the `config/driver_c
 ## Data Output
 The ADMA ROS driver is able to output two different file formats. 
 
-### GeneSys Binary Raw Data (.gsdb)
-The ADMA ROS driver is automatically saving the raw binary ADMA data as `*.gsdb` file in the directory of the executed terminal. The .gsdb data format is completly integrated in the GeneSys toolchain as shown in the following graphic.
+![Online](https://github.com/GeneSysElektronik/adma_ros_driver/assets/105273302/fbd7470e-6d6f-4499-8fd2-08a0110f89e2)
 
+### GeneSys Binary Raw Data (.gsdb)
 ![Integration of GSDB in the GeneSys Toolchain](https://user-images.githubusercontent.com/105273302/230074686-9b17826a-16d4-4f6a-83f7-8cd19daad914.jpg)
+
+The ADMA ROS driver is automatically saving the raw binary ADMA data as `*.gsdb` file in the directory of the executed terminal. The .gsdb data format is completly integrated in the GeneSys toolchain as shown in the graphic above.
 
 We recommend to always log .gsdb files for support purposes and for being able to reprocess the raw data with new ROS driver updates. If not needed, the logging can be disabled in the 
 `adma_driver.launch.py` by setting `log_gsdb_arg` to False. 
@@ -83,15 +91,17 @@ We recommend to always log .gsdb files for support purposes and for being able t
 ### Rosbag 
 For additionally recording a rosbag file, the `record_rosbag` argument in the `adma_driver.launch.py` have to be set to True. By adapting the list `recorded_topics`, the ROS topics getting written to the bag file can be chosen. 
 
-![Online](https://user-images.githubusercontent.com/105273302/230114010-a0ac709a-d661-4f85-8706-973f8e96820c.jpg)
 
 ## Tools
 Additional Tools can be found in the `adma_tools` folder and are separated based on their implementation language (`adma_tools_cpp`/ `adma_tools_py`).
 
 ### ROS2CSV-Converter
+![convert_csv](https://github.com/GeneSysElektronik/adma_ros_driver/assets/105273302/01339721-cd70-4363-9d6f-98b981377ab6)
+
 This tool subscribes to `/genesys/adma/data_scaled` and `/genesys/adma/status` and generates a CSV file for postprocessing. It can be used live or e.g. to convert a rosbag to CSV. 
 The tool can be used by executing it in an additional terminal:
 
+#### Execution
 ```bash
 # ensure you have sourced the workspace also in this terminal
 cd ~/ros2_ws
@@ -100,14 +110,22 @@ ros2 run adma_tools_py ros2csv
 ```
 
 This will create a `recorded_data.csv` in the destination where the `ros2 run adma_tools_py ros2csv` command is executed.
+The .csv file that gets created corresponds to the .gsda format specification of GeneSys. 
 If an individual file naming needs to be used, the `adma_tools_py/adma_tools_py/ros2csv_converter.py` file can be adapted (self.filename = '').
-
-![Convert CSV](https://user-images.githubusercontent.com/105273302/230113444-051bd497-82c2-4ae9-b0ee-10c916006a9a.jpg)
 
 
 ### BAG2GSDB-Converter
+![rosbag_replay](https://github.com/GeneSysElektronik/adma_ros_driver/assets/105273302/a8e36195-af1c-4f98-9e43-22b0da62cb17)
+
 This tool subscribes to the `/genesys/adma/data_raw` topic and generates a `*.gsdb`. By remapping it is also possible to subscribe to the `/genesys/adma/data_recorded` topic (e.g. if you already have recorded rosbags with the deprecated `data_recorded` topic). 
 
+#### Parameters
+| Parameter | Possible Values | Description | Location |
+|---|---|---|---|
+| rosbag_path | File location as String | Rosbag file to convert to GSDB | bag2gsdb.launch.py |
+| replay_rate | Rate as Integer | Rate of data replay for increasing the replay speed. | bag2gsdb.launch.py |
+
+#### Execution
 ```bash
 # ensure you have sourced the workspace also in this terminal
 cd ~/ros2_ws
@@ -122,13 +140,53 @@ NOTE: Increasing the replay_rate depends on the computer performance. It might l
 Therefore at the end of every process a log is output that contains the amount of received messages. 
 This value can be compared with the value that is defined in the `metadata.yaml` (`message_count` entry at the `/genesys/adma/data_recorded` / `/genesys/adma/data_raw` topic). 
 
-![Rosbag Replay](https://user-images.githubusercontent.com/105273302/230113644-8de6f0a6-aa27-4371-835d-bbb5a706c202.jpg)
 
 ### Replay recorded GSDB files
+![gsdb_replay](https://github.com/GeneSysElektronik/adma_ros_driver/assets/105273302/db434e24-3cc3-4241-ae61-a88be4c46539)
+
 For reprocessing .gsdb files, the path to the desired .gsdb file has to be configured in the `gsdb_replay_config.yaml` at the parameter `gsdb_file`. After that, the `gsdb_replay.launch.py` tool can be launched.
 The tool creates a .db3 file in the location where the tool was launched via terminal.  
 
+#### Parameters
+| Parameter | Possible Values | Description | Location |
+|---|---|---|---|
+| destination_ip | IP as String | Destination IP-address of replayed data stream | gsdb_replay_config.yaml |
+| destination_port | Port as Integer | Destination Port of replayed data stream | gsdb_replay_config.yaml |
+| destination_port | Port as Integer | Destination Port of replayed data stream | gsdb_replay_config.yaml |
+| use_performance_check | BOOL | Enables time measurement for the process of receiving the UDP data until they get published | gsdb_replay_config.yaml |
+| protocol_version | Version as String | version of the ADMANet data stream that is contained in the GSDB file | gsdb_replay_config.yaml |
+| frame_ids | BOOL | Define the ROS topic names | gsdb_replay_config.yaml |
+| ip_address | IP as String | IP-address of the gsdb_server | gsdb_replay_config.yaml |
+| port | Port as Integer | Port of the gsdb_server | gsdb_replay_config.yaml |
+| frequency | Frequency as Integer | Data frequency | gsdb_replay_config.yaml |
+| protocol_version | Version as String | version of the ADMANet data stream that is contained in the GSDB file | gsdb_replay_config.yaml |
+| gsdb_file | File location as String | GSDB Source file to replay | gsdb_replay_config.yaml |
+| log_gsdb | BOOL | Enable creating a new GSDB file | gsdb_replay.launch.py |
+| record_rosbag | BOOL | Enable logging a rosbag file | gsdb_replay.launch.py |
+
+#### Execution
 ```bash
 ros2 launch adma_tools_cpp gsdb_replay.launch.py
 ```
-![GSDB Replay](https://user-images.githubusercontent.com/105273302/230113700-73885377-8fa8-4456-91e6-786bbe50ad6b.jpg)
+
+
+### Replay recorded GSDA files
+![gsda_replay](https://github.com/GeneSysElektronik/adma_ros_driver/assets/105273302/13f3f3ff-5f80-478f-b3c9-0409e111b35b)
+
+For reprocessing .gsda files, the path to the desired .gsda file has to be configured in the `gsda_replay_config.yaml` at the parameter `gsda_file`. After that, the `gsda_replay.launch.py` tool can be launched.
+The tool creates a .db3 file in the location where the tool was launched via terminal.  
+
+This tool was implemented for converting post processed data out of the ADMA PP software back to ROS2 data.
+
+#### Parameters
+| Parameter | Possible Values | Description | Location |
+|---|---|---|---|
+| frequency | Frequency as integer | Data frequency | gsda_replay_config.yaml |
+| gsda_file | String | GSDA Source file to replay | gsda_replay_config.yaml |
+| recorded_topics | Strings of ROS topics | Desired topics | gsda_replay.launch.py |
+
+#### Execution
+```bash
+ros2 launch adma_tools_cpp gsda_replay.launch.py
+```
+
