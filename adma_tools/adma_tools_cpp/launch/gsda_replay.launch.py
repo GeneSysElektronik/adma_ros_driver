@@ -30,7 +30,7 @@ def generate_launch_description():
                 executable='gsda_server',
                 output='screen',
                 namespace='genesys',
-                name='gsdb_server',
+                name='gsda_server',
                 parameters=[LaunchConfiguration('gsda_config')],
                 arguments=['--ros-args', '--log-level', LaunchConfiguration('log_level')],
                 on_exit=[LogInfo(msg=["GSDA replay done. Stopping everything..."]),
