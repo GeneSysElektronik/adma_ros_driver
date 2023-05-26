@@ -69,7 +69,7 @@ void GSDAServer::updateLoop()
   //offset between UNIX and GNSS (in ms)
   unsigned long offset_gps_unix = 315964800000;
   uint32_t week_to_msec = 604800000;
-  unsigned long timestamp;
+  unsigned long long timestamp;
 
   while(rclcpp::ok())
   {
