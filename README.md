@@ -119,6 +119,8 @@ If an individual file naming needs to be used, the `adma_tools_py/adma_tools_py/
 
 This tool subscribes to the `/genesys/adma/data_raw` topic and generates a `*.gsdb`. By remapping it is also possible to subscribe to the `/genesys/adma/data_recorded` topic (e.g. if you already have recorded rosbags with the deprecated `data_recorded` topic). 
 
+NOTE: For converting ROS bags from ADMA ROS2 driver versions <= 2.1.3, the "adma/data_recorded" topic has to be remapped to "adma/data_raw". 
+
 #### Parameters
 | Parameter | Possible Values | Description | Location |
 |---|---|---|---|
