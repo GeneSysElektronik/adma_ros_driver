@@ -67,7 +67,7 @@ void GSDAServer::updateLoop()
   navsatfixMsg.header.frame_id = "gnss_link";
 
   //offset between UNIX and GNSS (in ms)
-  unsigned long offset_gps_unix = 315964800000;
+  unsigned long long offset_gps_unix = 315964800000;
   uint32_t week_to_msec = 604800000;
   unsigned long long timestamp;
 
