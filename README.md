@@ -1,6 +1,19 @@
 # adma_ros2_driver
 Further Information can be found at the [GeneSys Technical Support Center](https://genesys-offenburg.de/support-center/). 
 
+## Integrated ROS Topics
+The ADMA uses a combination of GNSS-Receiver and different rate and acceleration sensors. Due to this, different ROS topics are getting filled with sensor, GNSS and combined measurement data as shown in the following list:
+
+| Topic | Content | Description |
+|---|---|---|
+| /adma/data_scaled | ADMAnet v3.3.x | Standard ADMA data output format. |
+| /adma/status | ADMAnet Status / Error / Warning v3.3.x | Standard ADMA Status, Error and Warning outputs. |
+| /adma/heading | Heading as [std_msgs::Float64](http://docs.ros.org/en/noetic/api/std_msgs/html/msg/Float64.html) | Heading in the standard ROS format. |
+| /adma/velocity | Velocity as [std_msgs::Float64](http://docs.ros.org/en/noetic/api/std_msgs/html/msg/Float64.html) | Velocity in the standard ROS format. |
+| /adma/fix | [sensor_msgs::Navsatfix](http://docs.ros.org/en/melodic/api/sensor_msgs/html/msg/NavSatFix.html) | GNSS Information in the standard ROS format. |
+| /adma/imu | [sensor_msgs::imu](http://docs.ros.org/en/melodic/api/sensor_msgs/html/msg/Imu.html) | Inertial data in the standard ROS format. |
+| /adma/data_raw | Raw UDP data stream | ADMA raw data as binary data stream. |
+
 ## Environment information
 This setup was implemented and tested with the following conditions:
 - Ubuntu 20.04
