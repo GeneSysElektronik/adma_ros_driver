@@ -5,7 +5,7 @@
   <version>0.0.0</version>
   <description>ROS message collection for the ros driver</description>
   <maintainer email="rico.schillings@hs-offenburg.de">Rico Schillings</maintainer>
-  <license>Apache 2.0</license>
+  <license>BSD3</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

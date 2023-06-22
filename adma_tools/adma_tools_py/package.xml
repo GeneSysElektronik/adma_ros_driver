@@ -5,7 +5,7 @@
   <version>0.0.0</version>
   <description>Collection of python tools to work with ADMA and ROS2</description>
   <maintainer email="rico.schillings@hs-offenburg.de">rschilli</maintainer>
-  <license>MIT</license>
+  <license>BSD3</license>
 
   <depend>rclpy</depend>
   <depend>adma_ros_driver_msgs</depend>

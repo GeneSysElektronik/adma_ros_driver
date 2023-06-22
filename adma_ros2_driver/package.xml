@@ -4,7 +4,7 @@
   <version>0.0.0</version>
   <description>adma_ros_driver originally from https://github.com/lab176344/adma_ros_driver.git</description>
   <maintainer email="rico.schillings@hs-offenburg.de">Rico Schillings</maintainer>
-  <license>Apache 2.0</license>
+  <license>BSD3</license>
    
   <buildtool_depend>ament_cmake</buildtool_depend>
   <!-- ROS dependencies -->
