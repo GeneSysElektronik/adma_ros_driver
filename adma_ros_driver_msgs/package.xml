@@ -5,7 +5,7 @@
   <description>Collection of several ROS msgs for the adma_ros_driver package</description>
 
   <maintainer email="ricoschillings@gmail.com">Rico Schillings</maintainer>
-  <license>BSD</license>
+  <license>BSD3</license>
   <author email="ricoschillings@gmail.com">Rico Schillings</author>
 
   <buildtool_depend>catkin</buildtool_depend>
