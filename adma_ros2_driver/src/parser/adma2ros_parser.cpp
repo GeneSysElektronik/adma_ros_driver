@@ -522,7 +522,8 @@ void ADMA2ROSParser::extractNavSatFix(
 }
 
 void ADMA2ROSParser::extractNavSatFix(
-  adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, sensor_msgs::msg::NavSatFix & nav_ros_msg)
+  adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, sensor_msgs::msg::NavSatFix & nav_ros_msg,
+  std::array<adma_ros_driver_msgs::msg::POI, 8> &pois, uint8_t desiredSource)
 {
   // fil status
   switch (ros_msg.status.status_gnss_mode) {
@@ -546,9 +547,9 @@ void ADMA2ROSParser::extractNavSatFix(
       break;
   }
 
-  nav_ros_msg.altitude = ros_msg.ins_height;
-  nav_ros_msg.latitude = ros_msg.ins_lat_abs;
-  nav_ros_msg.longitude = ros_msg.ins_long_abs;
+  nav_ros_msg.altitude = desiredSource == 0 ? ros_msg.ins_height : pois[desiredSource - 1].ins_height;
+  nav_ros_msg.latitude = desiredSource == 0 ? ros_msg.ins_lat_abs : pois[desiredSource - 1].ins_lat_abs;
+  nav_ros_msg.longitude = desiredSource == 0 ? ros_msg.ins_long_abs : pois[desiredSource - 1].ins_lon_abs;
   nav_ros_msg.position_covariance[0] = std::pow(ros_msg.ins_stddev_lat, 2);
   nav_ros_msg.position_covariance[4] = std::pow(ros_msg.ins_stddev_long, 2);
   nav_ros_msg.position_covariance[8] = std::pow(ros_msg.ins_stddev_height, 2);
@@ -586,11 +587,16 @@ void ADMA2ROSParser::extractIMU(
 }
 
 void ADMA2ROSParser::extractIMU(
-  adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, sensor_msgs::msg::Imu & imu_ros_msg)
+  adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, sensor_msgs::msg::Imu & imu_ros_msg,
+  std::array<adma_ros_driver_msgs::msg::POI, 8> &pois, uint8_t desiredSource)
 {
-  imu_ros_msg.linear_acceleration.x = ros_msg.acc_body_hr.x * 9.81;
-  imu_ros_msg.linear_acceleration.y = ros_msg.acc_body_hr.y * 9.81;
-  imu_ros_msg.linear_acceleration.z = ros_msg.acc_body_hr.z * 9.81;
+  imu_ros_msg.linear_acceleration.x = desiredSource == 0 ? ros_msg.acc_body_hr.x : pois[desiredSource - 1].acc_body.x;
+  imu_ros_msg.linear_acceleration.y = desiredSource == 0 ? ros_msg.acc_body_hr.y : pois[desiredSource - 1].acc_body.y;
+  imu_ros_msg.linear_acceleration.z = desiredSource == 0 ? ros_msg.acc_body_hr.z : pois[desiredSource - 1].acc_body.z;
+  // convert to m/s²
+  imu_ros_msg.linear_acceleration.x *= 9.81;
+  imu_ros_msg.linear_acceleration.y *= 9.81;
+  imu_ros_msg.linear_acceleration.z *= 9.81;
 
   imu_ros_msg.angular_velocity.x = deg2Rad(ros_msg.rate_body_hr.x);
   imu_ros_msg.angular_velocity.y = deg2Rad(ros_msg.rate_body_hr.y);
@@ -614,11 +620,12 @@ void ADMA2ROSParser::extractIMU(
 }
 
 void ADMA2ROSParser::extractOdometry(
-    adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, nav_msgs::msg::Odometry & odometry_msg, double yawOffset)
+    adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, nav_msgs::msg::Odometry & odometry_msg,
+    double yawOffset, std::array<adma_ros_driver_msgs::msg::POI, 8> &pois, uint8_t desiredSource)
 {
-  odometry_msg.pose.pose.position.x = ros_msg.ins_pos_rel_x;
-  odometry_msg.pose.pose.position.y = ros_msg.ins_pos_rel_y;
-  odometry_msg.pose.pose.position.z = ros_msg.ins_height;
+  odometry_msg.pose.pose.position.x = desiredSource == 0 ? ros_msg.ins_pos_rel_x : pois[desiredSource - 1].ins_pos_rel_x;
+  odometry_msg.pose.pose.position.y = desiredSource == 0 ? ros_msg.ins_pos_rel_y : pois[desiredSource - 1].ins_pos_rel_y;
+  odometry_msg.pose.pose.position.z = desiredSource == 0 ? ros_msg.ins_height : pois[desiredSource - 1].ins_height;
 
   double roll_rad = deg2Rad(ros_msg.ins_roll);
   double pitch_rad = deg2Rad(ros_msg.ins_pitch);
@@ -631,9 +638,9 @@ void ADMA2ROSParser::extractOdometry(
   odometry_msg.pose.covariance[28] = std::pow(deg2Rad(ros_msg.ins_stddev_pitch), 2);
   odometry_msg.pose.covariance[35] = std::pow(deg2Rad(ros_msg.ins_stddev_yaw), 2);
 
-  odometry_msg.twist.twist.linear.x = ros_msg.ins_vel_hor.x;
-  odometry_msg.twist.twist.linear.y = ros_msg.ins_vel_hor.y;
-  odometry_msg.twist.twist.linear.z = ros_msg.ins_vel_hor.z;
+  odometry_msg.twist.twist.linear.x = desiredSource == 0 ? ros_msg.ins_vel_hor.x : pois[desiredSource - 1].ins_vel_hor.x;
+  odometry_msg.twist.twist.linear.y = desiredSource == 0 ? ros_msg.ins_vel_hor.y : pois[desiredSource - 1].ins_vel_hor.y;
+  odometry_msg.twist.twist.linear.z = desiredSource == 0 ? ros_msg.ins_vel_hor.z : pois[desiredSource - 1].ins_vel_hor.z;
   odometry_msg.twist.twist.angular.x = deg2Rad(ros_msg.rate_body.x);
   odometry_msg.twist.twist.angular.y = deg2Rad(ros_msg.rate_body.y);
   odometry_msg.twist.twist.angular.z = deg2Rad(ros_msg.rate_body.z);

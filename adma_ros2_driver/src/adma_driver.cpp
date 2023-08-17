@@ -31,6 +31,11 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
   odometry_pose_frame_ = this->declare_parameter("frame_ids.odometry_pose_id", "adma");
   odometry_child_frame_ = this->declare_parameter("frame_ids.odometry_twist_id", "odometry");
   odometry_yaw_offset_ = this->declare_parameter("odometry_yaw_offset", 0.0);
+  navsatfix_id_ = this->declare_parameter("topic_pois.navsatfix", 1);
+  imu_id_ = this->declare_parameter("topic_pois.imu", 1);
+  velocity_id_ = this->declare_parameter("topic_pois.velocity", 1);
+  odometry_id_ = this->declare_parameter("topic_pois.odometry", 1);
+  
   // define protocol specific stuff
   protocol_version_ = this->declare_parameter("protocol_version", "v3.3.3");
   RCLCPP_INFO(get_logger(), "Working with: %s", protocol_version_.c_str());
@@ -162,6 +167,16 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
     adma_ros_driver_msgs::msg::AdmaDataScaled adma_data_scaled_msg;
     adma_data_scaled_msg.header.frame_id = adma_frame_;
     parser_->parseV334(adma_data_scaled_msg, data_struct);
+    pois = {
+      adma_data_scaled_msg.poi_1,
+      adma_data_scaled_msg.poi_2,
+      adma_data_scaled_msg.poi_3,
+      adma_data_scaled_msg.poi_4,
+      adma_data_scaled_msg.poi_5,
+      adma_data_scaled_msg.poi_6,
+      adma_data_scaled_msg.poi_7,
+      adma_data_scaled_msg.poi_8
+    };
     timestamp = adma_data_scaled_msg.ins_time_msec + offset_gps_unix;
     timestamp += adma_data_scaled_msg.ins_time_week * week_to_msec;
     adma_data_scaled_msg.time_msec = timestamp;
@@ -169,8 +184,8 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
     adma_data_scaled_msg.header.stamp.sec = timestamp / 1000;
     adma_data_scaled_msg.header.stamp.nanosec = timestamp * 1E6;
 
-    parser_->extractNavSatFix(adma_data_scaled_msg, message_fix);
-    parser_->extractIMU(adma_data_scaled_msg, message_imu);
+    parser_->extractNavSatFix(adma_data_scaled_msg, message_fix, pois, navsatfix_id_);
+    parser_->extractIMU(adma_data_scaled_msg, message_imu, pois, imu_id_);
 
     // fill odometry message
     nav_msgs::msg::Odometry odom_msg;
@@ -178,15 +193,15 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
     odom_msg.child_frame_id = odometry_child_frame_;
     odom_msg.header.stamp.sec = timestamp / 1000;
     odom_msg.header.stamp.nanosec = timestamp * 1E6;
-    parser_->extractOdometry(adma_data_scaled_msg, odom_msg, odometry_yaw_offset_);
+    parser_->extractOdometry(adma_data_scaled_msg, odom_msg, odometry_yaw_offset_, pois, odometry_id_);
     pub_odometry_->publish(odom_msg);
 
     // read heading and velocity
     message_heading.data = adma_data_scaled_msg.ins_yaw;
-    message_velocity.data = std::sqrt(
-                              std::pow(adma_data_scaled_msg.ins_vel_frame.x, 2) +
-                              std::pow(adma_data_scaled_msg.ins_vel_frame.y, 2)) *
-                            3.6;
+    geometry_msgs::msg::Vector3 insSource = velocity_id_ == 0 
+      ? adma_data_scaled_msg.ins_vel_frame 
+      : pois[velocity_id_ - 1].ins_vel_hor;
+    message_velocity.data = std::sqrt(std::pow(insSource.x, 2) + std::pow(insSource.y, 2)) * 3.6;
 
     pub_adma_data_scaled_->publish(adma_data_scaled_msg);
 

@@ -13,3 +13,8 @@ genesys:
         odometry_twist_id: 'odometry' # odometry.child_frame_id
       odometry_yaw_offset: 0.0 # in degrees
       publish_tf: False # can be used for debugging and visualization in Rviz2
+      topic_pois: # those values can be mixed individually
+        navsatfix: 1 # either 1-8 for desired POI or 0 if MRP(Measurement Reference Point) is required
+        imu: 1
+        velocity: 1
+        odometry: 1

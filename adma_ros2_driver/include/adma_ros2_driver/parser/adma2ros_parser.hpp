@@ -23,14 +23,17 @@ public:
   void extractNavSatFix(
     adma_ros_driver_msgs::msg::AdmaData & ros_msg, sensor_msgs::msg::NavSatFix & nav_ros_msg);
   void extractNavSatFix(
-    adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, sensor_msgs::msg::NavSatFix & nav_ros_msg);
+    adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, sensor_msgs::msg::NavSatFix & nav_ros_msg,
+    std::array<adma_ros_driver_msgs::msg::POI, 8> &pois, uint8_t desiredSource);
   void extractIMU(
     adma_ros_driver_msgs::msg::AdmaData & ros_msg, sensor_msgs::msg::Imu & imu_ros_msg);
   void extractIMU(
-    adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, sensor_msgs::msg::Imu & imu_ros_msg);
+    adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, sensor_msgs::msg::Imu & imu_ros_msg,
+    std::array<adma_ros_driver_msgs::msg::POI, 8> &pois, uint8_t desiredSource);
   void extractOdometry(
     adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, 
-    nav_msgs::msg::Odometry & odometry_msg, double yawOffset);
+    nav_msgs::msg::Odometry & odometry_msg, double yawOffset,
+    std::array<adma_ros_driver_msgs::msg::POI, 8> &pois, uint8_t desiredSource);
   void parseV334(adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & local_data);
   void parseV334Status(adma_ros_driver_msgs::msg::AdmaStatus & ros_msg, AdmaDataV334 & local_data);
   void parseScaledData(adma_ros_driver_msgs::msg::AdmaData & ros_msg);

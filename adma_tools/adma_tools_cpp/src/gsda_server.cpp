@@ -33,7 +33,10 @@ tfBroadcaster_(*this)
   odometry_child_frame_ = this->declare_parameter("frame_ids.odometry_twist_id", "odometry");
   odometry_yaw_offset_ = this->declare_parameter("odometry_yaw_offset", 0.0);
   publish_TF_ = this->declare_parameter("publish_tf", false);
-
+  navsatfix_id_ = this->declare_parameter("topic_pois.navsatfix", 1);
+  imu_id_ = this->declare_parameter("topic_pois.imu", 1);
+  velocity_id_ = this->declare_parameter("topic_pois.velocity", 1);
+  odometry_id_ = this->declare_parameter("topic_pois.odometry", 1);
   gsdaFile_ = std::fstream(gsdaFilePath_);
   if(gsdaFile_)
   {
@@ -118,11 +121,21 @@ void GSDAServer::updateLoop()
       dataScaledMsg.time_nsec = timestamp * 1E6;
       dataScaledMsg.header.stamp.sec = timestamp / 1000;
       dataScaledMsg.header.stamp.nanosec = timestamp * 1E6;
+      pois = {
+        dataScaledMsg.poi_1,
+        dataScaledMsg.poi_2,
+        dataScaledMsg.poi_3,
+        dataScaledMsg.poi_4,
+        dataScaledMsg.poi_5,
+        dataScaledMsg.poi_6,
+        dataScaledMsg.poi_7,
+        dataScaledMsg.poi_8
+      };
       // extract separate msgs
-      parser_->extractNavSatFix(dataScaledMsg, navsatfixMsg);
+      parser_->extractNavSatFix(dataScaledMsg, navsatfixMsg, pois, navsatfix_id_);
       navsatfixMsg.header.stamp.sec = timestamp / 1000;
       navsatfixMsg.header.stamp.nanosec = timestamp * 1E6;
-      parser_->extractIMU(dataScaledMsg, imuMsg);
+      parser_->extractIMU(dataScaledMsg, imuMsg, pois, imu_id_);
       // ADMA PP doesnt provide "hr" channels so use normal body rate/acc for IMU
       imuMsg.linear_acceleration.x = dataScaledMsg.acc_body.x * 9.81;
       imuMsg.linear_acceleration.y = dataScaledMsg.acc_body.y * 9.81;
@@ -134,10 +147,10 @@ void GSDAServer::updateLoop()
       imuMsg.header.stamp.nanosec = timestamp * 1E6;
       // read heading and velocity
       headingMsg.data = dataScaledMsg.ins_yaw;
-      velMsg.data = std::sqrt(
-                      std::pow(dataScaledMsg.ins_vel_frame.x, 2) +
-                      std::pow(dataScaledMsg.ins_vel_frame.y, 2)) *
-                    3.6;
+      geometry_msgs::msg::Vector3 insSource = velocity_id_ == 0 
+          ? dataScaledMsg.ins_vel_frame 
+          : pois[velocity_id_ - 1].ins_vel_hor;
+      velMsg.data = std::sqrt(std::pow(insSource.x, 2) + std::pow(insSource.y, 2)) * 3.6;
       
       extractBytes(stateMsg, dataScaledMsg);
       stateMsg.header.stamp.sec = timestamp / 1000;
@@ -145,7 +158,7 @@ void GSDAServer::updateLoop()
 
       odomMsg.header.stamp.sec = timestamp / 1000;
       odomMsg.header.stamp.nanosec = timestamp * 1E6;
-      parser_->extractOdometry(dataScaledMsg, odomMsg, odometry_yaw_offset_);
+      parser_->extractOdometry(dataScaledMsg, odomMsg, odometry_yaw_offset_, pois, odometry_id_);
 
       if(publish_TF_)
       {

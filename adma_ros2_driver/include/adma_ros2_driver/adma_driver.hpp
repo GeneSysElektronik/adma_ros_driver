@@ -66,5 +66,12 @@ private:
 
   // yaw offset angle if the odometry should be rotated by a fixed angle
   double odometry_yaw_offset_;
+
+  // desired data sources per topic (POI_x or MRP)
+  uint8_t navsatfix_id_;
+  uint8_t imu_id_;
+  uint8_t velocity_id_;
+  uint8_t odometry_id_;
+  std::array<adma_ros_driver_msgs::msg::POI, 8> pois;
 };
 }  // namespace genesys
