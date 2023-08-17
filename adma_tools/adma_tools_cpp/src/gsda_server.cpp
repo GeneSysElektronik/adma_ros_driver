@@ -4,6 +4,7 @@
 #include <sys/socket.h>
 #include <iostream>
 #include <string>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
 #include <rclcpp_components/register_node_macro.hpp>
 #include <adma_ros2_driver/parser/parser_utils.hpp>
@@ -17,11 +18,22 @@ namespace tools
 {
 GSDAServer::GSDAServer(const rclcpp::NodeOptions & options)
 : Node("gsda_server", options), 
-msgCounter_(0)
+msgCounter_(0),
+tfBroadcaster_(*this)
 {
   // read ros parameters
   frequency_ = this->declare_parameter("frequency", 100);
   gsdaFilePath_ = declare_parameter("gsda_file", "/home/$USER/$ROS2_WS/data/$FILENAME.gsda");
+  gnss_frame_ = this->declare_parameter("frame_ids.navsatfix", "gnss_link");
+  imu_frame_ = this->declare_parameter("frame_ids.imu", "imu_link");
+  adma_frame_ = this->declare_parameter("frame_ids.adma", "adma");
+  adma_status_frame_ = this->declare_parameter("frame_ids.adma_status", "adma_status");
+  raw_data_frame_ = this->declare_parameter("frame_ids.raw_data", "data_raw");
+  odometry_pose_frame_ = this->declare_parameter("frame_ids.odometry_pose_id", "adma");
+  odometry_child_frame_ = this->declare_parameter("frame_ids.odometry_twist_id", "odometry");
+  odometry_yaw_offset_ = this->declare_parameter("odometry_yaw_offset", 0.0);
+  publish_TF_ = this->declare_parameter("publish_tf", false);
+
   gsdaFile_ = std::fstream(gsdaFilePath_);
   if(gsdaFile_)
   {
@@ -39,6 +51,12 @@ msgCounter_(0)
   pub_imu_ = this->create_publisher<sensor_msgs::msg::Imu>("adma/imu", 1);
   pub_heading_ = this->create_publisher<std_msgs::msg::Float64>("adma/heading", 1);
   pub_velocity_ = this->create_publisher<std_msgs::msg::Float64>("adma/velocity", 1);
+  pub_odometry_ = this->create_publisher<nav_msgs::msg::Odometry>("adma/odometry", 1);
+  if(publish_TF_)
+  {
+    pub_trajectory_ = this->create_publisher<nav_msgs::msg::Path>("adma/trajectory", 1);
+    trajectory_msg_.header.frame_id = odometry_child_frame_;
+  }
 
   parser_ = new ADMA2ROSParser("v3.3.4");
 
@@ -56,15 +74,18 @@ void GSDAServer::updateLoop()
   // define messages to publish
   //TODO: inject frame_id as ROS params like its done in driver node
   adma_ros_driver_msgs::msg::AdmaDataScaled dataScaledMsg;
-  dataScaledMsg.header.frame_id = "adma";
+  dataScaledMsg.header.frame_id = adma_frame_;
   adma_ros_driver_msgs::msg::AdmaStatus stateMsg;
-  stateMsg.header.frame_id = "adma_status";
+  stateMsg.header.frame_id = adma_status_frame_;
   std_msgs::msg::Float64 velMsg;
   std_msgs::msg::Float64 headingMsg;
   sensor_msgs::msg::Imu imuMsg;
-  imuMsg.header.frame_id = "imu_link";
+  imuMsg.header.frame_id = imu_frame_;
   sensor_msgs::msg::NavSatFix navsatfixMsg;
-  navsatfixMsg.header.frame_id = "gnss_link";
+  navsatfixMsg.header.frame_id = imu_frame_;
+  nav_msgs::msg::Odometry odomMsg;
+  odomMsg.header.frame_id = odometry_pose_frame_;
+  odomMsg.child_frame_id = odometry_child_frame_;
 
   //offset between UNIX and GNSS (in ms)
   unsigned long long offset_gps_unix = 315964800000;
@@ -94,23 +115,23 @@ void GSDAServer::updateLoop()
       timestamp = dataScaledMsg.ins_time_msec + offset_gps_unix;
       timestamp += dataScaledMsg.ins_time_week * week_to_msec;
       dataScaledMsg.time_msec = timestamp;
-      dataScaledMsg.time_nsec = timestamp * 1000000;
+      dataScaledMsg.time_nsec = timestamp * 1E6;
       dataScaledMsg.header.stamp.sec = timestamp / 1000;
-      dataScaledMsg.header.stamp.nanosec = timestamp * 1000000;
+      dataScaledMsg.header.stamp.nanosec = timestamp * 1E6;
       // extract separate msgs
       parser_->extractNavSatFix(dataScaledMsg, navsatfixMsg);
       navsatfixMsg.header.stamp.sec = timestamp / 1000;
-      navsatfixMsg.header.stamp.nanosec = timestamp * 1000000;
+      navsatfixMsg.header.stamp.nanosec = timestamp * 1E6;
       parser_->extractIMU(dataScaledMsg, imuMsg);
       // ADMA PP doesnt provide "hr" channels so use normal body rate/acc for IMU
       imuMsg.linear_acceleration.x = dataScaledMsg.acc_body.x * 9.81;
       imuMsg.linear_acceleration.y = dataScaledMsg.acc_body.y * 9.81;
       imuMsg.linear_acceleration.z = dataScaledMsg.acc_body.z * 9.81;
-      imuMsg.angular_velocity.x = dataScaledMsg.rate_body.x * PI / 180.0;
-      imuMsg.angular_velocity.y = dataScaledMsg.rate_body.y * PI / 180.0;
-      imuMsg.angular_velocity.z = dataScaledMsg.rate_body.z * PI / 180.0;
+      imuMsg.angular_velocity.x = deg2Rad(dataScaledMsg.rate_body.x);
+      imuMsg.angular_velocity.y = deg2Rad(dataScaledMsg.rate_body.y);
+      imuMsg.angular_velocity.z = deg2Rad(dataScaledMsg.rate_body.z);
       imuMsg.header.stamp.sec = timestamp / 1000;
-      imuMsg.header.stamp.nanosec = timestamp * 1000000;
+      imuMsg.header.stamp.nanosec = timestamp * 1E6;
       // read heading and velocity
       headingMsg.data = dataScaledMsg.ins_yaw;
       velMsg.data = std::sqrt(
@@ -120,7 +141,42 @@ void GSDAServer::updateLoop()
       
       extractBytes(stateMsg, dataScaledMsg);
       stateMsg.header.stamp.sec = timestamp / 1000;
-      stateMsg.header.stamp.nanosec = timestamp * 1000000;
+      stateMsg.header.stamp.nanosec = timestamp * 1E6;
+
+      odomMsg.header.stamp.sec = timestamp / 1000;
+      odomMsg.header.stamp.nanosec = timestamp * 1E6;
+      parser_->extractOdometry(dataScaledMsg, odomMsg, odometry_yaw_offset_);
+
+      if(publish_TF_)
+      {
+        // TODO: evaluate those transformations!!
+        geometry_msgs::msg::TransformStamped transform_msg;
+        transform_msg.header.stamp.sec = timestamp / 1000;
+        transform_msg.header.stamp.nanosec = timestamp * 1E6;
+        transform_msg.header.frame_id = "map";
+        transform_msg.child_frame_id = adma_frame_;
+        transform_msg.transform.rotation = odomMsg.pose.pose.orientation;
+        transform_msg.transform.translation.x = odomMsg.pose.pose.position.x;
+        transform_msg.transform.translation.y = odomMsg.pose.pose.position.y;
+        transform_msg.transform.translation.z = odomMsg.pose.pose.position.z;
+        tfBroadcaster_.sendTransform(transform_msg);
+
+        transform_msg.header.frame_id = adma_frame_;
+        transform_msg.child_frame_id = odometry_child_frame_;
+        tf2::Quaternion rotOdom2Base;
+        rotOdom2Base.setRPY(0.0,0.0,0.0);
+        transform_msg.transform.rotation = tf2::toMsg(rotOdom2Base);
+        transform_msg.transform.translation.x = 0.0;
+        transform_msg.transform.translation.y = 0.0;
+        transform_msg.transform.translation.z = 0.0;
+        tfBroadcaster_.sendTransform(transform_msg);
+
+        geometry_msgs::msg::PoseStamped pose_msg;
+        pose_msg.pose = odomMsg.pose.pose;
+        pose_msg.header = odomMsg.header;
+        trajectory_msg_.poses.push_back(pose_msg);
+        pub_trajectory_->publish(trajectory_msg_);
+      }
 
       pub_adma_data_scaled_->publish(dataScaledMsg);
       pub_adma_status_->publish(stateMsg);
@@ -128,6 +184,7 @@ void GSDAServer::updateLoop()
       pub_imu_->publish(imuMsg);
       pub_heading_->publish(headingMsg);
       pub_velocity_->publish(velMsg);    
+      pub_odometry_->publish(odomMsg);
 
       std::this_thread::sleep_for(std::chrono::milliseconds(1000 / frequency_));
       msgCounter_++;

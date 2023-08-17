@@ -28,6 +28,9 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
   adma_frame_ = this->declare_parameter("frame_ids.adma", "adma");
   adma_status_frame_ = this->declare_parameter("frame_ids.adma_status", "adma_status");
   raw_data_frame_ = this->declare_parameter("frame_ids.raw_data", "data_raw");
+  odometry_pose_frame_ = this->declare_parameter("frame_ids.odometry_pose_id", "adma");
+  odometry_child_frame_ = this->declare_parameter("frame_ids.odometry_twist_id", "odometry");
+  odometry_yaw_offset_ = this->declare_parameter("odometry_yaw_offset", 0.0);
   // define protocol specific stuff
   protocol_version_ = this->declare_parameter("protocol_version", "v3.3.3");
   RCLCPP_INFO(get_logger(), "Working with: %s", protocol_version_.c_str());
@@ -47,6 +50,9 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
       this->create_publisher<adma_ros_driver_msgs::msg::AdmaDataScaled>("adma/data_scaled", 1);
     pub_adma_status_ =
       this->create_publisher<adma_ros_driver_msgs::msg::AdmaStatus>("adma/status", 1);
+    pub_odometry_ =
+      this->create_publisher<nav_msgs::msg::Odometry>("adma/odometry", 1);
+
   }
   parser_ = new ADMA2ROSParser(protocol_version_);
 
@@ -132,7 +138,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
     timestamp = admaData_ros_msg.instimemsec + offset_gps_unix;
     timestamp += admaData_ros_msg.instimeweek * week_to_msec;
     admaData_ros_msg.timemsec = timestamp;
-    admaData_ros_msg.timensec = timestamp * 1000000;
+    admaData_ros_msg.timensec = timestamp * 1E6;
 
     // read NavSatFix out of AdmaData
     parser_->extractNavSatFix(admaData_ros_msg, message_fix);
@@ -147,7 +153,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
     // read IMU
     parser_->extractIMU(admaData_ros_msg, message_imu);
     admaData_ros_msg.header.stamp.sec = timestamp / 1000;
-    admaData_ros_msg.header.stamp.nanosec = timestamp * 1000000;
+    admaData_ros_msg.header.stamp.nanosec = timestamp * 1E6;
     pub_adma_data_->publish(admaData_ros_msg);
     weektime = admaData_ros_msg.instimeweek;
   } else if (protocol_version_ == "v3.3.4") {
@@ -159,12 +165,21 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
     timestamp = adma_data_scaled_msg.ins_time_msec + offset_gps_unix;
     timestamp += adma_data_scaled_msg.ins_time_week * week_to_msec;
     adma_data_scaled_msg.time_msec = timestamp;
-    adma_data_scaled_msg.time_nsec = timestamp * 1000000;
+    adma_data_scaled_msg.time_nsec = timestamp * 1E6;
     adma_data_scaled_msg.header.stamp.sec = timestamp / 1000;
-    adma_data_scaled_msg.header.stamp.nanosec = timestamp * 1000000;
+    adma_data_scaled_msg.header.stamp.nanosec = timestamp * 1E6;
 
     parser_->extractNavSatFix(adma_data_scaled_msg, message_fix);
     parser_->extractIMU(adma_data_scaled_msg, message_imu);
+
+    // fill odometry message
+    nav_msgs::msg::Odometry odom_msg;
+    odom_msg.header.frame_id = odometry_pose_frame_;
+    odom_msg.child_frame_id = odometry_child_frame_;
+    odom_msg.header.stamp.sec = timestamp / 1000;
+    odom_msg.header.stamp.nanosec = timestamp * 1E6;
+    parser_->extractOdometry(adma_data_scaled_msg, odom_msg, odometry_yaw_offset_);
+    pub_odometry_->publish(odom_msg);
 
     // read heading and velocity
     message_heading.data = adma_data_scaled_msg.ins_yaw;
@@ -179,7 +194,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
 
     adma_ros_driver_msgs::msg::AdmaStatus status_msg;
     status_msg.header.stamp.sec = timestamp / 1000;
-    status_msg.header.stamp.nanosec = timestamp * 1000000;
+    status_msg.header.stamp.nanosec = timestamp * 1E6;
     status_msg.header.frame_id = adma_status_frame_;
     parser_->parseV334Status(status_msg, data_struct);
     pub_adma_status_->publish(status_msg);
@@ -191,7 +206,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
     adma_ros_driver_msgs::msg::AdmaDataRaw raw_data_msg;
     raw_data_msg.size = len_;
     raw_data_msg.header.stamp.sec = timestamp / 1000;
-    raw_data_msg.header.stamp.nanosec = timestamp * 1000000;
+    raw_data_msg.header.stamp.nanosec = timestamp * 1E6;
     raw_data_msg.header.frame_id = raw_data_frame_;
 
     for (int i = 0; i < len_; ++i) {
@@ -202,9 +217,9 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
 
   // publish the messages
   message_fix.header.stamp.sec = timestamp / 1000;
-  message_fix.header.stamp.nanosec = timestamp * 1000000;
+  message_fix.header.stamp.nanosec = timestamp * 1E6;
   message_imu.header.stamp.sec = timestamp / 1000;
-  message_imu.header.stamp.nanosec = timestamp * 1000000;
+  message_imu.header.stamp.nanosec = timestamp * 1E6;
   pub_navsat_fix_->publish(message_fix);
   pub_heading_->publish(message_heading);
   pub_velocity_->publish(message_velocity);

@@ -14,6 +14,9 @@
   <depend>rclcpp_components</depend>
   <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_geometry_msgs</depend>
   <!-- adma dependencies -->
   <depend>adma_ros_driver_msgs</depend>
   <depend>adma_ros2_driver</depend>

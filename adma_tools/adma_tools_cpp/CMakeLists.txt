@@ -17,6 +17,9 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 find_package(adma_ros_driver_msgs REQUIRED)
 find_package(adma_ros2_driver REQUIRED)
 
@@ -33,6 +36,9 @@ ament_target_dependencies(${PROJECT_NAME}_node
   rclcpp_components
   sensor_msgs
   std_msgs
+  nav_msgs
+  tf2_ros
+  tf2_geometry_msgs
   adma_ros_driver_msgs
   adma_ros2_driver
 )

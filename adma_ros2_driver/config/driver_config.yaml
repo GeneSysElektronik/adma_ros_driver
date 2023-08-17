@@ -11,3 +11,6 @@ genesys:
         adma: 'adma'
         adma_status: 'adma_status'
         raw_data: 'data_raw'
+        odometry_pose_id: 'adma' # header.frame_id (basicly could be a "name" of desired POI)
+        odometry_twist_id: 'odometry' # odometry.child_frame_id
+      odometry_yaw_offset: 0.0 # in degrees

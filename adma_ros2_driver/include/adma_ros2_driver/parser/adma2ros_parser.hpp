@@ -4,6 +4,7 @@
 #include <memory>
 #include <sensor_msgs/msg/imu.hpp>
 #include <sensor_msgs/msg/nav_sat_fix.hpp>
+#include <nav_msgs/msg/odometry.hpp>
 
 #include "adma_ros2_driver/data/adma_data_v32.hpp"
 #include "adma_ros2_driver/parser/adma2ros_parser_v32.hpp"
@@ -27,6 +28,9 @@ public:
     adma_ros_driver_msgs::msg::AdmaData & ros_msg, sensor_msgs::msg::Imu & imu_ros_msg);
   void extractIMU(
     adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, sensor_msgs::msg::Imu & imu_ros_msg);
+  void extractOdometry(
+    adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, 
+    nav_msgs::msg::Odometry & odometry_msg, double yawOffset);
   void parseV334(adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & local_data);
   void parseV334Status(adma_ros_driver_msgs::msg::AdmaStatus & ros_msg, AdmaDataV334 & local_data);
   void parseScaledData(adma_ros_driver_msgs::msg::AdmaData & ros_msg);
