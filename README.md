@@ -30,14 +30,27 @@ cd ~/ros2_ws/src
 git clone -b ros_2 $REPO_URL(HTPPS/SSH)
 ```
 
-2. Build workspace
+2. install all ROS dependencies (the warning for `ament_cmake_clange_format` can be ignored..)
+```bash
+cd ~/ros2_ws
+# source ROS
+. /opt/ros/$INSTALLED_ROS_CONTRIB/setup.bash
+# initialize rosdep
+sudo rosdep init # only required if not already done for other projects on your system
+# update rosdep
+rosdep update
+# install dependencies
+rosdep install --from-paths src --ignore-src -y
+```
+
+3. Build your workspace
 ```bash
 cd ~/ros2_ws
 . /opt/ros/$INSTALLED_ROS_CONTRIB/setup.bash
 colcon build --symlink-install
 ```
 
-3. Source workspace and launch
+4. Source workspace and launch
 ```bash
 . install/setup.bash
 ros2 launch adma_ros2_driver adma_driver.launch.py
