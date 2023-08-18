@@ -104,7 +104,7 @@ To switch between those, the`protocol_version` parameter in the `config/driver_c
 ## Data Output
 The ADMA ROS driver is able to output two different file formats. 
 
-![Online](https://github.com/GeneSysElektronik/adma_ros_driver/assets/105273302/fbd7470e-6d6f-4499-8fd2-08a0110f89e2)
+![Online](https://github.com/GeneSysElektronik/adma_ros_driver/assets/105273302/f10a2ed1-1e7b-47b4-9f03-14a68fcdeac3)
 
 ### GeneSys Binary Raw Data (.gsdb)
 ![Integration of GSDB in the GeneSys Toolchain](https://user-images.githubusercontent.com/105273302/230074686-9b17826a-16d4-4f6a-83f7-8cd19daad914.jpg)
