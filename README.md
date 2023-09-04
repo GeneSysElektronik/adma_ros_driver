@@ -1,8 +1,7 @@
 # adma_ros2_driver
 Further Information can be found at the [GeneSys Technical Support Center](https://genesys-offenburg.de/support-center/). 
 
-## Standard ROS Topics
-### Integrated Topics
+## Integrated Standard ROS Topics
 The ADMA uses a combination of GNSS-Receiver and different rate and acceleration sensors. Due to this, different ROS topics are getting filled with sensor, GNSS and combined measurement data as shown in the following list:
 
 | Topic | Content | Description |
@@ -15,11 +14,6 @@ The ADMA uses a combination of GNSS-Receiver and different rate and acceleration
 | /adma/imu | [sensor_msgs::imu](http://docs.ros.org/en/melodic/api/sensor_msgs/html/msg/Imu.html) | Inertial data in the standard ROS format. |
 | /adma/data_raw | Raw UDP data stream | ADMA raw data as binary data stream. |
 | /adma/odometrsy | [nav_msgs::Odometry](http://docs.ros.org/en/noetic/api/nav_msgs/html/msg/Odometry.html) | Position, velocity and orientation |
-
-### ROS Topic onfiguration
-The ROS Topics can be output in desired measurement point locations in the vehicle. This can be done by using the ADMA POI's (Point of Interest). The POI's are defined in the ADMA Webinterface
-through user defined offsets to the Measurement Reference Point (MRP). In the ADMA ROS Driver, the POI's in which each ROS topic shall be output can be selected with the relating ID in the 
-Driver Config File (0 = MRP, 1-8 = POI 1-8). As Default, the ROS Topics are output in POI1. 
 
 ## Environment information
 This setup was implemented and tested with the following conditions:
@@ -68,6 +62,16 @@ ros2 launch adma_ros2_driver adma_driver.launch.py
 For configuring the ADMA ROS Driver the according parameters in the `adma_ros2_driver/config/driver_config.yaml` file have to be modified.
 If the workspace was built with `colcon build --symlink-install`, it is possible to restart the node after changing configuration parameters directly. Otherwise (built without '--symlink-install') it is necessary to rebuild the workspace to update the files. 
 Same "linking" rule applies to the `launch.py` files. The available parameters are described in the table below.
+
+#### ROS Topic configuration
+The ROS Topics can be output in desired measurement point locations in the vehicle. This can be done by using the ADMA POI's (Point of Interest). The POI's are defined in the ADMA Webinterface
+through user defined offsets to the Measurement Reference Point (MRP). In the ADMA ROS Driver, the POI's in which each ROS topic shall be output can be selected with the relating ID in the 
+Driver Config File (0 = MRP, 1-8 = POI 1-8). As Default, the ROS Topics are output in POI1. 
+
+By default, the odometry topic outputs Yaw relative to the north direction. You can configure an offset for Yaw using the "odometry_yaw_offset" parameter.
+
+![DriverConfig_marked](https://github.com/GeneSysElektronik/adma_ros_driver/assets/105273302/9399a887-53dd-47b6-b58d-b93a3cd319a0)
+
 
 ### Launch File
 #### Topic Remapping
