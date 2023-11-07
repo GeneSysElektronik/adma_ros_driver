@@ -510,7 +510,7 @@ void ADMA2ROSParser::extractNavSatFix(
       break;
   }
 
-  nav_ros_msg.altitude = ros_msg.finsheight;
+  nav_ros_msg.altitude = ros_msg.finsheight + ros_msg.undulation;
   nav_ros_msg.latitude = ros_msg.finslatabs;
   nav_ros_msg.longitude = ros_msg.finslonabs;
   nav_ros_msg.position_covariance[0] = std::pow(ros_msg.finsstddevlat, 2);
