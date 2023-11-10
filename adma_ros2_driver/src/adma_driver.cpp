@@ -133,7 +133,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
   float weektime;
   //offset between UNIX and GNSS (in ms)
   unsigned long long offset_gps_unix = 315964800000;
-  uint32_t week_to_msec = 604800000;
+  unsigned long long week_to_msec = 604800000;
   unsigned long long timestamp;
 
   // read Adma msg from UDP data packet
