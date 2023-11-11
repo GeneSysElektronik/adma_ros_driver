@@ -12,6 +12,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options() # (-Wall -Wextra) #-Wpedantic)
 endif()
 
+# define ROS dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
@@ -21,10 +22,13 @@ find_package(nav_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
+
+# define genesys dependencies
 find_package(adma_ros_driver_msgs REQUIRED)
 
 include_directories(include)
 
+# define library of this package
 add_library(${PROJECT_NAME}_node SHARED
   src/parser/adma2ros_parser.cpp
   src/parser/adma2ros_parser_v32.cpp
@@ -34,6 +38,7 @@ add_library(${PROJECT_NAME}_node SHARED
   src/adma_driver.cpp
 )
 
+# link ROS deps to this package
 ament_target_dependencies(${PROJECT_NAME}_node
   rclcpp
   rclcpp_components
@@ -46,6 +51,7 @@ ament_target_dependencies(${PROJECT_NAME}_node
   adma_ros_driver_msgs
 )
 
+# setup executable
 rclcpp_components_register_node(${PROJECT_NAME}_node
   PLUGIN "genesys::ADMADriver"
   EXECUTABLE adma_driver

@@ -547,9 +547,12 @@ void ADMA2ROSParser::extractNavSatFix(
       break;
   }
 
+  // read POI specific height for NavSatFix msg
   nav_ros_msg.altitude = desiredSource == 0 ? ros_msg.ins_height : pois[desiredSource - 1].ins_height;
   nav_ros_msg.latitude = desiredSource == 0 ? ros_msg.ins_lat_abs : pois[desiredSource - 1].ins_lat_abs;
   nav_ros_msg.longitude = desiredSource == 0 ? ros_msg.ins_long_abs : pois[desiredSource - 1].ins_lon_abs;
+  // add undulation to get WGS84 height for ROS standard
+  nav_ros_msg.altitude += ros_msg.undulation;
   nav_ros_msg.position_covariance[0] = std::pow(ros_msg.ins_stddev_lat, 2);
   nav_ros_msg.position_covariance[4] = std::pow(ros_msg.ins_stddev_long, 2);
   nav_ros_msg.position_covariance[8] = std::pow(ros_msg.ins_stddev_height, 2);
@@ -590,6 +593,7 @@ void ADMA2ROSParser::extractIMU(
   adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, sensor_msgs::msg::Imu & imu_ros_msg,
   std::array<adma_ros_driver_msgs::msg::POI, 8> &pois, uint8_t desiredSource)
 {
+  // get POI specific IMU data
   imu_ros_msg.linear_acceleration.x = desiredSource == 0 ? ros_msg.acc_body_hr.x : pois[desiredSource - 1].acc_body.x;
   imu_ros_msg.linear_acceleration.y = desiredSource == 0 ? ros_msg.acc_body_hr.y : pois[desiredSource - 1].acc_body.y;
   imu_ros_msg.linear_acceleration.z = desiredSource == 0 ? ros_msg.acc_body_hr.z : pois[desiredSource - 1].acc_body.z;
@@ -623,6 +627,7 @@ void ADMA2ROSParser::extractOdometry(
     adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, nav_msgs::msg::Odometry & odometry_msg,
     double yawOffset, std::array<adma_ros_driver_msgs::msg::POI, 8> &pois, uint8_t desiredSource)
 {
+  // extract POI specific odometry data
   odometry_msg.pose.pose.position.x = desiredSource == 0 ? ros_msg.ins_pos_rel_x : pois[desiredSource - 1].ins_pos_rel_x;
   odometry_msg.pose.pose.position.y = desiredSource == 0 ? ros_msg.ins_pos_rel_y : pois[desiredSource - 1].ins_pos_rel_y;
   odometry_msg.pose.pose.position.z = desiredSource == 0 ? ros_msg.ins_height : pois[desiredSource - 1].ins_height;

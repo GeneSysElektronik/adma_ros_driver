@@ -19,9 +19,9 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
   adma_address_length_(4),
   adma_port_(0)
 {
+  // define ROS parameters, adjustable by config yaml file
   std::string param_address = this->declare_parameter("destination_ip", "0.0.0.0");
   adma_port_ = this->declare_parameter("destination_port", 1040);
-
   performance_check_ = this->declare_parameter("use_performance_check", false);
   gnss_frame_ = this->declare_parameter("frame_ids.navsatfix", "gnss_link");
   imu_frame_ = this->declare_parameter("frame_ids.imu", "imu_link");
@@ -36,7 +36,7 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
   velocity_id_ = this->declare_parameter("topic_pois.velocity", 1);
   odometry_id_ = this->declare_parameter("topic_pois.odometry", 1);
   
-  // define protocol specific stuff
+  // define protocol version specific stuff
   protocol_version_ = this->declare_parameter("protocol_version", "v3.3.3");
   RCLCPP_INFO(get_logger(), "Working with: %s", protocol_version_.c_str());
   if (protocol_version_ == "v3.2") {
@@ -59,8 +59,10 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
       this->create_publisher<nav_msgs::msg::Odometry>("adma/odometry", 1);
 
   }
+  // create a generic parser
   parser_ = new ADMA2ROSParser(protocol_version_);
 
+  // setup additional publisher that are protocol version indepent
   pub_navsat_fix_ = this->create_publisher<sensor_msgs::msg::NavSatFix>("adma/fix", 1);
   pub_imu_ = this->create_publisher<sensor_msgs::msg::Imu>("adma/imu", 1);
   pub_heading_ = this->create_publisher<std_msgs::msg::Float64>("adma/heading", 1);
@@ -72,6 +74,7 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
 
 ADMADriver::~ADMADriver()
 {
+  // unlock socket when stopping application
   freeaddrinfo(rcv_addr_info_);
   ::shutdown(rcv_sock_fd_, SHUT_RDWR);
   rcv_sock_fd_ = -1;
@@ -79,6 +82,7 @@ ADMADriver::~ADMADriver()
 
 void ADMADriver::initializeUDP(std::string adma_address)
 {
+  // setup socket
   struct addrinfo hints;
   memset(&hints, 0, sizeof(hints));
   hints.ai_family = AF_UNSPEC;
@@ -92,6 +96,7 @@ void ADMADriver::initializeUDP(std::string adma_address)
   adma_address_.sin_port = htons(adma_port_);
   inet_aton(adma_address.c_str(), &(adma_address_.sin_addr));
 
+  // define some error handling
   int r = getaddrinfo(adma_address.c_str(), rcv_port_str.c_str(), &hints, &rcv_addr_info_);
   if (r != 0 || rcv_addr_info_ == NULL) {
     RCLCPP_FATAL(
@@ -167,6 +172,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
     adma_ros_driver_msgs::msg::AdmaDataScaled adma_data_scaled_msg;
     adma_data_scaled_msg.header.frame_id = adma_frame_;
     parser_->parseV334(adma_data_scaled_msg, data_struct);
+    // define POI-list for publishing odometry
     pois = {
       adma_data_scaled_msg.poi_1,
       adma_data_scaled_msg.poi_2,
@@ -240,10 +246,10 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
   pub_velocity_->publish(message_velocity);
   pub_imu_->publish(message_imu);
 
-  double grab_time = this->get_clock()->now().seconds();
-
+  // just for debugging
   if (performance_check_) {
-    RCLCPP_INFO(get_logger(), "%f ", ((grab_time * 1000) - (timestamp)));
+    double grab_time = this->get_clock()->now().seconds();
+    RCLCPP_INFO(get_logger(), " parsing time: %f ", ((grab_time * 1000) - (timestamp)));
   }
 }
 

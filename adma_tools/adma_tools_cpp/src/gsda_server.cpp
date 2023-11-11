@@ -11,6 +11,7 @@
 
 /**
  * @brief This helper class can replay post-processed ADMA data (GSDA file) and publish the data to ROS
+ * Only supported for protocol version >= 3.3.4
  */
 namespace genesys
 {
@@ -61,6 +62,7 @@ tfBroadcaster_(*this)
     trajectory_msg_.header.frame_id = odometry_child_frame_;
   }
 
+  // TODO: if a new protocol version is released, inject the version as ROS parameter for parsing 
   parser_ = new ADMA2ROSParser("v3.3.4");
 
   updateLoop();
@@ -160,6 +162,7 @@ void GSDAServer::updateLoop()
       odomMsg.header.stamp.nanosec = timestamp * 1E6;
       parser_->extractOdometry(dataScaledMsg, odomMsg, odometry_yaw_offset_, pois, odometry_id_);
 
+      // TODO: extract the TF stuff to separate node for reusage
       if(publish_TF_)
       {
         // TODO: evaluate those transformations!!

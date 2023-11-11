@@ -3,7 +3,7 @@
 <package format="3">
   <name>adma_tools_cpp</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>A collection of some useful tools to handle ADMA data</description>
   <maintainer email="rico.schillings@hs-offenburg.de">rschilli</maintainer>
   <license>BSD3</license>
 

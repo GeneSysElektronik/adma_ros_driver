@@ -399,7 +399,9 @@ void ADMA2ROSParserV334::mapScaledData(
 void ADMA2ROSParserV334::mapPOI(
   adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & adma_data)
 {
+  // first create a array for all available POI
   std::array<adma_ros_driver_msgs::msg::POI, 8> pois;
+  // then fill the POIs with data
   for (size_t i = 0; i < 8; i++) {
     adma_ros_driver_msgs::msg::POI new_poi;
 
@@ -429,7 +431,7 @@ void ADMA2ROSParserV334::mapPOI(
     new_poi.ins_vel_hor.z = getScaledValue(cur_ins_vel_hor.z, 0.005);
     pois[i] = new_poi;
   }
-
+  // finally set the filled POI data to the whole ROS msg
   ros_msg.poi_1 = pois[0];
   ros_msg.poi_2 = pois[1];
   ros_msg.poi_3 = pois[2];

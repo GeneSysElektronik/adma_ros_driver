@@ -11,4 +11,4 @@ template <typename T>
 inline T deg2Rad(T deg){ return T(deg * PI / 180.0); }
 
 template <typename T>
-inline T rad2Deg(T rad){ return T(rad * 180 / PI); }
+inline T rad2Deg(T rad){ return T(rad * 180.0 / PI); }
