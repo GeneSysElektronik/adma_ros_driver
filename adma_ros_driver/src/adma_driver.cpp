@@ -61,15 +61,15 @@ class ADMADriver {
 ADMADriver::ADMADriver(ros::NodeHandle* n)
 {
         //define ROS parameters
-        ros::param::get("/adma_driver/destination_ip", _param_adma_ip);
-        ros::param::get("/adma_driver/destination_port", _param_adma_port);
-        ros::param::get("/adma_driver/use_performance_check", _use_performance_check);
-        ros::param::get("/adma_driver/protocol_version", _protocol_version);
-        ros::param::get("/adma_driver/frame_id_navsatfix", _frame_id_navsatfix);
-        ros::param::get("/adma_driver/frame_id_imu", _frame_id_imu);
-        ros::param::get("/adma_driver/frame_id_adma", _frame_id_adma);
-        ros::param::get("/adma_driver/frame_id_adma_status", _frame_id_adma_status);
-        ros::param::get("/adma_driver/frame_id_data_raw", _frame_id_data_raw);
+        ros::param::get("adma_driver/destination_ip", _param_adma_ip);
+        ros::param::get("adma_driver/destination_port", _param_adma_port);
+        ros::param::get("adma_driver/use_performance_check", _use_performance_check);
+        ros::param::get("adma_driver/protocol_version", _protocol_version);
+        ros::param::get("adma_driver/frame_id_navsatfix", _frame_id_navsatfix);
+        ros::param::get("adma_driver/frame_id_imu", _frame_id_imu);
+        ros::param::get("adma_driver/frame_id_adma", _frame_id_adma);
+        ros::param::get("adma_driver/frame_id_adma_status", _frame_id_adma_status);
+        ros::param::get("adma_driver/frame_id_data_raw", _frame_id_data_raw);
         
         ROS_INFO("Try finding ADMA at: %s:%d", _param_adma_ip.c_str(), _param_adma_port);
         ROS_INFO("Using ADMA protocol version: %s", _protocol_version.c_str());
