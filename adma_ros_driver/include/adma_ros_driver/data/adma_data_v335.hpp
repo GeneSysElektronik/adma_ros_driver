@@ -134,7 +134,7 @@ struct AdmaDataV335
         // gnssreceiverload in %
         unsigned char gnssreceiverload;
         unsigned char gnssbasenr[4];
-        Reserved1 reservedData10;
+        unsigned char reservedSpace10[1];
         unsigned char gnsssatsdualantmultifreq;
 
         // ins angle and gnss cog
