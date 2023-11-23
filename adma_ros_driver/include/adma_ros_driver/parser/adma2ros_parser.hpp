@@ -9,6 +9,7 @@
 #include "adma_ros_driver_msgs/AdmaDataScaled.h"
 #include "adma_ros_driver/parser/adma2ros_parser_v333.hpp"
 #include "adma_ros_driver/parser/adma2ros_parser_v334.hpp"
+#include "adma_ros_driver/parser/adma2ros_parser_v335.hpp"
 
 
 class ADMA2ROSParser
@@ -21,6 +22,8 @@ class ADMA2ROSParser
                 void extractIMU(adma_ros_driver_msgs::AdmaDataScaled& rosMsg, sensor_msgs::Imu& imuRosMsg);
                 void parseV334(adma_ros_driver_msgs::AdmaDataScaled& rosMsg, AdmaDataV334& localData);
                 void parseV334Status(adma_ros_driver_msgs::AdmaStatus& rosMsg, AdmaDataV334& localData);
+                void parseV335(adma_ros_driver_msgs::AdmaDataScaled& rosMsg, AdmaDataV335& localData);
+                void parseV335Status(adma_ros_driver_msgs::AdmaStatus& rosMsg, AdmaDataV335& localData);
                 void parseScaledData(adma_ros_driver_msgs::Adma& rosMsg);
         private:
                 template <typename AdmaDataHeaderStruct>

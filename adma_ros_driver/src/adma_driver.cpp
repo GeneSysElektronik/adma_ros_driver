@@ -249,6 +249,53 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
                 weektime = admaDataScaledMsg.ins_time_week;
                 
         }
+        else if (_protocol_version == "v3.3.5")
+        {
+            // first extract V335 ros msg
+            AdmaDataV335 dataStruct;
+            memcpy(&dataStruct, &recv_buf, sizeof(dataStruct));
+            adma_ros_driver_msgs::AdmaDataScaled admaDataScaledMsg;
+            admaDataScaledMsg.header.frame_id = _frame_id_adma;
+            admaDataScaledMsg.header.seq = _seq;
+            _parser->parseV335(admaDataScaledMsg, dataStruct);
+
+            _parser->extractNavSatFix(admaDataScaledMsg, message_fix);
+            _parser->extractIMU(admaDataScaledMsg, message_imu);
+
+            // read heading and velocity
+            message_heading.data = admaDataScaledMsg.ins_yaw;
+            message_velocity.data = std::sqrt(std::pow(admaDataScaledMsg.ins_vel_frame.x, 2) + std::pow(admaDataScaledMsg.ins_vel_frame.y, 2)) * 3.6;
+            timestamp = admaDataScaledMsg.ins_time_msec + offset_gps_unix;
+            timestamp += admaDataScaledMsg.ins_time_week * week_to_msec;
+            admaDataScaledMsg.header.stamp.sec = timestamp / 1000;
+            admaDataScaledMsg.header.stamp.nsec = timestamp * 1000000;
+            admaDataScaledMsg.time_msec = timestamp;
+            admaDataScaledMsg.time_nsec = timestamp * 1000000;
+            // parse status msg
+            adma_ros_driver_msgs::AdmaStatus statusMsg;
+            statusMsg.header.frame_id = _frame_id_adma_status;
+            statusMsg.header.seq = _seq;
+            statusMsg.header.stamp.sec = timestamp / 1000;
+            statusMsg.header.stamp.nsec = timestamp * 1000000;
+            _parser->parseV335Status(statusMsg, dataStruct);
+
+            // publish v335 specific topics
+            _pubAdmaDataScaled.publish(admaDataScaledMsg);
+            _pubAdmaStatus.publish(statusMsg);
+
+            // publish ros standard messages
+            message_fix.header.stamp.sec = timestamp / 1000;
+            message_fix.header.stamp.nsec = timestamp * 1000000;
+            message_imu.header.stamp.sec = timestamp / 1000;
+            message_imu.header.stamp.nsec = timestamp * 1000000;
+            _pubNavSatFix.publish(message_fix);
+            _pubHeading.publish(message_heading);
+            _pubVelocity.publish(message_velocity);
+            _pubImu.publish(message_imu);
+
+            weektime = admaDataScaledMsg.ins_time_week;
+
+        }
 
         // protocol version indepent parsing
 

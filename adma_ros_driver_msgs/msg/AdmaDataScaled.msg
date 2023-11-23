@@ -98,6 +98,7 @@ float64 gnss_pos_rel_y
 float64 gnss_stddev_lat
 float64 gnss_stddev_long
 float64 gnss_stddev_height
+float64 gnss_stddev_cog
 
 # gnss velocity frame in m/s
 geometry_msgs/Vector3 gnss_vel_frame
@@ -122,14 +123,16 @@ int8 gnss_sats_used
 int8 gnss_sats_visible
 int8 gnss_sats_dualant_used
 int8 gnss_sats_dualant_visible
+int8 gnss_sats_single_freq
+int8 gnss_sats_multi_freq
 
 # gnss auxdata 2
 # gnsslogdelay in ta
 int8 gnss_log_delay
 # gnssreceiverload in %
 float64 gnss_receiver_load
-
 string gnss_base_nr
+int8 gnss_sats_dualant_multi_freq
 
 # ins angle and gnss cog
 # all units in deg
@@ -162,6 +165,7 @@ float32 gnss_dualant_stddev_pitch_hr
 
 # ins position height (msl)
 float64 ins_height
+float64 ins_yaw_rel
 
 # ins time utc
 # instimemsec in ms
