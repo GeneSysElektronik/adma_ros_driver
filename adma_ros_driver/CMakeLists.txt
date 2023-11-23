@@ -46,6 +46,7 @@ add_library(${PROJECT_NAME}
   src/parser/adma2ros_parser.cpp
   src/parser/adma2ros_parser_v333.cpp
   src/parser/adma2ros_parser_v334.cpp
+  src/parser/adma2ros_parser_v335.cpp
   src/parser/parser_utils.cpp
 )
 
