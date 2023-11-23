@@ -6,7 +6,7 @@
 ADMA2ROSParser::ADMA2ROSParser()
         :_parserV333(),
         _parserV334(),
-        _parser335()
+        _parserV335()
 {
 }
 
