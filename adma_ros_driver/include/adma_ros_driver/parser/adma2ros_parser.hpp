@@ -36,4 +36,5 @@ class ADMA2ROSParser
                 void geterrorandwarning(adma_ros_driver_msgs::Adma& rosMsg, unsigned char admaData[4]);
                 ADMA2ROSParserV333 _parserV333;
                 ADMA2ROSParserV334 _parserV334;
+                ADMA2ROSParserV335 _parserV335;
 };
