@@ -87,6 +87,15 @@ ADMADriver::ADMADriver(ros::NodeHandle* n)
                 _pubNavSatFix = n->advertise<sensor_msgs::NavSatFix>("adma/fix", 10);
                 _pubImu = n->advertise<sensor_msgs::Imu>("adma/imu", 10);
         }
+        else if (_protocol_version == "v3.3.5")
+        {
+            _pubAdmaDataScaled = n->advertise<adma_ros_driver_msgs::AdmaDataScaled>("adma/data_scaled", 10);
+            _pubAdmaStatus = n->advertise<adma_ros_driver_msgs::AdmaStatus>("adma/status", 10);
+            _pubHeading = n->advertise<std_msgs::Float64>("adma/heading", 10);
+            _pubVelocity = n->advertise<std_msgs::Float64>("adma/velocity", 10);
+            _pubNavSatFix = n->advertise<sensor_msgs::NavSatFix>("adma/fix", 10);
+            _pubImu = n->advertise<sensor_msgs::Imu>("adma/imu", 10);
+        }
         
         //raw data should be published always, protocol version indepent
         _pubAdmaDataRaw = n->advertise<adma_ros_driver_msgs::AdmaDataRaw>("adma/data_raw", 10);
