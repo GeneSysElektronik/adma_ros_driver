@@ -28,11 +28,11 @@ catkin_make
 3. Source workspace and launch
 ```bash
 source ~/ros1_ws/devel/setup.bash
-roslaunch adma_ros_driver ADMA_pub_Ethernet_new.launch
+roslaunch adma_ros_driver ADMA_pub_Ethernet.launch
 ```
 
 ## Parameter configuration
-For configuring the ADMA ROS Driver the according parameters in the `adma_ros_driver/launch/ADMA_pub_Ethernet_new.launch` file have to be modified.
+For configuring the ADMA ROS Driver the according parameters in the `adma_ros_driver/launch/ADMA_pub.launch` file have to be modified.
 
 | Parameter | Possible Values | Description|
 |---|---|---|
@@ -40,7 +40,7 @@ For configuring the ADMA ROS Driver the according parameters in the `adma_ros_dr
 | destination_port | any valid integer value | Destination Port of your ADMA |
 | use_performance_check | True/False | True if you want to log informations about the performance |
 | frame_id_X | any string name | ROS frame_id of the X topic |
-| protocol_version | "v3.3.3" / "v3.3.4" | the ADMAnet protocol version of your ADMA |
+| protocol_version | "v3.3.3" / "v3.3.4" / "v3.3.5" | the ADMAnet protocol version of your ADMA |
 | mode | "default" / "record" / "replay" | defines if you want to use it live with ADMA (default), record raw data received from ADMA (record) or replay the recorded raw data by replaying a rosbag (replay) |
 
 ## Supported ADMA Protocol versions
@@ -58,6 +58,11 @@ To switch between those, the`protocol_version` parameter in the `adma_ros_driver
         - additionally publishes the raw data (HEX) as separate String topic (could be recorded e.g. for post-processing)
         - this also uses several standard-ROS msgs like Vector3 to represent XYZ coordinates instead of having 3 individual attributes
         - POI's are now integrated as a object list and can be accessed by their index 
+- v3.3.5
+
+        - added INS Yaw Relative
+        - added COG Standarddeviation
+        - added Amount of Satellites Single Frequency and Multi Frequency
 
 ## ADMA Postprocessing
 The driver logs per default the received raw data into a `*.gsdb` file. This logfile can be used afterwards for the ADMA PP tool.
@@ -87,7 +92,7 @@ This will add the additional topic and also start the recording of the rosbag. I
 For replaying the raw data the following parameters have to be configured:
 1. switch the `mode` parameter to `replay`
 2. modify the `rosbag_file` in the `.launch`-file to ensure it contains the correct path to your recorded rosbag (this time INCLUDING the file name, so e.g. `/home/$USER/records/my_new_record.bag`) 
-3. start again with `roslaunch adma_ros_driver ADMA_pub_Ethernet_new.launch`.
+3. start again with `roslaunch adma_ros_driver ADMA_pub_Ethernet.launch`.
  
 ## Remapping topics
 If you want to modify the topics for some reason (e.g. make it compatible to your own ros nodes), you can modify the `<remap>...` entries of the `launch`-file. Here you just have to change the value of the `to=".."` attribute to let the driver publish to the desired topic.
