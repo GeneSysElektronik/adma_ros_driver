@@ -35,6 +35,8 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
   imu_id_ = this->declare_parameter("topic_pois.imu", 1);
   velocity_id_ = this->declare_parameter("topic_pois.velocity", 1);
   odometry_id_ = this->declare_parameter("topic_pois.odometry", 1);
+  mode_ = this->declare_parameter("mode", 0); // 0 / 1
+  time_mode_ = this->declare_parameter("time_mode", 0); // 0 / 1
   
   // define protocol version specific stuff
   protocol_version_ = this->declare_parameter("protocol_version", "v3.3.3");
@@ -49,8 +51,19 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
       this->create_publisher<adma_ros_driver_msgs::msg::AdmaDataRaw>("adma/data_raw", 1);
   } else if (protocol_version_ == "v3.3.4") {
     len_ = 856;
-    pub_adma_data_raw_ =
+    if(mode_ == 0)
+    {
+      RCLCPP_INFO(get_logger(), "Starting in live mode..");
+      pub_adma_data_raw_ =
       this->create_publisher<adma_ros_driver_msgs::msg::AdmaDataRaw>("adma/data_raw", 1);
+    }else if (mode_ == 1)
+    {
+      RCLCPP_INFO(get_logger(), "Starting in rosbag replay mode..");
+      subRawData_ = create_subscription<adma_ros_driver_msgs::msg::AdmaDataRaw>(
+      "adma/data_raw", 10, std::bind(&ADMADriver::rawDataCallback,
+      this, std::placeholders::_1));
+    }
+    
     pub_adma_data_scaled_ =
       this->create_publisher<adma_ros_driver_msgs::msg::AdmaDataScaled>("adma/data_scaled", 1);
     pub_adma_status_ =
@@ -68,16 +81,24 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
   pub_heading_ = this->create_publisher<std_msgs::msg::Float64>("adma/heading", 1);
   pub_velocity_ = this->create_publisher<std_msgs::msg::Float64>("adma/velocity", 1);
 
-  initializeUDP(param_address);
-  updateLoop();
+  if(mode_ == 0)
+  {
+    // only setup UDP connection and loop in live mode
+    initializeUDP(param_address);
+    updateLoop();
+  }
+  
 }
 
 ADMADriver::~ADMADriver()
 {
   // unlock socket when stopping application
-  freeaddrinfo(rcv_addr_info_);
-  ::shutdown(rcv_sock_fd_, SHUT_RDWR);
-  rcv_sock_fd_ = -1;
+  if(mode_ == 0)
+  {
+    freeaddrinfo(rcv_addr_info_);
+    ::shutdown(rcv_sock_fd_, SHUT_RDWR);
+    rcv_sock_fd_ = -1;
+  }
 }
 
 void ADMADriver::initializeUDP(std::string adma_address)
@@ -126,6 +147,17 @@ void ADMADriver::initializeUDP(std::string adma_address)
   }
 }
 
+void ADMADriver::rawDataCallback(adma_ros_driver_msgs::msg::AdmaDataRaw::SharedPtr newMsg)
+{
+  // first convert the received raw ROS msg into byte array for easier parsing afterwards
+  std::array<char, 856> recv_buf;
+  for(size_t i = 0; i < newMsg->size; i++) 
+  {
+    recv_buf[i] = newMsg->raw_data[i];
+  }
+  parseData(recv_buf);
+}
+
 void ADMADriver::parseData(std::array<char, 856> recv_buf)
 {
   // prepare several ros msgs
@@ -135,6 +167,8 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
   std_msgs::msg::Float64 message_velocity;
   sensor_msgs::msg::Imu message_imu;
   message_imu.header.frame_id = imu_frame_;
+
+  builtin_interfaces::msg::Time timestampForMsgs;
   float weektime;
   //offset between UNIX and GNSS (in ms)
   unsigned long long offset_gps_unix = 315964800000;
@@ -187,8 +221,19 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
     timestamp += adma_data_scaled_msg.ins_time_week * week_to_msec;
     adma_data_scaled_msg.time_msec = timestamp;
     adma_data_scaled_msg.time_nsec = timestamp * 1E6;
-    adma_data_scaled_msg.header.stamp.sec = timestamp / 1000;
-    adma_data_scaled_msg.header.stamp.nanosec = timestamp * 1E6;
+
+    if(time_mode_ == 0)
+    {
+      // mode == 0 -> use ADMA time 
+      timestampForMsgs.sec = timestamp / 1000;
+      timestampForMsgs.nanosec = timestamp * 1E6;
+    }else if(time_mode_ == 1)
+    {
+      // mode == 1 -> use current ROS system time
+      timestampForMsgs = get_clock()->now();
+    }
+
+    adma_data_scaled_msg.header.stamp = timestampForMsgs;
 
     parser_->extractNavSatFix(adma_data_scaled_msg, message_fix, pois, navsatfix_id_);
     parser_->extractIMU(adma_data_scaled_msg, message_imu, pois, imu_id_);
@@ -197,8 +242,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
     nav_msgs::msg::Odometry odom_msg;
     odom_msg.header.frame_id = odometry_pose_frame_;
     odom_msg.child_frame_id = odometry_child_frame_;
-    odom_msg.header.stamp.sec = timestamp / 1000;
-    odom_msg.header.stamp.nanosec = timestamp * 1E6;
+    odom_msg.header.stamp = timestampForMsgs;
     parser_->extractOdometry(adma_data_scaled_msg, odom_msg, odometry_yaw_offset_, pois, odometry_id_);
     pub_odometry_->publish(odom_msg);
 
@@ -214,20 +258,18 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
     weektime = adma_data_scaled_msg.ins_time_week;
 
     adma_ros_driver_msgs::msg::AdmaStatus status_msg;
-    status_msg.header.stamp.sec = timestamp / 1000;
-    status_msg.header.stamp.nanosec = timestamp * 1E6;
+    status_msg.header.stamp = timestampForMsgs;
     status_msg.header.frame_id = adma_status_frame_;
     parser_->parseV334Status(status_msg, data_struct);
     pub_adma_status_->publish(status_msg);
   }
 
   // publish raw data with >= v3.3.3
-  if (protocol_version_ != "v3.2") {
+  if (protocol_version_ != "v3.2" && mode_== 0) {
     // publish raw data as byte array
     adma_ros_driver_msgs::msg::AdmaDataRaw raw_data_msg;
     raw_data_msg.size = len_;
-    raw_data_msg.header.stamp.sec = timestamp / 1000;
-    raw_data_msg.header.stamp.nanosec = timestamp * 1E6;
+    raw_data_msg.header.stamp  = timestampForMsgs;
     raw_data_msg.header.frame_id = raw_data_frame_;
 
     for (int i = 0; i < len_; ++i) {
@@ -237,10 +279,8 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
   }
 
   // publish the messages
-  message_fix.header.stamp.sec = timestamp / 1000;
-  message_fix.header.stamp.nanosec = timestamp * 1E6;
-  message_imu.header.stamp.sec = timestamp / 1000;
-  message_imu.header.stamp.nanosec = timestamp * 1E6;
+  message_fix.header.stamp = timestampForMsgs;
+  message_imu.header.stamp = timestampForMsgs;
   pub_navsat_fix_->publish(message_fix);
   pub_heading_->publish(message_heading);
   pub_velocity_->publish(message_velocity);

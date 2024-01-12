@@ -27,6 +27,7 @@ private:
   void initializeUDP(std::string adma_address);
   void updateLoop();
   void parseData(std::array<char, 856> recv_buf);
+  void rawDataCallback(adma_ros_driver_msgs::msg::AdmaDataRaw::SharedPtr rawDataMsg);
 
   // Socket file descriptor for receiving from adma
   int rcv_sock_fd_;
@@ -41,6 +42,9 @@ private:
   /** \brief Check the timings */
   bool performance_check_ = true;
   std::string protocol_version_;
+
+  // subscriber
+  rclcpp::Subscription<adma_ros_driver_msgs::msg::AdmaDataRaw>::SharedPtr subRawData_;
 
   // publisher
   rclcpp::Publisher<adma_ros_driver_msgs::msg::AdmaData>::SharedPtr pub_adma_data_;
@@ -73,5 +77,9 @@ private:
   uint8_t velocity_id_;
   uint8_t odometry_id_;
   std::array<adma_ros_driver_msgs::msg::POI, 8> pois;
+
+  // parameters for mode and time source
+  uint8_t mode_;
+  uint8_t time_mode_;
 };
 }  // namespace genesys
