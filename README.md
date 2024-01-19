@@ -61,7 +61,7 @@ ros2 launch adma_ros2_driver adma_driver.launch.py
 ### Config File
 For configuring the ADMA ROS Driver the according parameters in the `adma_ros2_driver/config/driver_config.yaml` file have to be modified.
 If the workspace was built with `colcon build --symlink-install`, it is possible to restart the node after changing configuration parameters directly. Otherwise (built without '--symlink-install') it is necessary to rebuild the workspace to update the files. 
-Same "linking" rule applies to the `launch.py` files. The available parameters are described in the table below.
+Same "linking" rule applies to the `launch.py` files. The available parameters are described below.
 
 #### ROS Topic configuration
 The ROS Topics can be output in desired measurement point locations in the vehicle. This can be done by using the ADMA POI's (Point of Interest). The POI's are defined in the ADMA Webinterface
@@ -70,7 +70,12 @@ Driver Config File (0 = MRP, 1-8 = POI 1-8). As Default, the ROS Topics are outp
 
 By default, the odometry topic outputs Yaw relative to the north direction. You can configure an offset for Yaw using the "odometry_yaw_offset" parameter.
 
-![DriverConfig_marked](https://github.com/GeneSysElektronik/adma_ros_driver/assets/105273302/9399a887-53dd-47b6-b58d-b93a3cd319a0)
+With the mode, it is possible to switch between the online and the replay mode. The replay mode is a built in replay function for subscribing to the /adma/data_raw topic of a replayed bag file. 
+This enables only the decoder part of the driver, that takes the rosbag data and publishes them in the standard ADMA ROS driver topics. 
+
+With the time_mode parameter it is possible to define how the ROS header time stamps shall be defined. Either by the ADMA INS Time (default) or by the ROS system time. 
+
+![ConfigFile](https://github.com/GeneSysElektronik/adma_ros_driver/assets/105273302/dd0d2eb0-3ec5-4649-8949-1ec591de530b)
 
 
 ### Launch File
