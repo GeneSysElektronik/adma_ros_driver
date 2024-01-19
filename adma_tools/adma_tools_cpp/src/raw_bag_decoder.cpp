@@ -28,7 +28,7 @@ RawBagDecoder::RawBagDecoder(const rclcpp::NodeOptions & options)
   imu_id_ = this->declare_parameter("topic_pois.imu", 1);
   velocity_id_ = this->declare_parameter("topic_pois.velocity", 1);
   odometry_id_ = this->declare_parameter("topic_pois.odometry", 1);
-  time_mode_ = this->declare_parameter("time_mode", 0); // 0 / 1 / 2
+  time_mode_ = this->declare_parameter("time_mode", 1); // 0 / 1 / 2
 
   subRawData_ = create_subscription<adma_ros_driver_msgs::msg::AdmaDataRaw>(
     "/genesys/adma/data_raw", 10, std::bind(&RawBagDecoder::rawDataCallback,
