@@ -33,7 +33,6 @@ add_library(${PROJECT_NAME}_node SHARED
   src/bag2gsdb_converter.cpp
   src/gsdb_server.cpp
   src/gsda_server.cpp
-  src/raw_bag_decoder.cpp
 )
 
 # link ROS deps to library of this node
@@ -63,11 +62,6 @@ rclcpp_components_register_node(${PROJECT_NAME}_node
 rclcpp_components_register_node(${PROJECT_NAME}_node
   PLUGIN "genesys::tools::GSDAServer"
   EXECUTABLE gsda_server
-)
-
-rclcpp_components_register_node(${PROJECT_NAME}_node
-  PLUGIN "genesys::tools::RawBagDecoder"
-  EXECUTABLE raw_bag_decoder
 )
 
 install(TARGETS ${PROJECT_NAME}_node
