@@ -90,7 +90,7 @@ It is possible to remap ROS topics in the driver to new namings by editing the `
 | use_performance_check | True / False | True if you want to log informations about the performance | driver_config.yaml |
 | gnss_frame | name as string | ROS frame_id of the NavSat topic | driver_config.yaml |
 | imu_frame | name as string | ROS frame_id of the IMU topic | driver_config.yaml |
-| protocol_version | "v3.2" / "v3.3.3" / "v3.3.4" | the ADMAnet protocol version of your ADMA | driver_config.yaml |
+| protocol_version | "v3.2" / "v3.3.3" / "v3.3.4" / "v3.3.5" | the ADMAnet protocol version of your ADMA | driver_config.yaml |
 | frame_ids | BOOL | Define the ROS topic names |  driver_config.yaml |
 | log_gsdb | BOOL | Enable creating a GSDB file for logging the raw data |  adma_driver.launch.py |
 | record_rosbag | BOOL | Enable logging a rosbag file |  adma_driver.launch.py |
@@ -109,7 +109,7 @@ To switch between those, the`protocol_version` parameter in the `config/driver_c
 
         - UDP packet protocol of 856 bytes
         - supports 8 POI
-- v3.3.4
+- v3.3.5
 
         - UDP packet protocol of 856 bytes
         - supports 8 POI
