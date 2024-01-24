@@ -4,7 +4,7 @@
       destination_ip: '192.168.88.255'
       destination_port: 11021
       use_performance_check: False
-      protocol_version: 'v3.3.4'
+      protocol_version: 'v3.3.5'
       frame_ids:
         navsatfix: 'gnss_link'
         imu: 'imu_link'
