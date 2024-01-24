@@ -71,7 +71,30 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
     pub_odometry_ =
       this->create_publisher<nav_msgs::msg::Odometry>("adma/odometry", 1);
 
+  } else if (protocol_version_ == "v3.3.5") {
+    len_ = 856;
+    if(mode_ == 0)
+    {
+      RCLCPP_INFO(get_logger(), "Starting in live mode..");
+      pub_adma_data_raw_ =
+      this->create_publisher<adma_ros_driver_msgs::msg::AdmaDataRaw>("adma/data_raw", 1);
+    }else if (mode_ == 1)
+    {
+      RCLCPP_INFO(get_logger(), "Starting in rosbag replay mode..");
+      subRawData_ = create_subscription<adma_ros_driver_msgs::msg::AdmaDataRaw>(
+      "adma/data_raw", 10, std::bind(&ADMADriver::rawDataCallback,
+      this, std::placeholders::_1));
+    }
+    
+    pub_adma_data_scaled_ =
+      this->create_publisher<adma_ros_driver_msgs::msg::AdmaDataScaled>("adma/data_scaled", 1);
+    pub_adma_status_ =
+      this->create_publisher<adma_ros_driver_msgs::msg::AdmaStatus>("adma/status", 1);
+    pub_odometry_ =
+      this->create_publisher<nav_msgs::msg::Odometry>("adma/odometry", 1);
+
   }
+
   // create a generic parser
   parser_ = new ADMA2ROSParser(protocol_version_);
 
@@ -262,6 +285,70 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
     status_msg.header.frame_id = adma_status_frame_;
     parser_->parseV334Status(status_msg, data_struct);
     pub_adma_status_->publish(status_msg);
+  }
+  else if (protocol_version_ == "v3.3.5") {
+      AdmaDataV335 data_struct;
+      memcpy(&data_struct, &recv_buf, sizeof(data_struct));
+      adma_ros_driver_msgs::msg::AdmaDataScaled adma_data_scaled_msg;
+      adma_data_scaled_msg.header.frame_id = adma_frame_;
+      parser_->parseV335(adma_data_scaled_msg, data_struct);
+      // define POI-list for publishing odometry
+      pois = {
+        adma_data_scaled_msg.poi_1,
+        adma_data_scaled_msg.poi_2,
+        adma_data_scaled_msg.poi_3,
+        adma_data_scaled_msg.poi_4,
+        adma_data_scaled_msg.poi_5,
+        adma_data_scaled_msg.poi_6,
+        adma_data_scaled_msg.poi_7,
+        adma_data_scaled_msg.poi_8
+      };
+      timestamp = adma_data_scaled_msg.ins_time_msec + offset_gps_unix;
+      timestamp += adma_data_scaled_msg.ins_time_week * week_to_msec;
+      adma_data_scaled_msg.time_msec = timestamp;
+      adma_data_scaled_msg.time_nsec = timestamp * 1E6;
+
+      if (time_mode_ == 0)
+      {
+          // mode == 0 -> use ADMA time 
+          timestampForMsgs.sec = timestamp / 1000;
+          timestampForMsgs.nanosec = timestamp * 1E6;
+      }
+      else if (time_mode_ == 1)
+      {
+          // mode == 1 -> use current ROS system time
+          timestampForMsgs = get_clock()->now();
+      }
+
+      adma_data_scaled_msg.header.stamp = timestampForMsgs;
+
+      parser_->extractNavSatFix(adma_data_scaled_msg, message_fix, pois, navsatfix_id_);
+      parser_->extractIMU(adma_data_scaled_msg, message_imu, pois, imu_id_);
+
+      // fill odometry message
+      nav_msgs::msg::Odometry odom_msg;
+      odom_msg.header.frame_id = odometry_pose_frame_;
+      odom_msg.child_frame_id = odometry_child_frame_;
+      odom_msg.header.stamp = timestampForMsgs;
+      parser_->extractOdometry(adma_data_scaled_msg, odom_msg, odometry_yaw_offset_, pois, odometry_id_);
+      pub_odometry_->publish(odom_msg);
+
+      // read heading and velocity
+      message_heading.data = adma_data_scaled_msg.ins_yaw;
+      geometry_msgs::msg::Vector3 insSource = velocity_id_ == 0
+          ? adma_data_scaled_msg.ins_vel_frame
+          : pois[velocity_id_ - 1].ins_vel_hor;
+      message_velocity.data = std::sqrt(std::pow(insSource.x, 2) + std::pow(insSource.y, 2)) * 3.6;
+
+      pub_adma_data_scaled_->publish(adma_data_scaled_msg);
+
+      weektime = adma_data_scaled_msg.ins_time_week;
+
+      adma_ros_driver_msgs::msg::AdmaStatus status_msg;
+      status_msg.header.stamp = timestampForMsgs;
+      status_msg.header.frame_id = adma_status_frame_;
+      parser_->parseV335Status(status_msg, data_struct);
+      pub_adma_status_->publish(status_msg);
   }
 
   // publish raw data with >= v3.3.3

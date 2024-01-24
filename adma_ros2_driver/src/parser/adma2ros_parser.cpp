@@ -7,7 +7,7 @@
 #include "adma_ros2_driver/parser/parser_utils.hpp"
 
 ADMA2ROSParser::ADMA2ROSParser(std::string version)
-: parserV32_(), parserV333_(), parserV334_(), version_(version)
+: parserV32_(), parserV333_(), parserV334_(), parserV335(); version_(version)
 {
 }
 
@@ -53,6 +53,18 @@ void ADMA2ROSParser::parseV334Status(
   adma_ros_driver_msgs::msg::AdmaStatus & ros_msg, AdmaDataV334 & local_data)
 {
   parserV334_.mapStatusToROS(ros_msg, local_data);
+}
+
+void ADMA2ROSParser::parseV335(
+    adma_ros_driver_msgs::msg::AdmaDataScaled& ros_msg, AdmaDataV334& recv_data)
+{
+    parserV335_.mapAdmaMessageToROS(ros_msg, recv_data);
+}
+
+void ADMA2ROSParser::parseV335Status(
+    adma_ros_driver_msgs::msg::AdmaStatus& ros_msg, AdmaDataV334& local_data)
+{
+    parserV335_.mapStatusToROS(ros_msg, local_data);
 }
 
 template <typename AdmaDataHeaderStruct>

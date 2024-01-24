@@ -23,7 +23,7 @@ def generate_launch_description():
         recorded_topics = [
                 # '/genesys/adma/data_raw', # unnecessary since its redundant logged in gsdb 
                 # '/genesys/adma/data', # v3.3.3
-                '/genesys/adma/data_scaled', # v3.3.4
+                '/genesys/adma/data_scaled', # v3.3.5
                 '/genesys/adma/status',
                 '/genesys/adma/fix',
                 '/genesys/adma/imu',
