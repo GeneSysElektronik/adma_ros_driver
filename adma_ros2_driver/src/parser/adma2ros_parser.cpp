@@ -646,7 +646,7 @@ void ADMA2ROSParser::extractOdometry(
 
   double roll_rad = deg2Rad(ros_msg.ins_roll);
   double pitch_rad = deg2Rad(ros_msg.ins_pitch);
-  double yaw_rad = deg2Rad((ros_msg.ins_yaw + yawOffset));
+  double yaw_rad = deg2Rad((ros_msg.ins_yaw_rel + yawOffset));
   tf2::Quaternion q;
   q.setRPY(roll_rad, pitch_rad, yaw_rad);
   odometry_msg.pose.pose.orientation = tf2::toMsg(q);
