@@ -272,7 +272,10 @@ void ADMA2ROSParserV335::mapUnscaledData(
   ros_msg.gnss_sats_visible = adma_data.gnsssatsvisible;
   ros_msg.gnss_sats_dualant_used = adma_data.gnsssatsdualantused;
   ros_msg.gnss_sats_dualant_visible = adma_data.gnsssatsdualantvisible;
+  ros_msg.gnss_sats_single_freq = adma_data.gnsssatssinglefreq;
+  ros_msg.gnss_sats_multi_freq = adma_data.gnsssatsmultifreq;
   ros_msg.gnss_log_delay = adma_data.gnsslogdelay;
+  ros_msg.gnss_sats_dualant_multi_freq = adma_data.gnsssatsdualantmultifreq;
   std::stringstream ss;
   ss << adma_data.gnssbasenr;
   ros_msg.gnss_base_nr = ss.str();
@@ -336,6 +339,7 @@ void ADMA2ROSParserV335::mapScaledData(
   ros_msg.gnss_stddev_lat = getScaledValue(adma_data.gnssstddevlat, 0.001);
   ros_msg.gnss_stddev_long = getScaledValue(adma_data.gnssstddevlon, 0.001);
   ros_msg.gnss_stddev_height = getScaledValue(adma_data.gnssstddevheight, 0.001);
+  ros_msg.gnss_stddev_cog = getScaledValue(adma_data.gnssstddevcog, 0.01);
 
   ros_msg.gnss_vel_frame.x = getScaledValue(adma_data.gnssvelframex, 0.005);
   ros_msg.gnss_vel_frame.y = getScaledValue(adma_data.gnssvelframey, 0.005);
@@ -358,6 +362,7 @@ void ADMA2ROSParserV335::mapScaledData(
   ros_msg.undulation = getScaledValue(adma_data.undulation, 0.01);
 
   ros_msg.ins_height = getScaledValue(adma_data.insHeight, 0.01);
+  ros_msg.ins_yaw_rel = getScaledValue(adma_data.insyawrel, 0.01);
 
   ros_msg.ins_lat_abs = getScaledValue(adma_data.insPos.pos_abs.latitude, 0.0000001);
   ros_msg.ins_long_abs = getScaledValue(adma_data.insPos.pos_abs.longitude, 0.0000001);
