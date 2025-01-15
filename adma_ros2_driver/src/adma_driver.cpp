@@ -37,6 +37,7 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
   odometry_id_ = this->declare_parameter("topic_pois.odometry", 1);
   mode_ = this->declare_parameter("mode", 0); // 0 / 1
   time_mode_ = this->declare_parameter("time_mode", 0); // 0 / 1
+  publish_clock_ = this->declare_parameter("publish_clock", false);
   
   // define protocol version specific stuff
   protocol_version_ = this->declare_parameter("protocol_version", "v3.3.3");
@@ -103,6 +104,10 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
   pub_imu_ = this->create_publisher<sensor_msgs::msg::Imu>("adma/imu", 1);
   pub_heading_ = this->create_publisher<std_msgs::msg::Float64>("adma/heading", 1);
   pub_velocity_ = this->create_publisher<std_msgs::msg::Float64>("adma/velocity", 1);
+  if(publish_clock_)
+    {
+      pub_clock_ = this->create_publisher<rosgraph_msgs::msg::Clock>("/clock", 1);
+    }
 
   if(mode_ == 0)
   {
@@ -349,6 +354,13 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
       status_msg.header.frame_id = adma_status_frame_;
       parser_->parseV335Status(status_msg, data_struct);
       pub_adma_status_->publish(status_msg);
+
+      // kind of a "hack" to ensure clock is only published if INS time is valid
+      if(adma_data_scaled_msg.ins_time_week > 0 && publish_clock_){
+        rosgraph_msgs::msg::Clock clockMsg;
+        clockMsg.clock = timestampForMsgs;
+        pub_clock_->publish(clockMsg);
+      }
   }
 
   // publish raw data with >= v3.3.3

@@ -20,4 +20,5 @@
         velocity: 1
         odometry: 1
       mode: 0 # 0 = live (default) / 1 = rosbag replay of raw data
-      time_mode: 0 # 0 = ADMA INS time / 1 = ROS system time 
+      time_mode: 0 # 0 = ADMA INS time / 1 = ROS system time
+      publish_clock: False 

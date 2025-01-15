@@ -6,6 +6,7 @@
 #include <std_msgs/msg/float64.hpp>
 #include <std_msgs/msg/string.hpp>
 #include <nav_msgs/msg/odometry.hpp>
+#include <rosgraph_msgs/msg/clock.hpp>
 
 #include "adma_ros2_driver/parser/adma2ros_parser.hpp"
 #include "adma_ros_driver_msgs/msg/adma_data.hpp"
@@ -56,6 +57,7 @@ private:
   rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr pub_heading_;
   rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr pub_velocity_;
   rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr pub_odometry_;
+  rclcpp::Publisher<rosgraph_msgs::msg::Clock>::SharedPtr pub_clock_;
 
   // frame_ids for the ros msgs
   std::string gnss_frame_;
@@ -81,5 +83,6 @@ private:
   // parameters for mode and time source
   uint8_t mode_;
   uint8_t time_mode_;
+  bool publish_clock_;
 };
 }  // namespace genesys
