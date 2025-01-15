@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>adma_core_lib</name>
+  <version>0.0.0</version>
+  <description>Collection of some basic functionality for using ADMA with ROS</description>
+  <maintainer email="rico.schillings@hs-offenburg.de">Rico Schillings</maintainer>
+  <license>BSD3</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+  
+</package>

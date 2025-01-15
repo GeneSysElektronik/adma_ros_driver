@@ -1,5 +1,3 @@
-#include <netdb.h>
-
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 #include <sensor_msgs/msg/nav_sat_fix.hpp>
@@ -13,6 +11,7 @@
 #include "adma_ros_driver_msgs/msg/adma_data_raw.hpp"
 #include "adma_ros_driver_msgs/msg/adma_data_scaled.hpp"
 #include "adma_ros_driver_msgs/msg/adma_status.hpp"
+#include "adma_core_lib/network/udp_socket.hpp"
 
 #pragma once
 
@@ -25,20 +24,11 @@ public:
   virtual ~ADMADriver();
 
 private:
-  void initializeUDP(std::string adma_address);
   void updateLoop();
   void parseData(std::array<char, 856> recv_buf);
   void rawDataCallback(adma_ros_driver_msgs::msg::AdmaDataRaw::SharedPtr rawDataMsg);
 
-  // Socket file descriptor for receiving from adma
-  int rcv_sock_fd_;
-  // Address info for receiving from adma
-  struct addrinfo * rcv_addr_info_;
-  // adma socket address
-  struct sockaddr_in adma_address_;
-  //Adma  socket address length
-  socklen_t adma_address_length_;
-  int adma_port_;
+  genesys::core::UDPSocket * socket_;
   size_t len_ = 0;
   /** \brief Check the timings */
   bool performance_check_ = true;

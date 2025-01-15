@@ -1,10 +1,5 @@
 #include "adma_ros2_driver/adma_driver.hpp"
 
-#include <arpa/inet.h>
-#include <sys/select.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-
 #include <rclcpp_components/register_node_macro.hpp>
 
 #include "adma_ros2_driver/parser/parser_utils.hpp"
@@ -12,16 +7,11 @@
 namespace genesys
 {
 ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
-: Node("adma_driver", options),
-  rcv_sock_fd_(-1),
-  rcv_addr_info_(NULL),
-  adma_address_(),
-  adma_address_length_(4),
-  adma_port_(0)
+: Node("adma_driver", options)
 {
   // define ROS parameters, adjustable by config yaml file
   std::string param_address = this->declare_parameter("destination_ip", "0.0.0.0");
-  adma_port_ = this->declare_parameter("destination_port", 1040);
+  int adma_port = this->declare_parameter("destination_port", 1040);
   performance_check_ = this->declare_parameter("use_performance_check", false);
   gnss_frame_ = this->declare_parameter("frame_ids.navsatfix", "gnss_link");
   imu_frame_ = this->declare_parameter("frame_ids.imu", "imu_link");
@@ -42,6 +32,7 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
   // define protocol version specific stuff
   protocol_version_ = this->declare_parameter("protocol_version", "v3.3.3");
   RCLCPP_INFO(get_logger(), "Working with: %s", protocol_version_.c_str());
+
   if (protocol_version_ == "v3.2") {
     len_ = 768;
     pub_adma_data_ = this->create_publisher<adma_ros_driver_msgs::msg::AdmaData>("adma/data", 1);
@@ -111,8 +102,9 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
 
   if(mode_ == 0)
   {
+    socket_ = new genesys::core::UDPSocket(len_);
+    socket_->initializeUDP(param_address, adma_port);
     // only setup UDP connection and loop in live mode
-    initializeUDP(param_address);
     updateLoop();
   }
   
@@ -123,55 +115,7 @@ ADMADriver::~ADMADriver()
   // unlock socket when stopping application
   if(mode_ == 0)
   {
-    freeaddrinfo(rcv_addr_info_);
-    ::shutdown(rcv_sock_fd_, SHUT_RDWR);
-    rcv_sock_fd_ = -1;
-  }
-}
-
-void ADMADriver::initializeUDP(std::string adma_address)
-{
-  // setup socket
-  struct addrinfo hints;
-  memset(&hints, 0, sizeof(hints));
-  hints.ai_family = AF_UNSPEC;
-  hints.ai_socktype = SOCK_DGRAM;
-  hints.ai_protocol = IPPROTO_UDP;
-  std::string rcv_port_str = std::to_string(adma_port_);
-
-  adma_address_length_ = sizeof(adma_address_);
-  memset((char *)&adma_address_, 0, adma_address_length_);
-  adma_address_.sin_family = AF_INET;
-  adma_address_.sin_port = htons(adma_port_);
-  inet_aton(adma_address.c_str(), &(adma_address_.sin_addr));
-
-  // define some error handling
-  int r = getaddrinfo(adma_address.c_str(), rcv_port_str.c_str(), &hints, &rcv_addr_info_);
-  if (r != 0 || rcv_addr_info_ == NULL) {
-    RCLCPP_FATAL(
-      get_logger(), "Invalid port for UDP socket: \"%s:%s\"", adma_address.c_str(),
-      rcv_port_str.c_str());
-    throw rclcpp::exceptions::InvalidParameterValueException(
-      "Invalid port for UDP socket: \"" + adma_address + ":" + rcv_port_str + "\"");
-  }
-  rcv_sock_fd_ = socket(rcv_addr_info_->ai_family, SOCK_DGRAM | SOCK_CLOEXEC, IPPROTO_UDP);
-  if (rcv_sock_fd_ == -1) {
-    freeaddrinfo(rcv_addr_info_);
-    RCLCPP_FATAL(
-      get_logger(), "Could not create UDP socket for: \"%s:%s", adma_address.c_str(),
-      rcv_port_str.c_str());
-    throw rclcpp::exceptions::InvalidParameterValueException(
-      "Could not create UDP socket for: \"" + adma_address + ":" + rcv_port_str + "\"");
-  }
-  r = bind(rcv_sock_fd_, rcv_addr_info_->ai_addr, rcv_addr_info_->ai_addrlen);
-  if (r != 0) {
-    freeaddrinfo(rcv_addr_info_);
-    ::shutdown(rcv_sock_fd_, SHUT_RDWR);
-    RCLCPP_FATAL(
-      get_logger(), "Could not bind UDP socket with: \"%s:%s", adma_address.c_str(),
-      rcv_port_str.c_str());
-    throw rclcpp::exceptions::InvalidParameterValueException(
-      "Could not bind UDP socket with: \"" + adma_address + ":" + rcv_port_str + "\"");
+    socket_->~UDPSocket();
   }
 }
 
@@ -394,39 +338,10 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
 
 void ADMADriver::updateLoop()
 {
-  fd_set s;
-  struct timeval timeout;
-  // struct sockaddr src_addr;
-  // socklen_t src_addr_len;
-
   std::array<char, 856> recv_buf;
 
   while (rclcpp::ok()) {
-    // check if new data is available
-    FD_ZERO(&s);
-    FD_SET(rcv_sock_fd_, &s);
-    timeout.tv_sec = 1;
-    timeout.tv_usec = 0;
-    int ret = select(rcv_sock_fd_ + 1, &s, NULL, NULL, &timeout);
-    if (ret == 0) {
-      // reached timeout
-      RCLCPP_INFO(get_logger(), "Waiting for ADMA data...");
-      continue;
-    } else if (ret == -1) {
-      // error
-      RCLCPP_WARN(get_logger(), "Select-error: %s", strerror(errno));
-      continue;
-    }
-
-    ret = ::recv(rcv_sock_fd_, (void *)(&recv_buf), len_, 0);
-    if (ret < 0) {
-      RCLCPP_WARN(get_logger(), "Receive-error: %s", strerror(errno));
-      continue;
-    } else if (ret != len_) {
-      RCLCPP_WARN(get_logger(), "Invalid ADMA message size: %d instead of %ld", ret, len_);
-      continue;
-    }
-
+    socket_->updateLoop(recv_buf);
     parseData(recv_buf);
   }
 }

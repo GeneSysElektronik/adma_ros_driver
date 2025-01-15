@@ -19,6 +19,7 @@
   <depend>rosgraph_msgs</depend>
   <!-- adma dependencies -->
   <depend>adma_ros_driver_msgs</depend>
+  <depend>adma_core_lib</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_cmake_clange_format</test_depend>

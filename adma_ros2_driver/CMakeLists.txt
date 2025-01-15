@@ -26,6 +26,7 @@ find_package(rosgraph_msgs REQUIRED)
 
 # define genesys dependencies
 find_package(adma_ros_driver_msgs REQUIRED)
+find_package(adma_core_lib REQUIRED)
 
 include_directories(include)
 
@@ -52,6 +53,7 @@ ament_target_dependencies(${PROJECT_NAME}_node
   tf2_geometry_msgs
   rosgraph_msgs
   adma_ros_driver_msgs
+  adma_core_lib
 )
 
 # setup executable
