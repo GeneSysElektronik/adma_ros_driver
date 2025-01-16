@@ -15,10 +15,10 @@ class UDPSocket
                 explicit UDPSocket(size_t buffer_length);
                 virtual ~UDPSocket();
 
-                void initializeUDP(std::string adma_address, int adma_port);
+                void setupReceiveSocket(std::string adma_address, int adma_port);
                 
                 template <std::size_t Buffersize>
-                void updateLoop(std::array<char, Buffersize>& recv_buf)
+                void receiveUDPPacket(std::array<char, Buffersize>& recv_buf)
                 {
                         
                         // check if new data is available
@@ -47,20 +47,30 @@ class UDPSocket
                         }
                 }
 
+                void setupSendingSocket(std::string socket_adress, int port);
+
+                void sendUDPPacket(char buffer[856]);
+
         private:
+                // general attributes
+                //Adma  socket address length
+                socklen_t address_length_;
+                size_t len_ = 0;
+                
+                //attributes for receiving UDP packets
+                struct sockaddr_in rcv_socket_address_;
                 // Address info for receiving from adma
                 struct addrinfo * rcv_addr_info_;
-                // adma socket address
-                struct sockaddr_in adma_address_;
-                //Adma  socket address length
-                socklen_t adma_address_length_;
-                size_t len_ = 0;
                 // Socket file descriptor for receiving from adma
                 int rcv_sock_fd_;
                 fd_set s;
                 struct timeval timeout;
                 // struct sockaddr src_addr;
                 // socklen_t src_addr_len;
+
+                // attributes for sending UDP packets
+                struct sockaddr_in send_socket_address_;
+                int send_socket_fd_;
 
 };
 } // namespace core

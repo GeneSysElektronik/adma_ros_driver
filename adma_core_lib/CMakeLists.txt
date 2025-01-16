@@ -21,6 +21,7 @@ include_directories(include)
 # define library of this package
 add_library(${PROJECT_NAME}_node SHARED
   src/network/udp_socket.cpp
+  src/parser/parser_utils.cpp
 )
 
 # link ROS deps to this package

@@ -2,7 +2,7 @@
 
 #include <rclcpp_components/register_node_macro.hpp>
 
-#include "adma_ros2_driver/parser/parser_utils.hpp"
+#include "adma_core_lib/parser/parser_utils.hpp"
 
 namespace genesys
 {
@@ -103,7 +103,7 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
   if(mode_ == 0)
   {
     socket_ = new genesys::core::UDPSocket(len_);
-    socket_->initializeUDP(param_address, adma_port);
+    socket_->setupReceiveSocket(param_address, adma_port);
     // only setup UDP connection and loop in live mode
     updateLoop();
   }
@@ -341,7 +341,7 @@ void ADMADriver::updateLoop()
   std::array<char, 856> recv_buf;
 
   while (rclcpp::ok()) {
-    socket_->updateLoop(recv_buf);
+    socket_->receiveUDPPacket(recv_buf);
     parseData(recv_buf);
   }
 }

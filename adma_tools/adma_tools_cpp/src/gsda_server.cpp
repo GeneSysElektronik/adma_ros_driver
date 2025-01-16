@@ -7,7 +7,7 @@
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 #include <rclcpp_components/register_node_macro.hpp>
-#include <adma_ros2_driver/parser/parser_utils.hpp>
+#include <adma_core_lib/parser/parser_utils.hpp>
 
 /**
  * @brief This helper class can replay post-processed ADMA data (GSDA file) and publish the data to ROS

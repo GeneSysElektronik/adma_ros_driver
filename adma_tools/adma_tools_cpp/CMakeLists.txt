@@ -25,6 +25,7 @@ find_package(tf2_geometry_msgs REQUIRED)
 # define own genesys specific dependencies
 find_package(adma_ros_driver_msgs REQUIRED)
 find_package(adma_ros2_driver REQUIRED)
+find_package(adma_core_lib REQUIRED)
 
 include_directories(include)
 
@@ -46,6 +47,7 @@ ament_target_dependencies(${PROJECT_NAME}_node
   tf2_geometry_msgs
   adma_ros_driver_msgs
   adma_ros2_driver
+  adma_core_lib
 )
 
 # macro to define executables

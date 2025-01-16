@@ -11,10 +11,12 @@ namespace core
 {
 UDPSocket::UDPSocket(size_t buffer_length)        
 {
+        RCLCPP_INFO(rclcpp::get_logger("UDP-Socket"), "setup Socket with length: %ld", buffer_length);
         rcv_sock_fd_ = -1;
         rcv_addr_info_ = NULL;
-        adma_address_length_ = 4;
+        address_length_ = 4;
         len_ = buffer_length;
+        send_socket_fd_ = -1;
 }
 
 UDPSocket::~UDPSocket()
@@ -22,9 +24,11 @@ UDPSocket::~UDPSocket()
         freeaddrinfo(rcv_addr_info_);
         ::shutdown(rcv_sock_fd_, SHUT_RDWR);
         rcv_sock_fd_ = -1;
+        ::shutdown(send_socket_fd_, SHUT_RDWR);
+        send_socket_fd_ = -1;
 }
 
-void UDPSocket::initializeUDP(std::string adma_address, int adma_port)
+void UDPSocket::setupReceiveSocket(std::string adma_address, int adma_port)
 {
         // setup socket
         struct addrinfo hints;
@@ -34,11 +38,11 @@ void UDPSocket::initializeUDP(std::string adma_address, int adma_port)
         hints.ai_protocol = IPPROTO_UDP;
         std::string rcv_port_str = std::to_string(adma_port);
 
-        adma_address_length_ = sizeof(adma_address_);
-        memset((char *)&adma_address_, 0, adma_address_length_);
-        adma_address_.sin_family = AF_INET;
-        adma_address_.sin_port = htons(adma_port);
-        inet_aton(adma_address.c_str(), &(adma_address_.sin_addr));
+        address_length_ = sizeof(rcv_socket_address_);
+        memset((char *)&rcv_socket_address_, 0, address_length_);
+        rcv_socket_address_.sin_family = AF_INET;
+        rcv_socket_address_.sin_port = htons(adma_port);
+        inet_aton(adma_address.c_str(), &(rcv_socket_address_.sin_addr));
 
         // define some error handling
         int r = getaddrinfo(adma_address.c_str(), rcv_port_str.c_str(), &hints, &rcv_addr_info_);
@@ -72,6 +76,21 @@ void UDPSocket::initializeUDP(std::string adma_address, int adma_port)
         RCLCPP_INFO(
         rclcpp::get_logger("UDP-Socket"), "Try opening UDP socket with: \"%s:%s", adma_address.c_str(),
         rcv_port_str.c_str());
+}
+
+void UDPSocket::setupSendingSocket(std::string socket_adress, int port)
+{
+        send_socket_fd_ = socket(AF_INET, SOCK_DGRAM | SOCK_CLOEXEC, IPPROTO_UDP);
+        address_length_ = sizeof(send_socket_address_);
+        memset((char *)&send_socket_address_, 0, address_length_);
+        send_socket_address_.sin_family = AF_INET;
+        send_socket_address_.sin_port = htons(port);
+        inet_aton(socket_adress.c_str(), &(send_socket_address_.sin_addr));
+}
+
+void UDPSocket::sendUDPPacket(char buffer[856])
+{
+        ::sendto(send_socket_fd_, (void *)(&buffer), len_, 0, (struct sockaddr *)&send_socket_address_, address_length_);
 }
 
 }

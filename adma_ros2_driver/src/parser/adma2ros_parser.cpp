@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-#include "adma_ros2_driver/parser/parser_utils.hpp"
+#include "adma_core_lib/parser/parser_utils.hpp"
 
 ADMA2ROSParser::ADMA2ROSParser(std::string version)
 : parserV32_(), parserV333_(), parserV334_(), parserV335_(), version_(version)

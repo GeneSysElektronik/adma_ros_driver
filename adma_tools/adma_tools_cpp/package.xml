@@ -20,6 +20,7 @@
   <!-- adma dependencies -->
   <depend>adma_ros_driver_msgs</depend>
   <depend>adma_ros2_driver</depend>
+  <depend>adma_core_lib</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
