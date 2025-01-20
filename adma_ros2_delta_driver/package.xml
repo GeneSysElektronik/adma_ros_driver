@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>adma_ros2_delta_driver</name>
+  <version>0.0.0</version>
+  <description>ROS2 Driver to receive ADMA AddonDelta into ROS</description>
+  <maintainer email="rico.schillings@hs-offenburg.de">Rico Schillings</maintainer>
+  <license>BSD3</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <!-- ROS dependencies -->
+  <depend>rclcpp</depend>
+  <depend>rclcpp_components</depend>
+
+  <!-- adma dependencies -->
+  <depend>adma_ros_driver_msgs</depend>
+  <depend>adma_core_lib</depend>
+  
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

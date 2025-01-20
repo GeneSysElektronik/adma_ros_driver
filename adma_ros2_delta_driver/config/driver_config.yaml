@@ -1,0 +1,6 @@
+/**:
+  adma_ros2_delta_driver:
+    ros__parameters:
+      destination_ip: 'localhost'
+      destination_port: 1025
+      protocol_version: 'v7.0'
