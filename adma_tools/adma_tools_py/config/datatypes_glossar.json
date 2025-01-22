@@ -16,5 +16,27 @@
                         "adma_datatype" : "GSFloat",
                         "ros_datatype" : "float64"
                 }
+        ],
+        "admanet" : [
+                {
+                        "adma_datatype" : "UINT",
+                        "ros_datatype" : "uint16"
+                },
+                {
+                        "adma_datatype" : "INT",
+                        "ros_datatype" : "int16"
+                },
+                {
+                        "adma_datatype" : "IEEEFloat",
+                        "ros_datatype" : "float32"
+                },
+                {
+                        "adma_datatype" : "GSFloat",
+                        "ros_datatype" : "float64"
+                },
+                {
+                        "adma_datatype" : "BOOL",
+                        "ros_datatype" : "bool"
+                }
         ]
 }

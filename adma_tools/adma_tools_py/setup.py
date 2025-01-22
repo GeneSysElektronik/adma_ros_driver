@@ -22,7 +22,8 @@ setup(
     entry_points={
         'console_scripts': [
             'ros2csv = adma_tools_py.ros2csv_converter:main',
-            'xml2msg = adma_tools_py.xml2msg_generator:main',
+            'xml2msg_generator_addondelta = adma_tools_py.msggenerator.addondelta_generator:main',
+            'xml2msg_generator_admanet = adma_tools_py.msggenerator.admanet_generator:main'
         ],
     },
 )

@@ -1,5 +1,6 @@
-# Generated from XML
-byte[8] adb_header
+# AddOnDelta7.0.0.0 generated from XML by adma_tools_py from the offical ADMA ROS Driver
+
+byte[8] abd_header
 float64 target_longitude
 float64 target_latitude
 byte[2] reserved_0
