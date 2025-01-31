@@ -14,8 +14,9 @@ class ADMADeltaDriver : public rclcpp::Node
                 virtual ~ADMADeltaDriver();
         
         private:
-
                 void updateLoop();
+                double convertCoordinates(double rawValue);
+                
                 std::string protocol_version_;
                 size_t len_ = 0;
                 genesys::core::UDPSocket * socket_;
