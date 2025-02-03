@@ -4,7 +4,7 @@ genesys:
       destination_ip: '127.0.0.1'
       destination_port: 1040
       use_performance_check: False
-      protocol_version: 'v3.3.4'
+      protocol_version: 'v3.3.5'
       frame_ids:
         navsatfix: 'gnss_link'
         imu: 'imu_link'
@@ -16,8 +16,17 @@ genesys:
       odometry_yaw_offset: 0.0 # in degrees
   gsdb_server:
     ros__parameters:
-      ip_address: '127.0.0.1'
-      port: 1040
+      admanet_ip_address: '127.0.0.1'
+      admanet_port: 1040
+      admanet_protocol_version: 'v3.3.5'
+      contains_addondelta: True
+      addondelta_ip_address: '127.0.0.1'
+      addondelta_port: 1025
       frequency: 100
-      protocol_version: 'v3.3.4'
-      gsdb_file: '/home/$USER/$ROS2_WS/data/raw_data.gsdb'
+      gsdb_file: '/home/rschilli/Documents/GeneSys/Github_Issues/Messdaten_Delta_1-1/Delta_ADMAnet_beides.gsdb'
+      # gsdb_file: '/home/rschilli/Documents/GeneSys/Github_Issues/Messdaten_Delta_1-1/Only_Delta1-1.gsdb'
+  adma_ros2_delta_driver:
+    ros__parameters:
+      destination_ip: '127.0.0.1'
+      destination_port: 1025
+      protocol_version: 'v7.0'

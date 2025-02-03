@@ -13,13 +13,21 @@ def generate_launch_description():
         log_gsdb_arg = DeclareLaunchArgument('log_gsdb', default_value='False')
 
         # set this to true if you want to replay GSDB and create a rosbag of it
-        record_rosbag_arg = DeclareLaunchArgument('record_rosbag', default_value='True')
+        record_rosbag_arg = DeclareLaunchArgument('record_rosbag', default_value='False')
 
         adma_driver = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(PathJoinSubstitution([
                         FindPackageShare('adma_ros2_driver'),
                         'launch',
                         'adma_driver.launch.py'
+                ]))
+        )
+
+        delta_driver = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(PathJoinSubstitution([
+                        FindPackageShare('adma_ros2_delta_driver'),
+                        'launch',
+                        'adma_delta_driver.launch.py'
                 ]))
         )
 
@@ -43,5 +51,6 @@ def generate_launch_description():
                 record_rosbag_arg,
                 # #  nodes
                 adma_driver,
-                gsdb_server
+                gsdb_server,
+                delta_driver
         ])
