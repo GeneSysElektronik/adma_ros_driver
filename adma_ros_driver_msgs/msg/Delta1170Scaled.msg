@@ -1,0 +1,26 @@
+std_msgs/Header header
+
+byte[8] abd_header
+float64 target_longitude
+float64 target_latitude
+uint16 code_version
+float32 long_delta_distance
+float32 long_delta_velocity
+float32 lat_delta_distance
+float32 lat_delta_velocity
+float32 resultant_distance
+float32 resultant_velocity
+float32 angle_of_orientation
+int32 delta_time
+float32 target_forward_velocity
+float32 hunter_forward_velocity
+float32 target_forward_acceleration
+float32 hunter_forward_acceleration
+float32 target_lateral_velocity
+float32 hunter_lateral_velocity
+float32 target_lateral_acceleration
+float32 hunter_lateral_acceleration
+float32 target_pitch_angle
+float32 hunter_pitch_angle
+uint16 target_status
+uint16 hunter_status

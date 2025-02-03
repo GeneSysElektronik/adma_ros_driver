@@ -14,7 +14,8 @@ ADMADeltaDriver::ADMADeltaDriver(const rclcpp::NodeOptions & options)
         protocol_version_ = this->declare_parameter("protocol_version", "v7.0");
         
         // setup publisher
-        pub_delta_ = this->create_publisher<adma_ros_driver_msgs::msg::Delta1170>("adma/delta", 1);
+        pub_delta_raw_ = this->create_publisher<adma_ros_driver_msgs::msg::Delta1170Raw>("adma/delta_raw", 1);
+        pub_delta_scaled_ = this->create_publisher<adma_ros_driver_msgs::msg::Delta1170Scaled>("adma/delta_scaled", 1);
 
         // setup UDP socket communication
         len_ = 88;
@@ -31,28 +32,51 @@ ADMADeltaDriver::~ADMADeltaDriver()
 
 void ADMADeltaDriver::updateLoop()
 {
-        adma_ros_driver_msgs::msg::Delta1170 delta_msg;
+        adma_ros_driver_msgs::msg::Delta1170Raw delta_msg_raw;
+        adma_ros_driver_msgs::msg::Delta1170Scaled delta_msg_scaled;
         std::array<char, 88> recv_buf;
         while(rclcpp::ok()) {
                 socket_->receiveUDPPacket(recv_buf);
                 
                 // copy UDP packet directly into XML-generated ROS msg
-                memcpy(&delta_msg, &recv_buf, sizeof(delta_msg));
+                memcpy(&delta_msg_raw, &recv_buf, sizeof(delta_msg_raw));
                 
+                
+                // fill msg header for scaled msg
+                delta_msg_scaled.header.frame_id = "addondelta";
+                // TODO: may fill timestamp with data based on delta input
+                delta_msg_scaled.header.stamp = get_clock()->now();
+                // fill scaled msg with content
+                delta_msg_scaled.abd_header = delta_msg_raw.abd_header;
+                delta_msg_scaled.code_version = delta_msg_raw.code_version;
+                delta_msg_scaled.long_delta_distance = delta_msg_raw.long_delta_distance;
+                delta_msg_scaled.long_delta_velocity = delta_msg_raw.long_delta_velocity;
+                delta_msg_scaled.lat_delta_distance = delta_msg_raw.lat_delta_distance;
+                delta_msg_scaled.lat_delta_velocity = delta_msg_raw.lat_delta_velocity;
+                delta_msg_scaled.resultant_distance = delta_msg_raw.resultant_distance;
+                delta_msg_scaled.resultant_velocity = delta_msg_raw.resultant_velocity;
+                delta_msg_scaled.angle_of_orientation = delta_msg_raw.angle_of_orientation;
+                delta_msg_scaled.delta_time = delta_msg_raw.delta_time;
+                delta_msg_scaled.target_status = delta_msg_raw.target_status;
+                delta_msg_scaled.hunter_status = delta_msg_raw.hunter_status;
+
                 // modify individual values where required (e.g. coordinates, LSB factor)
-                delta_msg.target_longitude = convertCoordinates(delta_msg.target_longitude);
-                delta_msg.target_latitude = convertCoordinates(delta_msg.target_latitude);
-                delta_msg.target_forward_velocity = getScaledValue(delta_msg.target_forward_velocity, 0.005);
-                delta_msg.hunter_forward_velocity = getScaledValue(delta_msg.hunter_forward_velocity, 0.005);
-                delta_msg.target_forward_acceleration = getScaledValue(delta_msg.target_forward_acceleration, 0.005);
-                delta_msg.hunter_forward_acceleration = getScaledValue(delta_msg.hunter_forward_acceleration, 0.005);
-                delta_msg.target_lateral_velocity = getScaledValue(delta_msg.target_lateral_velocity, 0.005);
-                delta_msg.hunter_lateral_velocity = getScaledValue(delta_msg.hunter_lateral_velocity, 0.005);
-                delta_msg.target_lateral_acceleration = getScaledValue(delta_msg.target_lateral_acceleration, 0.005);
-                delta_msg.hunter_lateral_acceleration = getScaledValue(delta_msg.hunter_lateral_acceleration, 0.005);
-                delta_msg.target_pitch_angle = getScaledValue(delta_msg.target_pitch_angle, 0.02);
-                delta_msg.hunter_pitch_angle = getScaledValue(delta_msg.hunter_pitch_angle, 0.02);
-                pub_delta_->publish(delta_msg);
+                delta_msg_scaled.target_longitude = convertCoordinates(delta_msg_raw.target_longitude);
+                delta_msg_scaled.target_latitude = convertCoordinates(delta_msg_raw.target_latitude);
+                delta_msg_scaled.target_forward_velocity = getScaledValue(delta_msg_raw.target_forward_velocity, 0.005);
+                delta_msg_scaled.hunter_forward_velocity = getScaledValue(delta_msg_raw.hunter_forward_velocity, 0.005);
+                delta_msg_scaled.target_forward_acceleration = getScaledValue(delta_msg_raw.target_forward_acceleration, 0.005);
+                delta_msg_scaled.hunter_forward_acceleration = getScaledValue(delta_msg_raw.hunter_forward_acceleration, 0.005);
+                delta_msg_scaled.target_lateral_velocity = getScaledValue(delta_msg_raw.target_lateral_velocity, 0.005);
+                delta_msg_scaled.hunter_lateral_velocity = getScaledValue(delta_msg_raw.hunter_lateral_velocity, 0.005);
+                delta_msg_scaled.target_lateral_acceleration = getScaledValue(delta_msg_raw.target_lateral_acceleration, 0.005);
+                delta_msg_scaled.hunter_lateral_acceleration = getScaledValue(delta_msg_raw.hunter_lateral_acceleration, 0.005);
+                delta_msg_scaled.target_pitch_angle = getScaledValue(delta_msg_raw.target_pitch_angle, 0.02);
+                delta_msg_scaled.hunter_pitch_angle = getScaledValue(delta_msg_raw.hunter_pitch_angle, 0.02);
+                
+                // publish both msgs
+                pub_delta_raw_->publish(delta_msg_raw);
+                pub_delta_scaled_->publish(delta_msg_scaled);
         }
 }
 

@@ -1,7 +1,8 @@
 #include <rclcpp/rclcpp.hpp>
 
 #include "adma_core_lib/network/udp_socket.hpp"
-#include "adma_ros_driver_msgs/msg/delta1170.hpp"
+#include "adma_ros_driver_msgs/msg/delta1170_raw.hpp"
+#include "adma_ros_driver_msgs/msg/delta1170_scaled.hpp"
 
 #pragma once
 
@@ -21,6 +22,7 @@ class ADMADeltaDriver : public rclcpp::Node
                 size_t len_ = 0;
                 genesys::core::UDPSocket * socket_;
 
-                rclcpp::Publisher<adma_ros_driver_msgs::msg::Delta1170>::SharedPtr pub_delta_;
+                rclcpp::Publisher<adma_ros_driver_msgs::msg::Delta1170Raw>::SharedPtr pub_delta_raw_;
+                rclcpp::Publisher<adma_ros_driver_msgs::msg::Delta1170Scaled>::SharedPtr pub_delta_scaled_;
 };
 }

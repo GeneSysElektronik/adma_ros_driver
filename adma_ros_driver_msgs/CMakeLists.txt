@@ -30,7 +30,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/ErrorWarning.msg"
   "msg/Status.msg"
   "msg/AdmaStatus.msg"
-  "msg/Delta1170.msg"
+  "msg/Delta1170Raw.msg"
+  "msg/Delta1170Scaled.msg"
   DEPENDENCIES builtin_interfaces geometry_msgs std_msgs
 )
 
