@@ -31,7 +31,7 @@ cd ~/ros2_ws/src
 git clone -b ros_2 $REPO_URL(HTPPS/SSH)
 ```
 
-2. install all ROS dependencies (the warning for `ament_cmake_clange_format` can be ignored..)
+2. install all ROS dependencies (the warning for `ament_cmake_clang_format` can be ignored..)
 ```bash
 cd ~/ros2_ws
 # source ROS

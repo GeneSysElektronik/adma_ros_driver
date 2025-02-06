@@ -22,7 +22,7 @@
   <depend>adma_core_lib</depend>
 
   <test_depend>ament_lint_auto</test_depend>
-  <test_depend>ament_cmake_clange_format</test_depend>
+  <test_depend>ament_cmake_clang_format</test_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
