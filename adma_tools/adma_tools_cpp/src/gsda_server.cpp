@@ -120,9 +120,9 @@ void GSDAServer::updateLoop()
       timestamp = dataScaledMsg.ins_time_msec + offset_gps_unix;
       timestamp += dataScaledMsg.ins_time_week * week_to_msec;
       dataScaledMsg.time_msec = timestamp;
-      dataScaledMsg.time_nsec = timestamp * 1E6;
+      dataScaledMsg.time_nsec = (timestamp % 1000) * 1E6;
       dataScaledMsg.header.stamp.sec = timestamp / 1000;
-      dataScaledMsg.header.stamp.nanosec = timestamp * 1E6;
+      dataScaledMsg.header.stamp.nanosec = (timestamp % 1000) * 1E6;
       pois = {
         dataScaledMsg.poi_1,
         dataScaledMsg.poi_2,
@@ -136,7 +136,7 @@ void GSDAServer::updateLoop()
       // extract separate msgs
       parser_->extractNavSatFix(dataScaledMsg, navsatfixMsg, pois, navsatfix_id_);
       navsatfixMsg.header.stamp.sec = timestamp / 1000;
-      navsatfixMsg.header.stamp.nanosec = timestamp * 1E6;
+      navsatfixMsg.header.stamp.nanosec = (timestamp % 1000) * 1E6;
       parser_->extractIMU(dataScaledMsg, imuMsg, pois, imu_id_);
       // ADMA PP doesnt provide "hr" channels so use normal body rate/acc for IMU
       imuMsg.linear_acceleration.x = dataScaledMsg.acc_body.x * 9.81;
@@ -146,7 +146,7 @@ void GSDAServer::updateLoop()
       imuMsg.angular_velocity.y = deg2Rad(dataScaledMsg.rate_body.y);
       imuMsg.angular_velocity.z = deg2Rad(dataScaledMsg.rate_body.z);
       imuMsg.header.stamp.sec = timestamp / 1000;
-      imuMsg.header.stamp.nanosec = timestamp * 1E6;
+      imuMsg.header.stamp.nanosec = (timestamp % 1000) * 1E6;
       // read heading and velocity
       headingMsg.data = dataScaledMsg.ins_yaw;
       geometry_msgs::msg::Vector3 insSource = velocity_id_ == 0 
@@ -156,10 +156,10 @@ void GSDAServer::updateLoop()
       
       extractBytes(stateMsg, dataScaledMsg);
       stateMsg.header.stamp.sec = timestamp / 1000;
-      stateMsg.header.stamp.nanosec = timestamp * 1E6;
+      stateMsg.header.stamp.nanosec = (timestamp % 1000) * 1E6;
 
       odomMsg.header.stamp.sec = timestamp / 1000;
-      odomMsg.header.stamp.nanosec = timestamp * 1E6;
+      odomMsg.header.stamp.nanosec = (timestamp % 1000) * 1E6;
       parser_->extractOdometry(dataScaledMsg, odomMsg, odometry_yaw_offset_, pois, odometry_id_);
 
       // TODO: extract the TF stuff to separate node for reusage
@@ -168,7 +168,7 @@ void GSDAServer::updateLoop()
         // TODO: evaluate those transformations!!
         geometry_msgs::msg::TransformStamped transform_msg;
         transform_msg.header.stamp.sec = timestamp / 1000;
-        transform_msg.header.stamp.nanosec = timestamp * 1E6;
+        transform_msg.header.stamp.nanosec = (timestamp % 1000) * 1E6;
         transform_msg.header.frame_id = "map";
         transform_msg.child_frame_id = adma_frame_;
         transform_msg.transform.rotation = odomMsg.pose.pose.orientation;

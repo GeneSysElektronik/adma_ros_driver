@@ -169,7 +169,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
     // read IMU
     parser_->extractIMU(admaData_ros_msg, message_imu);
     admaData_ros_msg.header.stamp.sec = timestamp / 1000;
-    admaData_ros_msg.header.stamp.nanosec = timestamp * 1E6;
+    admaData_ros_msg.header.stamp.nanosec = (timestamp % 1000) * 1E6;
     pub_adma_data_->publish(admaData_ros_msg);
     weektime = admaData_ros_msg.instimeweek;
   } else if (protocol_version_ == "v3.3.4") {
@@ -192,13 +192,13 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
     timestamp = adma_data_scaled_msg.ins_time_msec + offset_gps_unix;
     timestamp += adma_data_scaled_msg.ins_time_week * week_to_msec;
     adma_data_scaled_msg.time_msec = timestamp;
-    adma_data_scaled_msg.time_nsec = timestamp * 1E6;
+    adma_data_scaled_msg.time_nsec = (timestamp % 1000) * 1E6;
 
     if(time_mode_ == 0)
     {
       // mode == 0 -> use ADMA time 
       timestampForMsgs.sec = timestamp / 1000;
-      timestampForMsgs.nanosec = timestamp * 1E6;
+      timestampForMsgs.nanosec = (timestamp % 1000) * 1E6;
     }else if(time_mode_ == 1)
     {
       // mode == 1 -> use current ROS system time
@@ -255,13 +255,13 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
       timestamp = adma_data_scaled_msg.ins_time_msec + offset_gps_unix;
       timestamp += adma_data_scaled_msg.ins_time_week * week_to_msec;
       adma_data_scaled_msg.time_msec = timestamp;
-      adma_data_scaled_msg.time_nsec = timestamp * 1E6;
+      adma_data_scaled_msg.time_nsec = (timestamp % 1000) * 1E6;
 
       if (time_mode_ == 0)
       {
           // mode == 0 -> use ADMA time 
           timestampForMsgs.sec = timestamp / 1000;
-          timestampForMsgs.nanosec = timestamp * 1E6;
+          timestampForMsgs.nanosec = (timestamp % 1000) * 1E6;
       }
       else if (time_mode_ == 1)
       {
