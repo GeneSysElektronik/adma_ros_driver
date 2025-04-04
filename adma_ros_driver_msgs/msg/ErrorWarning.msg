@@ -9,7 +9,6 @@ uint8 error_gnss_hw                     # 2504
 # error misc1
 uint8 error_data_bus_checksum           # 2506
 uint8 error_eeprom                      # 2507
-uint8 error_xmit                        # 2508
 uint8 error_cmd                         # 2509
 
 # error misc2

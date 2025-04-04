@@ -1,0 +1,832 @@
+{
+        "status" : {
+                "status_bytes" : {
+                        "status_byte_0" : [
+                                {"version" : "33x", "channelID" : 2100}
+                        ],
+                        "status_byte_1" : [
+                                {"version" : "33x", "channelID" : 2101}
+                        ],
+                        "status_byte_2" : [
+                                {"version" : "33x", "channelID" : 2102}
+                        ],
+                        "status_count" : [
+                                {"version" : "33x", "channelID" : 2019}
+                        ],
+                        "status_byte_4" : [
+                                {"version" : "33x", "channelID" : 2104}
+                        ],
+                        "status_byte_5" : [
+                                {"version" : "33x", "channelID" : 2105}
+                        ]
+                },
+                "error_warnings_bytes" : {
+                        "error_byte_0" : [
+                                {"version" : "33x", "channelID" : 2600}
+                        ],
+                        "error_byte_1" : [
+                                {"version" : "33x", "channelID" : 2601}
+                        ],
+                        "error_byte_2" : [
+                                {"version" : "33x", "channelID" : 2602}
+                        ],
+                        "error_byte_3" : [
+                                {"version" : "33x", "channelID" : 2603}
+                        ]
+                },
+                "status" : {
+                        "status_gnss_mode" : [
+                                {"version" : "33x", "channelID" : 2000}
+                        ],
+                        "status_standstill" : [
+                                {"version" : "33x", "channelID" : 2001}
+                        ],
+                        "status_skidding" : [
+                                {"version" : "33x", "channelID" : 2002}
+                        ],
+                        "status_external_vel_out" : [
+                                {"version" : "33x", "channelID" : 2004}
+                        ],
+                        "status_trig_gnss" : [
+                                {"version" : "33x", "channelID" : 2005}
+                        ],
+                        "status_signal_in3" : [
+                                {"version" : "33x", "channelID" : 2006}
+                        ],
+                        "status_signal_in2" : [
+                                {"version" : "33x", "channelID" : 2007}
+                        ],
+                        "status_signal_in1" : [
+                                {"version" : "33x", "channelID" : 2008}
+                        ],
+                        "status_alignment" : [
+                                {"version" : "33x", "channelID" : 2009}
+                        ],
+                        "status_ahrs_ins" : [
+                                {"version" : "33x", "channelID" : 2010}
+                        ],
+                        "status_dead_reckoning" : [
+                                {"version" : "33x", "channelID" : 2011}
+                        ],
+                        "status_synclock" : [
+                                {"version" : "33x", "channelID" : 2012}
+                        ],
+                        "status_evk_activ" : [
+                                {"version" : "33x", "channelID" : 2013}
+                        ],
+                        "status_evk_estimates" : [
+                                {"version" : "33x", "channelID" : 2014}
+                        ],
+                        "status_heading_executed" : [
+                                {"version" : "33x", "channelID" : 2015}
+                        ],
+                        "status_config_changed" : [
+                                {"version" : "33x", "channelID" : 2016}
+                        ],
+                        "status_tilt" : [
+                                {"version" : "33x", "channelID" : 2017}
+                        ],
+                        "status_pos" : [
+                                {"version" : "33x", "channelID" : 2018}
+                        ],
+                        "status_count" : [
+                                {"version" : "33x", "channelID" : 2019}
+                        ],
+                        "status_kalmanfilter_settled" : [
+                                {"version" : "33x", "channelID" : 2020}
+                        ],
+                        "status_kf_lat_stimulated" : [
+                                {"version" : "33x", "channelID" : 2021}
+                        ],
+                        "status_kf_long_stimulated" : [
+                                {"version" : "33x", "channelID" : 2015}
+                        ],
+                        "status_kf_steady_state" : [
+                                {"version" : "33x", "channelID" : 2023}
+                        ],
+                        "status_speed" : [
+                                {"version" : "33x", "channelID" : 2024}
+                        ],
+                        "status_ips_mode" : [
+                                {"version" : "33x", "channelID" : 2025}
+                        ],
+                        "status_robot" : [
+                                {"version" : "33x", "channelID" : 2027}
+                        ],
+                        "status_dualant_mode" : [
+                                {"version" : "33x", "channelID" : 2028}
+                        ]
+                },
+                "error_warnings" : {
+                        "error_gyro_hw" : [
+                                {"version" : "33x", "channelID" : 2501}
+                        ],
+                        "error_accel_hw" : [
+                                {"version" : "33x", "channelID" : 2502}
+                        ],
+                        "error_ext_speed_hw" : [
+                                {"version" : "33x", "channelID" : 2503}
+                        ],
+                        "error_gnss_hw" : [
+                                {"version" : "33x", "channelID" : 2504}
+                        ],
+                        "error_data_bus_checksum" : [
+                                {"version" : "33x", "channelID" : 2506}
+                        ],
+                        "error_eeprom" : [
+                                {"version" : "33x", "channelID" : 2507}
+                        ],
+                        "error_cmd" : [
+                                {"version" : "33x", "channelID" : 2509}
+                        ],
+                        "error_data_bus" : [
+                                {"version" : "33x", "channelID" : 2511}
+                        ],
+                        "error_can_bus" : [
+                                {"version" : "33x", "channelID" : 2512}
+                        ],
+                        "error_num" : [
+                                {"version" : "33x", "channelID" : 2514}
+                        ],
+                        "error_temp_warning" : [
+                                {"version" : "33x", "channelID" : 2516}
+                        ],
+                        "error_reduced_accuracy" : [
+                                {"version" : "33x", "channelID" : 2517}
+                        ],
+                        "error_range_max" : [
+                                {"version" : "33x", "channelID" : 2518}
+                        ],
+                        "warn_gnss_no_solution" : [
+                                {"version" : "33x", "channelID" : 2521}
+                        ],
+                        "warn_gnss_vel_ignored" : [
+                                {"version" : "33x", "channelID" : 2522}
+                        ],
+                        "warn_gnss_pos_ignored" : [
+                                {"version" : "33x", "channelID" : 2523}
+                        ],
+                        "warn_gnss_unable_to_cfg" : [
+                                {"version" : "33x", "channelID" : 2524}
+                        ],
+                        "warn_speed_off" : [
+                                {"version" : "33x", "channelID" : 2526}
+                        ],
+                        "warn_gnss_dualant_ignored" : [
+                                {"version" : "33x", "channelID" : 2528}
+                        ],
+                        "error_hw_sticky" : [
+                                {"version" : "33x", "channelID" : 2529}
+                        ]
+                }
+},
+        "heading" : [
+                        {"version" : "33x", "channelID" : 3172}
+                ],
+        "velocity" : [
+                        {"version" : "320", "channelID" : [3151, 3152]},
+                        {"version" : "33x", "channelID" : [3243, 3244]}
+                ],
+        "navsatfix" : {
+                        "status" : [
+                                {"version" : "33x", "channelID" : 2000}
+                        ],
+                        "latitude" : [
+                                {"version" : "33x", "channelID" : 3203}
+                        ],
+                        "longitude" : [
+                                {"version" : "33x", "channelID" : 3204}
+                        ],
+                        "altitude" : [
+                                {"version" : "33x", "channelID" : 3188}
+                        ],
+                        "ins_stddev" : [
+                                {"version" : "33x", "channelID" : [3275, 3276, 3277]}
+                        ]
+                },
+        "imu" : {
+                "acc_body_hr" : [
+                        {"version" : "33x", "channelID" : [3000, 3002, 3004]}
+                ],
+                "rate_body" : [
+                        {"version" : "33x", "channelID" : [3006, 3007, 3008]}
+                ],
+                "ins_roll" : [
+                        {"version" : "33x", "channelID" : 3170}
+                ],
+                "ins_pitch" : [
+                        {"version" : "33x", "channelID" : 3171}
+                ],
+                "ins_yaw" : [
+                        {"version" : "33x", "channelID" : 3172}
+                ],
+                "ins_stddev_roll" : [
+                        {"version" : "33x", "channelID" : 3282}
+                ],
+                "ins_stddev_pitch" : [
+                        {"version" : "33x", "channelID" : 3283}
+                ],
+                "ins_stddev_yaw" : [
+                        {"version" : "33x", "channelID" : 3284}
+                ]
+        },
+        "odometry" : {
+                "ins_pos_rel" : [
+                        {"version" : "33x", "channelID" : [3205,3206,3188]}
+                ],
+                "ins_roll" : [
+                        {"version" : "33x", "channelID" : 3170}
+                ],
+                "ins_pitch" : [
+                        {"version" : "33x", "channelID" : 3171}
+                ],
+                "ins_yaw" : [
+                        {"version" : "33x", "channelID" : 3172}
+                ],
+                "ins_stddev_pos" : [
+                        {"version" : "33x", "channelID" : [3275, 3276, 3277]}
+                ],
+                "ins_vel_hor" : [
+                        {"version" : "33x", "channelID" : [3243, 3244, 3245]}
+                ],
+                "rate_body" : [
+                        {"version" : "33x", "channelID" : [3006, 3007, 3008]}
+                ],
+                "ins_stddev_vel" : [
+                        {"version" : "33x", "channelID" : [3279, 3280, 3281]}
+                ]
+        },
+        "data_scaled" : {
+                "acc_body_hr" : [
+                        {"version" : "33x", "channelID" : [3000, 3002, 3004]}
+                ],
+                "rate_body_hr" : [
+                        {"version" : "33x", "channelID" : [3001, 3003, 3005]}
+                ],
+                "rate_body" : [
+                        {"version" : "33x", "channelID" : [3006, 3007, 3008]}
+                ],
+                "rate_hor" : [
+                        {"version" : "33x", "channelID" : [3010, 3011, 3012]}
+                ],
+                "acc_body" : [
+                        {"version" : "33x", "channelID" : [3014, 3015, 3016]}
+                ],
+                "acc_hor" : [
+                        {"version" : "33x", "channelID" : [3018, 3019, 3020]}
+                ],
+                "ext_vel_an_x" : [
+                        {"version" : "33x", "channelID" : 3086}
+                ],
+                "ext_vel_an_y" : [
+                        {"version" : "33x", "channelID" : 3087}
+                ],
+                "ext_vel_dig_x" : [
+                        {"version" : "33x", "channelID" : 3090}
+                ],
+                "ext_vel_dig_y" : [
+                        {"version" : "33x", "channelID" : 3091}
+                ],
+                "ext_vel_dig_pulses_x" : [
+                        {"version" : "33x", "channelID" : 3092}
+                ],
+                "ext_vel_dig_pulses_y" : [
+                        {"version" : "33x", "channelID" : 3093}
+                ],
+                "ext_vel_x_corrected" : [
+                        {"version" : "33x", "channelID" : 3094}
+                ],
+                "ext_vel_y_corrected" : [
+                        {"version" : "33x", "channelID" : 3095}
+                ],
+                "inv_path_radius" : [
+                        {"version" : "33x", "channelID" : 3104}
+                ],
+                "side_slip_angle" : [
+                        {"version" : "33x", "channelID" : 3105}
+                ],
+                "dist_trav" : [
+                        {"version" : "33x", "channelID" : 3106}
+                ],
+                "trig_rising_1" : [
+                        {"version" : "33x", "channelID" : 3131}
+                ],
+                "trig_falling_1" : [
+                        {"version" : "33x", "channelID" : 3132}
+                ],
+                "trig_rising_2" : [
+                        {"version" : "33x", "channelID" : 3133}
+                ],
+                "trig_falling_2" : [
+                        {"version" : "33x", "channelID" : 3134}
+                ],
+                "trig_rising_3" : [
+                        {"version" : "33x", "channelID" : 3135}
+                ],
+                "trig_falling_3" : [
+                        {"version" : "33x", "channelID" : 3136}
+                ],
+                "trig_rising_4" : [
+                        {"version" : "33x", "channelID" : 3137}
+                ],
+                "trig_falling_4" : [
+                        {"version" : "33x", "channelID" : 3138}
+                ],
+                "system_ta" : [
+                        {"version" : "33x", "channelID" : 3139}
+                ],
+                "system_temp" : [
+                        {"version" : "33x", "channelID" : 3140}
+                ],
+                "system_time_since_init" : [
+                        {"version" : "33x", "channelID" : 3141}
+                ],
+                "system_dsp_load" : [
+                        {"version" : "33x", "channelID" : 3142}
+                ],
+                "gnss_lat_abs" : [
+                        {"version" : "33x", "channelID" : 3143}
+                ],
+                "gnss_long_abs" : [
+                        {"version" : "33x", "channelID" : 3144}
+                ],
+                "gnss_pos_rel_x" : [
+                        {"version" : "33x", "channelID" : 3145}
+                ],
+                "gnss_pos_rel_y" : [
+                        {"version" : "33x", "channelID" : 3146}
+                ],
+                "gnss_stddev_lat" : [
+                        {"version" : "33x", "channelID" : 3147}
+                ],
+                "gnss_stddev_long" : [
+                        {"version" : "33x", "channelID" : 3148}
+                ],
+                "gnss_stddev_height" : [
+                        {"version" : "33x", "channelID" : 3149}
+                ],
+                "gnss_stddev_cog" : [
+                        {"version" : "33x", "channelID" : 3150}
+                ],
+                "gnss_vel_frame" : [
+                        {"version" : "33x", "channelID" : [3151, 3152, 3153]}
+                ],
+                "gnss_vel_latency" : [
+                        {"version" : "33x", "channelID" : 3154}
+                ],
+                "gnss_stddev_vel" : [
+                        {"version" : "33x", "channelID" : [3155, 3156, 3157]}
+                ],
+                "gnss_time_msec" : [
+                        {"version" : "33x", "channelID" : 3159}
+                ],
+                "gnss_time_week" : [
+                        {"version" : "33x", "channelID" : 3160}
+                ],
+                "trigger_gnss" : [
+                        {"version" : "33x", "channelID" : 3161}
+                ],
+                "gnss_diffage" : [
+                        {"version" : "33x", "channelID" : 3162}
+                ],
+                "gnss_sats_used" : [
+                        {"version" : "33x", "channelID" : 3163}
+                ],
+                "gnss_sats_visible" : [
+                        {"version" : "33x", "channelID" : 3164}
+                ],
+                "gnss_sats_dualant_used" : [
+                        {"version" : "33x", "channelID" : 3165}
+                ],
+                "gnss_sats_dualant_visible" : [
+                        {"version" : "33x", "channelID" : 3360}
+                ],
+                "gnss_sats_single_freq" : [
+                        {"version" : "33x", "channelID" : 3362}
+                ],
+                "gnss_sats_multi_freq" : [
+                        {"version" : "33x", "channelID" : 3363}
+                ],
+                "gnss_log_delay" : [
+                        {"version" : "33x", "channelID" : 3166}
+                ],
+                "gnss_receiver_load" : [
+                        {"version" : "33x", "channelID" : 3167}
+                ],
+                "gnss_base_nr" : [
+                        {"version" : "33x", "channelID" : 3168}
+                ],
+                "gnss_sats_dualant_multi_freq" : [
+                        {"version" : "33x", "channelID" : 3365}
+                ],
+                "ins_roll" : [
+                        {"version" : "33x", "channelID" : 3170}
+                ],
+                "ins_pitch" : [
+                        {"version" : "33x", "channelID" : 3171}
+                ],
+                "ins_yaw" : [
+                        {"version" : "33x", "channelID" : 3172}
+                ],
+                "gnss_cog" : [
+                        {"version" : "33x", "channelID" : 3173}
+                ],
+                "gnss_height" : [
+                        {"version" : "33x", "channelID" : 3174}
+                ],
+                "undulation" : [
+                        {"version" : "33x", "channelID" : 3175}
+                ],
+                "gnss_dualant_time_msec" : [
+                        {"version" : "33x", "channelID" : 3177}
+                ],
+                "gnss_dualant_time_week" : [
+                        {"version" : "33x", "channelID" : 3178}
+                ],
+                "gnss_dualant_heading" : [
+                        {"version" : "33x", "channelID" : 3180}
+                ],
+                "gnss_dualant_pitch" : [
+                        {"version" : "33x", "channelID" : 3181}
+                ],
+                "gnss_dualant_stddev_heading" : [
+                        {"version" : "33x", "channelID" : 3183}
+                ],
+                "gnss_dualant_stddev_pitch" : [
+                        {"version" : "33x", "channelID" : 3184}
+                ],
+                "gnss_dualant_stddev_heading_hr" : [
+                        {"version" : "33x", "channelID" : 3185}
+                ],
+                "gnss_dualant_stddev_pitch_hr" : [
+                        {"version" : "33x", "channelID" : 3361}
+                ],
+                "ins_height" : [
+                        {"version" : "33x", "channelID" : 3186}
+                ],
+                "ins_yaw_rel" : [
+                        {"version" : "33x", "channelID" : 3187}
+                ],
+                "ins_time_msec" : [
+                        {"version" : "33x", "channelID" : 3196}
+                ],
+                "ins_time_week" : [
+                        {"version" : "33x", "channelID" : 3197}
+                ],
+                "leap_seconds" : [
+                        {"version" : "33x", "channelID" : 3198}
+                ],
+                "ins_lat_abs" : [
+                        {"version" : "33x", "channelID" : 3199}
+                ],
+                "ins_long_abs" : [
+                        {"version" : "33x", "channelID" : 3200}
+                ],
+                "ins_pos_rel_x" : [
+                        {"version" : "33x", "channelID" : 3201}
+                ],
+                "ins_pos_rel_y" : [
+                        {"version" : "33x", "channelID" : 3202}
+                ],
+                "ins_vel_hor" : [
+                        {"version" : "33x", "channelID" : [3235, 3236, 3237]}
+                ],
+                "ins_vel_frame" : [
+                        {"version" : "33x", "channelID" : [3239, 3240, 3241]}
+                ],
+                "ins_stddev_lat" : [
+                        {"version" : "33x", "channelID" : 3275}
+                ],
+                "ins_stddev_long" : [
+                        {"version" : "33x", "channelID" : 3276}
+                ],
+                "ins_stddev_height" : [
+                        {"version" : "33x", "channelID" : 3277}
+                ],
+                "ins_stddev_vel" : [
+                        {"version" : "33x", "channelID" : [3279, 3280, 3281]}
+                ],
+                "ins_stddev_roll" : [
+                        {"version" : "33x", "channelID" : 3282}
+                ],
+                "ins_stddev_pitch" : [
+                        {"version" : "33x", "channelID" : 3283}
+                ],
+                "ins_stddev_yaw" : [
+                        {"version" : "33x", "channelID" : 3284}
+                ],
+                "an1" : [
+                        {"version" : "33x", "channelID" : 3286}
+                ],
+                "an2" : [
+                        {"version" : "33x", "channelID" : 3287}
+                ],
+                "an3" : [
+                        {"version" : "33x", "channelID" : 3288}
+                ],
+                "an4" : [
+                        {"version" : "33x", "channelID" : 3289}
+                ],
+                "kf_lat_stimulated" : [
+                        {"version" : "33x", "channelID" : 3290}
+                ],
+                "kf_long_stimulated" : [
+                        {"version" : "33x", "channelID" : 3291}
+                ],
+                "kf_steady_state" : [
+                        {"version" : "33x", "channelID" : 3292}
+                ],
+                "gnss_receiver_error" : [
+                        {"version" : "33x", "channelID" : 3294}
+                ],
+                "gnss_receiver_status" : [
+                        {"version" : "33x", "channelID" : 3327}
+                ],
+                "time_msec" : [
+                        {"version" : "33x", "channelID" : 2529}
+                ],
+                "time_nsec" : [
+                        {"version" : "33x", "channelID" : 2529}
+                ],
+                "poi_1" : {
+                        "acc_body" : [
+                                {"version" : "33x", "channelID" : [3022, 3023, 3024]}
+                        ],
+                        "acc_hor" : [
+                                {"version" : "33x", "channelID" : [3054, 3055, 3056]}
+                        ],
+                        "inv_path_radius" : [
+                                {"version" : "33x", "channelID" : 3107}
+                        ],
+                        "side_slip_angle" : [
+                                {"version" : "33x", "channelID" : 3108}
+                        ],
+                        "dist_trav" : [
+                                {"version" : "33x", "channelID" : 3109}
+                        ],
+                        "ins_height" : [
+                                {"version" : "33x", "channelID" : 3188}
+                        ],
+                        "ins_lat_abs" : [
+                                {"version" : "33x", "channelID" : 3203}
+                        ],
+                        "ins_long_abs" : [
+                                {"version" : "33x", "channelID" : 3204}
+                        ],
+                        "ins_pos_rel_x" : [
+                                {"version" : "33x", "channelID" : 3205}
+                        ],
+                        "ins_pos_rel_y" : [
+                                {"version" : "33x", "channelID" : 3206}
+                        ],
+                        "ins_vel_hor" : [
+                                {"version" : "33x", "channelID" : [3243, 3244, 3245]}
+                        ]
+                },
+                "poi_2" : {
+                        "acc_body" : [
+                                {"version" : "33x", "channelID" : [3026, 3027, 3028]}
+                        ],
+                        "acc_hor" : [
+                                {"version" : "33x", "channelID" : [3058, 3059, 3060]}
+                        ],
+                        "inv_path_radius" : [
+                                {"version" : "33x", "channelID" : 3110}
+                        ],
+                        "side_slip_angle" : [
+                                {"version" : "33x", "channelID" : 3111}
+                        ],
+                        "dist_trav" : [
+                                {"version" : "33x", "channelID" : 3112}
+                        ],
+                        "ins_height" : [
+                                {"version" : "33x", "channelID" : 3189}
+                        ],
+                        "ins_lat_abs" : [
+                                {"version" : "33x", "channelID" : 3207}
+                        ],
+                        "ins_long_abs" : [
+                                {"version" : "33x", "channelID" : 3208}
+                        ],
+                        "ins_pos_rel_x" : [
+                                {"version" : "33x", "channelID" : 3209}
+                        ],
+                        "ins_pos_rel_y" : [
+                                {"version" : "33x", "channelID" : 3210}
+                        ],
+                        "ins_vel_hor" : [
+                                {"version" : "33x", "channelID" : [3247, 3248, 3249]}
+                        ]
+                },
+                "poi_3" : {
+                        "acc_body" : [
+                                {"version" : "33x", "channelID" : [3030, 3031, 3032]}
+                        ],
+                        "acc_hor" : [
+                                {"version" : "33x", "channelID" : [3062, 3063, 3064]}
+                        ],
+                        "inv_path_radius" : [
+                                {"version" : "33x", "channelID" : 3113}
+                        ],
+                        "side_slip_angle" : [
+                                {"version" : "33x", "channelID" : 3114}
+                        ],
+                        "dist_trav" : [
+                                {"version" : "33x", "channelID" : 3115}
+                        ],
+                        "ins_height" : [
+                                {"version" : "33x", "channelID" : 3190}
+                        ],
+                        "ins_lat_abs" : [
+                                {"version" : "33x", "channelID" : 3211}
+                        ],
+                        "ins_long_abs" : [
+                                {"version" : "33x", "channelID" : 3212}
+                        ],
+                        "ins_pos_rel_x" : [
+                                {"version" : "33x", "channelID" : 3213}
+                        ],
+                        "ins_pos_rel_y" : [
+                                {"version" : "33x", "channelID" : 3214}
+                        ],
+                        "ins_vel_hor" : [
+                                {"version" : "33x", "channelID" : [3251, 3252, 3253]}
+                        ]
+                },
+                "poi_4" : {
+                        "acc_body" : [
+                                {"version" : "33x", "channelID" : [3034, 3035, 3036]}
+                        ],
+                        "acc_hor" : [
+                                {"version" : "33x", "channelID" : [3066, 3067, 3068]}
+                        ],
+                        "inv_path_radius" : [
+                                {"version" : "33x", "channelID" : 3116}
+                        ],
+                        "side_slip_angle" : [
+                                {"version" : "33x", "channelID" : 3117}
+                        ],
+                        "dist_trav" : [
+                                {"version" : "33x", "channelID" : 3118}
+                        ],
+                        "ins_height" : [
+                                {"version" : "33x", "channelID" : 3191}
+                        ],
+                        "ins_lat_abs" : [
+                                {"version" : "33x", "channelID" : 3215}
+                        ],
+                        "ins_long_abs" : [
+                                {"version" : "33x", "channelID" : 3216}
+                        ],
+                        "ins_pos_rel_x" : [
+                                {"version" : "33x", "channelID" : 3217}
+                        ],
+                        "ins_pos_rel_y" : [
+                                {"version" : "33x", "channelID" : 3218}
+                        ],
+                        "ins_vel_hor" : [
+                                {"version" : "33x", "channelID" : [3255, 3256, 3257]}
+                        ]
+                },
+                "poi_5" : {
+                        "acc_body" : [
+                                {"version" : "33x", "channelID" : [3038, 3039, 3040]}
+                        ],
+                        "acc_hor" : [
+                                {"version" : "33x", "channelID" : [3070, 3071, 3072]}
+                        ],
+                        "inv_path_radius" : [
+                                {"version" : "33x", "channelID" : 3119}
+                        ],
+                        "side_slip_angle" : [
+                                {"version" : "33x", "channelID" : 3120}
+                        ],
+                        "dist_trav" : [
+                                {"version" : "33x", "channelID" : 3121}
+                        ],
+                        "ins_height" : [
+                                {"version" : "33x", "channelID" : 3192}
+                        ],
+                        "ins_lat_abs" : [
+                                {"version" : "33x", "channelID" : 3219}
+                        ],
+                        "ins_long_abs" : [
+                                {"version" : "33x", "channelID" : 3220}
+                        ],
+                        "ins_pos_rel_x" : [
+                                {"version" : "33x", "channelID" : 3221}
+                        ],
+                        "ins_pos_rel_y" : [
+                                {"version" : "33x", "channelID" : 3222}
+                        ],
+                        "ins_vel_hor" : [
+                                {"version" : "33x", "channelID" : [3259, 3260, 3261]}
+                        ]
+                },
+                "poi_6" : {
+                        "acc_body" : [
+                                {"version" : "33x", "channelID" : [3042, 3043, 3044]}
+                        ],
+                        "acc_hor" : [
+                                {"version" : "33x", "channelID" : [3074, 3075, 3076]}
+                        ],
+                        "inv_path_radius" : [
+                                {"version" : "33x", "channelID" : 3122}
+                        ],
+                        "side_slip_angle" : [
+                                {"version" : "33x", "channelID" : 3123}
+                        ],
+                        "dist_trav" : [
+                                {"version" : "33x", "channelID" : 3124}
+                        ],
+                        "ins_height" : [
+                                {"version" : "33x", "channelID" : 3193}
+                        ],
+                        "ins_lat_abs" : [
+                                {"version" : "33x", "channelID" : 3223}
+                        ],
+                        "ins_long_abs" : [
+                                {"version" : "33x", "channelID" : 3224}
+                        ],
+                        "ins_pos_rel_x" : [
+                                {"version" : "33x", "channelID" : 3225}
+                        ],
+                        "ins_pos_rel_y" : [
+                                {"version" : "33x", "channelID" : 3226}
+                        ],
+                        "ins_vel_hor" : [
+                                {"version" : "33x", "channelID" : [3263, 3264, 3265]}
+                        ]
+                },
+                "poi_7" : {
+                        "acc_body" : [
+                                {"version" : "33x", "channelID" : [3046, 3047, 3048]}
+                        ],
+                        "acc_hor" : [
+                                {"version" : "33x", "channelID" : [3078, 3079, 3080]}
+                        ],
+                        "inv_path_radius" : [
+                                {"version" : "33x", "channelID" : 3125}
+                        ],
+                        "side_slip_angle" : [
+                                {"version" : "33x", "channelID" : 3126}
+                        ],
+                        "dist_trav" : [
+                                {"version" : "33x", "channelID" : 3127}
+                        ],
+                        "ins_height" : [
+                                {"version" : "33x", "channelID" : 3194}
+                        ],
+                        "ins_lat_abs" : [
+                                {"version" : "33x", "channelID" : 3227}
+                        ],
+                        "ins_long_abs" : [
+                                {"version" : "33x", "channelID" : 3228}
+                        ],
+                        "ins_pos_rel_x" : [
+                                {"version" : "33x", "channelID" : 3229}
+                        ],
+                        "ins_pos_rel_y" : [
+                                {"version" : "33x", "channelID" : 3230}
+                        ],
+                        "ins_vel_hor" : [
+                                {"version" : "33x", "channelID" : [3267, 3268, 3269]}
+                        ]
+                },
+                "poi_8" : {
+                        "acc_body" : [
+                                {"version" : "33x", "channelID" : [3050, 3051, 3052]}
+                        ],
+                        "acc_hor" : [
+                                {"version" : "33x", "channelID" : [3082, 3083, 3084]}
+                        ],
+                        "inv_path_radius" : [
+                                {"version" : "33x", "channelID" : 3128}
+                        ],
+                        "side_slip_angle" : [
+                                {"version" : "33x", "channelID" : 3129}
+                        ],
+                        "dist_trav" : [
+                                {"version" : "33x", "channelID" : 3130}
+                        ],
+                        "ins_height" : [
+                                {"version" : "33x", "channelID" : 3195}
+                        ],
+                        "ins_lat_abs" : [
+                                {"version" : "33x", "channelID" : 3231}
+                        ],
+                        "ins_long_abs" : [
+                                {"version" : "33x", "channelID" : 3232}
+                        ],
+                        "ins_pos_rel_x" : [
+                                {"version" : "33x", "channelID" : 3233}
+                        ],
+                        "ins_pos_rel_y" : [
+                                {"version" : "33x", "channelID" : 3234}
+                        ],
+                        "ins_vel_hor" : [
+                                {"version" : "33x", "channelID" : [3271, 3272, 3273]}
+                        ]
+                }
+        }
+}

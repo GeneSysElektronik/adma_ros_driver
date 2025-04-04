@@ -27,30 +27,30 @@ void ADMA2ROSParserV334::mapAdmaHeader(
   adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & adma_data)
 {
   // fill static header information
-  AdmaStaticHeader static_header = adma_data.staticHeader;
-  ros_msg.genesys_id = static_header.genesysid;
-  std::stringstream ss;
-  ss << int(static_header.headerversion[0]) << int(static_header.headerversion[1])
-     << int(static_header.headerversion[2]) << int(static_header.headerversion[3]);
-  ros_msg.header_version = ss.str();
-  ss.clear();
-  ss.str("");
-  ros_msg.format_id = static_header.formatid;
-  //TODO: this value is parsed wrong?!
-  ss << int(static_header.formatversion[0]) << int(static_header.formatversion[1])
-     << int(static_header.formatversion[2]) << int(static_header.formatversion[3]);
-  ros_msg.format_version = ss.str();
-  ros_msg.serial_number = static_header.serialno;
+  // AdmaStaticHeader static_header = adma_data.staticHeader;
+  // ros_msg.genesys_id = static_header.genesysid;
+  // std::stringstream ss;
+  // ss << int(static_header.headerversion[0]) << int(static_header.headerversion[1])
+  //    << int(static_header.headerversion[2]) << int(static_header.headerversion[3]);
+  // ros_msg.header_version = ss.str();
+  // ss.clear();
+  // ss.str("");
+  // ros_msg.format_id = static_header.formatid;
+  // //TODO: this value is parsed wrong?!
+  // // ss << int(static_header.formatversion[0]) << int(static_header.formatversion[1])
+  // //    << int(static_header.formatversion[2]) << int(static_header.formatversion[3]);
+  // // ros_msg.format_version = ss.str();
+  // ros_msg.serial_number = static_header.serialno;
 
-  // fill dynamic header information
-  AdmaDynamicHeader dynamic_header = adma_data.dynamicHeader;
-  ros_msg.config_id = dynamic_header.configid;
-  ros_msg.config_format = dynamic_header.configformat;
-  ros_msg.config_version = dynamic_header.configversion;
-  ros_msg.config_size = dynamic_header.configsize;
-  ros_msg.byte_offset = dynamic_header.byteoffset;
-  ros_msg.slice_size = dynamic_header.slicesize;
-  ros_msg.slice_data = dynamic_header.slicedata;
+  // // fill dynamic header information
+  // AdmaDynamicHeader dynamic_header = adma_data.dynamicHeader;
+  // ros_msg.config_id = dynamic_header.configid;
+  // ros_msg.config_format = dynamic_header.configformat;
+  // ros_msg.config_version = dynamic_header.configversion;
+  // ros_msg.config_size = dynamic_header.configsize;
+  // ros_msg.byte_offset = dynamic_header.byteoffset;
+  // ros_msg.slice_size = dynamic_header.slicesize;
+  // ros_msg.slice_data = dynamic_header.slicedata;
 }
 
 void ADMA2ROSParserV334::mapStatusBytes(
@@ -216,7 +216,7 @@ void ADMA2ROSParserV334::mapErrorBit0(adma_ros_driver_msgs::msg::ErrorWarning & 
   ros_msg_error_warning.error_gnss_hw = getbit(error_byte, 3);
   ros_msg_error_warning.error_data_bus_checksum = getbit(error_byte, 4);
   ros_msg_error_warning.error_eeprom = getbit(error_byte, 5);
-  ros_msg_error_warning.error_xmit = getbit(error_byte, 6);
+  // ros_msg_error_warning.error_xmit = getbit(error_byte, 6);
   ros_msg_error_warning.error_cmd = getbit(error_byte, 7);
 }
 
@@ -423,7 +423,7 @@ void ADMA2ROSParserV334::mapPOI(
     new_poi.dist_trav = getScaledValue(cur_misc.distanceTraveled, 0.01);
     new_poi.ins_height = getScaledValue(cur_ins_height, 0.01);
     new_poi.ins_lat_abs = getScaledValue(cur_ins_position.pos_abs.latitude, 0.0000001);
-    new_poi.ins_lon_abs = getScaledValue(cur_ins_position.pos_abs.longitude, 0.0000001);
+    new_poi.ins_long_abs = getScaledValue(cur_ins_position.pos_abs.longitude, 0.0000001);
     new_poi.ins_pos_rel_x = getScaledValue(cur_ins_position.pos_rel_x, 0.01);
     new_poi.ins_pos_rel_y = getScaledValue(cur_ins_position.pos_rel_y, 0.01);
     new_poi.ins_vel_hor.x = getScaledValue(cur_ins_vel_hor.x, 0.005);

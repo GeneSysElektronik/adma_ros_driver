@@ -23,9 +23,9 @@ struct AdmaStaticHeader
 {
   char genesysid[4];
   char headerversion[4];
-  Reserved16 reserved;
   uint32_t formatid;
   char formatversion[4];
+  Reserved16 reserved;  
   uint32_t serialno;
   char alias[32];
 };
@@ -40,6 +40,12 @@ struct AdmaDynamicHeader
   uint32_t byteoffset;
   uint32_t slicesize;
   int32_t slicedata;
+};
+
+struct AdmaNetHeader
+{
+  AdmaStaticHeader staticHeader;
+  AdmaDynamicHeader dynamicHeader;
 };
 
 // struct to represent a sensor body

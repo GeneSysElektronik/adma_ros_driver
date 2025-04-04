@@ -8,3 +8,6 @@ ByteErrorWarning error_warnings_bytes
 
 # bitfields error/warning
 ErrorWarning error_warnings
+
+# bitfields status
+Status status

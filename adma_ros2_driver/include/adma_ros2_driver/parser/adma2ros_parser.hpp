@@ -2,9 +2,11 @@
 
 #include <iostream>
 #include <memory>
+#include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 #include <sensor_msgs/msg/nav_sat_fix.hpp>
 #include <nav_msgs/msg/odometry.hpp>
+#include <std_msgs/msg/float64.hpp>
 
 #include "adma_ros2_driver/data/adma_data_v32.hpp"
 #include "adma_ros2_driver/parser/adma2ros_parser_v32.hpp"
@@ -13,12 +15,16 @@
 #include "adma_ros2_driver/parser/adma2ros_parser_v335.hpp"
 #include "adma_ros_driver_msgs/msg/adma_data.hpp"
 #include "adma_ros_driver_msgs/msg/adma_data_scaled.hpp"
+#include "adma_core_lib/parser/mapping.hpp"
 
 class ADMA2ROSParser
 {
 public:
   ADMA2ROSParser(std::string version);
+  ADMA2ROSParser(uint16_t version, const std::string &protocolFileName, const std::string &glossarFileName);
+  ADMA2ROSParser(u_int16_t version);
   ~ADMA2ROSParser() {}
+  void findMappingFiles(std::string &protocolFileName, std::string &glossarFileName);
   void mapAdmaMessageToROS(
     adma_ros_driver_msgs::msg::AdmaData & ros_msg, std::array<char, 856> & recv_data);
   void extractNavSatFix(
@@ -44,6 +50,12 @@ public:
   ADMA2ROSParserV333 parserV333_;
   ADMA2ROSParserV334 parserV334_;
   ADMA2ROSParserV335 parserV335_;
+  genesys::parser::Mapping * mapping_;
+  void extractHeading(std_msgs::msg::Float64 &headingMsg, std::array<char, 856> & recv_data);
+  void extractAdmaStatus(adma_ros_driver_msgs::msg::AdmaStatus &statusMsg, std::array<char, 856> & recv_data);
+  void extractAdmaHeader(adma_ros_driver_msgs::msg::AdmaDataScaled &admaScaledMsg, std::array<char, 856> &recv_data);
+  void extractAdmaDataScaled(adma_ros_driver_msgs::msg::AdmaDataScaled &admaScaledMsg, std::array<char, 856> & recv_data);
+  void extractPOIs(adma_ros_driver_msgs::msg::AdmaDataScaled &admaScaledMsg, std::array<char, 856> &recv_data);
 
 private:
   template <typename AdmaDataHeaderStruct>
@@ -60,4 +72,5 @@ private:
     adma_ros_driver_msgs::msg::AdmaData & ros_msg, unsigned char adma_data[4]);
   
   std::string version_;
+  uint16_t protocolVersion_;
 };

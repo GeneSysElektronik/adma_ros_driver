@@ -32,7 +32,9 @@ uint8 status_kf_lat_stimulated          # 2021
 uint8 status_kf_long_stimulated         # 2022
 uint8 status_kf_steady_state            # 2023
 uint8 status_speed                      # 2024
+uint8 status_ips_mode                   # 2025
 
 # status_byte_5
 uint8 status_robot                      # 2027
+uint8 status_dualant_mode               # 2028
 

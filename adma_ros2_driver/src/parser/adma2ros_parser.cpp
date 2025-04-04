@@ -1,7 +1,7 @@
 #include "adma_ros2_driver/parser/adma2ros_parser.hpp"
 
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
-
+#include <ament_index_cpp/get_package_share_directory.hpp>
 #include <iostream>
 
 #include "adma_core_lib/parser/parser_utils.hpp"
@@ -9,6 +9,283 @@
 ADMA2ROSParser::ADMA2ROSParser(std::string version)
 : parserV32_(), parserV333_(), parserV334_(), parserV335_(), version_(version)
 {
+}
+
+ADMA2ROSParser::ADMA2ROSParser(u_int16_t version)
+: protocolVersion_(version){
+  if(protocolVersion_ == 3200){
+    
+  } else {
+    std::string admanetXMLFile, mappingGlossarFile;
+    findMappingFiles(admanetXMLFile, mappingGlossarFile);
+    mapping_ = new genesys::parser::Mapping(version);
+    mapping_->initialize(admanetXMLFile, mappingGlossarFile);
+  }
+}
+
+void ADMA2ROSParser::findMappingFiles(std::string &protocolFileName, std::string &glossarFileName)
+{
+  std::string configPath = ament_index_cpp::get_package_share_directory("adma_ros2_driver");
+  configPath += "/config/protocols/";
+  std::string xmlFile;
+  uint16_t mappingVersion;
+  if(protocolVersion_ == 3330)
+  {
+    xmlFile += "ADMA_UDP-DataStream_ADMAnet_v3.3.3_v30.8.0.1.xml";
+  }
+  else if(protocolVersion_ == 3340)
+  {
+    xmlFile += "ADMA_UDP-DataStream_ADMAnet_v3.3.4_v30.10.0.40.xml";
+  }
+    else if(protocolVersion_ == 3350)
+  {
+    xmlFile += "ADMA_UDP-DataStream_ADMAnet_v3.3.5_v35.2.0.1.xml";
+  }
+  else if(protocolVersion_ == 3360)
+  {
+    xmlFile += "ADMA_UDP-DataStream_ADMAnet_v3.3.6_v35.3.0.14.xml";
+  }
+  protocolFileName = configPath + xmlFile;
+  glossarFileName = configPath + "channel_mapping_updated.json";
+}
+
+void ADMA2ROSParser::extractHeading(std_msgs::msg::Float64 &headingMsg, std::array<char, 856> & recv_data)
+{
+  headingMsg.data = mapping_->loadDataFromBuffer<uint16_t, double>("heading", recv_data);
+}
+
+void ADMA2ROSParser::extractAdmaStatus(adma_ros_driver_msgs::msg::AdmaStatus &statusMsg, std::array<char, 856> & recv_data)
+{
+  // first load bytes from buffer into ROS msg
+  statusMsg.status_bytes.status_byte_0 = mapping_->loadDataFromBuffer<unsigned char, unsigned char>("status.status_bytes.status_byte_0", recv_data);
+  statusMsg.status_bytes.status_byte_1 = mapping_->loadDataFromBuffer<unsigned char, unsigned char>("status.status_bytes.status_byte_1", recv_data);
+  statusMsg.status_bytes.status_byte_2 = mapping_->loadDataFromBuffer<unsigned char, unsigned char>("status.status_bytes.status_byte_2", recv_data);
+  statusMsg.status_bytes.status_count = mapping_->loadDataFromBuffer<unsigned char, unsigned char>("status.status_bytes.status_count", recv_data);
+  statusMsg.status_bytes.status_byte_4 = mapping_->loadDataFromBuffer<unsigned char, unsigned char>("status.status_bytes.status_byte_4", recv_data);
+  statusMsg.status_bytes.status_byte_5 = mapping_->loadDataFromBuffer<unsigned char, unsigned char>("status.status_bytes.status_byte_5", recv_data);
+  statusMsg.error_warnings_bytes.error_1 = mapping_->loadDataFromBuffer<unsigned char, unsigned char>("status.error_warnings_bytes.error_byte_0", recv_data);
+  statusMsg.error_warnings_bytes.error_2 = mapping_->loadDataFromBuffer<unsigned char, unsigned char>("status.error_warnings_bytes.error_byte_1", recv_data);
+  statusMsg.error_warnings_bytes.warn_1 = mapping_->loadDataFromBuffer<unsigned char, unsigned char>("status.error_warnings_bytes.error_byte_2", recv_data);
+  statusMsg.error_warnings_bytes.error_3 = mapping_->loadDataFromBuffer<unsigned char, unsigned char>("status.error_warnings_bytes.error_byte_3", recv_data);
+
+  // then extract single bits
+  statusMsg.error_warnings.error_gyro_hw = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.error_warnings.error_gyro_hw", recv_data);
+  statusMsg.error_warnings.error_accel_hw = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.error_warnings.error_accel_hw", recv_data);
+  statusMsg.error_warnings.error_ext_speed_hw = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.error_warnings.error_ext_speed_hw", recv_data);
+  statusMsg.error_warnings.error_gnss_hw = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.error_warnings.error_gnss_hw", recv_data);
+  statusMsg.error_warnings.error_data_bus_checksum = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.error_warnings.error_data_bus_checksum", recv_data);
+  statusMsg.error_warnings.error_eeprom = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.error_warnings.error_eeprom", recv_data);
+  statusMsg.error_warnings.error_cmd = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.error_warnings.error_cmd", recv_data);
+  statusMsg.error_warnings.error_data_bus = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.error_warnings.error_data_bus", recv_data);
+  statusMsg.error_warnings.error_can_bus = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.error_warnings.error_can_bus", recv_data);
+  statusMsg.error_warnings.error_num = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.error_warnings.error_num", recv_data);
+  statusMsg.error_warnings.error_temp_warning = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.error_warnings.error_temp_warning", recv_data);
+  statusMsg.error_warnings.error_reduced_accuracy = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.error_warnings.error_reduced_accuracy", recv_data);
+  statusMsg.error_warnings.error_range_max = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.error_warnings.error_range_max", recv_data);
+  statusMsg.error_warnings.warn_gnss_no_solution = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.error_warnings.warn_gnss_no_solution", recv_data);
+  statusMsg.error_warnings.warn_gnss_vel_ignored = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.error_warnings.warn_gnss_vel_ignored", recv_data);
+  statusMsg.error_warnings.warn_gnss_pos_ignored = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.error_warnings.warn_gnss_pos_ignored", recv_data);
+  statusMsg.error_warnings.warn_gnss_unable_to_cfg = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.error_warnings.warn_gnss_unable_to_cfg", recv_data);
+  statusMsg.error_warnings.warn_speed_off = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.error_warnings.warn_speed_off", recv_data);
+  statusMsg.error_warnings.warn_gnss_dualant_ignored = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.error_warnings.warn_gnss_dualant_ignored", recv_data);
+  statusMsg.error_warnings.error_hw_sticky = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.error_warnings.error_hw_sticky", recv_data);
+
+  // status_byte_0 (2100)
+  statusMsg.status.status_gnss_mode = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_gnss_mode", recv_data);
+  statusMsg.status.status_standstill = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_standstill", recv_data);
+  statusMsg.status.status_skidding = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_skidding", recv_data);
+  statusMsg.status.status_external_vel_out = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_external_vel_out", recv_data);
+  // status_byte_1 (2101)
+  statusMsg.status.status_trig_gnss = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_trig_gnss", recv_data);
+  statusMsg.status.status_signal_in3 = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_signal_in3", recv_data);
+  statusMsg.status.status_signal_in2 = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_signal_in2", recv_data);
+  statusMsg.status.status_signal_in1 = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_signal_in1", recv_data);
+  statusMsg.status.status_alignment = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_alignment", recv_data);
+  statusMsg.status.status_ahrs_ins = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_ahrs_ins", recv_data);
+  statusMsg.status.status_dead_reckoning = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_dead_reckoning", recv_data);
+  statusMsg.status.status_synclock = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_synclock", recv_data);
+  // status_byte_2 (2102)
+  statusMsg.status.status_evk_activ = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_evk_activ", recv_data);
+  statusMsg.status.status_evk_estimates = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_evk_estimates", recv_data);
+  statusMsg.status.status_heading_executed = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_heading_executed", recv_data);
+  statusMsg.status.status_config_changed = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_config_changed", recv_data);
+  statusMsg.status.status_tilt = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_tilt", recv_data);
+  statusMsg.status.status_pos = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_pos", recv_data);
+  // status_byte_3 (2103)
+  statusMsg.status.status_count = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_count", recv_data);
+  // status_byte_4 (2104)
+  statusMsg.status.status_kalmanfilter_settled = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_kalmanfilter_settled", recv_data);
+  statusMsg.status.status_kf_lat_stimulated = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_kf_lat_stimulated", recv_data);
+  statusMsg.status.status_kf_long_stimulated = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_kf_long_stimulated", recv_data);
+  statusMsg.status.status_kf_steady_state = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_kf_steady_state", recv_data);
+  statusMsg.status.status_speed = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_speed", recv_data);
+  statusMsg.status.status_ips_mode = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_ips_mode", recv_data);
+  // status_byte_5 (2105)
+  statusMsg.status.status_robot = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_robot", recv_data);
+  statusMsg.status.status_dualant_mode = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_dualant_mode", recv_data);
+}
+
+void ADMA2ROSParser::extractAdmaHeader(adma_ros_driver_msgs::msg::AdmaDataScaled &admaScaledMsg, std::array<char, 856> &recv_data)
+{
+  // genesys::AdmaHeader admaHeader;
+  // memcpy(&admaHeader, &recv_data, sizeof(admaHeader));
+  // admaScaledMsg.genesys_id = admaHeader.genesysid;
+  // std::stringstream ss;
+  // ss << int(admaHeader.headerversion[0]) << int(admaHeader.headerversion[1])
+  //    << int(admaHeader.headerversion[2]) << int(admaHeader.headerversion[3]);
+  //    admaScaledMsg.header_version = ss.str();
+  // ss.clear();
+  // ss.str("");
+  // admaScaledMsg.format_id = admaHeader.formatid;
+  // ss << int(admaHeader.formatversion[0]) << int(admaHeader.formatversion[1])
+  //    << int(admaHeader.formatversion[2]) << int(admaHeader.formatversion[3]);
+  // admaScaledMsg.format_version = ss.str();
+  // admaScaledMsg.serial_number = admaHeader.serialno;
+
+  // // fill dynamic header information
+  // admaScaledMsg.config_id = admaHeader.configid;
+  // admaScaledMsg.config_format = admaHeader.configformat;
+  // admaScaledMsg.config_version = admaHeader.configversion;
+  // admaScaledMsg.config_size = admaHeader.configsize;
+  // admaScaledMsg.byte_offset = admaHeader.byteoffset;
+  // admaScaledMsg.slice_size = admaHeader.slicesize;
+  // admaScaledMsg.slice_data = admaHeader.slicedata;
+}
+
+void ADMA2ROSParser::extractAdmaDataScaled(adma_ros_driver_msgs::msg::AdmaDataScaled &admaScaledMsg, std::array<char, 856> & recv_data)
+{
+  mapping_->loadVector3FromBuffer("data_scaled.acc_body_hr", recv_data, admaScaledMsg.acc_body_hr);
+  mapping_->loadVector3FromBuffer("data_scaled.rate_body_hr", recv_data, admaScaledMsg.rate_body_hr);
+  mapping_->loadVector3FromBuffer("data_scaled.rate_body", recv_data, admaScaledMsg.rate_body);
+  mapping_->loadVector3FromBuffer("data_scaled.rate_hor", recv_data, admaScaledMsg.rate_hor);
+  mapping_->loadVector3FromBuffer("data_scaled.acc_body", recv_data, admaScaledMsg.acc_body);
+  mapping_->loadVector3FromBuffer("data_scaled.acc_hor", recv_data, admaScaledMsg.acc_hor);
+
+  admaScaledMsg.ext_vel_an_x = mapping_->loadDataFromBuffer<int16_t, double>("data_scaled.ext_vel_an_x", recv_data);
+  admaScaledMsg.ext_vel_an_y = mapping_->loadDataFromBuffer<int16_t, double>("data_scaled.ext_vel_an_y", recv_data);
+  admaScaledMsg.ext_vel_dig_x = mapping_->loadDataFromBuffer<int16_t, double>("data_scaled.ext_vel_dig_x", recv_data);
+  admaScaledMsg.ext_vel_dig_y = mapping_->loadDataFromBuffer<int16_t, double>("data_scaled.ext_vel_dig_y", recv_data);
+  admaScaledMsg.ext_vel_dig_pulses_x = mapping_->loadDataFromBuffer<uint16_t, uint16_t>("data_scaled.ext_vel_dig_pulses_x", recv_data);
+  admaScaledMsg.ext_vel_dig_pulses_y = mapping_->loadDataFromBuffer<uint16_t, uint16_t>("data_scaled.ext_vel_dig_pulses_y", recv_data);
+  admaScaledMsg.ext_vel_x_corrected = mapping_->loadDataFromBuffer<int16_t, double>("data_scaled.ext_vel_x_corrected", recv_data);
+  admaScaledMsg.ext_vel_y_corrected = mapping_->loadDataFromBuffer<int16_t, double>("data_scaled.ext_vel_y_corrected", recv_data);
+  admaScaledMsg.inv_path_radius = mapping_->loadDataFromBuffer<int16_t, double>("data_scaled.inv_path_radius", recv_data);
+  admaScaledMsg.side_slip_angle = mapping_->loadDataFromBuffer<int16_t, double>("data_scaled.side_slip_angle", recv_data);
+  admaScaledMsg.dist_trav = mapping_->loadDataFromBuffer<uint32_t, double>("data_scaled.dist_trav", recv_data);
+  admaScaledMsg.trig_rising_1 = mapping_->loadDataFromBuffer<uint16_t, uint16_t>("data_scaled.trig_rising_1", recv_data);
+  admaScaledMsg.trig_falling_1 = mapping_->loadDataFromBuffer<uint16_t, uint16_t>("data_scaled.trig_falling_1", recv_data);
+  admaScaledMsg.trig_rising_2 = mapping_->loadDataFromBuffer<uint16_t, uint16_t>("data_scaled.trig_rising_2", recv_data);
+  admaScaledMsg.trig_falling_2 = mapping_->loadDataFromBuffer<uint16_t, uint16_t>("data_scaled.trig_falling_2", recv_data);
+  admaScaledMsg.trig_rising_3 = mapping_->loadDataFromBuffer<uint16_t, uint16_t>("data_scaled.trig_rising_3", recv_data);
+  admaScaledMsg.trig_falling_3 = mapping_->loadDataFromBuffer<uint16_t, uint16_t>("data_scaled.trig_falling_3", recv_data);
+  admaScaledMsg.trig_rising_4 = mapping_->loadDataFromBuffer<uint16_t, uint16_t>("data_scaled.trig_rising_4", recv_data);
+  admaScaledMsg.trig_falling_4 = mapping_->loadDataFromBuffer<uint16_t, uint16_t>("data_scaled.trig_falling_4", recv_data);
+  admaScaledMsg.system_ta = mapping_->loadDataFromBuffer<uint16_t, uint16_t>("data_scaled.system_ta", recv_data);
+  admaScaledMsg.system_temp = mapping_->loadDataFromBuffer<int16_t, double>("data_scaled.system_temp", recv_data);
+  admaScaledMsg.system_time_since_init = mapping_->loadDataFromBuffer<uint16_t, uint16_t>("data_scaled.system_time_since_init", recv_data);
+  admaScaledMsg.system_dsp_load = mapping_->loadDataFromBuffer<uint16_t, double>("data_scaled.system_dsp_load", recv_data);
+  admaScaledMsg.gnss_lat_abs = mapping_->loadDataFromBuffer<int32_t, double>("data_scaled.gnss_lat_abs", recv_data);
+  admaScaledMsg.gnss_long_abs = mapping_->loadDataFromBuffer<int32_t, double>("data_scaled.gnss_long_abs", recv_data);
+  admaScaledMsg.gnss_pos_rel_x = mapping_->loadDataFromBuffer<int32_t, double>("data_scaled.gnss_pos_rel_x", recv_data);
+  admaScaledMsg.gnss_pos_rel_y = mapping_->loadDataFromBuffer<int32_t, double>("data_scaled.gnss_pos_rel_y", recv_data);
+  admaScaledMsg.gnss_stddev_lat = mapping_->loadDataFromBuffer<uint16_t, double>("data_scaled.gnss_stddev_lat", recv_data);
+  admaScaledMsg.gnss_stddev_long = mapping_->loadDataFromBuffer<uint16_t, double>("data_scaled.gnss_stddev_long", recv_data);
+  admaScaledMsg.gnss_stddev_height = mapping_->loadDataFromBuffer<uint16_t, double>("data_scaled.gnss_stddev_height", recv_data);
+  admaScaledMsg.gnss_stddev_cog = mapping_->loadDataFromBuffer<uint16_t, double>("data_scaled.gnss_stddev_cog", recv_data);
+
+  mapping_->loadVector3FromBuffer("data_scaled.gnss_vel_frame", recv_data, admaScaledMsg.gnss_vel_frame);
+  admaScaledMsg.gnss_vel_latency = mapping_->loadDataFromBuffer<uint16_t, double>("data_scaled.gnss_vel_latency", recv_data);
+  mapping_->loadVector3FromBuffer("data_scaled.gnss_stddev_vel", recv_data, admaScaledMsg.gnss_stddev_vel);
+
+  admaScaledMsg.gnss_time_msec = mapping_->loadDataFromBuffer<uint32_t, uint32_t>("data_scaled.gnss_time_msec", recv_data);
+  admaScaledMsg.gnss_time_week = mapping_->loadDataFromBuffer<uint16_t, uint16_t>("data_scaled.gnss_time_week", recv_data);
+  admaScaledMsg.gnss_trigger = mapping_->loadDataFromBuffer<uint16_t, uint16_t>("data_scaled.trigger_gnss", recv_data);
+  admaScaledMsg.gnss_diffage = mapping_->loadDataFromBuffer<uint16_t, double>("data_scaled.gnss_diffage", recv_data);
+  admaScaledMsg.gnss_sats_used = mapping_->loadDataFromBuffer<unsigned char, int8_t>("data_scaled.gnss_sats_used", recv_data);
+  admaScaledMsg.gnss_sats_visible = mapping_->loadDataFromBuffer<unsigned char, int8_t>("data_scaled.gnss_sats_visible", recv_data);
+  admaScaledMsg.gnss_sats_dualant_used = mapping_->loadDataFromBuffer<unsigned char, int8_t>("data_scaled.gnss_sats_dualant_used", recv_data);
+  admaScaledMsg.gnss_sats_dualant_visible = mapping_->loadDataFromBuffer<unsigned char, int8_t>("data_scaled.gnss_sats_dualant_visible", recv_data);
+  admaScaledMsg.gnss_sats_single_freq = mapping_->loadDataFromBuffer<unsigned char, int8_t>("data_scaled.gnss_sats_single_freq", recv_data);
+  admaScaledMsg.gnss_sats_multi_freq = mapping_->loadDataFromBuffer<unsigned char, int8_t>("data_scaled.gnss_sats_multi_freq", recv_data);
+  admaScaledMsg.gnss_log_delay = mapping_->loadDataFromBuffer<unsigned char, int8_t>("data_scaled.gnss_log_delay", recv_data);
+  admaScaledMsg.gnss_receiver_load = mapping_->loadDataFromBuffer<unsigned char, double>("data_scaled.gnss_receiver_load", recv_data);
+  // admaScaledMsg.gnss_base_nr = mapping_->loadDataFromBuffer<unsigned char[4], std::string>("data_scaled.gnss_base_nr", recv_data);
+  admaScaledMsg.gnss_sats_dualant_multi_freq = mapping_->loadDataFromBuffer<unsigned char, int8_t>("data_scaled.gnss_sats_dualant_multi_freq", recv_data);
+  admaScaledMsg.ins_roll = mapping_->loadDataFromBuffer<int16_t, double>("data_scaled.ins_roll", recv_data);
+  admaScaledMsg.ins_pitch = mapping_->loadDataFromBuffer<int16_t, double>("data_scaled.ins_pitch", recv_data);
+  admaScaledMsg.ins_yaw = mapping_->loadDataFromBuffer<uint16_t, double>("data_scaled.ins_yaw", recv_data);
+  admaScaledMsg.gnss_cog = mapping_->loadDataFromBuffer<uint16_t, double>("data_scaled.gnss_cog", recv_data);
+  admaScaledMsg.gnss_height = mapping_->loadDataFromBuffer<int32_t, double>("data_scaled.gnss_height", recv_data);
+  admaScaledMsg.undulation = mapping_->loadDataFromBuffer<int16_t, double>("data_scaled.undulation", recv_data);
+  admaScaledMsg.gnss_dualant_time_msec = mapping_->loadDataFromBuffer<uint32_t, uint32_t>("data_scaled.gnss_dualant_time_msec", recv_data);
+  admaScaledMsg.gnss_dualant_time_week = mapping_->loadDataFromBuffer<uint16_t, uint16_t>("data_scaled.gnss_dualant_time_week", recv_data);
+  admaScaledMsg.gnss_dualant_heading = mapping_->loadDataFromBuffer<uint16_t, double>("data_scaled.gnss_dualant_heading", recv_data);
+  admaScaledMsg.gnss_dualant_pitch = mapping_->loadDataFromBuffer<int16_t, double>("data_scaled.gnss_dualant_pitch", recv_data);
+  admaScaledMsg.gnss_dualant_stddev_heading = mapping_->loadDataFromBuffer<unsigned char, double>("data_scaled.gnss_dualant_stddev_heading", recv_data);
+  admaScaledMsg.gnss_dualant_stddev_pitch = mapping_->loadDataFromBuffer<unsigned char, double>("data_scaled.gnss_dualant_stddev_pitch", recv_data);
+  admaScaledMsg.gnss_dualant_stddev_heading_hr = mapping_->loadDataFromBuffer<uint16_t, float>("data_scaled.gnss_dualant_stddev_heading_hr", recv_data);
+  admaScaledMsg.gnss_dualant_stddev_pitch_hr = mapping_->loadDataFromBuffer<uint16_t, float>("data_scaled.gnss_dualant_stddev_pitch_hr", recv_data);
+  admaScaledMsg.ins_height = mapping_->loadDataFromBuffer<int32_t, double>("data_scaled.ins_height", recv_data);
+  admaScaledMsg.ins_yaw_rel = mapping_->loadDataFromBuffer<uint16_t, double>("data_scaled.ins_yaw_rel", recv_data);
+  admaScaledMsg.ins_time_msec = mapping_->loadDataFromBuffer<uint32_t, uint32_t>("data_scaled.ins_time_msec", recv_data);
+  admaScaledMsg.ins_time_week = mapping_->loadDataFromBuffer<uint16_t, uint16_t>("data_scaled.ins_time_week", recv_data);
+  admaScaledMsg.leap_seconds = mapping_->loadDataFromBuffer<int16_t, int16_t>("data_scaled.leap_seconds", recv_data);
+  admaScaledMsg.ins_lat_abs = mapping_->loadDataFromBuffer<int32_t, double>("data_scaled.ins_lat_abs", recv_data);
+  admaScaledMsg.ins_long_abs = mapping_->loadDataFromBuffer<int32_t, double>("data_scaled.ins_long_abs", recv_data);
+  admaScaledMsg.ins_pos_rel_x = mapping_->loadDataFromBuffer<int32_t, double>("data_scaled.ins_pos_rel_x", recv_data);
+  admaScaledMsg.ins_pos_rel_y = mapping_->loadDataFromBuffer<int32_t, double>("data_scaled.ins_pos_rel_y", recv_data);
+
+  mapping_->loadVector3FromBuffer("data_scaled.ins_vel_hor", recv_data, admaScaledMsg.ins_vel_hor);
+  admaScaledMsg.ins_stddev_lat = mapping_->loadDataFromBuffer<uint16_t, double>("data_scaled.ins_stddev_lat", recv_data);
+  admaScaledMsg.ins_stddev_long = mapping_->loadDataFromBuffer<uint16_t, double>("data_scaled.ins_stddev_long", recv_data);
+  admaScaledMsg.ins_stddev_height = mapping_->loadDataFromBuffer<uint16_t, double>("data_scaled.ins_stddev_height", recv_data);
+  mapping_->loadVector3FromBuffer("data_scaled.ins_vel_frame", recv_data, admaScaledMsg.ins_vel_frame);
+
+  admaScaledMsg.ins_stddev_roll = mapping_->loadDataFromBuffer<int8_t, double>("data_scaled.ins_stddev_roll", recv_data);
+  admaScaledMsg.ins_stddev_pitch = mapping_->loadDataFromBuffer<int8_t, double>("data_scaled.ins_stddev_pitch", recv_data);
+  admaScaledMsg.ins_stddev_yaw = mapping_->loadDataFromBuffer<int8_t, double>("data_scaled.ins_stddev_yaw", recv_data);
+  admaScaledMsg.an1 = mapping_->loadDataFromBuffer<int16_t, double>("data_scaled.an1", recv_data);
+  admaScaledMsg.an2 = mapping_->loadDataFromBuffer<int16_t, double>("data_scaled.an2", recv_data);
+  admaScaledMsg.an3 = mapping_->loadDataFromBuffer<int16_t, double>("data_scaled.an3", recv_data);
+  admaScaledMsg.an4 = mapping_->loadDataFromBuffer<int16_t, double>("data_scaled.an4", recv_data);
+  admaScaledMsg.kf_lat_stimulated = mapping_->loadDataFromBuffer<uint8_t, uint8_t>("data_scaled.kf_lat_stimulated", recv_data);
+  admaScaledMsg.kf_long_stimulated = mapping_->loadDataFromBuffer<uint8_t, uint8_t>("data_scaled.kf_long_stimulated", recv_data);
+  admaScaledMsg.kf_steady_state = mapping_->loadDataFromBuffer<uint8_t, uint8_t>("data_scaled.kf_steady_state", recv_data);
+  admaScaledMsg.gnss_receiver_error = mapping_->loadDataFromBuffer<uint32_t, uint32_t>("data_scaled.gnss_receiver_error", recv_data);
+  admaScaledMsg.gnss_receiver_status = mapping_->loadDataFromBuffer<uint32_t, uint32_t>("data_scaled.gnss_receiver_status", recv_data);
+}
+
+void ADMA2ROSParser::extractPOIs(adma_ros_driver_msgs::msg::AdmaDataScaled &admaScaledMsg, std::array<char, 856> &recv_data)
+{
+  // first create a array for all available POI
+  std::array<adma_ros_driver_msgs::msg::POI, 8> pois;
+  // then fill the POIs with data
+  for (size_t i = 0; i < 8; i++) {
+    adma_ros_driver_msgs::msg::POI new_poi;
+    std::string poiName = "poi_" + std::to_string(i+1);
+    mapping_->loadVector3FromBuffer("data_scaled." + poiName + ".acc_body", recv_data, new_poi.acc_body);
+    mapping_->loadVector3FromBuffer("data_scaled." + poiName + ".acc_hor", recv_data, new_poi.acc_hor);
+    mapping_->loadVector3FromBuffer("data_scaled." + poiName + ".ins_vel_hor", recv_data, new_poi.ins_vel_hor);
+    new_poi.inv_path_radius = mapping_->loadDataFromBuffer<int16_t, double>("data_scaled." + poiName + ".inv_path_radius", recv_data);
+    new_poi.side_slip_angle = mapping_->loadDataFromBuffer<int16_t, double>("data_scaled." + poiName + ".side_slip_angle", recv_data);
+    new_poi.dist_trav = mapping_->loadDataFromBuffer<uint32_t, double>("data_scaled." + poiName + ".dist_trav", recv_data);
+    new_poi.ins_height = mapping_->loadDataFromBuffer<int32_t, double>("data_scaled." + poiName + ".ins_height", recv_data);
+    new_poi.ins_lat_abs = mapping_->loadDataFromBuffer<int32_t, double>("data_scaled." + poiName + ".ins_lat_abs", recv_data);
+    new_poi.ins_long_abs = mapping_->loadDataFromBuffer<int32_t, double>("data_scaled." + poiName + ".ins_long_abs", recv_data);
+    new_poi.ins_pos_rel_x = mapping_->loadDataFromBuffer<int32_t, double>("data_scaled." + poiName + ".ins_pos_rel_x", recv_data);
+    new_poi.ins_pos_rel_y = mapping_->loadDataFromBuffer<int32_t, double>("data_scaled." + poiName + ".ins_pos_rel_y", recv_data);
+    pois[i] = new_poi;
+  }
+  // finally set the filled POI data to the whole ROS msg
+  admaScaledMsg.poi_1 = pois[0];
+  admaScaledMsg.poi_2 = pois[1];
+  admaScaledMsg.poi_3 = pois[2];
+  admaScaledMsg.poi_4 = pois[3];
+  admaScaledMsg.poi_5 = pois[4];
+  admaScaledMsg.poi_6 = pois[5];
+  admaScaledMsg.poi_7 = pois[6];
+  admaScaledMsg.poi_8 = pois[7];
+  
 }
 
 void ADMA2ROSParser::mapAdmaMessageToROS(
@@ -81,9 +358,9 @@ void ADMA2ROSParser::parseStaticHeader(
   ss.str("");
   ros_msg.formatid = static_header.formatid;
   //TODO: this value is parsed wrong?!
-  ss << int(static_header.formatversion[0]) << int(static_header.formatversion[1])
-     << int(static_header.formatversion[2]) << int(static_header.formatversion[3]);
-  ros_msg.formatversion = ss.str();
+  // ss << int(static_header.formatversion[0]) << int(static_header.formatversion[1])
+  //    << int(static_header.formatversion[2]) << int(static_header.formatversion[3]);
+  // ros_msg.formatversion = ss.str();
   ros_msg.serialno = static_header.serialno;
 }
 
@@ -562,7 +839,7 @@ void ADMA2ROSParser::extractNavSatFix(
   // read POI specific height for NavSatFix msg
   nav_ros_msg.altitude = desiredSource == 0 ? ros_msg.ins_height : pois[desiredSource - 1].ins_height;
   nav_ros_msg.latitude = desiredSource == 0 ? ros_msg.ins_lat_abs : pois[desiredSource - 1].ins_lat_abs;
-  nav_ros_msg.longitude = desiredSource == 0 ? ros_msg.ins_long_abs : pois[desiredSource - 1].ins_lon_abs;
+  nav_ros_msg.longitude = desiredSource == 0 ? ros_msg.ins_long_abs : pois[desiredSource - 1].ins_long_abs;
   // add undulation to get WGS84 height for ROS standard
   nav_ros_msg.altitude += ros_msg.undulation;
   nav_ros_msg.position_covariance[0] = std::pow(ros_msg.ins_stddev_lat, 2);

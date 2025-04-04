@@ -1,21 +1,6 @@
 std_msgs/Header header
 
-# adma static header
-string genesys_id
-string header_version
-uint32 format_id
-string format_version
-uint32 serial_number
-uint32 alias
-
-# adma dynamic header
-uint32 config_id
-uint32 config_format
-uint32 config_version
-uint32 config_size
-uint32 byte_offset
-uint32 slice_size
-uint32 slice_data
+AdmanetHeader adma_header
 
 # sensors body acc in g
 geometry_msgs/Vector3 acc_body_hr

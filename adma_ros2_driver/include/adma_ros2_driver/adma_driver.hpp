@@ -32,7 +32,7 @@ private:
   size_t len_ = 0;
   /** \brief Check the timings */
   bool performance_check_ = true;
-  std::string protocol_version_;
+  bool setupDone = false;
 
   // subscriber
   rclcpp::Subscription<adma_ros_driver_msgs::msg::AdmaDataRaw>::SharedPtr subRawData_;
@@ -59,6 +59,7 @@ private:
   std::string odometry_child_frame_;
 
   ADMA2ROSParser * parser_;
+  ADMA2ROSParser * newParser_;
 
   // yaw offset angle if the odometry should be rotated by a fixed angle
   double odometry_yaw_offset_;

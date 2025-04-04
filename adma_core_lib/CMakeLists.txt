@@ -5,7 +5,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS YES)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD 17)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -15,6 +15,10 @@ endif()
 # find ROS dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(tinyxml2_vendor QUIET)
+find_package(TinyXML2 REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(adma_ros_driver_msgs REQUIRED)
 
 include_directories(include)
 
@@ -22,11 +26,16 @@ include_directories(include)
 add_library(${PROJECT_NAME}_node SHARED
   src/network/udp_socket.cpp
   src/parser/parser_utils.cpp
+  src/parser/xml_parser.cpp
+  src/parser/mapping.cpp
 )
 
 # link ROS deps to this package
 ament_target_dependencies(${PROJECT_NAME}_node
   rclcpp
+  TinyXML2
+  geometry_msgs
+  adma_ros_driver_msgs
 )
 
 install(TARGETS ${PROJECT_NAME}_node

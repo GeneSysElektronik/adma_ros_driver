@@ -1,0 +1,4326 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- GeneSys Elektronik GmbH -->
+<!-- VERSION "ETH-Message-Format: ADMA-Data; Format Version: 3.3.4; Datei Version: 30.10.0.50" -->
+<MessageFormatDefinition>
+  <FormatHeader>
+    <GeneSysID>GBIN</GeneSysID>
+    <DynamicHeaderVersion>1.0.1.0</DynamicHeaderVersion>
+    <FormatID>10003000</FormatID>
+    <FormatVersion>3.3.4.0</FormatVersion>
+    <FormatName>ADMAnet</FormatName>
+    <HeaderSize>96</HeaderSize>
+    <DataSize>760</DataSize>
+  </FormatHeader>
+  <MeasurementData>
+    <Package Name="Status" PackageID="2000">
+      <Description>Status</Description>
+      <Channel Name="Status_Byte_0" ChannelID="2100">
+        <Description>Combination of the following 1-byte individual status bits into a 1-byte block summarised</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>255</Max>
+        <ByteOffset>96</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="Status_GNSS_Mode" ChannelID="2000">
+        <Description>8=DGNSS precise, 4=DGNSS coarse, 2=single GNSS, 1=no GNSS-Data</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>15</Max>
+        <ByteOffset>96</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>4</LengthBits>
+      </Channel>
+      <Channel Name="Status_Standstill" ChannelID="2001">
+        <Description>1=Vehicle at stop</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>96</ByteOffset>
+        <BitOffset>4</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Status_Skidding" ChannelID="2002">
+        <Description>1=Vehicle is skidding </Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>96</ByteOffset>
+        <BitOffset>5</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Status_External_Vel_Out" ChannelID="2004">
+        <Description>1=External velocity deviates from system velocity</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>96</ByteOffset>
+        <BitOffset>7</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Status_Byte_1" ChannelID="2101">
+        <Description>Combination of the following 1-byte individual status bits into a 1-byte block summarised</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>255</Max>
+        <ByteOffset>97</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="Status_Trig_GNSS" ChannelID="2005">
+        <Description>1=GNSS receiver was sampling</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>97</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Status_Signal_IN3" ChannelID="2006">
+        <Description>1=Signal was detected</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>97</ByteOffset>
+        <BitOffset>1</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Status_Signal_IN2" ChannelID="2007">
+        <Description>1=Signal was detected</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>97</ByteOffset>
+        <BitOffset>2</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Status_Signal_IN1" ChannelID="2008">
+        <Description>1=Signal was detected</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>97</ByteOffset>
+        <BitOffset>3</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Status_Alignment" ChannelID="2009">
+        <Description>1=prealignment (at start)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>97</ByteOffset>
+        <BitOffset>4</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Status_AHRS_INS" ChannelID="2010">
+        <Description>0=IMU-Modus, 1=AHRS-Modus</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>97</ByteOffset>
+        <BitOffset>5</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Status_Dead_reckoning" ChannelID="2011">
+        <Description>1=dead reckoning operation</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>97</ByteOffset>
+        <BitOffset>6</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Status_SyncLock" ChannelID="2012">
+        <Description>1=ADMA-Time is adjusted</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>97</ByteOffset>
+        <BitOffset>7</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Status_Byte_2" ChannelID="2102">
+        <Description>Combination of the following 1-byte individual status bits into a 1-byte block summarised</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>255</Max>
+        <ByteOffset>98</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="Status_EVK_activ" ChannelID="2013">
+        <Description>External-Velocity-Kalman filter active, control criteria fulfilled</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>98</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Status_EVK_Estimates" ChannelID="2014">
+        <Description>External-Velocity-Kalman filter has found valid estimates</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>98</ByteOffset>
+        <BitOffset>1</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Status_Heading_executed" ChannelID="2015">
+        <Description>Initialisation of heading executed</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>98</ByteOffset>
+        <BitOffset>2</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Status_Config_Changed" ChannelID="2016">
+        <Description>Indicate a change of the ADMA configuration during measurement mode</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>98</ByteOffset>
+        <BitOffset>3</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Status_Tilt" ChannelID="2017">
+        <Description>tilt quality 0=red, 1=yellow, 2=green</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>3</Max>
+        <ByteOffset>98</ByteOffset>
+        <BitOffset>4</BitOffset>
+        <LengthBits>2</LengthBits>
+      </Channel>
+      <Channel Name="Status_Pos" ChannelID="2018">
+        <Description>position quality 0=red, 1=yellow, 2=green</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>3</Max>
+        <ByteOffset>98</ByteOffset>
+        <BitOffset>6</BitOffset>
+        <LengthBits>2</LengthBits>
+      </Channel>
+      <Channel Name="Status_Byte_3" ChannelID="2103">
+        <Description>Alignment Time countdown at measurement start, Data record count 0-255 continuously at measurement</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>255</Max>
+        <ByteOffset>99</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="Status_Count" ChannelID="2019">
+        <Description>Alignment Time countdown at measurement start, Data record count 0-255 continuously at measurement</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>255</Max>
+        <ByteOffset>99</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="Status_Byte_4" ChannelID="2104">
+        <Description>Combination of the following 1-byte individual status bits into a 1-byte block summarised</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>255</Max>
+        <ByteOffset>100</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="Status_Kalmanfilter_settled" ChannelID="2020">
+        <Description>1 = Kalman filter settled in all axes</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>100</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Status_KF_Lat_stimulated" ChannelID="2021">
+        <Description>1 = Kalman filter settled in lateral axis</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>100</ByteOffset>
+        <BitOffset>1</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Status_KF_Long_stimulated" ChannelID="2022">
+        <Description>1 = Kalman filter settled in longitudinal axis</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>100</ByteOffset>
+        <BitOffset>2</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Status_KF_steady_state" ChannelID="2023">
+        <Description>1 = Kalman filter bias estimates settled</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>100</ByteOffset>
+        <BitOffset>3</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Status_Speed" ChannelID="2024">
+        <Description>Speed quality 0=red, 1=yellow, 2=green</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>3</Max>
+        <ByteOffset>100</ByteOffset>
+        <BitOffset>4</BitOffset>
+        <LengthBits>2</LengthBits>
+      </Channel>
+      <Channel Name="Status_Byte_5" ChannelID="2105">
+        <Description>Combination of the following 1-byte individual status bits into a 1-byte block summarised</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>255</Max>
+        <ByteOffset>101</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="Status_Robot" ChannelID="2027">
+        <Description>9 = RTK Mode, 8 = DGNSS Mode, 7 = GNSS Mode, 2 = Locking: GNSS ok but no Init and no TimeSynclock; 3 = GNSS Outage, 0 = Error</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>15</Max>
+        <ByteOffset>101</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>4</LengthBits>
+      </Channel>
+      <Channel Name="Status_Byte_6" ChannelID="2106">
+        <Description>Combination of the following 1-byte individual status bits into a 1-byte block summarised</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>255</Max>
+        <ByteOffset>102</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="Status_Byte_7" ChannelID="2107">
+        <Description>Combination of the following 1-byte individual status bits into a 1-byte block summarised</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>255</Max>
+        <ByteOffset>103</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Error_and_Warning" PackageID="2001">
+      <Description>Error and Warning</Description>
+      <Channel Name="Error_Byte_0" ChannelID="2600">
+        <Description>Combination of the following 1-byte individual status bits into a 1-byte block summarised</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>255</Max>
+        <ByteOffset>104</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="Error_Hardware" ChannelID="2500">
+        <Description>HW Error of Gyro, Accelerometer, External velocity, GNSS Receiver - insufficient supply voltage.</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>15</Max>
+        <ByteOffset>104</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>4</LengthBits>
+      </Channel>
+      <Channel Name="Error_Gyro_HW" ChannelID="2501">
+        <Description>
+        </Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>104</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Error_Accel_HW" ChannelID="2502">
+        <Description>HW error of accelerometer</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>104</ByteOffset>
+        <BitOffset>1</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Error_Ext_Speed_HW" ChannelID="2503">
+        <Description>HW error of external speed signal - Missing pulses from external sensor</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>104</ByteOffset>
+        <BitOffset>2</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Error_GNSS_HW" ChannelID="2504">
+        <Description>HW error of GNSS Receiver</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>104</ByteOffset>
+        <BitOffset>3</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Error_Misc1" ChannelID="2505">
+        <Description>Miscellaneous HW Errors. Definition see TechDoc</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>15</Max>
+        <ByteOffset>104</ByteOffset>
+        <BitOffset>4</BitOffset>
+        <LengthBits>4</LengthBits>
+      </Channel>
+      <Channel Name="Error_Data_Bus_Checksum" ChannelID="2506">
+        <Description>Serious data bus error</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>104</ByteOffset>
+        <BitOffset>4</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Error_EEProm" ChannelID="2507">
+        <Description>EEProm error (no calibration data)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>104</ByteOffset>
+        <BitOffset>5</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Error_Xmit" ChannelID="2508">
+        <Description>Transmission error (RS232)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>104</ByteOffset>
+        <BitOffset>6</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Error_CMD" ChannelID="2509">
+        <Description>Command error</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>104</ByteOffset>
+        <BitOffset>7</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Error_Byte_1" ChannelID="2601">
+        <Description>Combination of the following 1-byte individual status bits into a 1-byte block summarised</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>255</Max>
+        <ByteOffset>105</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="Error_Misc2" ChannelID="2510">
+        <Description>Miscellaneous HW Errors. Definition see TechDoc</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>15</Max>
+        <ByteOffset>105</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>4</LengthBits>
+      </Channel>
+      <Channel Name="Error_Data_Bus" ChannelID="2511">
+        <Description>Serious data bus error</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>105</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Error_CAN_Bus" ChannelID="2512">
+        <Description>Error during CAN operation</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>105</ByteOffset>
+        <BitOffset>1</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Error_Num" ChannelID="2514">
+        <Description>Numerical error</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>105</ByteOffset>
+        <BitOffset>3</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Error_Misc3" ChannelID="2515">
+        <Description>Miscellaneous HW Errors. Definition see TechDoc</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>15</Max>
+        <ByteOffset>105</ByteOffset>
+        <BitOffset>4</BitOffset>
+        <LengthBits>4</LengthBits>
+      </Channel>
+      <Channel Name="Error_Temp_Warning" ChannelID="2516">
+        <Description>Temperature warning</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>105</ByteOffset>
+        <BitOffset>4</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Error_Reduced_Accuracy" ChannelID="2517">
+        <Description>Reduced sensor accuracy</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>105</ByteOffset>
+        <BitOffset>5</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Error_Range_Max" ChannelID="2518">
+        <Description>Measuring range trespassed / measurement invalid</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>105</ByteOffset>
+        <BitOffset>6</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Error_Byte_2" ChannelID="2602">
+        <Description>Combination of the following 1-byte individual status bits into a 1-byte block summarised</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>255</Max>
+        <ByteOffset>106</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="Warn_GNSS" ChannelID="2520">
+        <Description>Warnings GNSS</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>15</Max>
+        <ByteOffset>106</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>4</LengthBits>
+      </Channel>
+      <Channel Name="Warn_GNSS_no_solution" ChannelID="2521">
+        <Description>GNSS cannot calculate position</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>106</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Warn_GNSS_Vel_ignored" ChannelID="2522">
+        <Description>GNSS Velocity seems not correct - Data ignored</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>106</ByteOffset>
+        <BitOffset>1</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Warn_GNSS_Pos_ignored" ChannelID="2523">
+        <Description>GNSS Position seems not correct - Data ignored</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>106</ByteOffset>
+        <BitOffset>2</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Warn_GNSS_unable_to_cfg" ChannelID="2524">
+        <Description>GNSS unable to configure, still booting</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>106</ByteOffset>
+        <BitOffset>3</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Warn_Misc1" ChannelID="2525">
+        <Description>Miscellaneous warnings, definition see TechDoc</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>15</Max>
+        <ByteOffset>106</ByteOffset>
+        <BitOffset>4</BitOffset>
+        <LengthBits>4</LengthBits>
+      </Channel>
+      <Channel Name="Warn_speed_off" ChannelID="2526">
+        <Description>External speed signal not valid</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>106</ByteOffset>
+        <BitOffset>4</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Warn_GNSS_DualAnt_ignored" ChannelID="2528">
+        <Description>GNSS DualAnt seems not correct - Data ignored</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>106</ByteOffset>
+        <BitOffset>5</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="Error_Byte_3" ChannelID="2603">
+        <Description>Combination of the following 1-byte individual status bits into a 1-byte block summarised</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>255</Max>
+        <ByteOffset>107</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="Error_HW_Sticky" ChannelID="2529">
+        <Description>Hardware Error counter</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>107</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Sensors_body_X" PackageID="3000">
+      <Description>Sensors body X</Description>
+      <Channel Name="Acc_Body_HR_X" ChannelID="3000">
+        <Description>Accel high resolution in X, Body</Description>
+        <Scale>0.0001</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-10</Min>
+        <Max>10</Max>
+        <ByteOffset>112</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="Rate_Body_HR_X" ChannelID="3001">
+        <Description>Rate high resolution in X, Body </Description>
+        <Scale>0.0001</Scale>
+        <Unit>°/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-320</Min>
+        <Max>320</Max>
+        <ByteOffset>116</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Sensors_body_Y" PackageID="3001">
+      <Description>Sensors body Y</Description>
+      <Channel Name="Acc_Body_HR_Y" ChannelID="3002">
+        <Description>Accel high resolution in Y, Body</Description>
+        <Scale>0.0001</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-10</Min>
+        <Max>10</Max>
+        <ByteOffset>120</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="Rate_Body_HR_Y" ChannelID="3003">
+        <Description>Rate high resolution in Y, Body </Description>
+        <Scale>0.0001</Scale>
+        <Unit>°/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-320</Min>
+        <Max>320</Max>
+        <ByteOffset>124</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Sensors_body_Z" PackageID="3002">
+      <Description>Sensors body Z</Description>
+      <Channel Name="Acc_Body_HR_Z" ChannelID="3004">
+        <Description>Accel high resolution in Z, Body</Description>
+        <Scale>0.0001</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-10</Min>
+        <Max>10</Max>
+        <ByteOffset>128</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="Rate_Body_HR_Z" ChannelID="3005">
+        <Description>Rate high resolution in Z, Body </Description>
+        <Scale>0.0001</Scale>
+        <Unit>°/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-320</Min>
+        <Max>320</Max>
+        <ByteOffset>132</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Rates_body" PackageID="3003">
+      <Description>Rates body</Description>
+      <Channel Name="Rate_Body_X" ChannelID="3006">
+        <Description>Rate in X, Body</Description>
+        <Scale>0.01</Scale>
+        <Unit>°/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-320</Min>
+        <Max>320</Max>
+        <ByteOffset>136</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Rate_Body_Y" ChannelID="3007">
+        <Description>Rate in Y, Body</Description>
+        <Scale>0.01</Scale>
+        <Unit>°/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-320</Min>
+        <Max>320</Max>
+        <ByteOffset>138</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Rate_Body_Z" ChannelID="3008">
+        <Description>Rate in Z, Body</Description>
+        <Scale>0.01</Scale>
+        <Unit>°/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-320</Min>
+        <Max>320</Max>
+        <ByteOffset>140</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Rates_horizontal" PackageID="3004">
+      <Description>Rates horizontal</Description>
+      <Channel Name="Rate_Hor_X" ChannelID="3010">
+        <Description>Rate in X, Horizontal, longitudinal</Description>
+        <Scale>0.01</Scale>
+        <Unit>°/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-320</Min>
+        <Max>320</Max>
+        <ByteOffset>144</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Rate_Hor_Y" ChannelID="3011">
+        <Description>Rate in Y, Horizontal, lateral</Description>
+        <Scale>0.01</Scale>
+        <Unit>°/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-320</Min>
+        <Max>320</Max>
+        <ByteOffset>146</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Rate_Hor_Z" ChannelID="3012">
+        <Description>Rate in Z, Horizontal, vertical</Description>
+        <Scale>0.01</Scale>
+        <Unit>°/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-320</Min>
+        <Max>320</Max>
+        <ByteOffset>148</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Accelerations_body" PackageID="3005">
+      <Description>Accelerations body</Description>
+      <Channel Name="Acc_Body_X" ChannelID="3014">
+        <Description>Accel in X, Body, Measuring reference point</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>152</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Body_Y" ChannelID="3015">
+        <Description>Accel in Y, Body, Measuring reference point</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>154</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Body_Z" ChannelID="3016">
+        <Description>Accel in Z, Body, Measuring reference point</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>156</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Accelerations_horizontal" PackageID="3006">
+      <Description>Accelerations horizontal</Description>
+      <Channel Name="Acc_Hor_X" ChannelID="3018">
+        <Description>Accel in X, Horizontal, longitudinal, Measuring reference point</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>160</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Hor_Y" ChannelID="3019">
+        <Description>Accel in Y, Horizontal, lateral, Measuring reference point</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>162</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Hor_Z" ChannelID="3020">
+        <Description>Accel in Z, Horizontal, vertical, Measuring reference point</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>164</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Accelerations_POI1_body" PackageID="3007">
+      <Description>Accelerations POI1 body</Description>
+      <Channel Name="Acc_Body_X_POI1" ChannelID="3022">
+        <Description>Accel in X, Body, at POI1</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>168</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Body_Y_POI1" ChannelID="3023">
+        <Description>Accel in Y, Body, at POI1</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>170</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Body_Z_POI1" ChannelID="3024">
+        <Description>Accel in Z, Body, at POI1</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>172</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Accelerations_POI2_body" PackageID="3008">
+      <Description>Accelerations POI2 body</Description>
+      <Channel Name="Acc_Body_X_POI2" ChannelID="3026">
+        <Description>Accel in X, Body, at POI2</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>176</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Body_Y_POI2" ChannelID="3027">
+        <Description>Accel in Y, Body, at POI2</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>178</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Body_Z_POI2" ChannelID="3028">
+        <Description>Accel in Z, Body, at POI2</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>180</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Accelerations_POI3_body" PackageID="3009">
+      <Description>Accelerations POI3 body</Description>
+      <Channel Name="Acc_Body_X_POI3" ChannelID="3030">
+        <Description>Accel in X, Body, at POI3</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>184</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Body_Y_POI3" ChannelID="3031">
+        <Description>Accel in Y, Body, at POI3</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>186</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Body_Z_POI3" ChannelID="3032">
+        <Description>Accel in Z, Body, at POI3</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>188</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Accelerations_POI4_body" PackageID="3010">
+      <Description>Accelerations POI4 body</Description>
+      <Channel Name="Acc_Body_X_POI4" ChannelID="3034">
+        <Description>Accel in X, Body, at POI4</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>192</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Body_Y_POI4" ChannelID="3035">
+        <Description>Accel in Y, Body, at POI4</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>194</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Body_Z_POI4" ChannelID="3036">
+        <Description>Accel in Z, Body, at POI4</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>196</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Accelerations_POI5_body" PackageID="3011">
+      <Description>Accelerations POI5 body</Description>
+      <Channel Name="Acc_Body_X_POI5" ChannelID="3038">
+        <Description>Accel in X, Body, at POI5</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>200</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Body_Y_POI5" ChannelID="3039">
+        <Description>Accel in Y, Body, at POI5</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>202</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Body_Z_POI5" ChannelID="3040">
+        <Description>Accel in Z, Body, at POI5</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>204</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Accelerations_POI6_body" PackageID="3012">
+      <Description>Accelerations POI6 body</Description>
+      <Channel Name="Acc_Body_X_POI6" ChannelID="3042">
+        <Description>Accel in X, Body, at POI6</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>208</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Body_Y_POI6" ChannelID="3043">
+        <Description>Accel in Y, Body, at POI6</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>210</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Body_Z_POI6" ChannelID="3044">
+        <Description>Accel in Z, Body, at POI6</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>212</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Accelerations_POI7_body" PackageID="3013">
+      <Description>Accelerations POI7 body</Description>
+      <Channel Name="Acc_Body_X_POI7" ChannelID="3046">
+        <Description>Accel in X, Body, at POI7</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>216</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Body_Y_POI7" ChannelID="3047">
+        <Description>Accel in Y, Body, at POI7</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>218</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Body_Z_POI7" ChannelID="3048">
+        <Description>Accel in Z, Body, at POI7</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>220</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Accelerations_POI8_body" PackageID="3014">
+      <Description>Accelerations POI8 body</Description>
+      <Channel Name="Acc_Body_X_POI8" ChannelID="3050">
+        <Description>Accel in X, Body, at POI8</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>224</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Body_Y_POI8" ChannelID="3051">
+        <Description>Accel in Y, Body, at POI8</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>226</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Body_Z_POI8" ChannelID="3052">
+        <Description>Accel in Z, Body, at POI8</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>228</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Accelerations_POI1_horizontal" PackageID="3015">
+      <Description>Accelerations POI1 horizontal</Description>
+      <Channel Name="Acc_Hor_X_POI1" ChannelID="3054">
+        <Description>Accel in X, Horizontal, longitudinal, at POI1</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>232</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Hor_Y_POI1" ChannelID="3055">
+        <Description>Accel in Y, Horizontal, lateral, at POI1</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>234</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Hor_Z_POI1" ChannelID="3056">
+        <Description>Accel in Z, Horizontal, vertical, at POI1</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>236</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Accelerations_POI2_horizontal" PackageID="3016">
+      <Description>Accelerations POI2 horizontal</Description>
+      <Channel Name="Acc_Hor_X_POI2" ChannelID="3058">
+        <Description>Accel in X, Horizontal, longitudinal, at POI2</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>240</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Hor_Y_POI2" ChannelID="3059">
+        <Description>Accel in Y, Horizontal, lateral, at POI2</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>242</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Hor_Z_POI2" ChannelID="3060">
+        <Description>Accel in Z, Horizontal, vertical, at POI2</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>244</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Accelerations_POI3_horizontal" PackageID="3017">
+      <Description>Accelerations POI3 horizontal</Description>
+      <Channel Name="Acc_Hor_X_POI3" ChannelID="3062">
+        <Description>Accel in X, Horizontal, longitudinal, at POI3</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>248</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Hor_Y_POI3" ChannelID="3063">
+        <Description>Accel in Y, Horizontal, lateral, at POI3</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>250</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Hor_Z_POI3" ChannelID="3064">
+        <Description>Accel in Z, Horizontal, vertical, at POI3</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>252</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Accelerations_POI4_horizontal" PackageID="3018">
+      <Description>Accelerations POI4 horizontal</Description>
+      <Channel Name="Acc_Hor_X_POI4" ChannelID="3066">
+        <Description>Accel in X, Horizontal, longitudinal, at POI4</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>256</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Hor_Y_POI4" ChannelID="3067">
+        <Description>Accel in Y, Horizontal, lateral, at POI4</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>258</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Hor_Z_POI4" ChannelID="3068">
+        <Description>Accel in Z, Horizontal, vertical, at POI4</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>260</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Accelerations_POI5_horizontal" PackageID="3019">
+      <Description>Accelerations POI5 horizontal</Description>
+      <Channel Name="Acc_Hor_X_POI5" ChannelID="3070">
+        <Description>Accel in X, Horizontal, longitudinal, at POI5</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>264</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Hor_Y_POI5" ChannelID="3071">
+        <Description>Accel in Y, Horizontal, lateral, at POI5</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>266</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Hor_Z_POI5" ChannelID="3072">
+        <Description>Accel in Z, Horizontal, vertical, at POI5</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>268</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Accelerations_POI6_horizontal" PackageID="3020">
+      <Description>Accelerations POI6 horizontal</Description>
+      <Channel Name="Acc_Hor_X_POI6" ChannelID="3074">
+        <Description>Accel in X, Horizontal, longitudinal, at POI6</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>272</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Hor_Y_POI6" ChannelID="3075">
+        <Description>Accel in Y, Horizontal, lateral, at POI6</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>274</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Hor_Z_POI6" ChannelID="3076">
+        <Description>Accel in Z, Horizontal, vertical, at POI6</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>276</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Accelerations_POI7_horizontal" PackageID="3021">
+      <Description>Accelerations POI7 horizontal</Description>
+      <Channel Name="Acc_Hor_X_POI7" ChannelID="3078">
+        <Description>Accel in X, Horizontal, longitudinal, at POI7</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>280</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Hor_Y_POI7" ChannelID="3079">
+        <Description>Accel in Y, Horizontal, lateral, at POI7</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>282</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Hor_Z_POI7" ChannelID="3080">
+        <Description>Accel in Z, Horizontal, vertical, at POI7</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>284</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Accelerations_POI8_horizontal" PackageID="3022">
+      <Description>Accelerations POI8 horizontal</Description>
+      <Channel Name="Acc_Hor_X_POI8" ChannelID="3082">
+        <Description>Accel in X, Horizontal, longitudinal, at POI8</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>288</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Hor_Y_POI8" ChannelID="3083">
+        <Description>Accel in Y, Horizontal, lateral, at POI8</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>290</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Acc_Hor_Z_POI8" ChannelID="3084">
+        <Description>Accel in Z, Horizontal, vertical, at POI8</Description>
+        <Scale>0.0004</Scale>
+        <Unit>g</Unit>
+        <DataType>INT</DataType>
+        <Min>-13.1</Min>
+        <Max>13.1</Max>
+        <ByteOffset>292</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="External_Velocity_Analog" PackageID="3023">
+      <Description>External Velocity Analog</Description>
+      <Channel Name="Ext_Vel_An_X" ChannelID="3086">
+        <Description>external Velocity (analog raw), longitudinal</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>296</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Ext_Vel_An_Y" ChannelID="3087">
+        <Description>external Velocity (analog raw), lateral</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>298</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="External_Velocity_Digital_Pulses" PackageID="3024">
+      <Description>External Velocity Digital Pulses</Description>
+      <Channel Name="Ext_Vel_Dig_X" ChannelID="3090">
+        <Description>external Velocity (digital raw), longitudinal</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>304</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Ext_Vel_Dig_Y" ChannelID="3091">
+        <Description>external Velocity (digital raw), lateral</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>306</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Ext_Vel_Dig_Pulses_X" ChannelID="3092">
+        <Description>external Velocity counted Pulses, longitudinal</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>65535</Max>
+        <ByteOffset>308</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Ext_Vel_Dig_Pulses_Y" ChannelID="3093">
+        <Description>external Velocity counted Pulses, biased, lateral</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>65535</Max>
+        <ByteOffset>310</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="External_Velocity_corrected" PackageID="3025">
+      <Description>External Velocity corrected</Description>
+      <Channel Name="Ext_Vel_X_corrected" ChannelID="3094">
+        <Description>Corrected external Velocity, longitudinal</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>312</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Ext_Vel_Y_corrected" ChannelID="3095">
+        <Description>Corrected external Velocity, lateral</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>314</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Miscellaneous" PackageID="3029">
+      <Description>Miscellaneous</Description>
+      <Channel Name="Inv_Path_Radius" ChannelID="3104">
+        <Description>inverse path radius, at Measuring reference point</Description>
+        <Scale>0.0001</Scale>
+        <Unit>1/m</Unit>
+        <DataType>INT</DataType>
+        <Min>-3.2767</Min>
+        <Max>3.2767</Max>
+        <ByteOffset>344</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Side_Slip_Angle" ChannelID="3105">
+        <Description>side slip angle, inertial, at Measuring reference point</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <ByteOffset>346</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Dist_Trav" ChannelID="3106">
+        <Description>distance travelled, at Measuring reference point</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>1000000</Max>
+        <ByteOffset>348</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Miscellaneous_POI1" PackageID="3030">
+      <Description>Miscellaneous POI1</Description>
+      <Channel Name="Inv_Path_Radius_POI1" ChannelID="3107">
+        <Description>inverse path radius, at POI1</Description>
+        <Scale>0.0001</Scale>
+        <Unit>1/m</Unit>
+        <DataType>INT</DataType>
+        <Min>-3.2767</Min>
+        <Max>3.2767</Max>
+        <ByteOffset>352</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Side_Slip_Angle_POI1" ChannelID="3108">
+        <Description>side slip angle, inertial, at POI1</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <ByteOffset>354</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Dist_Trav_POI1" ChannelID="3109">
+        <Description>distance travelled, at POI1</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>1000000</Max>
+        <ByteOffset>356</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Miscellaneous_POI2" PackageID="3031">
+      <Description>Miscellaneous POI2</Description>
+      <Channel Name="Inv_Path_Radius_POI2" ChannelID="3110">
+        <Description>inverse path radius, at POI2</Description>
+        <Scale>0.0001</Scale>
+        <Unit>1/m</Unit>
+        <DataType>INT</DataType>
+        <Min>-3.2767</Min>
+        <Max>3.2767</Max>
+        <ByteOffset>360</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Side_Slip_Angle_POI2" ChannelID="3111">
+        <Description>side slip angle, inertial, at POI2</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <ByteOffset>362</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Dist_Trav_POI2" ChannelID="3112">
+        <Description>distance travelled, at POI2</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>1000000</Max>
+        <ByteOffset>364</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Miscellaneous_POI3" PackageID="3032">
+      <Description>Miscellaneous POI3</Description>
+      <Channel Name="Inv_Path_Radius_POI3" ChannelID="3113">
+        <Description>inverse path radius, at POI3</Description>
+        <Scale>0.0001</Scale>
+        <Unit>1/m</Unit>
+        <DataType>INT</DataType>
+        <Min>-3.2767</Min>
+        <Max>3.2767</Max>
+        <ByteOffset>368</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Side_Slip_Angle_POI3" ChannelID="3114">
+        <Description>side slip angle, inertial, at POI3</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <ByteOffset>370</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Dist_Trav_POI3" ChannelID="3115">
+        <Description>distance travelled, at POI3</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>1000000</Max>
+        <ByteOffset>372</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Miscellaneous_POI4" PackageID="3033">
+      <Description>Miscellaneous POI4</Description>
+      <Channel Name="Inv_Path_Radius_POI4" ChannelID="3116">
+        <Description>inverse path radius, at POI4</Description>
+        <Scale>0.0001</Scale>
+        <Unit>1/m</Unit>
+        <DataType>INT</DataType>
+        <Min>-3.2767</Min>
+        <Max>3.2767</Max>
+        <ByteOffset>376</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Side_Slip_Angle_POI4" ChannelID="3117">
+        <Description>side slip angle, inertial, at POI4</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <ByteOffset>378</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Dist_Trav_POI4" ChannelID="3118">
+        <Description>distance travelled, at POI4</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>1000000</Max>
+        <ByteOffset>380</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Miscellaneous_POI5" PackageID="3034">
+      <Description>Miscellaneous POI5</Description>
+      <Channel Name="Inv_Path_Radius_POI5" ChannelID="3119">
+        <Description>inverse path radius, at POI5</Description>
+        <Scale>0.0001</Scale>
+        <Unit>1/m</Unit>
+        <DataType>INT</DataType>
+        <Min>-3.2767</Min>
+        <Max>3.2767</Max>
+        <ByteOffset>384</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Side_Slip_Angle_POI5" ChannelID="3120">
+        <Description>side slip angle, inertial, at POI5</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <ByteOffset>386</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Dist_Trav_POI5" ChannelID="3121">
+        <Description>distance travelled, at POI5</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>1000000</Max>
+        <ByteOffset>388</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Miscellaneous_POI6" PackageID="3035">
+      <Description>Miscellaneous POI6</Description>
+      <Channel Name="Inv_Path_Radius_POI6" ChannelID="3122">
+        <Description>inverse path radius, at POI6</Description>
+        <Scale>0.0001</Scale>
+        <Unit>1/m</Unit>
+        <DataType>INT</DataType>
+        <Min>-3.2767</Min>
+        <Max>3.2767</Max>
+        <ByteOffset>392</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Side_Slip_Angle_POI6" ChannelID="3123">
+        <Description>side slip angle, inertial, at POI6</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <ByteOffset>394</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Dist_Trav_POI6" ChannelID="3124">
+        <Description>distance travelled, at POI6</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>1000000</Max>
+        <ByteOffset>396</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Miscellaneous_POI7" PackageID="3036">
+      <Description>Miscellaneous POI7</Description>
+      <Channel Name="Inv_Path_Radius_POI7" ChannelID="3125">
+        <Description>inverse path radius, at POI7</Description>
+        <Scale>0.0001</Scale>
+        <Unit>1/m</Unit>
+        <DataType>INT</DataType>
+        <Min>-3.2767</Min>
+        <Max>3.2767</Max>
+        <ByteOffset>400</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Side_Slip_Angle_POI7" ChannelID="3126">
+        <Description>side slip angle, inertial, at POI7</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <ByteOffset>402</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Dist_Trav_POI7" ChannelID="3127">
+        <Description>distance travelled, at POI7</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>1000000</Max>
+        <ByteOffset>404</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Miscellaneous_POI8" PackageID="3037">
+      <Description>Miscellaneous POI8</Description>
+      <Channel Name="Inv_Path_Radius_POI8" ChannelID="3128">
+        <Description>inverse path radius, at POI8</Description>
+        <Scale>0.0001</Scale>
+        <Unit>1/m</Unit>
+        <DataType>INT</DataType>
+        <Min>-3.2767</Min>
+        <Max>3.2767</Max>
+        <ByteOffset>408</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Side_Slip_Angle_POI8" ChannelID="3129">
+        <Description>side slip angle, inertial, at POI8</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <ByteOffset>410</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Dist_Trav_POI8" ChannelID="3130">
+        <Description>distance travelled, at POI8</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>1000000</Max>
+        <ByteOffset>412</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Triggers_1_and_2" PackageID="3038">
+      <Description>Triggers 1 and 2</Description>
+      <Channel Name="Trig_Rising_1" ChannelID="3131">
+        <Description>external trigger e.g. Brake Pedal Trigger, etc.</Description>
+        <Scale>1</Scale>
+        <Unit>µs</Unit>
+        <DataType>UINT</DataType>
+        <Min>1</Min>
+        <Max>20000</Max>
+        <ByteOffset>416</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Trig_Falling_1" ChannelID="3132">
+        <Description>external trigger e.g. Brake Pedal Trigger, etc.</Description>
+        <Scale>1</Scale>
+        <Unit>µs</Unit>
+        <DataType>UINT</DataType>
+        <Min>1</Min>
+        <Max>20000</Max>
+        <ByteOffset>418</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Trig_Rising_2" ChannelID="3133">
+        <Description>external trigger e.g. Brake Pedal Trigger, etc.</Description>
+        <Scale>1</Scale>
+        <Unit>µs</Unit>
+        <DataType>UINT</DataType>
+        <Min>1</Min>
+        <Max>20000</Max>
+        <ByteOffset>420</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Trig_Falling_2" ChannelID="3134">
+        <Description>external trigger e.g. Brake Pedal Trigger etc.</Description>
+        <Scale>1</Scale>
+        <Unit>µs</Unit>
+        <DataType>UINT</DataType>
+        <Min>1</Min>
+        <Max>20000</Max>
+        <ByteOffset>422</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Triggers_3_and_4" PackageID="3039">
+      <Description>Triggers 3 and 4</Description>
+      <Channel Name="Trig_Rising_3" ChannelID="3135">
+        <Description>external trigger e.g. Brake Pedal Trigger etc.</Description>
+        <Scale>1</Scale>
+        <Unit>µs</Unit>
+        <DataType>UINT</DataType>
+        <Min>1</Min>
+        <Max>20000</Max>
+        <ByteOffset>424</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Trig_Falling_3" ChannelID="3136">
+        <Description>external trigger e.g. Brake Pedal Trigger etc.</Description>
+        <Scale>1</Scale>
+        <Unit>µs</Unit>
+        <DataType>UINT</DataType>
+        <Min>1</Min>
+        <Max>20000</Max>
+        <ByteOffset>426</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Trig_Rising_4" ChannelID="3137">
+        <Description>external trigger e.g. Brake Pedal Trigger etc.</Description>
+        <Scale>1</Scale>
+        <Unit>µs</Unit>
+        <DataType>UINT</DataType>
+        <Min>1</Min>
+        <Max>20000</Max>
+        <ByteOffset>428</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Trig_Falling_4" ChannelID="3138">
+        <Description>external trigger e.g. Brake Pedal Trigger etc.</Description>
+        <Scale>1</Scale>
+        <Unit>µs</Unit>
+        <DataType>UINT</DataType>
+        <Min>1</Min>
+        <Max>20000</Max>
+        <ByteOffset>430</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="System_Data" PackageID="3040">
+      <Description>System Data</Description>
+      <Channel Name="System_Ta" ChannelID="3139">
+        <Description>Sampling time</Description>
+        <Scale>1</Scale>
+        <Unit>µs</Unit>
+        <DataType>UINT</DataType>
+        <Min>1000</Min>
+        <Max>20000</Max>
+        <ByteOffset>432</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="System_Temp" ChannelID="3140">
+        <Description>System temperature. The source can be selected via Web interface menu Sytem.</Description>
+        <Scale>0.1</Scale>
+        <Unit>°C</Unit>
+        <DataType>INT</DataType>
+        <Min>-127</Min>
+        <Max>127</Max>
+        <ByteOffset>434</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="System_TimeSinceInit" ChannelID="3141">
+        <Description>Time since last system init</Description>
+        <Scale>1</Scale>
+        <Unit>s</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>65535</Max>
+        <ByteOffset>436</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="System_DSP_Load" ChannelID="3142">
+        <Description>System processor load</Description>
+        <Scale>0.1</Scale>
+        <Unit>%</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>100</Max>
+        <ByteOffset>438</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="GNSS_Position_absolute" PackageID="3041">
+      <Description>GNSS Position absolute</Description>
+      <Channel Name="GNSS_Lat_Abs" ChannelID="3143">
+        <Description>Latitude absolute</Description>
+        <Scale>0.0000001</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-90</Min>
+        <Max>90</Max>
+        <ByteOffset>440</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Long_Abs" ChannelID="3144">
+        <Description>Longitude absolute</Description>
+        <Scale>0.0000001</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <ByteOffset>444</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="GNSS_Position_relative" PackageID="3042">
+      <Description>GNSS Position relative</Description>
+      <Channel Name="GNSS_Pos_Rel_X" ChannelID="3145">
+        <Description>Relative meters in direction of X axis</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>448</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Pos_Rel_Y" ChannelID="3146">
+        <Description>Relative meters in direction of Y axis</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>452</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="GNSS_EPE" PackageID="3043">
+      <Description>GNSS EPE</Description>
+      <Channel Name="GNSS_Stddev_Lat" ChannelID="3147">
+        <Description>GNSS-Receiver expected error of latitude (X)</Description>
+        <Scale>0.001</Scale>
+        <Unit>m</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>60</Max>
+        <ByteOffset>456</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Stddev_Long" ChannelID="3148">
+        <Description>GNSS-Receiver expected error of longitude (Y)</Description>
+        <Scale>0.001</Scale>
+        <Unit>m</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>60</Max>
+        <ByteOffset>458</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Stddev_Height" ChannelID="3149">
+        <Description>GNSS-Receiver expected error of hight (Z)</Description>
+        <Scale>0.001</Scale>
+        <Unit>m</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>60</Max>
+        <ByteOffset>460</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="GNSS_Velocity_frame" PackageID="3044">
+      <Description>GNSS Velocity frame</Description>
+      <Channel Name="GNSS_Vel_Frame_X" ChannelID="3151">
+        <Description>GNSS velocity in X, north-south</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>464</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Vel_Frame_Y" ChannelID="3152">
+        <Description>GNSS velocity in Y, east-west</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>466</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Vel_Frame_Z" ChannelID="3153">
+        <Description>GNSS velocity in Z, up-down</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>468</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Vel_Latency" ChannelID="3154">
+        <Description>GNSS velocity has a calculation based latency</Description>
+        <Scale>0.001</Scale>
+        <Unit>s</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>60</Max>
+        <ByteOffset>470</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="GNSS_EVE" PackageID="3045">
+      <Description>GNSS EVE</Description>
+      <Channel Name="GNSS_Stddev_Vel_X" ChannelID="3155">
+        <Description>GNSS-Receiver expected velocity error X</Description>
+        <Scale>0.001</Scale>
+        <Unit>m/s</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>60</Max>
+        <ByteOffset>472</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Stddev_Vel_Y" ChannelID="3156">
+        <Description>GNSS-Receiver expected velocity error Y</Description>
+        <Scale>0.001</Scale>
+        <Unit>m/s</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>60</Max>
+        <ByteOffset>474</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Stddev_Vel_Z" ChannelID="3157">
+        <Description>GNSS-Receiver expected velocity error Z</Description>
+        <Scale>0.001</Scale>
+        <Unit>m/s</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>60</Max>
+        <ByteOffset>476</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="GNSS_Time_UTC" PackageID="3046">
+      <Description>GNSS Time UTC</Description>
+      <Channel Name="GNSS_Time_msec" ChannelID="3159">
+        <Description>Time in Milliseconds, UTC</Description>
+        <Scale>1</Scale>
+        <Unit>ms</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>604800000</Max>
+        <ByteOffset>480</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Time_Week" ChannelID="3160">
+        <Description>Start 0h 6-Jan-1980</Description>
+        <Scale>1</Scale>
+        <Unit>week</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>65536</Max>
+        <ByteOffset>484</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Trigger_GNSS" ChannelID="3161">
+        <Description>GNSS sampling indicated</Description>
+        <Scale>1</Scale>
+        <Unit>µs</Unit>
+        <DataType>UINT</DataType>
+        <Min>1000</Min>
+        <Max>20000</Max>
+        <ByteOffset>486</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="GNSS_AuxData_1" PackageID="3047">
+      <Description>GNSS AuxData 1</Description>
+      <Channel Name="GNSS_DiffAge" ChannelID="3162">
+        <Description>Data age of the DGNSS correction data received.</Description>
+        <Scale>0.1</Scale>
+        <Unit>s</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>60</Max>
+        <ByteOffset>488</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Sats_Used" ChannelID="3163">
+        <Description>Used satellites to compute a valid position solution.</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>100</Max>
+        <ByteOffset>490</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Sats_Visible" ChannelID="3164">
+        <Description>Number of satellites the GNSS receiver is actually observing.</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>100</Max>
+        <ByteOffset>491</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Sats_DualAnt_Used" ChannelID="3165">
+        <Description>Used satellites to compute a valid dual antenne solution.</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>100</Max>
+        <ByteOffset>492</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Sats_DualAnt_Visible" ChannelID="3360">
+        <Description>Number of satellites the dual antenna is actually observing.</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>100</Max>
+        <ByteOffset>493</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="GNSS_AuxData_2" PackageID="3048">
+      <Description>GNSS AuxData 2</Description>
+      <Channel Name="GNSS_Log_Delay" ChannelID="3166">
+        <Description>Number of ADMA sampling interval having passed until GNSS data (the GNSS data log) is available.</Description>
+        <Scale>1</Scale>
+        <Unit>Ta</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>20</Max>
+        <ByteOffset>496</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Receiver_Load" ChannelID="3167">
+        <Description>GNSS receiver processor load.</Description>
+        <Scale>0.5</Scale>
+        <Unit>%</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>100</Max>
+        <ByteOffset>497</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_BaseNr" ChannelID="3168">
+        <Description>Base station identifier</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>4294967295</Max>
+        <ByteOffset>498</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Angle_and_GNSS_COG" PackageID="3049">
+      <Description>INS Angle and GNSS COG</Description>
+      <Channel Name="INS_Roll" ChannelID="3170">
+        <Description>Roll</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-60</Min>
+        <Max>60</Max>
+        <ByteOffset>504</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Pitch" ChannelID="3171">
+        <Description>Pitch</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-60</Min>
+        <Max>60</Max>
+        <ByteOffset>506</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Yaw" ChannelID="3172">
+        <Description>Yaw, alt. True Heading</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>359.99</Max>
+        <ByteOffset>508</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_COG" ChannelID="3173">
+        <Description>Course over Ground, only with (D)GNSS in motion</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>359.99</Max>
+        <ByteOffset>510</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="GNSS_Height_MSL" PackageID="3050">
+      <Description>GNSS Height MSL</Description>
+      <Channel Name="GNSS_Height" ChannelID="3174">
+        <Description>Referenced to MSL</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>512</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="Undulation" ChannelID="3175">
+        <Description>Undulation of the geoid</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-327.68</Min>
+        <Max>327.67</Max>
+        <ByteOffset>516</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="GNSS_DualAnt_Time_UTC" PackageID="3051">
+      <Description>GNSS DualAnt Time UTC</Description>
+      <Channel Name="GNSS_DualAnt_Time_msec" ChannelID="3177">
+        <Description>Time in Milliseconds, UTC</Description>
+        <Scale>1</Scale>
+        <Unit>ms</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>604800000</Max>
+        <ByteOffset>520</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_DualAnt_Time_Week" ChannelID="3178">
+        <Description>Weeks, Start 0h 6-Jan-1980</Description>
+        <Scale>1</Scale>
+        <Unit>week</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>65536</Max>
+        <ByteOffset>524</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="GNSS_DualAnt_Angle" PackageID="3052">
+      <Description>GNSS DualAnt Angle</Description>
+      <Channel Name="GNSS_DualAnt_Heading" ChannelID="3180">
+        <Description>Heading DualAnt</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>359.99</Max>
+        <ByteOffset>528</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_DualAnt_Pitch" ChannelID="3181">
+        <Description>Pitch DualAnt</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-60</Min>
+        <Max>60</Max>
+        <ByteOffset>530</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="GNSS_DualAnt_Angle_ETE" PackageID="3053">
+      <Description>GNSS DualAnt Angle ETE</Description>
+      <Channel Name="GNSS_DualAnt_Stddev_Heading" ChannelID="3183">
+        <Description>GNSS-Receiver expected error Heading</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>UINT</DataType>
+        <Min>0.01</Min>
+        <Max>2.55</Max>
+        <ByteOffset>536</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_DualAnt_Stddev_Pitch" ChannelID="3184">
+        <Description>GNSS-Receiver expected error Pitch</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>UINT</DataType>
+        <Min>0.01</Min>
+        <Max>2.55</Max>
+        <ByteOffset>537</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_DualAnt_Stddev_Heading_HR" ChannelID="3185">
+        <Description>GNSS-Receiver expected error Heading high resolution</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>UINT</DataType>
+        <Min>0.01</Min>
+        <Max>359.99</Max>
+        <ByteOffset>538</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_DualAnt_Stddev_Pitch_HR" ChannelID="3361">
+        <Description>GNSS-Receiver expected error Pitch high resolution</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>UINT</DataType>
+        <Min>0.01</Min>
+        <Max>359.99</Max>
+        <ByteOffset>540</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_Height" PackageID="3054">
+      <Description>INS Position Height</Description>
+      <Channel Name="INS_Height" ChannelID="3186">
+        <Description>Inertial height, at Measuring reference point </Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>544</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_Height_POI1_and_2" PackageID="3055">
+      <Description>INS Position Height POI1 and 2</Description>
+      <Channel Name="INS_Height_POI1" ChannelID="3188">
+        <Description>Inertial height, at POI1</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>552</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Height_POI2" ChannelID="3189">
+        <Description>Inertial height, at POI2</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>556</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_Height_POI3_and_4" PackageID="3056">
+      <Description>INS Position Height POI3 and 4</Description>
+      <Channel Name="INS_Height_POI3" ChannelID="3190">
+        <Description>Inertial height, at POI3</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>560</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Height_POI4" ChannelID="3191">
+        <Description>Inertial height, at POI4</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>564</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_Height_POI5_and_6" PackageID="3057">
+      <Description>INS Position Height POI5 and 6</Description>
+      <Channel Name="INS_Height_POI5" ChannelID="3192">
+        <Description>Inertial height, at POI5</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>568</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Height_POI6" ChannelID="3193">
+        <Description>Inertial height, at POI6</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>572</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_Height_POI7_and_8" PackageID="3058">
+      <Description>INS Position Height POI7 and 8</Description>
+      <Channel Name="INS_Height_POI7" ChannelID="3194">
+        <Description>Inertial height, at POI7</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>576</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Height_POI8" ChannelID="3195">
+        <Description>Inertial height, at POI8</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>580</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Time_UTC" PackageID="3059">
+      <Description>INS Time UTC</Description>
+      <Channel Name="INS_Time_msec" ChannelID="3196">
+        <Description>Time in Milliseconds, UTC</Description>
+        <Scale>1</Scale>
+        <Unit>ms</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>604800000</Max>
+        <ByteOffset>584</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Time_Week" ChannelID="3197">
+        <Description>Weeks, Start 0h 6-Jan-1980</Description>
+        <Scale>1</Scale>
+        <Unit>week</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>65536</Max>
+        <ByteOffset>588</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Leap_Seconds" ChannelID="3198">
+        <Description>Leap seconds</Description>
+        <Scale>1</Scale>
+        <Unit>s</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>100</Max>
+        <ByteOffset>590</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_absolute" PackageID="3060">
+      <Description>INS Position absolute</Description>
+      <Channel Name="INS_Lat_Abs" ChannelID="3199">
+        <Description>Latitude, at Measuring reference point</Description>
+        <Scale>0.0000001</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-90</Min>
+        <Max>90</Max>
+        <ByteOffset>592</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Long_Abs" ChannelID="3200">
+        <Description>Longitude, at Measuring reference point</Description>
+        <Scale>0.0000001</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <ByteOffset>596</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_relative" PackageID="3061">
+      <Description>INS Position relative</Description>
+      <Channel Name="INS_Pos_Rel_X" ChannelID="3201">
+        <Description>Relative meters in direction of X axis, at Measuring reference point</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>600</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Pos_Rel_Y" ChannelID="3202">
+        <Description>Relative meters in direction of Y axis, at Measuring reference point</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>604</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_POI1_absolute" PackageID="3062">
+      <Description>INS Position POI1 absolute</Description>
+      <Channel Name="INS_Lat_Abs_POI1" ChannelID="3203">
+        <Description>Latitude, at POI1</Description>
+        <Scale>0.0000001</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-90</Min>
+        <Max>90</Max>
+        <ByteOffset>608</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Long_Abs_POI1" ChannelID="3204">
+        <Description>Longitude, at POI1</Description>
+        <Scale>0.0000001</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <ByteOffset>612</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_POI1_relative" PackageID="3063">
+      <Description>INS Position POI1 relative</Description>
+      <Channel Name="INS_Pos_Rel_X_POI1" ChannelID="3205">
+        <Description>Relative meters in direction of X axis, at POI1</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>616</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Pos_Rel_Y_POI1" ChannelID="3206">
+        <Description>Relative meters in direction of Y axis, at POI1</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>620</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_POI2_absolute" PackageID="3064">
+      <Description>INS Position POI2 absolute</Description>
+      <Channel Name="INS_Lat_Abs_POI2" ChannelID="3207">
+        <Description>Latitude, at POI2</Description>
+        <Scale>0.0000001</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-90</Min>
+        <Max>90</Max>
+        <ByteOffset>624</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Long_Abs_POI2" ChannelID="3208">
+        <Description>Longitude, at POI2</Description>
+        <Scale>0.0000001</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <ByteOffset>628</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_POI2_relative" PackageID="3065">
+      <Description>INS Position POI2 relative</Description>
+      <Channel Name="INS_Pos_Rel_X_POI2" ChannelID="3209">
+        <Description>Relative meters in direction of X axis, at POI2</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>632</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Pos_Rel_Y_POI2" ChannelID="3210">
+        <Description>Relative meters in direction of Y axis, at POI2</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>636</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_POI3_absolute" PackageID="3066">
+      <Description>INS Position POI3 absolute</Description>
+      <Channel Name="INS_Lat_Abs_POI3" ChannelID="3211">
+        <Description>Latitude, at POI3</Description>
+        <Scale>0.0000001</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-90</Min>
+        <Max>90</Max>
+        <ByteOffset>640</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Long_Abs_POI3" ChannelID="3212">
+        <Description>Longitude, at POI3</Description>
+        <Scale>0.0000001</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <ByteOffset>644</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_POI3_relative" PackageID="3067">
+      <Description>INS Position POI3 relative</Description>
+      <Channel Name="INS_Pos_Rel_X_POI3" ChannelID="3213">
+        <Description>Relative meters in direction of X axis, at POI3</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>648</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Pos_Rel_Y_POI3" ChannelID="3214">
+        <Description>Relative meters in direction of Y axis, at POI3</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>652</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_POI4_absolute" PackageID="3068">
+      <Description>INS Position POI4 absolute</Description>
+      <Channel Name="INS_Lat_Abs_POI4" ChannelID="3215">
+        <Description>Latitude, at POI4</Description>
+        <Scale>0.0000001</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-90</Min>
+        <Max>90</Max>
+        <ByteOffset>656</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Long_Abs_POI4" ChannelID="3216">
+        <Description>Longitude, at POI4</Description>
+        <Scale>0.0000001</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <ByteOffset>660</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_POI4_relative" PackageID="3069">
+      <Description>INS Position POI4 relative</Description>
+      <Channel Name="INS_Pos_Rel_X_POI4" ChannelID="3217">
+        <Description>Relative meters in direction of X axis, at POI4</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>664</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Pos_Rel_Y_POI4" ChannelID="3218">
+        <Description>Relative meters in direction of Y axis, at POI4</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>668</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_POI5_absolute" PackageID="3070">
+      <Description>INS Position POI5 absolute</Description>
+      <Channel Name="INS_Lat_Abs_POI5" ChannelID="3219">
+        <Description>Latitude, at POI5</Description>
+        <Scale>0.0000001</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-90</Min>
+        <Max>90</Max>
+        <ByteOffset>672</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Long_Abs_POI5" ChannelID="3220">
+        <Description>Longitude, at POI5</Description>
+        <Scale>0.0000001</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <ByteOffset>676</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_POI5_relative" PackageID="3071">
+      <Description>INS Position POI5 relative</Description>
+      <Channel Name="INS_Pos_Rel_X_POI5" ChannelID="3221">
+        <Description>Relative meters in direction of X axis, at POI5</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>680</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Pos_Rel_Y_POI5" ChannelID="3222">
+        <Description>Relative meters in direction of Y axis, at POI5</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>684</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_POI6_absolute" PackageID="3072">
+      <Description>INS Position POI6 absolute</Description>
+      <Channel Name="INS_Lat_Abs_POI6" ChannelID="3223">
+        <Description>Latitude, at POI6</Description>
+        <Scale>0.0000001</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-90</Min>
+        <Max>90</Max>
+        <ByteOffset>688</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Long_Abs_POI6" ChannelID="3224">
+        <Description>Longitude, at POI6</Description>
+        <Scale>0.0000001</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <ByteOffset>692</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_POI6_relative" PackageID="3073">
+      <Description>INS Position POI6 relative</Description>
+      <Channel Name="INS_Pos_Rel_X_POI6" ChannelID="3225">
+        <Description>Relative meters in direction of X axis, at POI6</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>696</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Pos_Rel_Y_POI6" ChannelID="3226">
+        <Description>Relative meters in direction of Y axis, at POI6</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>700</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_POI7_absolute" PackageID="3074">
+      <Description>INS Position POI7 absolute</Description>
+      <Channel Name="INS_Lat_Abs_POI7" ChannelID="3227">
+        <Description>Latitude, at POI7</Description>
+        <Scale>0.0000001</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-90</Min>
+        <Max>90</Max>
+        <ByteOffset>704</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Long_Abs_POI7" ChannelID="3228">
+        <Description>Longitude, at POI7</Description>
+        <Scale>0.0000001</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <ByteOffset>708</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_POI7_relative" PackageID="3075">
+      <Description>INS Position POI7 relative</Description>
+      <Channel Name="INS_Pos_Rel_X_POI7" ChannelID="3229">
+        <Description>Relative meters in direction of X axis, at POI7</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>712</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Pos_Rel_Y_POI7" ChannelID="3230">
+        <Description>Relative meters in direction of Y axis, at POI7</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>716</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_POI8_absolute" PackageID="3076">
+      <Description>INS Position POI8 absolute</Description>
+      <Channel Name="INS_Lat_Abs_POI8" ChannelID="3231">
+        <Description>Latitude, at POI8</Description>
+        <Scale>0.0000001</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-90</Min>
+        <Max>90</Max>
+        <ByteOffset>720</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Long_Abs_POI8" ChannelID="3232">
+        <Description>Longitude, at POI8</Description>
+        <Scale>0.0000001</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <ByteOffset>724</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Position_POI8_relative" PackageID="3077">
+      <Description>INS Position POI8 relative</Description>
+      <Channel Name="INS_Pos_Rel_X_POI8" ChannelID="3233">
+        <Description>Relative meters in direction of X axis, at POI8</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>728</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="INS_Pos_Rel_Y_POI8" ChannelID="3234">
+        <Description>Relative meters in direction of Y axis, at POI8</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>INT</DataType>
+        <Min>-21474836.48</Min>
+        <Max>21474836.47</Max>
+        <ByteOffset>732</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Velocity_horizontal" PackageID="3078">
+      <Description>INS Velocity horizontal</Description>
+      <Channel Name="INS_Vel_Hor_X" ChannelID="3235">
+        <Description>Inertial velocity in X, longitudinal</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>736</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Vel_Hor_Y" ChannelID="3236">
+        <Description>Inertial velocity in Y, lateral</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>738</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Vel_Hor_Z" ChannelID="3237">
+        <Description>Inertial velocity in Z, vertical</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>740</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Velocity_frame" PackageID="3079">
+      <Description>INS Velocity frame</Description>
+      <Channel Name="INS_Vel_Frame_X" ChannelID="3239">
+        <Description>Inertial velocity in X, north-south</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>744</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Vel_Frame_Y" ChannelID="3240">
+        <Description>Inertial velocity in Y, east-west</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>746</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Vel_Frame_Z" ChannelID="3241">
+        <Description>Inertial velocity in Z, up-down</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>748</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Velocity_POI1_horizontal" PackageID="3080">
+      <Description>INS Velocity POI1 horizontal</Description>
+      <Channel Name="INS_Vel_Hor_X_POI1" ChannelID="3243">
+        <Description>Inertial velocity in X, longitudinal, at POI1</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>752</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Vel_Hor_Y_POI1" ChannelID="3244">
+        <Description>Inertial velocity in Y, lateral, at POI1</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>754</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Vel_Hor_Z_POI1" ChannelID="3245">
+        <Description>Inertial velocity in Z, vertical, at POI1</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>756</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Velocity_POI2_horizontal" PackageID="3081">
+      <Description>INS Velocity POI2 horizontal</Description>
+      <Channel Name="INS_Vel_Hor_X_POI2" ChannelID="3247">
+        <Description>Inertial velocity in X, longitudinal, at POI2</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>760</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Vel_Hor_Y_POI2" ChannelID="3248">
+        <Description>Inertial velocity in Y, lateral, at POI2</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>762</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Vel_Hor_Z_POI2" ChannelID="3249">
+        <Description>Inertial velocity in Z, vertical, at POI2</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>764</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Velocity_POI3_horizontal" PackageID="3082">
+      <Description>INS Velocity POI3 horizontal</Description>
+      <Channel Name="INS_Vel_Hor_X_POI3" ChannelID="3251">
+        <Description>Inertial velocity in X, longitudinal, at POI3</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>768</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Vel_Hor_Y_POI3" ChannelID="3252">
+        <Description>Inertial velocity in Y, lateral, at POI3</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>770</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Vel_Hor_Z_POI3" ChannelID="3253">
+        <Description>Inertial velocity in Z, vertical, at POI3</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>772</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Velocity_POI4_horizontal" PackageID="3083">
+      <Description>INS Velocity POI4 horizontal</Description>
+      <Channel Name="INS_Vel_Hor_X_POI4" ChannelID="3255">
+        <Description>Inertial velocity in X, longitudinal, at POI4</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>776</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Vel_Hor_Y_POI4" ChannelID="3256">
+        <Description>Inertial velocity in Y, lateral, at POI4</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>778</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Vel_Hor_Z_POI4" ChannelID="3257">
+        <Description>Inertial velocity in Z, vertical, at POI4</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>780</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Velocity_POI5_horizontal" PackageID="3084">
+      <Description>INS Velocity POI5 horizontal</Description>
+      <Channel Name="INS_Vel_Hor_X_POI5" ChannelID="3259">
+        <Description>Inertial velocity in X, longitudinal, at POI5</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>784</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Vel_Hor_Y_POI5" ChannelID="3260">
+        <Description>Inertial velocity in Y, lateral, at POI5</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>786</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Vel_Hor_Z_POI5" ChannelID="3261">
+        <Description>Inertial velocity in Z, vertical, at POI5</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>788</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Velocity_POI6_horizontal" PackageID="3085">
+      <Description>INS Velocity POI6 horizontal</Description>
+      <Channel Name="INS_Vel_Hor_X_POI6" ChannelID="3263">
+        <Description>Inertial velocity in X, longitudinal, at POI6</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>792</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Vel_Hor_Y_POI6" ChannelID="3264">
+        <Description>Inertial velocity in Y, lateral, at POI6</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>794</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Vel_Hor_Z_POI6" ChannelID="3265">
+        <Description>Inertial velocity in Z, vertical, at POI6</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>796</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Velocity_POI7_horizontal" PackageID="3086">
+      <Description>INS Velocity POI7 horizontal</Description>
+      <Channel Name="INS_Vel_Hor_X_POI7" ChannelID="3267">
+        <Description>Inertial velocity in X, longitudinal, at POI7</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>800</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Vel_Hor_Y_POI7" ChannelID="3268">
+        <Description>Inertial velocity in Y, lateral, at POI7</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>802</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Vel_Hor_Z_POI7" ChannelID="3269">
+        <Description>Inertial velocity in Z, vertical, at POI7</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>804</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_Velocity_POI8_horizontal" PackageID="3087">
+      <Description>INS Velocity POI8 horizontal</Description>
+      <Channel Name="INS_Vel_Hor_X_POI8" ChannelID="3271">
+        <Description>Inertial velocity in X, longitudinal, at POI8</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>808</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Vel_Hor_Y_POI8" ChannelID="3272">
+        <Description>Inertial velocity in Y, lateral, at POI8</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>810</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Vel_Hor_Z_POI8" ChannelID="3273">
+        <Description>Inertial velocity in Z, vertical, at POI8</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <ByteOffset>812</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_EPE" PackageID="3088">
+      <Description>INS EPE</Description>
+      <Channel Name="INS_Stddev_Lat" ChannelID="3275">
+        <Description>Inertial expected error of latitude (X)</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>60</Max>
+        <ByteOffset>816</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Stddev_Long" ChannelID="3276">
+        <Description>Inertial expected error of longitude (Y)</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>60</Max>
+        <ByteOffset>818</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="INS_Stddev_Height" ChannelID="3277">
+        <Description>Inertial expected error of height (Z)</Description>
+        <Scale>0.01</Scale>
+        <Unit>m</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>60</Max>
+        <ByteOffset>820</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="INS_EVE_and_INS_ETE" PackageID="3089">
+      <Description>INS EVE and INS ETE</Description>
+      <Channel Name="INS_Stddev_Vel_X" ChannelID="3279">
+        <Description>Inertial expected error velocity X</Description>
+        <Scale>0.01</Scale>
+        <Unit>m/s</Unit>
+        <DataType>UINT</DataType>
+        <Min>0.01</Min>
+        <Max>2.55</Max>
+        <ByteOffset>824</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="INS_Stddev_Vel_Y" ChannelID="3280">
+        <Description>Inertial expected error of velocity Y</Description>
+        <Scale>0.01</Scale>
+        <Unit>m/s</Unit>
+        <DataType>UINT</DataType>
+        <Min>0.01</Min>
+        <Max>2.55</Max>
+        <ByteOffset>825</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="INS_Stddev_Vel_Z" ChannelID="3281">
+        <Description>Inertial expected error of velocity Z</Description>
+        <Scale>0.01</Scale>
+        <Unit>m/s</Unit>
+        <DataType>UINT</DataType>
+        <Min>0.01</Min>
+        <Max>2.55</Max>
+        <ByteOffset>826</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="INS_Stddev_Roll" ChannelID="3282">
+        <Description>Inertial expected error of Roll</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>UINT</DataType>
+        <Min>0.01</Min>
+        <Max>2.55</Max>
+        <ByteOffset>827</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="INS_Stddev_Pitch" ChannelID="3283">
+        <Description>Inertial expected error of Pitch</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>UINT</DataType>
+        <Min>0.01</Min>
+        <Max>2.55</Max>
+        <ByteOffset>828</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="INS_Stddev_Yaw" ChannelID="3284">
+        <Description>Inertial expected error of Yaw</Description>
+        <Scale>0.01</Scale>
+        <Unit>°</Unit>
+        <DataType>UINT</DataType>
+        <Min>0.01</Min>
+        <Max>2.55</Max>
+        <ByteOffset>829</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Analog_In1" PackageID="3090">
+      <Description>Analog In1</Description>
+      <Channel Name="AN1" ChannelID="3286">
+        <Description>Analog IN1</Description>
+        <Scale>0.0005</Scale>
+        <Unit>V</Unit>
+        <DataType>INT</DataType>
+        <Min>-10</Min>
+        <Max>10</Max>
+        <ByteOffset>832</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="AN2" ChannelID="3287">
+        <Description>Analog IN2</Description>
+        <Scale>0.0005</Scale>
+        <Unit>V</Unit>
+        <DataType>INT</DataType>
+        <Min>-10</Min>
+        <Max>10</Max>
+        <ByteOffset>834</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="AN3" ChannelID="3288">
+        <Description>Analog IN3</Description>
+        <Scale>0.0005</Scale>
+        <Unit>V</Unit>
+        <DataType>INT</DataType>
+        <Min>-10</Min>
+        <Max>10</Max>
+        <ByteOffset>836</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="AN4" ChannelID="3289">
+        <Description>Analog IN4</Description>
+        <Scale>0.0005</Scale>
+        <Unit>V</Unit>
+        <DataType>INT</DataType>
+        <Min>-10</Min>
+        <Max>10</Max>
+        <ByteOffset>838</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Kalmanfilter_Status" PackageID="3091">
+      <Description>Kalmanfilter Status</Description>
+      <Channel Name="KF_Lat_stimulated" ChannelID="3290">
+        <Description>Kalman filter settled in lateral axis, in percent</Description>
+        <Scale>1</Scale>
+        <Unit>%</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>100</Max>
+        <ByteOffset>840</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="KF_Long_stimulated" ChannelID="3291">
+        <Description>Kalman filter settled in longitudinal axis, in percent</Description>
+        <Scale>1</Scale>
+        <Unit>%</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>100</Max>
+        <ByteOffset>841</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+      <Channel Name="KF_steady_state" ChannelID="3292">
+        <Description>Kalman filter bias estimates settled, in percent</Description>
+        <Scale>1</Scale>
+        <Unit>%</Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>100</Max>
+        <ByteOffset>842</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>8</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="GNSS_Receiver_Status_and_Error" PackageID="3092">
+      <Description>GNSS Receiver Status and Error</Description>
+      <Channel Name="GNSS_Receiver_Error" ChannelID="3294">
+        <Description>GNSS receiver error (see Technical Documentation). A value of zero indicates no errors.</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>4294967295</Max>
+        <ByteOffset>848</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_DRAM_failure" ChannelID="3295">
+        <Description>GNSS receiver Dynamic Random Access Memory (DRAM) failure (0=OK 1=Error)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>848</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Invalid_Firmware" ChannelID="3296">
+        <Description>Invalid GNSS receiver firmware (0=OK 1=Error)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>848</ByteOffset>
+        <BitOffset>1</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_ROM_error" ChannelID="3297">
+        <Description>ROM status (0=OK 1=Error)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>848</ByteOffset>
+        <BitOffset>2</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_ESN_error" ChannelID="3299">
+        <Description>Electronic Serial Number (ESN) access status (0=OK 1=Error)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>848</ByteOffset>
+        <BitOffset>4</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Auth_code_error" ChannelID="3300">
+        <Description>Authorization code status (0=OK 1=Error)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>848</ByteOffset>
+        <BitOffset>5</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Supply_voltage_error" ChannelID="3302">
+        <Description>Supply voltage status (0=OK 1=Error)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>848</ByteOffset>
+        <BitOffset>7</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Temp_error" ChannelID="3304">
+        <Description>Temperature status (as compared against acceptable limits) (0=OK 1=Error)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>849</ByteOffset>
+        <BitOffset>1</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_MINOS_error" ChannelID="3305">
+        <Description>MINOS status (0=OK 1=Error)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>849</ByteOffset>
+        <BitOffset>2</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_PLL_RF_error " ChannelID="3306">
+        <Description>Error with an RF PLL (0=OK 1=Error)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>849</ByteOffset>
+        <BitOffset>3</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_NVM_error" ChannelID="3310">
+        <Description>NVM status (0=OK 1=Error)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>849</ByteOffset>
+        <BitOffset>7</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Softw_error" ChannelID="3311">
+        <Description>Software resource limit exceeded (0=OK 1=Error)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>850</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Model_invalid" ChannelID="3312">
+        <Description>Model invalid for this receiver (0=OK 1=Error)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>850</ByteOffset>
+        <BitOffset>1</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Remote_loading" ChannelID="3315">
+        <Description>Remote loading has begun (0=No 1=Yes)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>850</ByteOffset>
+        <BitOffset>4</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Export_restriction" ChannelID="3316">
+        <Description>Export restriction (0=OK 1=Error)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>850</ByteOffset>
+        <BitOffset>5</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Safe_mode" ChannelID="3317">
+        <Description>Save mode (0=OK 1=Error)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>850</ByteOffset>
+        <BitOffset>6</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Hardware_failure" ChannelID="3326">
+        <Description>Component hardware failure (0=OK 1=Error)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>851</ByteOffset>
+        <BitOffset>7</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Receiver_Status" ChannelID="3327">
+        <Description>Various status messages of the GNSS receiver (see Technical Documentation). Some flags are only available on certain products.</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>4294967295</Max>
+        <ByteOffset>852</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Error_flag" ChannelID="3328">
+        <Description>Error flag, see Table: Receiver Error (0=No error 1=Error)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>852</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Temp_warning" ChannelID="3329">
+        <Description>1 = Temperature out of specifications, warning</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>852</ByteOffset>
+        <BitOffset>1</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Voltage_supply" ChannelID="3330">
+        <Description>Voltage supply status (0=OK 1=Warning)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>852</ByteOffset>
+        <BitOffset>2</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_PrimAnt_power" ChannelID="3331">
+        <Description>Primary antenna power status (0=Powered 1=Not powered)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>852</ByteOffset>
+        <BitOffset>3</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_LNA_Failure" ChannelID="3332">
+        <Description>LNA Failure (0=OK 1=Failure)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>852</ByteOffset>
+        <BitOffset>4</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_PrimAnt_open" ChannelID="3333">
+        <Description>1 = Primary antenna open, antenna disconnected (This flag is only available on certain products)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>852</ByteOffset>
+        <BitOffset>5</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_PrimAnt_short_circuit" ChannelID="3334">
+        <Description>1 = Primary antenna short circuit detected.</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>852</ByteOffset>
+        <BitOffset>6</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_CPU_Overload" ChannelID="3335">
+        <Description>CPU overload (0=No overload 1=CPU overload)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>852</ByteOffset>
+        <BitOffset>7</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_COM_overrun" ChannelID="3336">
+        <Description>COM port transmit buffer overrun (0=OK 1=Overrun)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>853</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Link_overrun" ChannelID="3339">
+        <Description>Link overrun flag. This flag indicates if any of the USB, ICOM, CCOM, NCOM or File ports are overrun (0=OK 1=Overrun)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>853</ByteOffset>
+        <BitOffset>3</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Input_overrun" ChannelID="3340">
+        <Description>This flag is set if any of the receiver ports (COM, USB, ICOM or NCOM) experience an input overrun (0=OK 1=Overrun)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>853</ByteOffset>
+        <BitOffset>4</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Aux_overrun" ChannelID="3341">
+        <Description>Aux transmit overrun flag (0=OK 1=Overrun)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>853</ByteOffset>
+        <BitOffset>5</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Ant_Gain_out_of_range" ChannelID="3342">
+        <Description>1 = Antenna gain out of range. The antenna is not operating correctly, the antenna is not suitable for the GNSS receivers, or there is no antenna connected.</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>853</ByteOffset>
+        <BitOffset>6</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Jammer_Detected" ChannelID="3343">
+        <Description>1 = Jammer detected. GNSS signals are overpowered by a jammer.</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>853</ByteOffset>
+        <BitOffset>7</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Almanac_invalid" ChannelID="3346">
+        <Description>1 = GNSS almanac invalid. It typically takes 15 to 20 minutes of continuous GNSS tracking to download an updated almanac message. </Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>854</ByteOffset>
+        <BitOffset>2</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Solution_invalid" ChannelID="3347">
+        <Description>1 = Receiver cannot calculate a position solution.</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>854</ByteOffset>
+        <BitOffset>3</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Position_fixed" ChannelID="3348">
+        <Description>1 = Position fixed</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>854</ByteOffset>
+        <BitOffset>4</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Clock_steering" ChannelID="3349">
+        <Description>Clock steering status (0=Enabled 1=Disabled)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>854</ByteOffset>
+        <BitOffset>5</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Clock_Model" ChannelID="3350">
+        <Description>Clock model (0=Valid 1=Invalid)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>854</ByteOffset>
+        <BitOffset>6</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Ext_oscillator" ChannelID="3351">
+        <Description>External oscillator locked (0=Unlocked 1=Locked)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>854</ByteOffset>
+        <BitOffset>7</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Softw_status" ChannelID="3352">
+        <Description>Software resource (0=OK 1=Warning)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>855</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Version_0" ChannelID="3353">
+        <Description>Version bit 0</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>855</ByteOffset>
+        <BitOffset>1</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Version_1" ChannelID="3354">
+        <Description>Version bit 1</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>855</ByteOffset>
+        <BitOffset>2</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Tracking_mode" ChannelID="3355">
+        <Description>Tracking mode (0=Normal tracking 1=HDR tracking)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>855</ByteOffset>
+        <BitOffset>3</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Dig_Filtering" ChannelID="3356">
+        <Description>1 = Digital Filtering Enabled</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>855</ByteOffset>
+        <BitOffset>4</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Aux_status_3" ChannelID="3357">
+        <Description>Auxiliary status event flag (0=No event 1=Event)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>855</ByteOffset>
+        <BitOffset>5</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Aux_status_2" ChannelID="3358">
+        <Description>Auxiliary status event flag (0=No event 1=Event)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>855</ByteOffset>
+        <BitOffset>6</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+      <Channel Name="GNSS_Aux_status_1" ChannelID="3359">
+        <Description>Auxiliary status event flag (0=No event 1=Event)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>BOOL</DataType>
+        <Min>0</Min>
+        <Max>1</Max>
+        <ByteOffset>855</ByteOffset>
+        <BitOffset>7</BitOffset>
+        <LengthBits>1</LengthBits>
+      </Channel>
+    </Package>
+  </MeasurementData>
+</MessageFormatDefinition>
