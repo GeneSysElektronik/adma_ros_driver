@@ -354,7 +354,7 @@ void GSDAServer::fillDataScaledMsg(adma_ros_driver_msgs::msg::AdmaDataScaled& da
 
     // ins Position
     dataScaledMsg.poi_1.ins_lat_abs = readValue("INS_Lat_Abs_POI1");
-    dataScaledMsg.poi_1.ins_lon_abs = readValue("INS_Long_Abs_POI1");
+    dataScaledMsg.poi_1.ins_long_abs = readValue("INS_Long_Abs_POI1");
     dataScaledMsg.poi_1.ins_height = readValue("INS_Height_POI1");
 
     // relative position
@@ -384,7 +384,7 @@ void GSDAServer::fillDataScaledMsg(adma_ros_driver_msgs::msg::AdmaDataScaled& da
 
     // ins Position
     dataScaledMsg.poi_2.ins_lat_abs = readValue("INS_Lat_Abs_POI2");
-    dataScaledMsg.poi_2.ins_lon_abs = readValue("INS_Long_Abs_POI2");
+    dataScaledMsg.poi_2.ins_long_abs = readValue("INS_Long_Abs_POI2");
     dataScaledMsg.poi_2.ins_height = readValue("INS_Height_POI2");
 
     // relative position
@@ -414,7 +414,7 @@ void GSDAServer::fillDataScaledMsg(adma_ros_driver_msgs::msg::AdmaDataScaled& da
 
     // ins Position
     dataScaledMsg.poi_3.ins_lat_abs = readValue("INS_Lat_Abs_POI3");
-    dataScaledMsg.poi_3.ins_lon_abs = readValue("INS_Long_Abs_POI3");
+    dataScaledMsg.poi_3.ins_long_abs = readValue("INS_Long_Abs_POI3");
     dataScaledMsg.poi_3.ins_height = readValue("INS_Height_POI3");
 
     // relative position
@@ -444,7 +444,7 @@ void GSDAServer::fillDataScaledMsg(adma_ros_driver_msgs::msg::AdmaDataScaled& da
 
     // ins Position
     dataScaledMsg.poi_4.ins_lat_abs = readValue("INS_Lat_Abs_POI4");
-    dataScaledMsg.poi_4.ins_lon_abs = readValue("INS_Long_Abs_POI4");
+    dataScaledMsg.poi_4.ins_long_abs = readValue("INS_Long_Abs_POI4");
     dataScaledMsg.poi_4.ins_height = readValue("INS_Height_POI4");
 
     // relative position
@@ -474,7 +474,7 @@ void GSDAServer::fillDataScaledMsg(adma_ros_driver_msgs::msg::AdmaDataScaled& da
 
     // ins Position
     dataScaledMsg.poi_5.ins_lat_abs = readValue("INS_Lat_Abs_POI5");
-    dataScaledMsg.poi_5.ins_lon_abs = readValue("INS_Long_Abs_POI5");
+    dataScaledMsg.poi_5.ins_long_abs = readValue("INS_Long_Abs_POI5");
     dataScaledMsg.poi_5.ins_height = readValue("INS_Height_POI5");
 
     // relative position
@@ -504,7 +504,7 @@ void GSDAServer::fillDataScaledMsg(adma_ros_driver_msgs::msg::AdmaDataScaled& da
 
     // ins Position
     dataScaledMsg.poi_6.ins_lat_abs = readValue("INS_Lat_Abs_POI6");
-    dataScaledMsg.poi_6.ins_lon_abs = readValue("INS_Long_Abs_POI6");
+    dataScaledMsg.poi_6.ins_long_abs = readValue("INS_Long_Abs_POI6");
     dataScaledMsg.poi_6.ins_height = readValue("INS_Height_POI6");
 
     // relative position
@@ -534,7 +534,7 @@ void GSDAServer::fillDataScaledMsg(adma_ros_driver_msgs::msg::AdmaDataScaled& da
 
     // ins Position
     dataScaledMsg.poi_7.ins_lat_abs = readValue("INS_Lat_Abs_POI7");
-    dataScaledMsg.poi_7.ins_lon_abs = readValue("INS_Long_Abs_POI7");
+    dataScaledMsg.poi_7.ins_long_abs = readValue("INS_Long_Abs_POI7");
     dataScaledMsg.poi_7.ins_height = readValue("INS_Height_POI7");
 
     // relative position
@@ -564,7 +564,7 @@ void GSDAServer::fillDataScaledMsg(adma_ros_driver_msgs::msg::AdmaDataScaled& da
 
     // ins Position
     dataScaledMsg.poi_8.ins_lat_abs = readValue("INS_Lat_Abs_POI8");
-    dataScaledMsg.poi_8.ins_lon_abs = readValue("INS_Long_Abs_POI8");
+    dataScaledMsg.poi_8.ins_long_abs = readValue("INS_Long_Abs_POI8");
     dataScaledMsg.poi_8.ins_height = readValue("INS_Height_POI8");
 
     // relative position
