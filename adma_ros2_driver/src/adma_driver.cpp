@@ -35,7 +35,7 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
   pub_imu_ = this->create_publisher<sensor_msgs::msg::Imu>("adma/imu", 1);
   pub_heading_ = this->create_publisher<std_msgs::msg::Float64>("adma/heading", 1);
   pub_velocity_ = this->create_publisher<std_msgs::msg::Float64>("adma/velocity", 1);
-
+  
   if (mode_ == 1)
       {
         RCLCPP_INFO(get_logger(), "Starting in rosbag replay mode..");
@@ -50,6 +50,7 @@ ADMADriver::ADMADriver(const rclcpp::NodeOptions & options)
 
   if(mode_ == 0)
   {
+    len_ = 856;
     socket_ = new genesys::core::UDPSocket(len_);
     socket_->setupReceiveSocket(param_address, adma_port);
     // only setup UDP connection and loop in live mode
@@ -134,13 +135,10 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
     setupDone = true;
   }
 
-  // if(format_version == "3200"){
-
-  // }
-
   // read Adma msg from UDP data packet
   if (admaHeaderMsg.format_version == 3200) {
     adma_ros_driver_msgs::msg::AdmaData admaData_ros_msg;
+    admaData_ros_msg.adma_header = admaHeaderMsg;
     parser_->mapAdmaMessageToROS(admaData_ros_msg, recv_buf);
     timestamp = admaData_ros_msg.instimemsec + offset_gps_unix;
     timestamp += admaData_ros_msg.instimeweek * week_to_msec;
@@ -164,15 +162,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
     pub_adma_data_->publish(admaData_ros_msg);
     weektime = admaData_ros_msg.instimeweek;
 
-    // double oldHeading = message_heading.data;
-    //   newParser_->extractHeading(message_heading, recv_buf);
-    //   adma_ros_driver_msgs::msg::AdmaStatus status_msg_new;
-    //   newParser_->extractAdmaStatus(status_msg_new, recv_buf);
-      // RCLCPP_INFO(get_logger(), "statusbyte_0 old/new: %d / %d", status_msg.status_bytes.status_byte_0, status_msg_new.status_bytes.status_byte_0);
-      // RCLCPP_INFO(get_logger(), "error_gyro_hw old/new: %d / %d", status_msg.error_warnings.error_gyro_hw, status_msg_new.error_warnings.error_gyro_hw);
   } else {
-    // AdmaDataV334 data_struct;
-    // memcpy(&data_struct, &recv_buf, sizeof(data_struct));
     adma_ros_driver_msgs::msg::AdmaDataScaled adma_data_scaled_msg;
     adma_data_scaled_msg.adma_header = admaHeaderMsg;
     adma_ros_driver_msgs::msg::AdmaStatus status_msg;
@@ -183,7 +173,6 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
     adma_data_scaled_msg.status = status_msg.status;
 
     adma_data_scaled_msg.header.frame_id = adma_frame_;
-    // parser_->parseV334(adma_data_scaled_msg, data_struct);
     // define POI-list for publishing odometry
     pois = {
       adma_data_scaled_msg.poi_1,
@@ -238,36 +227,28 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
     
     status_msg.header.stamp = timestampForMsgs;
     status_msg.header.frame_id = adma_status_frame_;
-    // parser_->parseV334Status(status_msg, data_struct);
     pub_adma_status_->publish(status_msg);
 
-    // double oldHeading = message_heading.data;
-      // newParser_->extractHeading(message_heading, recv_buf);
-      // adma_ros_driver_msgs::msg::AdmaStatus status_msg_new;
-      // newParser_->extractAdmaStatus(status_msg_new, recv_buf);
-      // RCLCPP_INFO(get_logger(), "statusbyte_0 old/new: %d / %d", status_msg.status_bytes.status_byte_0, status_msg_new.status_bytes.status_byte_0);
-      // RCLCPP_INFO(get_logger(), "error_gyro_hw old/new: %d / %d", status_msg.error_warnings.error_gyro_hw, status_msg_new.error_warnings.error_gyro_hw);
+    // kind of a "hack" to ensure clock is only published if INS time is valid
+    if(adma_data_scaled_msg.ins_time_week > 0 && publish_clock_){
+      rosgraph_msgs::msg::Clock clockMsg;
+      clockMsg.clock = timestampForMsgs;
+      pub_clock_->publish(clockMsg);
+    }
 
-      // kind of a "hack" to ensure clock is only published if INS time is valid
-      if(adma_data_scaled_msg.ins_time_week > 0 && publish_clock_){
-        rosgraph_msgs::msg::Clock clockMsg;
-        clockMsg.clock = timestampForMsgs;
-        pub_clock_->publish(clockMsg);
-      }
+    if(mode_ == 0)
+    {
+      // publish raw data as byte array
+    adma_ros_driver_msgs::msg::AdmaDataRaw raw_data_msg;
+    raw_data_msg.size = len_;
+    raw_data_msg.header.stamp  = timestampForMsgs;
+    raw_data_msg.header.frame_id = raw_data_frame_;
 
-      if(mode_ == 0)
-      {
-        // publish raw data as byte array
-      adma_ros_driver_msgs::msg::AdmaDataRaw raw_data_msg;
-      raw_data_msg.size = len_;
-      raw_data_msg.header.stamp  = timestampForMsgs;
-      raw_data_msg.header.frame_id = raw_data_frame_;
-
-      for (int i = 0; i < len_; ++i) {
-        raw_data_msg.raw_data.push_back(recv_buf[i]);
-      }
-      pub_adma_data_raw_->publish(raw_data_msg);
-      }
+    for (int i = 0; i < len_; ++i) {
+      raw_data_msg.raw_data.push_back(recv_buf[i]);
+    }
+    pub_adma_data_raw_->publish(raw_data_msg);
+    }
   }
 
   

@@ -59,7 +59,6 @@ private:
   std::string odometry_child_frame_;
 
   ADMA2ROSParser * parser_;
-  ADMA2ROSParser * newParser_;
 
   // yaw offset angle if the odometry should be rotated by a fixed angle
   double odometry_yaw_offset_;

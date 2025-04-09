@@ -18,8 +18,6 @@ class Mapping
         public:
                 Mapping(uint16_t protocolVersion);
                 ~Mapping();
-        
-                void initialize(const std::string &protocolFileName, const std::string &glossarFileName);
                 nlohmann::json getChannelIDByROSName(const std::string &rosChannelName);
                 std::vector<std::string> splitKeys(const std::string &keys);
                 genesys::DataChannel getDataChannelByID(uint16_t channelID);

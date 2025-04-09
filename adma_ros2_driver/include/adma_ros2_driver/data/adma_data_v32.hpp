@@ -1,12 +1,11 @@
 #include "adma_ros2_driver/data/data_structs.hpp"
-
+#include <adma_core_lib/parser/data_structs.hpp>
 #pragma once
 
 // definition of the whole data packet of the UDP protocol (V 3.2)
 struct AdmaDataV32
 {
-  AdmaStaticHeader staticHeader;
-  AdmaDynamicHeader dynamicHeader;
+  genesys::ADMAnetHeader admanetHeader;
   //contains several states in 1 byte
   unsigned char gpsStatus;
   unsigned char gpsTriggerStatus;

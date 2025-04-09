@@ -2,7 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <rclcpp/rclcpp.hpp>
-
+#include <ament_index_cpp/get_package_share_directory.hpp>
 
 namespace genesys
 {
@@ -11,22 +11,27 @@ namespace parser
 
 Mapping::Mapping(uint16_t protocolVersion){
         version_ = protocolVersion;
+        std::string configPath = ament_index_cpp::get_package_share_directory("adma_ros2_driver");
+        configPath += "/config/protocols/";
+        std::string admanetXMLFile, mappingGlossarFile;
+        mappingGlossarFile = configPath + "channel_mapping_updated.json";
+        RCLCPP_INFO(rclcpp::get_logger("genesys::parser::Mapping"), "Loading Glossar: %s", mappingGlossarFile.c_str());
+        std::ifstream glossarFile(mappingGlossarFile);
+        glossarFile >> glossar_;
+        nlohmann::json xmlFiles = glossar_["xml_files"];
+        for (const auto& entry : xmlFiles) {
+                if(entry["version"] == version_){
+                        std::string xmlFileName = entry["filename"];
+                        admanetXMLFile = configPath + xmlFileName;
+                }
+        }
+        RCLCPP_INFO(rclcpp::get_logger("genesys::parser::Mapping"), "Loading XML: %s", admanetXMLFile.c_str());
+        // load protocol XML
+        channelMap_ = parseXMLProtocol(admanetXMLFile);
+        validateProtocol();
 }
 
 Mapping::~Mapping(){}
-
-void Mapping::initialize(const std::string &protocolFileName, const std::string &glossarFileName)
-{
-        RCLCPP_INFO(rclcpp::get_logger("genesys::parser::Mapping"), "Loading XML: %s", protocolFileName.c_str());
-        RCLCPP_INFO(rclcpp::get_logger("genesys::parser::Mapping"), "Loading Glossar: %s", glossarFileName.c_str());
-        // load json glossar file
-        std::ifstream glossarFile(glossarFileName);
-        glossarFile >> glossar_;
-
-        // load protocol XML
-        channelMap_ = parseXMLProtocol(protocolFileName);
-        validateProtocol();
-}
 
 void Mapping::extractEntries(const nlohmann::json& j, const std::string& parentKey, std::map<std::string, nlohmann::json>& result)
 {

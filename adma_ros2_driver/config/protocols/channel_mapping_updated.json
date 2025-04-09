@@ -1,4 +1,15 @@
 {
+        "xml_files" : [
+                        {"version" : 3330,
+                        "filename" : "ADMA_UDP-DataStream_ADMAnet_v3.3.3_v30.8.0.1.xml"},
+                        {"version" : 3340,
+                        "filename" : "ADMA_UDP-DataStream_ADMAnet_v3.3.4_v30.10.0.40.xml"},
+                        {"version" : 3350,
+                        "filename" : "ADMA_UDP-DataStream_ADMAnet_v3.3.5_v35.2.0.1.xml"},
+                        {"version" : 3360,
+                        "filename" : "ADMA_UDP-DataStream_ADMAnet_v3.3.6_v35.3.0.14.xml"}
+                ]
+        ,
         "status" : {
                 "status_bytes" : {
                         "status_byte_0" : [

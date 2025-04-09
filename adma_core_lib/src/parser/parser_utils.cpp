@@ -31,7 +31,7 @@ bool isLittleEndian() {
 
 void extractAdmanetHeader(adma_ros_driver_msgs::msg::AdmanetHeader &headerMsg, std::array<char, 856>& buffer)
 {
-  genesys::AdmaHeader admaHeaderStruct;
+  genesys::ADMAnetHeader admaHeaderStruct;
   memcpy(&admaHeaderStruct, &buffer, sizeof(admaHeaderStruct));
   // fill static header information
   headerMsg.genesys_id = admaHeaderStruct.genesysid;

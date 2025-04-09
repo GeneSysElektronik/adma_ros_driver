@@ -1,21 +1,6 @@
 std_msgs/Header header
 
-# adma static header
-string genesysid
-string headerversion
-uint32 formatid
-string formatversion
-uint32 serialno
-uint32 alias
-
-# adma dynamic header
-uint32 configid
-uint32 configformat
-uint32 configversion
-uint32 configsize
-uint32 byteoffset
-uint32 slicesize
-uint32 slicedata
+AdmanetHeader adma_header
 
 # status
 int32 statusgpsmode

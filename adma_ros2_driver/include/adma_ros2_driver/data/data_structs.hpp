@@ -18,36 +18,6 @@ struct Reserved2
   char reservedSpace[2];
 };
 
-// struct of the static header
-struct AdmaStaticHeader
-{
-  char genesysid[4];
-  char headerversion[4];
-  uint32_t formatid;
-  char formatversion[4];
-  Reserved16 reserved;  
-  uint32_t serialno;
-  char alias[32];
-};
-
-// struct of the dynamic header
-struct AdmaDynamicHeader
-{
-  uint32_t configid;
-  uint32_t configformat;
-  uint32_t configversion;
-  uint32_t configsize;
-  uint32_t byteoffset;
-  uint32_t slicesize;
-  int32_t slicedata;
-};
-
-struct AdmaNetHeader
-{
-  AdmaStaticHeader staticHeader;
-  AdmaDynamicHeader dynamicHeader;
-};
-
 // struct to represent a sensor body
 struct SensorBody
 {

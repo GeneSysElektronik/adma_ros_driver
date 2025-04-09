@@ -1,52 +1,18 @@
 #include "adma_ros2_driver/parser/adma2ros_parser.hpp"
 
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
-#include <ament_index_cpp/get_package_share_directory.hpp>
+
 #include <iostream>
 
 #include "adma_core_lib/parser/parser_utils.hpp"
 
-ADMA2ROSParser::ADMA2ROSParser(std::string version)
-: parserV32_(), parserV333_(), parserV334_(), parserV335_(), version_(version)
-{
-}
-
 ADMA2ROSParser::ADMA2ROSParser(u_int16_t version)
 : protocolVersion_(version){
   if(protocolVersion_ == 3200){
-    
+    parserV32_ = new ADMA2ROSParserV32();
   } else {
-    std::string admanetXMLFile, mappingGlossarFile;
-    findMappingFiles(admanetXMLFile, mappingGlossarFile);
     mapping_ = new genesys::parser::Mapping(version);
-    mapping_->initialize(admanetXMLFile, mappingGlossarFile);
   }
-}
-
-void ADMA2ROSParser::findMappingFiles(std::string &protocolFileName, std::string &glossarFileName)
-{
-  std::string configPath = ament_index_cpp::get_package_share_directory("adma_ros2_driver");
-  configPath += "/config/protocols/";
-  std::string xmlFile;
-  uint16_t mappingVersion;
-  if(protocolVersion_ == 3330)
-  {
-    xmlFile += "ADMA_UDP-DataStream_ADMAnet_v3.3.3_v30.8.0.1.xml";
-  }
-  else if(protocolVersion_ == 3340)
-  {
-    xmlFile += "ADMA_UDP-DataStream_ADMAnet_v3.3.4_v30.10.0.40.xml";
-  }
-    else if(protocolVersion_ == 3350)
-  {
-    xmlFile += "ADMA_UDP-DataStream_ADMAnet_v3.3.5_v35.2.0.1.xml";
-  }
-  else if(protocolVersion_ == 3360)
-  {
-    xmlFile += "ADMA_UDP-DataStream_ADMAnet_v3.3.6_v35.3.0.14.xml";
-  }
-  protocolFileName = configPath + xmlFile;
-  glossarFileName = configPath + "channel_mapping_updated.json";
 }
 
 void ADMA2ROSParser::extractHeading(std_msgs::msg::Float64 &headingMsg, std::array<char, 856> & recv_data)
@@ -123,33 +89,6 @@ void ADMA2ROSParser::extractAdmaStatus(adma_ros_driver_msgs::msg::AdmaStatus &st
   // status_byte_5 (2105)
   statusMsg.status.status_robot = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_robot", recv_data);
   statusMsg.status.status_dualant_mode = mapping_->loadDataFromBuffer<unsigned char, uint8_t>("status.status.status_dualant_mode", recv_data);
-}
-
-void ADMA2ROSParser::extractAdmaHeader(adma_ros_driver_msgs::msg::AdmaDataScaled &admaScaledMsg, std::array<char, 856> &recv_data)
-{
-  // genesys::AdmaHeader admaHeader;
-  // memcpy(&admaHeader, &recv_data, sizeof(admaHeader));
-  // admaScaledMsg.genesys_id = admaHeader.genesysid;
-  // std::stringstream ss;
-  // ss << int(admaHeader.headerversion[0]) << int(admaHeader.headerversion[1])
-  //    << int(admaHeader.headerversion[2]) << int(admaHeader.headerversion[3]);
-  //    admaScaledMsg.header_version = ss.str();
-  // ss.clear();
-  // ss.str("");
-  // admaScaledMsg.format_id = admaHeader.formatid;
-  // ss << int(admaHeader.formatversion[0]) << int(admaHeader.formatversion[1])
-  //    << int(admaHeader.formatversion[2]) << int(admaHeader.formatversion[3]);
-  // admaScaledMsg.format_version = ss.str();
-  // admaScaledMsg.serial_number = admaHeader.serialno;
-
-  // // fill dynamic header information
-  // admaScaledMsg.config_id = admaHeader.configid;
-  // admaScaledMsg.config_format = admaHeader.configformat;
-  // admaScaledMsg.config_version = admaHeader.configversion;
-  // admaScaledMsg.config_size = admaHeader.configsize;
-  // admaScaledMsg.byte_offset = admaHeader.byteoffset;
-  // admaScaledMsg.slice_size = admaHeader.slicesize;
-  // admaScaledMsg.slice_data = admaHeader.slicedata;
 }
 
 void ADMA2ROSParser::extractAdmaDataScaled(adma_ros_driver_msgs::msg::AdmaDataScaled &admaScaledMsg, std::array<char, 856> & recv_data)
@@ -291,91 +230,16 @@ void ADMA2ROSParser::extractPOIs(adma_ros_driver_msgs::msg::AdmaDataScaled &adma
 void ADMA2ROSParser::mapAdmaMessageToROS(
   adma_ros_driver_msgs::msg::AdmaData & ros_msg, std::array<char, 856> & recv_data)
 {
-  if (version_ == "v3.2") {
-    AdmaDataV32 adma_data;
-    memcpy(&adma_data, &recv_data, sizeof(adma_data));
-    parseStaticHeader(ros_msg, adma_data.staticHeader);
-    parseDynamicHeader(ros_msg, adma_data.dynamicHeader);
-    getStatusGPS(ros_msg, adma_data.gpsStatus);
-    getStatusTrigger(ros_msg, adma_data.gpsTriggerStatus);
-    getEVKStatus(ros_msg, adma_data.evkStatus);
-    unsigned char ew_bytes[] = {
-      adma_data.dataError1, adma_data.dataError2, adma_data.dataWarn1, adma_data.dataErrorHW};
-    getErrorandWarning(ros_msg, ew_bytes);
-    parserV32_.mapAdmaMessageToROS(ros_msg, adma_data);
-  } else if (version_ == "v3.3.3") {
-    AdmaDataV333 adma_data;
-    memcpy(&adma_data, &recv_data, sizeof(adma_data));
-    parseStaticHeader(ros_msg, adma_data.staticHeader);
-    parseDynamicHeader(ros_msg, adma_data.dynamicHeader);
-    getStatusGPS(ros_msg, adma_data.gnssStatus);
-    getStatusTrigger(ros_msg, adma_data.signalInStatus);
-    getEVKStatus(ros_msg, adma_data.miscStatus);
-    parserV333_.getKFStatus(ros_msg, adma_data.kfStatus);
-    unsigned char ew_bytes[] = {
-      adma_data.dataError1, adma_data.dataError2, adma_data.dataWarn1, adma_data.dataError3};
-    getErrorandWarning(ros_msg, ew_bytes);
-    parserV333_.mapAdmaMessageToROS(ros_msg, adma_data);
-  }
+  AdmaDataV32 adma_data;
+  memcpy(&adma_data, &recv_data, sizeof(adma_data));
+  getStatusGPS(ros_msg, adma_data.gpsStatus);
+  getStatusTrigger(ros_msg, adma_data.gpsTriggerStatus);
+  getEVKStatus(ros_msg, adma_data.evkStatus);
+  unsigned char ew_bytes[] = {
+    adma_data.dataError1, adma_data.dataError2, adma_data.dataWarn1, adma_data.dataErrorHW};
+  getErrorandWarning(ros_msg, ew_bytes);
+  parserV32_->mapAdmaMessageToROS(ros_msg, adma_data);
   parseScaledData(ros_msg);
-}
-
-void ADMA2ROSParser::parseV334(
-  adma_ros_driver_msgs::msg::AdmaDataScaled & ros_msg, AdmaDataV334 & recv_data)
-{
-  parserV334_.mapAdmaMessageToROS(ros_msg, recv_data);
-}
-
-void ADMA2ROSParser::parseV334Status(
-  adma_ros_driver_msgs::msg::AdmaStatus & ros_msg, AdmaDataV334 & local_data)
-{
-  parserV334_.mapStatusToROS(ros_msg, local_data);
-}
-
-void ADMA2ROSParser::parseV335(
-    adma_ros_driver_msgs::msg::AdmaDataScaled& ros_msg, AdmaDataV335& recv_data)
-{
-    parserV335_.mapAdmaMessageToROS(ros_msg, recv_data);
-}
-
-void ADMA2ROSParser::parseV335Status(
-    adma_ros_driver_msgs::msg::AdmaStatus& ros_msg, AdmaDataV335& local_data)
-{
-    parserV335_.mapStatusToROS(ros_msg, local_data);
-}
-
-template <typename AdmaDataHeaderStruct>
-void ADMA2ROSParser::parseStaticHeader(
-  adma_ros_driver_msgs::msg::AdmaData & ros_msg, AdmaDataHeaderStruct & static_header)
-{
-  // fill static header information
-  ros_msg.genesysid = static_header.genesysid;
-  std::stringstream ss;
-  ss << int(static_header.headerversion[0]) << int(static_header.headerversion[1])
-     << int(static_header.headerversion[2]) << int(static_header.headerversion[3]);
-  ros_msg.headerversion = ss.str();
-  ss.clear();
-  ss.str("");
-  ros_msg.formatid = static_header.formatid;
-  //TODO: this value is parsed wrong?!
-  // ss << int(static_header.formatversion[0]) << int(static_header.formatversion[1])
-  //    << int(static_header.formatversion[2]) << int(static_header.formatversion[3]);
-  // ros_msg.formatversion = ss.str();
-  ros_msg.serialno = static_header.serialno;
-}
-
-template <typename AdmaDataHeaderStruct>
-void ADMA2ROSParser::parseDynamicHeader(
-  adma_ros_driver_msgs::msg::AdmaData & ros_msg, AdmaDataHeaderStruct & dynamic_header)
-{
-  // fill dynamic header information
-  ros_msg.configid = dynamic_header.configid;
-  ros_msg.configformat = dynamic_header.configformat;
-  ros_msg.configversion = dynamic_header.configversion;
-  ros_msg.configsize = dynamic_header.configsize;
-  ros_msg.byteoffset = dynamic_header.byteoffset;
-  ros_msg.slicesize = dynamic_header.slicesize;
-  ros_msg.slicedata = dynamic_header.slicedata;
 }
 
 /// \file
@@ -925,10 +789,11 @@ void ADMA2ROSParser::extractOdometry(
   double pitch_rad = deg2Rad(ros_msg.ins_pitch);
   double yaw_rad;
 
-  if (version_ == "v3.3.4") {
-      double yaw_rad = deg2Rad((ros_msg.ins_yaw + yawOffset));
+  if (protocolVersion_< 3350) {
+    // relative yaw was introduced in admanet v3.3.5  
+    double yaw_rad = deg2Rad((ros_msg.ins_yaw + yawOffset));
   }
-  else if (version_ == "v3.3.5") {
+  else {
       double yaw_rad = deg2Rad((ros_msg.ins_yaw_rel + yawOffset));
   }
   

@@ -6,7 +6,7 @@ namespace genesys
 {
 
 // struct of the ADMA header
-struct AdmaHeader
+struct ADMAnetHeader
 {
         // static part
         char genesysid[4];
