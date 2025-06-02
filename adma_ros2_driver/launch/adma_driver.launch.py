@@ -12,10 +12,11 @@ def generate_launch_description():
         driver_config_arg = DeclareLaunchArgument('driver_config', default_value=driver_config)
         log_level_arg = DeclareLaunchArgument('log_level', default_value='INFO')
         rosbag_file_arg = DeclareLaunchArgument('rosbag_path', default_value='./')
+        adma_namespace_arg = DeclareLaunchArgument('adma_namespace', default_value='genesys')
 
         ### parameter for GSDB logging, used for ADMA-PP ####
         log_gsdb_arg = DeclareLaunchArgument('log_gsdb', default_value='True')
-        raw_data_topic = '/genesys/adma/data_raw'
+        raw_data_topic = 'adma/data_raw'
 
         ### parameters for recording data into a rosbag ###
         record_ros_bag_arg = DeclareLaunchArgument('record_rosbag', default_value='False')
@@ -35,7 +36,7 @@ def generate_launch_description():
                 package='adma_ros2_driver',
                 executable='adma_driver',
                 output='screen',
-                namespace='genesys',
+                namespace=LaunchConfiguration('adma_namespace'),
                 name='adma_ros2_driver',
                 parameters=[LaunchConfiguration('driver_config')],
                 arguments=['--ros-args', '--log-level', LaunchConfiguration('log_level')],
@@ -62,7 +63,7 @@ def generate_launch_description():
                 package='adma_tools_cpp',
                 executable='bag2gsdb_converter',
                 output='screen',
-                namespace='genesys',
+                namespace=LaunchConfiguration('adma_namespace'),
                 name='bag2gsdb',
                 parameters=[{
                         'rosbag_path': LaunchConfiguration('rosbag_path'),
@@ -80,6 +81,7 @@ def generate_launch_description():
                 record_ros_bag_arg,
                 rosbag_file_arg,
                 log_gsdb_arg,
+                adma_namespace_arg,
                 # #  nodes
                 adma_driver,
                 rosbag_recorder,
