@@ -179,6 +179,7 @@ void ADMA2ROSParser::extractAdmaDataScaled(adma_ros_driver_msgs::msg::AdmaDataSc
   admaScaledMsg.ins_stddev_long = mapping_->loadDataFromBuffer<uint16_t, double>("data_scaled.ins_stddev_long", recv_data);
   admaScaledMsg.ins_stddev_height = mapping_->loadDataFromBuffer<uint16_t, double>("data_scaled.ins_stddev_height", recv_data);
   mapping_->loadVector3FromBuffer("data_scaled.ins_vel_frame", recv_data, admaScaledMsg.ins_vel_frame);
+  mapping_->loadVector3FromBuffer("data_scaled.ins_stddev_vel", recv_data, admaScaledMsg.ins_stddev_vel);
 
   admaScaledMsg.ins_stddev_roll = mapping_->loadDataFromBuffer<int8_t, double>("data_scaled.ins_stddev_roll", recv_data);
   admaScaledMsg.ins_stddev_pitch = mapping_->loadDataFromBuffer<int8_t, double>("data_scaled.ins_stddev_pitch", recv_data);
