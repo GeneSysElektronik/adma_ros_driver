@@ -18,7 +18,7 @@ namespace genesys
 namespace tools
 {
 GSDAServer::GSDAServer(const rclcpp::NodeOptions & options)
-: Node("gsda_server", options), 
+: Node("gsda_server", options),
 msgCounter_(0),
 tfBroadcaster_(*this)
 {
@@ -62,14 +62,14 @@ tfBroadcaster_(*this)
     trajectory_msg_.header.frame_id = odometry_child_frame_;
   }
 
-  // TODO: if a new protocol version is released, inject the version as ROS parameter for parsing 
-  parser_ = new ADMA2ROSParser("v3.3.4");
+  // TODO: if a new protocol version is released, inject the version as ROS parameter for parsing
+  parser_ = new ADMA2ROSParser(3360);
 
   updateLoop();
 }
 
-GSDAServer::~GSDAServer() 
-{ 
+GSDAServer::~GSDAServer()
+{
   RCLCPP_INFO(get_logger(), "GSDA file streaming done.. Read %ld messages from file", msgCounter_);
 }
 
@@ -96,6 +96,7 @@ void GSDAServer::updateLoop()
   unsigned long long offset_gps_unix = 315964800000;
   unsigned long long week_to_msec = 604800000;
   unsigned long long timestamp;
+  builtin_interfaces::msg::Time timestampForMsgs;
 
   while(rclcpp::ok())
   {
@@ -115,14 +116,16 @@ void GSDAServer::updateLoop()
         continue;
       }
       readLine();
-      
+
       fillDataScaledMsg(dataScaledMsg);
       timestamp = dataScaledMsg.ins_time_msec + offset_gps_unix;
       timestamp += dataScaledMsg.ins_time_week * week_to_msec;
       dataScaledMsg.time_msec = timestamp;
       dataScaledMsg.time_nsec = (timestamp % 1000) * 1E6;
-      dataScaledMsg.header.stamp.sec = timestamp / 1000;
-      dataScaledMsg.header.stamp.nanosec = (timestamp % 1000) * 1E6;
+
+      timestampForMsgs.sec = timestamp / 1000;
+      timestampForMsgs.nanosec = (timestamp % 1000) * 1E6;
+      dataScaledMsg.header.stamp = timestampForMsgs;
       pois = {
         dataScaledMsg.poi_1,
         dataScaledMsg.poi_2,
@@ -135,8 +138,7 @@ void GSDAServer::updateLoop()
       };
       // extract separate msgs
       parser_->extractNavSatFix(dataScaledMsg, navsatfixMsg, pois, navsatfix_id_);
-      navsatfixMsg.header.stamp.sec = timestamp / 1000;
-      navsatfixMsg.header.stamp.nanosec = (timestamp % 1000) * 1E6;
+      navsatfixMsg.header.stamp = timestampForMsgs;
       parser_->extractIMU(dataScaledMsg, imuMsg, pois, imu_id_);
       // ADMA PP doesnt provide "hr" channels so use normal body rate/acc for IMU
       imuMsg.linear_acceleration.x = dataScaledMsg.acc_body.x * 9.81;
@@ -145,21 +147,18 @@ void GSDAServer::updateLoop()
       imuMsg.angular_velocity.x = deg2Rad(dataScaledMsg.rate_body.x);
       imuMsg.angular_velocity.y = deg2Rad(dataScaledMsg.rate_body.y);
       imuMsg.angular_velocity.z = deg2Rad(dataScaledMsg.rate_body.z);
-      imuMsg.header.stamp.sec = timestamp / 1000;
-      imuMsg.header.stamp.nanosec = (timestamp % 1000) * 1E6;
+      imuMsg.header.stamp = timestampForMsgs;
       // read heading and velocity
       headingMsg.data = dataScaledMsg.ins_yaw;
-      geometry_msgs::msg::Vector3 insSource = velocity_id_ == 0 
-          ? dataScaledMsg.ins_vel_frame 
+      geometry_msgs::msg::Vector3 insSource = velocity_id_ == 0
+          ? dataScaledMsg.ins_vel_frame
           : pois[velocity_id_ - 1].ins_vel_hor;
       velMsg.data = std::sqrt(std::pow(insSource.x, 2) + std::pow(insSource.y, 2)) * 3.6;
-      
-      extractBytes(stateMsg, dataScaledMsg);
-      stateMsg.header.stamp.sec = timestamp / 1000;
-      stateMsg.header.stamp.nanosec = (timestamp % 1000) * 1E6;
 
-      odomMsg.header.stamp.sec = timestamp / 1000;
-      odomMsg.header.stamp.nanosec = (timestamp % 1000) * 1E6;
+      extractBytes(stateMsg, dataScaledMsg);
+      stateMsg.header.stamp = timestampForMsgs;
+
+      odomMsg.header.stamp = timestampForMsgs;
       parser_->extractOdometry(dataScaledMsg, odomMsg, odometry_yaw_offset_, pois, odometry_id_);
 
       // TODO: extract the TF stuff to separate node for reusage
@@ -167,8 +166,7 @@ void GSDAServer::updateLoop()
       {
         // TODO: evaluate those transformations!!
         geometry_msgs::msg::TransformStamped transform_msg;
-        transform_msg.header.stamp.sec = timestamp / 1000;
-        transform_msg.header.stamp.nanosec = (timestamp % 1000) * 1E6;
+        transform_msg.header.stamp = timestampForMsgs;
         transform_msg.header.frame_id = "map";
         transform_msg.child_frame_id = adma_frame_;
         transform_msg.transform.rotation = odomMsg.pose.pose.orientation;
@@ -199,7 +197,7 @@ void GSDAServer::updateLoop()
       pub_navsat_fix_->publish(navsatfixMsg);
       pub_imu_->publish(imuMsg);
       pub_heading_->publish(headingMsg);
-      pub_velocity_->publish(velMsg);    
+      pub_velocity_->publish(velMsg);
       pub_odometry_->publish(odomMsg);
 
       std::this_thread::sleep_for(std::chrono::milliseconds(1000 / frequency_));
@@ -208,7 +206,7 @@ void GSDAServer::updateLoop()
 
     rclcpp::shutdown();
     }
-  
+
 }
 
 void GSDAServer::readLine()
@@ -242,7 +240,7 @@ double GSDAServer::readValue(std::string dataName)
       return std::stod(row[index]);
     }
   }
-  return 0.0;  
+  return 0.0;
 }
 
 int GSDAServer::readByteValue(std::string dataName)
@@ -256,8 +254,11 @@ int GSDAServer::readByteValue(std::string dataName)
       return std::stoi(row[index].c_str());
     }
   }
-  RCLCPP_WARN(get_logger(), "Channelname %s not found in GSDA File..", dataName.c_str());
-  return 0;  
+  if (std::find(unsupportedFields_.begin(), unsupportedFields_.end(), dataName) == unsupportedFields_.end()) {
+    unsupportedFields_.push_back(dataName);
+    RCLCPP_WARN(get_logger(), "Channelname %s not found in GSDA File..", dataName.c_str());
+  }
+  return 0;
 }
 
 void GSDAServer::extractBytes(adma_ros_driver_msgs::msg::AdmaStatus &stateMsg, adma_ros_driver_msgs::msg::AdmaDataScaled& dataScaledMsg)
@@ -291,16 +292,126 @@ void GSDAServer::extractBytes(adma_ros_driver_msgs::msg::AdmaStatus &stateMsg, a
   dataScaledMsg.error_warning.error_3 = error3;
 
   // parse SEW bits of bytes
-  parser_->parserV334_.mapStatusBit0(dataScaledMsg.status, gnssStatus);
-  parser_->parserV334_.mapStatusBit1(dataScaledMsg.status, signalInStatus);
-  parser_->parserV334_.mapStatusBit2(dataScaledMsg.status, miscStatus);
-  parser_->parserV334_.mapStatusBit4(dataScaledMsg.status, kfStatus);
-  parser_->parserV334_.mapStatusBit5(dataScaledMsg.status, statusRobot);
+  // status_byte_0
+  /* status gnss mode */
+  std::bitset<8> gnss_status_byte = gnssStatus;
+  std::bitset<4> status_gnss_mode;
+  status_gnss_mode[0] = gnss_status_byte[0];
+  status_gnss_mode[1] = gnss_status_byte[1];
+  status_gnss_mode[2] = gnss_status_byte[2];
+  status_gnss_mode[3] = gnss_status_byte[3];
+  stateMsg.status.status_gnss_mode = status_gnss_mode.to_ulong();
+  bool standstill_c = getbit(gnssStatus, 4);
+  bool status_skidding = getbit(gnssStatus, 5);
+  bool status_external_vel = getbit(gnssStatus, 7);
+  /* status stand still */
+  stateMsg.status.status_standstill = standstill_c;
+  /* status skidding */
+  stateMsg.status.status_skidding = status_skidding;
+  /* status external velocity slip */
+  stateMsg.status.status_external_vel_out = status_external_vel;
 
-  parser_->parserV334_.mapErrorBit0(stateMsg.error_warnings, error1);
-  parser_->parserV334_.mapErrorBit1(stateMsg.error_warnings, error2);
-  parser_->parserV334_.mapWarningBit0(stateMsg.error_warnings, warn1);
-  parser_->parserV334_.mapErrorBit2(stateMsg.error_warnings, error3);
+  // status_byte_1
+  bool status_trig_gnss = getbit(signalInStatus, 0);
+  bool status_signal_in3 = getbit(signalInStatus, 1);
+  bool status_signal_in2 = getbit(signalInStatus, 2);
+  bool status_signal_in1 = getbit(signalInStatus, 3);
+  bool status_alignment = getbit(signalInStatus, 4);
+  bool status_ahrs_ins = getbit(signalInStatus, 5);
+  bool status_dead_reckoning = getbit(signalInStatus, 6);
+  bool status_synclock = getbit(signalInStatus, 7);
+  /* status statustriggnss */
+  stateMsg.status.status_trig_gnss = status_trig_gnss;
+  /* status statussignalin3 */
+  stateMsg.status.status_signal_in3 = status_signal_in3;
+  /* status statussignalin2 */
+  stateMsg.status.status_signal_in2 = status_signal_in2;
+  /* status statussignalin1 */
+  stateMsg.status.status_signal_in1 = status_signal_in1;
+  /* status statusalignment */
+  stateMsg.status.status_alignment = status_alignment;
+  /* status statusahrsins */
+  stateMsg.status.status_ahrs_ins = status_ahrs_ins;
+  /* status statusdeadreckoning */
+  stateMsg.status.status_dead_reckoning = status_dead_reckoning;
+  /* status statussynclock */
+  stateMsg.status.status_synclock = status_synclock;
+
+  // status_byte_2
+  bool status_evk_activ = getbit(miscStatus, 0);
+  bool status_evk_estimates = getbit(miscStatus, 1);
+  bool status_heading_executed = getbit(miscStatus, 2);
+  bool status_configuration_changed = getbit(miscStatus, 3);
+  /* status statustriggnss */
+  stateMsg.status.status_evk_activ = status_evk_activ;
+  /* status status_evk_estimates */
+  stateMsg.status.status_evk_estimates = status_evk_estimates;
+  /* status status_heading_executed */
+  stateMsg.status.status_heading_executed = status_heading_executed;
+  /* status status_configuration_changed */
+  stateMsg.status.status_config_changed = status_configuration_changed;
+  /* status tilt */
+  std::bitset<8> evk_status_byte = miscStatus;
+  std::bitset<2> status_tilt;
+  status_tilt[0] = evk_status_byte[4];
+  status_tilt[1] = evk_status_byte[5];
+  stateMsg.status.status_tilt = status_tilt.to_ulong();
+  /* status pos */
+  std::bitset<2> status_pos;
+  status_pos[0] = evk_status_byte[6];
+  status_pos[1] = evk_status_byte[7];
+  stateMsg.status.status_pos = status_pos.to_ulong();
+
+  // status_byte_4
+  bool status_kalmanfilter_settled = getbit(kfStatus, 0);
+  bool status_kf_lat_stimulated = getbit(kfStatus, 1);
+  bool status_kf_long_stimulated = getbit(kfStatus, 2);
+  bool status_kf_steady_state = getbit(kfStatus, 3);
+  stateMsg.status.status_kalmanfilter_settled = status_kalmanfilter_settled;
+  stateMsg.status.status_kf_lat_stimulated = status_kf_lat_stimulated;
+  stateMsg.status.status_kf_long_stimulated = status_kf_long_stimulated;
+  stateMsg.status.status_kf_steady_state = status_kf_steady_state;
+  std::bitset<8> kf_status_byte = kfStatus;
+  std::bitset<2> status_speed;
+  status_speed[0] = kf_status_byte[4];
+  status_speed[1] = kf_status_byte[5];
+  stateMsg.status.status_speed = status_speed.to_ulong();
+
+  // status_byte_5
+  std::bitset<8> bit_status_robot = statusRobot;
+  std::bitset<4> status_robot;
+  for (size_t i = 0; i < 4; i++) {
+    status_robot[i] = bit_status_robot[i];
+  }
+  stateMsg.status.status_robot = status_robot.to_ulong();
+
+  // error_byte_0
+  stateMsg.error_warnings.error_gyro_hw = getbit(error1, 0);
+  stateMsg.error_warnings.error_accel_hw = getbit(error1, 1);
+  stateMsg.error_warnings.error_ext_speed_hw = getbit(error1, 2);
+  stateMsg.error_warnings.error_gnss_hw = getbit(error1, 3);
+  stateMsg.error_warnings.error_data_bus_checksum = getbit(error1, 4);
+  stateMsg.error_warnings.error_eeprom = getbit(error1, 5);
+  stateMsg.error_warnings.error_cmd = getbit(error1, 7);
+
+  // error_byte_1
+  stateMsg.error_warnings.error_data_bus = getbit(error2, 0);
+  stateMsg.error_warnings.error_can_bus = getbit(error2, 1);
+  stateMsg.error_warnings.error_num = getbit(error2, 3);
+  stateMsg.error_warnings.error_temp_warning = getbit(error2, 4);
+  stateMsg.error_warnings.error_reduced_accuracy = getbit(error2, 5);
+  stateMsg.error_warnings.error_range_max = getbit(error2, 6);
+
+  // warn_byte_0
+  stateMsg.error_warnings.warn_gnss_no_solution = getbit(warn1, 0);
+  stateMsg.error_warnings.warn_gnss_vel_ignored = getbit(warn1, 1);
+  stateMsg.error_warnings.warn_gnss_pos_ignored = getbit(warn1, 2);
+  stateMsg.error_warnings.warn_gnss_unable_to_cfg = getbit(warn1, 3);
+  stateMsg.error_warnings.warn_speed_off = getbit(warn1, 4);
+  stateMsg.error_warnings.warn_gnss_dualant_ignored = getbit(warn1, 5);
+
+  // error_byte_2
+    stateMsg.error_warnings.error_hw_sticky = getbit(error3, 0);
 }
 
 void GSDAServer::fillDataScaledMsg(adma_ros_driver_msgs::msg::AdmaDataScaled& dataScaledMsg)
@@ -577,9 +688,9 @@ void GSDAServer::fillDataScaledMsg(adma_ros_driver_msgs::msg::AdmaDataScaled& da
     dataScaledMsg.poi_8.ins_vel_hor.z = readValue("INS_Vel_Hor_Z_POI8");
 
 
-    // external velocity 
+    // external velocity
     dataScaledMsg.ext_vel_x_corrected = readValue("Ext_Vel_X_corrected");
-    
+
     // system data
     dataScaledMsg.system_ta = readValue("System_TA");
     dataScaledMsg.system_temp = readValue("System_Temp");

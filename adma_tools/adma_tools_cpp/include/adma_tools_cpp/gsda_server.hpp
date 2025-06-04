@@ -41,6 +41,7 @@ private:
 	std::vector<std::string> row;
 	std::string line, word;
   std::map<std::string, int> indexMap_;
+  std::vector<std::string> unsupportedFields_;
 
   rclcpp::Publisher<adma_ros_driver_msgs::msg::AdmaDataScaled>::SharedPtr pub_adma_data_scaled_;
   rclcpp::Publisher<adma_ros_driver_msgs::msg::AdmaStatus>::SharedPtr pub_adma_status_;
