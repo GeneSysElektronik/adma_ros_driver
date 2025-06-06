@@ -8,7 +8,7 @@ std::map<int, genesys::DataChannel> parseXMLProtocol(const std::string &xmlFileN
         xmlDoc.LoadFile(xmlFileName.c_str());
 
         if (xmlDoc.LoadFile(xmlFileName.c_str()) != tinyxml2::XML_SUCCESS) {
-                // std::cerr << "Fehler beim Laden der XML-Datei: " << xmlFileName << std::endl;
+                std::cerr << "Fehler beim Laden der XML-Datei: " << xmlFileName << std::endl;
                 return channelMap;
         }
 

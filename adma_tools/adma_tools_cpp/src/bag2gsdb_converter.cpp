@@ -1,6 +1,6 @@
 #include "adma_tools_cpp/bag2gsdb_converter.hpp"
 #include <rclcpp_components/register_node_macro.hpp>
-
+#include <filesystem>
 namespace genesys
 {
 namespace tools
@@ -18,13 +18,14 @@ msgCounter_(0)
                 std::stringstream datetime;
                 datetime << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d-%H-%M-%S");
                 filePath_ = datetime.str() + ".gsdb";
-                
+
         }else{
                 //otherwise create a file next to the *db3 rosbag file
-                filePath_ = filePath_ + "/raw_data.gsdb";
+                std::filesystem::path bag_file_path(filePath_);
+                filePath_ =  bag_file_path.parent_path().string() + "/raw_data.gsdb";
         }
         gdsbFile_ = std::ofstream(filePath_);
-        
+
         subRawData_ = create_subscription<adma_ros_driver_msgs::msg::AdmaDataRaw>(
                 "/genesys/adma/data_raw", 10, std::bind(&Bag2GSDBConverter::rawDataCallback,
                 this, std::placeholders::_1));

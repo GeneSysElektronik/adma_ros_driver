@@ -1,0 +1,353 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- GeneSys Elektronik GmbH -->
+<!-- VERSION "ETH-Message-Format: DELTA1:1-Data; XML-Type: GeneSys; Format Version: 7.0.0.0; Datei Version: 30.5.1.0" -->
+<!-- Confidentiality: All information within this document is strictly confidential and must not be passed to 3rd parties without the prior consent of GeneSys Elektronik GmbH. -->
+<MessageFormatDefinition>
+  <FormatHeader>
+    <GeneSysID>GBIN</GeneSysID>
+    <DynamicHeaderVersion>0.0.0.0</DynamicHeaderVersion>
+    <FormatID>20001000</FormatID>
+    <FormatVersion>7.0.0.0</FormatVersion>
+    <FormatName>AddOnDelta</FormatName>
+    <HeaderSize>8</HeaderSize>
+    <DataSize>80</DataSize>
+  </FormatHeader>
+  <MeasurementData>
+    <Package Name="Delta_Target_Longitude" PackageID="6000">
+      <Description>Delta Target Longitude</Description>
+      <Channel Name="Target_Longitude" ChannelID="6000">
+        <Description>Target Longitude</Description>
+        <Scale>1</Scale>
+        <Unit>°</Unit>
+        <DataType>GSFloat</DataType>
+        <Min>-2147483648</Min>
+        <Max>2147483647</Max>
+        <DecimalPlaces>7</DecimalPlaces>
+        <PreDecimalPlaces>3</PreDecimalPlaces>
+        <ByteOffset>8</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>64</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Delta_Target_Latitude" PackageID="6001">
+      <Description>Delta Target Latitude</Description>
+      <Channel Name="Target_Latitude" ChannelID="6003">
+        <Description>Target Latitude</Description>
+        <Scale>1</Scale>
+        <Unit>°</Unit>
+        <DataType>GSFloat</DataType>
+        <Min>-2147483648</Min>
+        <Max>2147483647</Max>
+        <DecimalPlaces>7</DecimalPlaces>
+        <PreDecimalPlaces>3</PreDecimalPlaces>
+        <ByteOffset>16</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>64</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Delta_Version" PackageID="6002">
+      <Description>Delta Version</Description>
+      <Channel Name="Code_version" ChannelID="6004">
+        <Description>Code version (Current value 7)</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>65535</Max>
+        <DecimalPlaces>0</DecimalPlaces>
+        <PreDecimalPlaces>1</PreDecimalPlaces>
+        <ByteOffset>26</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Delta_Longitudinal" PackageID="6003">
+      <Description>Delta Longitudinal</Description>
+      <Channel Name="Long_Delta_Distance" ChannelID="6005">
+        <Description>Longitudinal distance</Description>
+        <Scale>1</Scale>
+        <Unit>m</Unit>
+        <DataType>IEEEFloat</DataType>
+        <Min>-2147483648</Min>
+        <Max>2147483647</Max>
+        <DecimalPlaces>2</DecimalPlaces>
+        <PreDecimalPlaces>8</PreDecimalPlaces>
+        <ByteOffset>28</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="Long_Delta_Velocity" ChannelID="6006">
+        <Description>Longitudinal difference velocity</Description>
+        <Scale>1</Scale>
+        <Unit>m/s</Unit>
+        <DataType>IEEEFloat</DataType>
+        <Min>-2147483648</Min>
+        <Max>2147483647</Max>
+        <DecimalPlaces>3</DecimalPlaces>
+        <PreDecimalPlaces>3</PreDecimalPlaces>
+        <ByteOffset>32</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Delta_Lateral" PackageID="6004">
+      <Description>Delta Lateral</Description>
+      <Channel Name="Lat_Delta_Distance" ChannelID="6007">
+        <Description>Lateral distance, Positive left</Description>
+        <Scale>1</Scale>
+        <Unit>m</Unit>
+        <DataType>IEEEFloat</DataType>
+        <Min>-2147483648</Min>
+        <Max>2147483647</Max>
+        <DecimalPlaces>2</DecimalPlaces>
+        <PreDecimalPlaces>8</PreDecimalPlaces>
+        <ByteOffset>36</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="Lat_Delta_Velocity" ChannelID="6008">
+        <Description>Lateral difference velocity, Positive left</Description>
+        <Scale>1</Scale>
+        <Unit>m/s</Unit>
+        <DataType>IEEEFloat</DataType>
+        <Min>-2147483648</Min>
+        <Max>2147483647</Max>
+        <DecimalPlaces>3</DecimalPlaces>
+        <PreDecimalPlaces>3</PreDecimalPlaces>
+        <ByteOffset>40</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Delta_Resultant" PackageID="6005">
+      <Description>Delta Resultant</Description>
+      <Channel Name="Resultant_Distance" ChannelID="6009">
+        <Description>Resultant distance</Description>
+        <Scale>1</Scale>
+        <Unit>m</Unit>
+        <DataType>IEEEFloat</DataType>
+        <Min>-2147483648</Min>
+        <Max>2147483647</Max>
+        <DecimalPlaces>2</DecimalPlaces>
+        <PreDecimalPlaces>8</PreDecimalPlaces>
+        <ByteOffset>44</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="Resultant_Velocity" ChannelID="6010">
+        <Description>Resultant velocity</Description>
+        <Scale>1</Scale>
+        <Unit>m/s</Unit>
+        <DataType>IEEEFloat</DataType>
+        <Min>-2147483648</Min>
+        <Max>2147483647</Max>
+        <DecimalPlaces>3</DecimalPlaces>
+        <PreDecimalPlaces>3</PreDecimalPlaces>
+        <ByteOffset>48</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Delta_Angle" PackageID="6006">
+      <Description>Delta Angle</Description>
+      <Channel Name="Angle_of_Orientation" ChannelID="6011">
+        <Description>Angle of target in view of the hunter. Positive anti clockwise. Hunter Yaw (NED) – Target Yaw (NED) +/- 180 deg</Description>
+        <Scale>1</Scale>
+        <Unit>°</Unit>
+        <DataType>IEEEFloat</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <DecimalPlaces>2</DecimalPlaces>
+        <PreDecimalPlaces>3</PreDecimalPlaces>
+        <ByteOffset>52</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Delta_Time_ForwardVel" PackageID="6007">
+      <Description>Delta Time ForwardVel</Description>
+      <Channel Name="Delta_Time" ChannelID="6012">
+        <Description>Time stamp of Synchronised DELTA data. GNSS Time (milliseconds from midnight)
+</Description>
+        <Scale>1</Scale>
+        <Unit>ms</Unit>
+        <DataType>INT</DataType>
+        <Min>-2147483648</Min>
+        <Max>2147483647</Max>
+        <DecimalPlaces>0</DecimalPlaces>
+        <PreDecimalPlaces>10</PreDecimalPlaces>
+        <ByteOffset>60</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>32</LengthBits>
+      </Channel>
+      <Channel Name="Target_Forward_Velocity" ChannelID="6013">
+        <Description>Target forward velocity</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <DecimalPlaces>3</DecimalPlaces>
+        <PreDecimalPlaces>3</PreDecimalPlaces>
+        <ByteOffset>64</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Hunter_Forward_Velocity" ChannelID="6014">
+        <Description>Hunter forward velocity</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <DecimalPlaces>3</DecimalPlaces>
+        <PreDecimalPlaces>3</PreDecimalPlaces>
+        <ByteOffset>66</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Delta_ForwardAccel_LatVel" PackageID="6008">
+      <Description>Delta ForwardAccel LatVel</Description>
+      <Channel Name="Target_Forward_Acceleration" ChannelID="6015">
+        <Description>Target forward acceleration</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s²</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <DecimalPlaces>3</DecimalPlaces>
+        <PreDecimalPlaces>3</PreDecimalPlaces>
+        <ByteOffset>68</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Hunter_Forward_Acceleration" ChannelID="6016">
+        <Description>Hunter forward acceleration</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s²</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <DecimalPlaces>3</DecimalPlaces>
+        <PreDecimalPlaces>3</PreDecimalPlaces>
+        <ByteOffset>70</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Target_Lateral_Velocity" ChannelID="6017">
+        <Description>Target lateral velocity</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <DecimalPlaces>3</DecimalPlaces>
+        <PreDecimalPlaces>3</PreDecimalPlaces>
+        <ByteOffset>72</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Hunter_Lateral_Velocity" ChannelID="6018">
+        <Description>Hunter lateral velocity</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <DecimalPlaces>3</DecimalPlaces>
+        <PreDecimalPlaces>3</PreDecimalPlaces>
+        <ByteOffset>74</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Delta_LatAccel_PitchAngle" PackageID="6009">
+      <Description>Delta LatAccel PitchAngle</Description>
+      <Channel Name="Target_Lateral_Acceleration" ChannelID="6019">
+        <Description>Target lateral acceleration</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s²</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <DecimalPlaces>3</DecimalPlaces>
+        <PreDecimalPlaces>3</PreDecimalPlaces>
+        <ByteOffset>76</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Hunter_Lateral_Acceleration" ChannelID="6020">
+        <Description>Hunter lateral acceleration</Description>
+        <Scale>0.005</Scale>
+        <Unit>m/s²</Unit>
+        <DataType>INT</DataType>
+        <Min>-160</Min>
+        <Max>160</Max>
+        <DecimalPlaces>3</DecimalPlaces>
+        <PreDecimalPlaces>3</PreDecimalPlaces>
+        <ByteOffset>78</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Target_Pitch_Angle" ChannelID="6021">
+        <Description>Target pitch angle (ISO positive in braking)</Description>
+        <Scale>0.02</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <DecimalPlaces>2</DecimalPlaces>
+        <PreDecimalPlaces>3</PreDecimalPlaces>
+        <ByteOffset>80</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Hunter_Pitch_Angle" ChannelID="6022">
+        <Description>Hunter pitch angle (ISO positive in braking)</Description>
+        <Scale>0.02</Scale>
+        <Unit>°</Unit>
+        <DataType>INT</DataType>
+        <Min>-180</Min>
+        <Max>180</Max>
+        <DecimalPlaces>2</DecimalPlaces>
+        <PreDecimalPlaces>3</PreDecimalPlaces>
+        <ByteOffset>82</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+    <Package Name="Delta_Status" PackageID="6010">
+      <Description>Delta Status</Description>
+      <Channel Name="Target_Status" ChannelID="6023">
+        <Description>Coded status information of the Hunter ADMA.</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>9</Max>
+        <DecimalPlaces>0</DecimalPlaces>
+        <PreDecimalPlaces>1</PreDecimalPlaces>
+        <ByteOffset>84</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+      <Channel Name="Hunter_Status" ChannelID="6024">
+        <Description>Coded status information of the Hunter ADMA.</Description>
+        <Scale>1</Scale>
+        <Unit>
+        </Unit>
+        <DataType>UINT</DataType>
+        <Min>0</Min>
+        <Max>9</Max>
+        <DecimalPlaces>0</DecimalPlaces>
+        <PreDecimalPlaces>1</PreDecimalPlaces>
+        <ByteOffset>86</ByteOffset>
+        <BitOffset>0</BitOffset>
+        <LengthBits>16</LengthBits>
+      </Channel>
+    </Package>
+  </MeasurementData>
+</MessageFormatDefinition>

@@ -3,6 +3,7 @@
 #include "adma_core_lib/network/udp_socket.hpp"
 #include "adma_ros_driver_msgs/msg/delta1170_raw.hpp"
 #include "adma_ros_driver_msgs/msg/delta1170_scaled.hpp"
+#include <adma_core_lib/parser/mapping.hpp>
 
 #pragma once
 
@@ -13,14 +14,16 @@ class ADMADeltaDriver : public rclcpp::Node
         public:
                 explicit ADMADeltaDriver(const rclcpp::NodeOptions & options);
                 virtual ~ADMADeltaDriver();
-        
+
         private:
                 void updateLoop();
                 double convertCoordinates(double rawValue);
-                
+
                 std::string protocol_version_;
                 size_t len_ = 0;
                 genesys::core::UDPSocket * socket_;
+
+                genesys::parser::Mapping * mapping_;
 
                 rclcpp::Publisher<adma_ros_driver_msgs::msg::Delta1170Raw>::SharedPtr pub_delta_raw_;
                 rclcpp::Publisher<adma_ros_driver_msgs::msg::Delta1170Scaled>::SharedPtr pub_delta_scaled_;

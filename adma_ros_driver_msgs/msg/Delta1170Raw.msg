@@ -1,28 +1,4 @@
-# AddOnDelta7.0.0.0 generated from XML by adma_tools_py from the offical ADMA ROS Driver
+std_msgs/Header header
 
-byte[8] abd_header
-float64 target_longitude
-float64 target_latitude
-byte[2] reserved_0
-uint16 code_version
-float32 long_delta_distance
-float32 long_delta_velocity
-float32 lat_delta_distance
-float32 lat_delta_velocity
-float32 resultant_distance
-float32 resultant_velocity
-float32 angle_of_orientation
-byte[4] reserved_1
-int32 delta_time
-int16 target_forward_velocity
-int16 hunter_forward_velocity
-int16 target_forward_acceleration
-int16 hunter_forward_acceleration
-int16 target_lateral_velocity
-int16 hunter_lateral_velocity
-int16 target_lateral_acceleration
-int16 hunter_lateral_acceleration
-int16 target_pitch_angle
-int16 hunter_pitch_angle
-uint16 target_status
-uint16 hunter_status
+byte[] raw_data
+uint16 data_size

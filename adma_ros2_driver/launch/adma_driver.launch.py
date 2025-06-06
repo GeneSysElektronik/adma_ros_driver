@@ -69,7 +69,7 @@ def generate_launch_description():
                         'rosbag_path': LaunchConfiguration('rosbag_path'),
                 }],
                 remappings=[
-                        ("adma/data_recorded", raw_data_topic)
+                        ("/genesys/adma/data_raw", raw_data_topic)
                 ],
                 condition=IfCondition(LaunchConfiguration('log_gsdb'))
         )

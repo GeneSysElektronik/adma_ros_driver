@@ -16,7 +16,7 @@ namespace parser
 class Mapping
 {
         public:
-                Mapping(uint16_t protocolVersion);
+                Mapping(uint16_t protocolVersion, std::string package_name);
                 ~Mapping();
                 nlohmann::json getChannelIDByROSName(const std::string &rosChannelName);
                 std::vector<std::string> splitKeys(const std::string &keys);

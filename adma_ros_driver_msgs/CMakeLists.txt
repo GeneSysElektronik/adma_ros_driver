@@ -20,7 +20,6 @@ find_package(geometry_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
-  "msg/AdmaDataDelta.msg"
   "msg/AdmaData.msg"
   "msg/AdmaDataRaw.msg"
   "msg/AdmaDataScaled.msg"

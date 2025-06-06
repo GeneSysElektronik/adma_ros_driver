@@ -9,12 +9,12 @@ namespace genesys
 namespace parser
 {
 
-Mapping::Mapping(uint16_t protocolVersion){
+Mapping::Mapping(uint16_t protocolVersion, std::string package_name){
         version_ = protocolVersion;
-        std::string configPath = ament_index_cpp::get_package_share_directory("adma_ros2_driver");
+        std::string configPath = ament_index_cpp::get_package_share_directory(package_name);
         configPath += "/config/protocols/";
         std::string admanetXMLFile, mappingGlossarFile;
-        mappingGlossarFile = configPath + "channel_mapping_updated.json";
+        mappingGlossarFile = configPath + "channel_mapping.json";
         RCLCPP_INFO(rclcpp::get_logger("genesys::parser::Mapping"), "Loading Glossar: %s", mappingGlossarFile.c_str());
         std::ifstream glossarFile(mappingGlossarFile);
         glossarFile >> glossar_;
@@ -54,7 +54,7 @@ void Mapping::validateProtocol()
 {
         extractEntries(glossar_, "", glossarMap_);
         std::vector<std::string> unknownCHannels;
-        for (const auto& [key, value] : glossarMap_) 
+        for (const auto& [key, value] : glossarMap_)
         {
                 nlohmann::json channelIDs = value["channelID"];
                 if(channelIDs.is_array())
@@ -82,7 +82,7 @@ void Mapping::validateProtocol()
                         RCLCPP_WARN(rclcpp::get_logger("genesys::parser::Mapping"), "%s", value.c_str());
                 }
         }
-        
+
 }
 
 nlohmann::json Mapping::getChannelIDByROSName(const std::string &rosChannelName)
@@ -98,7 +98,7 @@ nlohmann::json Mapping::getChannelIDByROSName(const std::string &rosChannelName)
         std::vector<std::string> keys = splitKeys(rosChannelName);
         nlohmann::json value = glossar_;
         // search for channel IDs
-        for (const auto& key : keys) 
+        for (const auto& key : keys)
         {
                 if (value.contains(key)) {
                         value = value[key];
@@ -107,31 +107,7 @@ nlohmann::json Mapping::getChannelIDByROSName(const std::string &rosChannelName)
                         return 0;
                 }
         }
-
-        // sort results by version number
-        // std::sort(value.begin(), value.end(), [](const nlohmann::json& a, const nlohmann::json& b) {
-        //         return a["version"].get<int>() < b["version"].get<int>();
-        //     });
-        // find closest protocol version defined in glossar
-        // int minDiff = std::numeric_limits<int>::max();
         nlohmann::json closest = nullptr;
-        // for (const auto& entry : value) {
-        //         int curVersion = entry["version"].get<int>();
-        //         int diff = std::abs(curVersion - version_);
-
-        //         if (diff < minDiff) {
-        //         minDiff = diff;
-        //         closest = entry;
-        //         }
-        // }
-        // if(closest["version"].get<int>() > version_){
-        //         // dont try to use channels from higher versions..
-        //         std::cout << rosChannelName << " not supported in version " << version_ << ", first support at version: " << closest["version"].get<int>() << std::endl;
-        //         nlohmann::json empty;
-        //         return empty;
-        // }
-
-        // std::cout << rosChannelName << " : " << closest.dump() << std::endl;
         return closest;
 }
 
@@ -140,11 +116,11 @@ std::vector<std::string> Mapping::splitKeys(const std::string &keys)
         std::vector<std::string> result;
         std::istringstream ss(keys);
         std::string token;
-    
+
         while (std::getline(ss, token, '.')) {
                 result.push_back(token);
         }
-    
+
         return result;
 }
 

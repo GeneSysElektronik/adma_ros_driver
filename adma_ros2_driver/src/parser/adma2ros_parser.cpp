@@ -11,7 +11,7 @@ ADMA2ROSParser::ADMA2ROSParser(u_int16_t version)
   if(protocolVersion_ == 3200){
     parserV32_ = new ADMA2ROSParserV32();
   } else {
-    mapping_ = new genesys::parser::Mapping(version);
+    mapping_ = new genesys::parser::Mapping(version, "adma_ros2_driver");
   }
 }
 
@@ -225,7 +225,7 @@ void ADMA2ROSParser::extractPOIs(adma_ros_driver_msgs::msg::AdmaDataScaled &adma
   admaScaledMsg.poi_6 = pois[5];
   admaScaledMsg.poi_7 = pois[6];
   admaScaledMsg.poi_8 = pois[7];
-  
+
 }
 
 void ADMA2ROSParser::mapAdmaMessageToROS(
@@ -791,13 +791,13 @@ void ADMA2ROSParser::extractOdometry(
   double yaw_rad;
 
   if (protocolVersion_< 3350) {
-    // relative yaw was introduced in admanet v3.3.5  
+    // relative yaw was introduced in admanet v3.3.5
     double yaw_rad = deg2Rad((ros_msg.ins_yaw + yawOffset));
   }
   else {
       double yaw_rad = deg2Rad((ros_msg.ins_yaw_rel + yawOffset));
   }
-  
+
   tf2::Quaternion q;
   q.setRPY(roll_rad, pitch_rad, yaw_rad);
   odometry_msg.pose.pose.orientation = tf2::toMsg(q);
@@ -815,5 +815,5 @@ void ADMA2ROSParser::extractOdometry(
   odometry_msg.twist.covariance[0] = std::pow(ros_msg.ins_stddev_vel.x, 2);
   odometry_msg.twist.covariance[7] = std::pow(ros_msg.ins_stddev_vel.y, 2);
   odometry_msg.twist.covariance[14] = std::pow(ros_msg.ins_stddev_vel.z, 2);
-  
+
 }

@@ -1,0 +1,78 @@
+{
+        "xml_files" : [
+                        {"version" : 11700,
+                        "filename" : "ADMA_UDP-DataStream_DELTA11_v7.0_v30.5.1.0.xml"}
+                ]
+        ,
+        "delta_scaled" : {
+                "target_longitude" : [
+                        {"version" : "11700", "channelID" : 6000}
+                ],
+                "target_latitude" : [
+                        {"version" : "11700", "channelID" : 6003}
+                ],
+                "code_version" : [
+                        {"version" : "11700", "channelID" : 6004}
+                ],
+                "long_delta_distance" : [
+                        {"version" : "11700", "channelID" : 6005}
+                ],
+                "long_delta_velocity" : [
+                        {"version" : "11700", "channelID" : 6006}
+                ],
+                "lat_delta_distance" : [
+                        {"version" : "11700", "channelID" : 6007}
+                ],
+                "lat_delta_velocity" : [
+                        {"version" : "11700", "channelID" : 6008}
+                ],
+                "resultant_distance" : [
+                        {"version" : "11700", "channelID" : 6009}
+                ],
+                "resultant_velocity" : [
+                        {"version" : "11700", "channelID" : 6010}
+                ],
+                "angle_of_orientation" : [
+                        {"version" : "11700", "channelID" : 6011}
+                ],
+                "delta_time" : [
+                        {"version" : "11700", "channelID" : 6012}
+                ],
+                "target_forward_velocity" : [
+                        {"version" : "11700", "channelID" : 6013}
+                ],
+                "hunter_forward_velocity" : [
+                        {"version" : "11700", "channelID" : 6014}
+                ],
+                "target_forward_acceleration" : [
+                        {"version" : "11700", "channelID" : 6015}
+                ],
+                "hunter_forward_acceleration" : [
+                        {"version" : "11700", "channelID" : 6016}
+                ],
+                "target_lateral_velocity" : [
+                        {"version" : "11700", "channelID" : 6017}
+                ],
+                "hunter_lateral_velocity" : [
+                        {"version" : "11700", "channelID" : 6018}
+                ],
+                "target_lateral_acceleration" : [
+                        {"version" : "11700", "channelID" : 6019}
+                ],
+                "hunter_lateral_acceleration" : [
+                        {"version" : "11700", "channelID" : 6020}
+                ],
+                "target_pitch_angle" : [
+                        {"version" : "11700", "channelID" : 6021}
+                ],
+                "hunter_pitch_angle" : [
+                        {"version" : "11700", "channelID" : 6022}
+                ],
+                "target_status" : [
+                        {"version" : "11700", "channelID" : 6023}
+                ],
+                "hunter_status" : [
+                        {"version" : "11700", "channelID" : 6024}
+                ]
+        }
+}
