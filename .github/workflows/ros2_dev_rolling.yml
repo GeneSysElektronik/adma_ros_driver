@@ -1,0 +1,16 @@
+name: ROS 2 dev test rolling
+on:
+  pull_request:
+  push:
+    branches:
+      - ros2_dev
+jobs:
+  build_and_test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: ros-tooling/setup-ros@v0.6
+        with:
+          required-ros-distributions: rolling
+      - uses: ros-tooling/action-ros-ci@v0.3
+        with:
+          target-ros2-distro: rolling
