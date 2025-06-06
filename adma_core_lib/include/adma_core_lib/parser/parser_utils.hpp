@@ -27,7 +27,7 @@ inline T rad2Deg(T rad){ return T(rad * 180.0 / PI); }
 bool isLittleEndian();
 
 template<typename T_source>
-T_source extractValue(const std::array<char, 856>& buffer, size_t offset, int lengthBytes, bool sourceLittleEndian = true)
+T_source extractValue(const std::array<char, 856>& buffer, size_t offset, int lengthBytes)
 {
         if (lengthBytes > sizeof(T_source))
         {

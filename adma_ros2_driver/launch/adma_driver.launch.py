@@ -16,6 +16,7 @@ def generate_launch_description():
 
         ### parameter for GSDB logging, used for ADMA-PP ####
         log_gsdb_arg = DeclareLaunchArgument('log_gsdb', default_value='True')
+        log_addon_delta_gsdb_arg = DeclareLaunchArgument('log_addon_delta', default_value='False')
         raw_data_topic = 'adma/data_raw'
 
         ### parameters for recording data into a rosbag ###
@@ -67,9 +68,10 @@ def generate_launch_description():
                 name='bag2gsdb',
                 parameters=[{
                         'rosbag_path': LaunchConfiguration('rosbag_path'),
+                        'log_addon_delta': LaunchConfiguration('log_addon_delta'),
                 }],
                 remappings=[
-                        ("/genesys/adma/data_raw", raw_data_topic)
+                        ("adma/data_raw", raw_data_topic)
                 ],
                 condition=IfCondition(LaunchConfiguration('log_gsdb'))
         )
@@ -82,6 +84,7 @@ def generate_launch_description():
                 rosbag_file_arg,
                 log_gsdb_arg,
                 adma_namespace_arg,
+                log_addon_delta_gsdb_arg,
                 # #  nodes
                 adma_driver,
                 rosbag_recorder,

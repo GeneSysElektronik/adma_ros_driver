@@ -11,6 +11,7 @@ def generate_launch_description():
         log_level_arg = DeclareLaunchArgument('log_level', default_value='INFO')
         # overwrite ROS arg here to prevent creating new gsdb file during replaying another one..
         log_gsdb_arg = DeclareLaunchArgument('log_gsdb', default_value='False')
+        log_addon_delta_gsdb_arg = DeclareLaunchArgument('log_addon_delta', default_value='False')
 
         # set this to true if you want to replay GSDB and create a rosbag of it
         record_rosbag_arg = DeclareLaunchArgument('record_rosbag', default_value='False')
@@ -42,13 +43,14 @@ def generate_launch_description():
                 on_exit=[LogInfo(msg=["GSDB replay done. Stopping everything..."]),
                 Shutdown(reason='launch is shutting down')],
         )
-        
+
         return LaunchDescription([
                 # # args
                 driver_config_arg,
                 log_level_arg,
                 log_gsdb_arg,
                 record_rosbag_arg,
+                log_addon_delta_gsdb_arg,
                 # #  nodes
                 adma_driver,
                 gsdb_server,
