@@ -9,8 +9,8 @@ jobs:
         matrix:
           ros_distribution:
             # - noetic
-            - foxy
-            - galactic
+            # - foxy
+            # - galactic
             - humble
             - iron
             - jazzy
@@ -31,14 +31,14 @@ jobs:
             #   ros_version: 1
   
             # Foxy Fitzroy (June 2020 - June 2023)
-            - docker_image: ubuntu:focal # 20.04
-              ros_distribution: foxy
-              ros_version: 2
+            # - docker_image: ubuntu:focal # 20.04
+            #  ros_distribution: foxy
+            #  ros_version: 2
 
             # Galactic Geochelone (May 2021 - Dec 2022)
-            - docker_image: ubuntu:focal # 20.04
-              ros_distribution: galactic
-              ros_version: 2
+            # - docker_image: ubuntu:focal # 20.04
+            #  ros_distribution: galactic
+            #  ros_version: 2
 
             # Humble Hawksbill (May 2022 - May 2027)
             - docker_image: ubuntu:jammy # 22.04
