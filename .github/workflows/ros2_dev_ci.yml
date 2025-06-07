@@ -31,12 +31,12 @@ jobs:
       - name: setup directories
         run: mkdir -p ros_ws/src
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: ros_ws/src
       - name: build and test
         continue-on-error: true
-        uses: ros-tooling/action-ros-ci@0.2.2
+        uses: ros-tooling/action-ros-ci@0.7
         with:
           package-name: ""
           target-ros2-distro: ${{ matrix.ros_distribution }}
