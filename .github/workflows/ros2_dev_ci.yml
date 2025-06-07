@@ -1,7 +1,26 @@
-name: Setup ROS environment
-uses: ros-tooling/setup-ros@0.7.13
+name: ROS2 CI
+
 on:
-  pull_request:
   push:
-    branches:
-      - ros2_dev
+    branches: [ ros2_dev ]
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        ros_distro: [ humble, iron, rolling ]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up ROS
+        uses: ros-tooling/setup-ros@v0.7
+        with:
+          required-ros-distributions: ${{ matrix.ros_distro }}
+
+      - name: Build and Test
+        uses: ros-tooling/action-ros-ci@v0.3
+        with:
+          package-name: "" # empty entry for building all packages from repo
+          target-ros2-distro: ${{ matrix.ros_distro }}
