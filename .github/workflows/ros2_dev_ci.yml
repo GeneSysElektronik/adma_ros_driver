@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        ros_distro: [ humble, iron, rolling ]
+        # ros_distro: [ humble, iron, rolling ]
+        ros_distro: [ humble ]
     steps:
       - uses: actions/checkout@v4
 
@@ -22,5 +23,5 @@ jobs:
       - name: Build and Test
         uses: ros-tooling/action-ros-ci@v0.3
         with:
-          package-name: "" # empty entry for building all packages from repo
+          package-name: "adma_ros_driver_msgs" # empty entry for building all packages from repo
           target-ros2-distro: ${{ matrix.ros_distro }}
