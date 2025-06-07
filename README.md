@@ -3,11 +3,7 @@ Due to the increasing range of functions, the documentation is now no longer dis
 
 ## Build status
 
-| ROS2 Distribution | Status |
-|---|---|
-Foxy (Ubuntu 20.04) | ![ROS2 Foxy](https://github.com/freak89dutch/adma_ros_driver/actions/workflows/ros_dev_foxy.yml/badge.svg) |
-Humble (Ubuntu 22.04) | ![ROS2 Humble](https://github.com/freak89dutch/adma_ros_driver/actions/workflows/ros_dev_humble.yml/badge.svg) |
-Rolling (Ubuntu 22.04) | ![ROS2 Rolling](https://github.com/freak89dutch/adma_ros_driver/actions/workflows/ros_dev_rolling.yml/badge.svg) |
+[![ROS2 CI](https://github.com/freak89dutch/adma_ros_driver/actions/workflows/ros2_dev_ci.yml/badge.svg?branch=ros2_dev)](https://github.com/freak89dutch/adma_ros_driver/actions/workflows/ros2_dev_ci.yml)
 
 ## Environment information
 This setup was implemented and tested with the following conditions:
