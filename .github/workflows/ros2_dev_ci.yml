@@ -36,7 +36,7 @@ jobs:
           path: ros_ws/src
       - name: build and test
         continue-on-error: true
-        uses: ros-tooling/action-ros-ci@0.7
+        uses: ros-tooling/action-ros-ci@v0.4
         with:
           package-name: ""
           target-ros2-distro: ${{ matrix.ros_distribution }}
