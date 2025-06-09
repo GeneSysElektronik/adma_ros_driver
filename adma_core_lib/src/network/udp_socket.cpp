@@ -1,8 +1,5 @@
+// BSD 3-Clause License
 // Copyright (c) 2023, GeneSys Elektronik
-//
-// Licensed under the 3-Clause BSD License
-// SPDX-License-Identifier: 3-Clause BSD License
-//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
 // 1. Redistributions of source code must retain the above copyright notice, this
@@ -77,7 +74,7 @@ void UDPSocket::setupReceiveSocket(std::string adma_address, int adma_port)
       rclcpp::get_logger("UDP-Socket"), "Invalid port for UDP socket: \"%s:%s\"",
       adma_address.c_str(), rcv_port_str.c_str());
     throw rclcpp::exceptions::InvalidParameterValueException(
-      "Invalid port for UDP socket: \"" + adma_address + ":" + rcv_port_str + "\"");
+            "Invalid port for UDP socket: \"" + adma_address + ":" + rcv_port_str + "\"");
   }
   rcv_sock_fd_ = socket(rcv_addr_info_->ai_family, SOCK_DGRAM | SOCK_CLOEXEC, IPPROTO_UDP);
   if (rcv_sock_fd_ == -1) {
@@ -86,7 +83,7 @@ void UDPSocket::setupReceiveSocket(std::string adma_address, int adma_port)
       rclcpp::get_logger("UDP-Socket"), "Could not create UDP socket for: \"%s:%s",
       adma_address.c_str(), rcv_port_str.c_str());
     throw rclcpp::exceptions::InvalidParameterValueException(
-        "Could not create UDP socket for: \"" + adma_address + ":" + rcv_port_str + "\"");
+            "Could not create UDP socket for: \"" + adma_address + ":" + rcv_port_str + "\"");
   }
   r = bind(rcv_sock_fd_, rcv_addr_info_->ai_addr, rcv_addr_info_->ai_addrlen);
   if (r != 0) {
@@ -96,7 +93,7 @@ void UDPSocket::setupReceiveSocket(std::string adma_address, int adma_port)
       rclcpp::get_logger("UDP-Socket"), "Could not bind UDP socket with: \"%s:%s",
       adma_address.c_str(), rcv_port_str.c_str());
     throw rclcpp::exceptions::InvalidParameterValueException(
-        "Could not bind UDP socket with: \"" + adma_address + ":" + rcv_port_str + "\"");
+            "Could not bind UDP socket with: \"" + adma_address + ":" + rcv_port_str + "\"");
   }
 
   RCLCPP_INFO(
