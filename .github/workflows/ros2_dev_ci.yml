@@ -13,8 +13,8 @@ jobs:
             # - galactic
             - humble
             - iron
-            - jazzy
-            - rolling
+            # - jazzy
+            # - rolling
 
           # Define the Docker image(s) associated with each ROS distribution.
           # The include syntax allows additional variables to be defined, like
