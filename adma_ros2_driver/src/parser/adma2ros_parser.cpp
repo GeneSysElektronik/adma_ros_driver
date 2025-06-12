@@ -1004,9 +1004,9 @@ void ADMA2ROSParser::extractOdometry(
 
   if (protocolVersion_ < 3350) {
     // relative yaw was introduced in admanet v3.3.5
-    double yaw_rad = deg2Rad((ros_msg.ins_yaw + yawOffset));
+    yaw_rad = deg2Rad((ros_msg.ins_yaw + yawOffset));
   } else {
-    double yaw_rad = deg2Rad((ros_msg.ins_yaw_rel + yawOffset));
+    yaw_rad = deg2Rad((ros_msg.ins_yaw_rel + yawOffset));
   }
 
   tf2::Quaternion q;

@@ -108,7 +108,6 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
   message_imu.header.frame_id = imu_frame_;
 
   builtin_interfaces::msg::Time timestampForMsgs;
-  float weektime;
   // offset between UNIX and GNSS (in ms)
   uint64_t offset_gps_unix = 315964800000;
   uint64_t week_to_msec = 604800000;
@@ -175,7 +174,6 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
     admaData_ros_msg.header.stamp.sec = timestamp / 1000;
     admaData_ros_msg.header.stamp.nanosec = (timestamp % 1000) * 1E6;
     pub_adma_data_->publish(admaData_ros_msg);
-    weektime = admaData_ros_msg.instimeweek;
 
   } else {
     adma_ros_driver_msgs::msg::AdmaDataScaled adma_data_scaled_msg;
@@ -237,9 +235,6 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
 
     pub_adma_data_scaled_->publish(adma_data_scaled_msg);
 
-    weektime = adma_data_scaled_msg.ins_time_week;
-
-
     status_msg.header.stamp = timestampForMsgs;
     status_msg.header.frame_id = adma_status_frame_;
     pub_adma_status_->publish(status_msg);
@@ -258,7 +253,7 @@ void ADMADriver::parseData(std::array<char, 856> recv_buf)
       raw_data_msg.header.stamp = timestampForMsgs;
       raw_data_msg.header.frame_id = raw_data_frame_;
 
-      for (int i = 0; i < len_; ++i) {
+      for (size_t i = 0; i < len_; ++i) {
         raw_data_msg.raw_data.push_back(recv_buf[i]);
       }
       pub_adma_data_raw_->publish(raw_data_msg);

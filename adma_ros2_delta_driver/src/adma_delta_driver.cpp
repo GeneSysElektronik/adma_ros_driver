@@ -130,7 +130,7 @@ void ADMADeltaDriver::updateLoop()
     delta_msg_raw.data_size = len_;
     delta_msg_raw.header = delta_msg_scaled.header;
     // copy raw data
-    for (int i = 0; i < len_; ++i) {
+    for (size_t i = 0; i < len_; ++i) {
       delta_msg_raw.raw_data.push_back(recv_buf[i]);
     }
     // publish both msgs

@@ -57,7 +57,7 @@ inline T rad2Deg(T rad)
 bool isLittleEndian();
 
 template<typename T_source>
-T_source extractValue(const std::array<char, 856> & buffer, size_t offset, int lengthBytes)
+T_source extractValue(const std::array<char, 856> & buffer, size_t offset, size_t lengthBytes)
 {
   if (lengthBytes > sizeof(T_source)) {
     RCLCPP_ERROR(rclcpp::get_logger("adma_core_lib::parser_utils"), "Invalid datatype");

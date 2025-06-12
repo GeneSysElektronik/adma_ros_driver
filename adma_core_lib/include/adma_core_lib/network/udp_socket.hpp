@@ -81,7 +81,7 @@ private:
   // general attributes
   // Adma  socket address length
   socklen_t address_length_;
-  size_t len_ = 0;
+  ssize_t len_ = 0;
 
   // attributes for receiving UDP packets
   struct sockaddr_in rcv_socket_address_;
