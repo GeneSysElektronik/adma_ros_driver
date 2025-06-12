@@ -1,10 +1,11 @@
 from setuptools import setup
 import glob
+
 package_name = 'adma_tools_py'
 
 setup(
     name=package_name,
-    version='0.0.0',
+    version='2.4.0',
     packages=[package_name],
     data_files=[
         ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
@@ -18,12 +19,12 @@ setup(
     maintainer='rschilli',
     maintainer_email='rico.schillings@hs-offenburg.de',
     description='python tool collection for working with ADMA and ROS2',
-    license='MIT',
+    license='BSD-3-Clause',
     entry_points={
         'console_scripts': [
             'ros2csv = adma_tools_py.ros2csv_converter:main',
             'xml2msg_generator_addondelta = adma_tools_py.msggenerator.addondelta_generator:main',
-            'xml2msg_generator_admanet = adma_tools_py.msggenerator.admanet_generator:main'
+            'xml2msg_generator_admanet = adma_tools_py.msggenerator.admanet_generator:main',
         ],
     },
 )

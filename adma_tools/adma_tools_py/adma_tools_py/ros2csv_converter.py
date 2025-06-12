@@ -3,27 +3,35 @@ from rclpy.node import Node
 from adma_ros_driver_msgs.msg import AdmaDataScaled, AdmaStatus
 import message_filters
 
+
 class Ros2CSVConverter(Node):
 
     def __init__(self):
-        super().__init__("ros2csvConverter")  
-        
-        self.filename = "recorded_data.csv"
-        self.sub_adma_data_scaled = message_filters.Subscriber(self, AdmaDataScaled, "/genesys/adma/data_scaled")
-        self.sub_adma_error_warning = message_filters.Subscriber(self, AdmaStatus, "/genesys/adma/status")
+        super().__init__('ros2csvConverter')
 
-        self.ts = message_filters.TimeSynchronizer([self.sub_adma_data_scaled, self.sub_adma_error_warning], 10)
+        self.filename = 'recorded_data.csv'
+        self.sub_adma_data_scaled = message_filters.Subscriber(
+            self, AdmaDataScaled, '/genesys/adma/data_scaled'
+        )
+        self.sub_adma_error_warning = message_filters.Subscriber(
+            self, AdmaStatus, '/genesys/adma/status'
+        )
+
+        self.ts = message_filters.TimeSynchronizer(
+            [self.sub_adma_data_scaled, self.sub_adma_error_warning], 10
+        )
         self.ts.registerCallback(self.msg_cb)
 
         self.i = 1
 
-    def msg_cb(self, admaMsg : AdmaDataScaled, ewMsg : AdmaStatus):  
-        #Open File and write Data
+    def msg_cb(self, admaMsg: AdmaDataScaled, ewMsg: AdmaStatus):
+        # Open File and write Data
         if self.i > 1:
-            file = open(self.filename,"a")
+            file = open(self.filename, 'a')
 
-            file.write("\n")
-            file.write(f"{admaMsg.serial_number},\
+            file.write('\n')
+            file.write(
+                f'{admaMsg.adma_header.serial_number},\
             {admaMsg.acc_body_hr.x}, {admaMsg.acc_body_hr.y}, {admaMsg.acc_body_hr.z},\
             {admaMsg.rate_body_hr.x}, {admaMsg.rate_body_hr.y}, {admaMsg.rate_body_hr.z},\
             {admaMsg.rate_body.x}, {admaMsg.rate_body.y}, {admaMsg.rate_body.z},\
@@ -106,18 +114,20 @@ class Ros2CSVConverter(Node):
             {admaMsg.status.status_kalmanfilter_settled}, {admaMsg.status.status_kf_lat_stimulated}, {admaMsg.status.status_kf_long_stimulated}, {admaMsg.status.status_kf_steady_state},\
             {admaMsg.status.status_speed}, {admaMsg.status.status_robot},\
             {ewMsg.error_warnings.error_gyro_hw}, {ewMsg.error_warnings.error_accel_hw}, {ewMsg.error_warnings.error_ext_speed_hw}, {ewMsg.error_warnings.error_gnss_hw},\
-            {ewMsg.error_warnings.error_data_bus_checksum},{ewMsg.error_warnings.error_eeprom}, {ewMsg.error_warnings.error_xmit}, {ewMsg.error_warnings.error_cmd},\
+            {ewMsg.error_warnings.error_data_bus_checksum},{ewMsg.error_warnings.error_eeprom}, {ewMsg.error_warnings.error_cmd},\
             {ewMsg.error_warnings.error_data_bus}, {ewMsg.error_warnings.error_can_bus}, {ewMsg.error_warnings.error_num},\
             {ewMsg.error_warnings.error_temp_warning}, {ewMsg.error_warnings.error_reduced_accuracy}, {ewMsg.error_warnings.error_range_max},\
             {ewMsg.error_warnings.warn_gnss_no_solution}, {ewMsg.error_warnings.warn_gnss_vel_ignored}, {ewMsg.error_warnings.warn_gnss_pos_ignored}, {ewMsg.error_warnings.warn_gnss_unable_to_cfg},\
             {ewMsg.error_warnings.warn_speed_off}, {ewMsg.error_warnings.warn_gnss_dualant_ignored},\
             {ewMsg.error_warnings.error_hw_sticky}\
-            ")
+            '
+            )
             file.close()
         else:
-            #define headers
-            file = open(self.filename,"w")
-            file.write(f"serial_number,\
+            # define headers
+            file = open(self.filename, 'w')
+            file.write(
+                f'serial_number,\
             Acc_Body_HR_X, Acc_Body_HR_Y, Acc_Body_HR_Z,\
             Rate_Body_HR_X, Rate_Body_HR_Y, Rate_Body_HR_Z,\
             Rate_Body_X, Rate_Body_Y, Rate_Body_Z,\
@@ -198,15 +208,17 @@ class Ros2CSVConverter(Node):
             Status_Kalmanfilter_settled, Status_KF_Lat_stimulated, Status_KF_Long_stimulated, Status_KF_steady_state,\
             Status_Speed, Status_Robot,\
             Error_Gyro_HW, Error_Accel_HW, Error_Ext_Speed_HW, Error_GNSS_HW,\
-            Error_Data_Bus_Checksum, Error_Eeprom, Error_Xmit, Error_Cmd,\
+            Error_Data_Bus_Checksum, Error_Eeprom, Error_Cmd,\
             Error_Data_Bus, Error_CAN_Bus, Error_Num,\
             Error_Temp_Warning, Error_Reduced_Accuracy, Error_Range_Max,\
             Warn_GNSS_no_solution, Warn_GNSS_Vel_ignored, Warn_GNSS_Pos_ignored, Warn_GNSS_unable_to_cfg,\
             Warn_speed_off, Warn_GNSS_DualAnt_ignored,\
             Error_HW_Sticky\
-            ")                                                        
+            '
+            )
 
         self.i += 1
+
 
 def main(args=None):
     rclpy.init(args=args)
@@ -215,7 +227,5 @@ def main(args=None):
         rclpy.spin(l)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
-
-
