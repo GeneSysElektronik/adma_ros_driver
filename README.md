@@ -3,7 +3,12 @@ Due to the increasing range of functions, the documentation is now no longer dis
 
 ## Build status
 
-[![ROS2 CI](https://github.com/freak89dutch/adma_ros_driver/actions/workflows/ros2_dev_ci.yml/badge.svg?branch=ros2_dev)](https://github.com/freak89dutch/adma_ros_driver/actions/workflows/ros2_dev_ci.yml)
+| ROS Distro | Status |
+|------------|--------|
+| Humble     | ![Humble](https://github.com/freak89dutch/adma_ros_driver/actions/workflows/ros2_dev_ci.yml/badge.svg?branch=ros2_dev&job=test_docker%20 (humble)) |
+| Iron       | ![Iron](https://github.com/freak89dutch/adma_ros_driver/actions/workflows/ros2_dev_ci.yml/badge.svg?branch=ros2_dev&job=test_docker%20 (iron)) |
+| Jazzy      | ![Jazzy](https://github.com/freak89dutch/adma_ros_driver/actions/workflows/ros2_dev_ci.yml/badge.svg?branch=ros2_dev&job=test_docker%20 (jazzy)) |
+| Rolling    | ![Rolling](https://github.com/freak89dutch/adma_ros_driver/actions/workflows/ros2_dev_ci.yml/badge.svg?branch=ros2_dev&job=test_docker%20 (rolling)) |
 
 ## Environment information
 This setup was implemented and tested with the following conditions:
