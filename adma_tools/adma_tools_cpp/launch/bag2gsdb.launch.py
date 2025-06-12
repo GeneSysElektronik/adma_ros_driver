@@ -9,8 +9,12 @@ def generate_launch_description():
     # define the path to your rosbag folder here, it will create a .gsdb file next to the db3 file
     rosbag_path = PathJoinSubstitution('/home/$USER/$ROS2_WS/data')
     rosbag_path_arg = DeclareLaunchArgument('rosbag_path', default_value=rosbag_path)
-    log_addon_delta_arg = DeclareLaunchArgument('log_addon_delta', default_value='False')
-    adma_namespace_arg = DeclareLaunchArgument('adma_namespace', default_value='genesys')
+    log_addon_delta_arg = DeclareLaunchArgument(
+        'log_addon_delta', default_value='False'
+    )
+    adma_namespace_arg = DeclareLaunchArgument(
+        'adma_namespace', default_value='genesys'
+    )
 
     rosbag_replay_rate_arg = DeclareLaunchArgument('replay_rate', default_value='1')
 

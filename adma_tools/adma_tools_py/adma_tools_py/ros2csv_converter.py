@@ -39,25 +39,36 @@ class Ros2CSVConverter(Node):
             {admaMsg.acc_body.x}, {admaMsg.acc_body.y}, {admaMsg.acc_body.z},\
             {admaMsg.acc_hor.x}, {admaMsg.acc_hor.y}, {admaMsg.acc_hor.z},\
             {admaMsg.ext_vel_an_x}, {admaMsg.ext_vel_an_y},\
-            {admaMsg.ext_vel_dig_x}, {admaMsg.ext_vel_dig_y}, {admaMsg.ext_vel_dig_pulses_x}, {admaMsg.ext_vel_dig_pulses_y},\
+            {admaMsg.ext_vel_dig_x}, {admaMsg.ext_vel_dig_y},\
+            {admaMsg.ext_vel_dig_pulses_x}, {admaMsg.ext_vel_dig_pulses_y},\
             {admaMsg.ext_vel_x_corrected}, {admaMsg.ext_vel_y_corrected},\
             {admaMsg.inv_path_radius}, {admaMsg.side_slip_angle}, {admaMsg.dist_trav},\
-            {admaMsg.trig_rising_1}, {admaMsg.trig_falling_1}, {admaMsg.trig_rising_2}, {admaMsg.trig_falling_2},\
-            {admaMsg.trig_rising_3}, {admaMsg.trig_falling_3}, {admaMsg.trig_rising_4}, {admaMsg.trig_falling_4},\
-            {admaMsg.system_ta}, {admaMsg.system_temp}, {admaMsg.system_time_since_init}, {admaMsg.system_dsp_load},\
-            {admaMsg.gnss_lat_abs}, {admaMsg.gnss_long_abs}, {admaMsg.gnss_pos_rel_x}, {admaMsg.gnss_pos_rel_y},\
+            {admaMsg.trig_rising_1}, {admaMsg.trig_falling_1},\
+            {admaMsg.trig_rising_2}, {admaMsg.trig_falling_2},\
+            {admaMsg.trig_rising_3}, {admaMsg.trig_falling_3},\
+            {admaMsg.trig_rising_4}, {admaMsg.trig_falling_4},\
+            {admaMsg.system_ta}, {admaMsg.system_temp},\
+            {admaMsg.system_time_since_init}, {admaMsg.system_dsp_load},\
+            {admaMsg.gnss_lat_abs}, {admaMsg.gnss_long_abs},\
+            {admaMsg.gnss_pos_rel_x}, {admaMsg.gnss_pos_rel_y},\
             {admaMsg.gnss_stddev_lat}, {admaMsg.gnss_stddev_long}, {admaMsg.gnss_stddev_height},\
-            {admaMsg.gnss_vel_frame.x}, {admaMsg.gnss_vel_frame.y}, {admaMsg.gnss_vel_frame.z}, {admaMsg.gnss_vel_latency},\
+            {admaMsg.gnss_vel_frame.x}, {admaMsg.gnss_vel_frame.y}, {admaMsg.gnss_vel_frame.z},\
+            {admaMsg.gnss_vel_latency},\
             {admaMsg.gnss_stddev_vel.x}, {admaMsg.gnss_stddev_vel.y}, {admaMsg.gnss_stddev_vel.z},\
             {admaMsg.gnss_time_msec}, {admaMsg.gnss_time_week}, {admaMsg.gnss_trigger},\
-            {admaMsg.gnss_diffage}, {admaMsg.gnss_sats_used}, {admaMsg.gnss_sats_visible}, {admaMsg.gnss_sats_dualant_used}, {admaMsg.gnss_sats_dualant_visible},\
+            {admaMsg.gnss_diffage}, {admaMsg.gnss_sats_used}, {admaMsg.gnss_sats_visible},\
+            {admaMsg.gnss_sats_dualant_used}, {admaMsg.gnss_sats_dualant_visible},\
             {admaMsg.gnss_log_delay}, {admaMsg.gnss_receiver_load}, {admaMsg.gnss_base_nr},\
             {admaMsg.ins_roll}, {admaMsg.ins_pitch},{admaMsg.ins_yaw}, {admaMsg.gnss_cog},\
-            {admaMsg.gnss_height}, {admaMsg.undulation}, {admaMsg.gnss_dualant_time_msec}, {admaMsg.gnss_dualant_time_week},\
+            {admaMsg.gnss_height}, {admaMsg.undulation},\
+            {admaMsg.gnss_dualant_time_msec}, {admaMsg.gnss_dualant_time_week},\
             {admaMsg.gnss_dualant_heading}, {admaMsg.gnss_dualant_pitch},\
-            {admaMsg.gnss_dualant_stddev_heading}, {admaMsg.gnss_dualant_stddev_pitch}, {admaMsg.gnss_dualant_stddev_heading_hr}, {admaMsg.gnss_dualant_stddev_pitch_hr},\
-            {admaMsg.ins_height}, {admaMsg.ins_time_msec}, {admaMsg.ins_time_week}, {admaMsg.leap_seconds},\
-            {admaMsg.ins_lat_abs}, {admaMsg.ins_long_abs}, {admaMsg.ins_pos_rel_x}, {admaMsg.ins_pos_rel_y},\
+            {admaMsg.gnss_dualant_stddev_heading}, {admaMsg.gnss_dualant_stddev_pitch},\
+            {admaMsg.gnss_dualant_stddev_heading_hr}, {admaMsg.gnss_dualant_stddev_pitch_hr},\
+            {admaMsg.ins_height}, {admaMsg.ins_time_msec},\
+            {admaMsg.ins_time_week}, {admaMsg.leap_seconds},\
+            {admaMsg.ins_lat_abs}, {admaMsg.ins_long_abs},\
+            {admaMsg.ins_pos_rel_x}, {admaMsg.ins_pos_rel_y},\
             {admaMsg.ins_vel_hor.x}, {admaMsg.ins_vel_hor.y}, {admaMsg.ins_vel_hor.z},\
             {admaMsg.ins_vel_frame.x}, {admaMsg.ins_vel_frame.y}, {admaMsg.ins_vel_frame.z},\
             {admaMsg.ins_stddev_lat}, {admaMsg.ins_stddev_long}, {admaMsg.ins_stddev_height},\
@@ -68,57 +79,96 @@ class Ros2CSVConverter(Node):
             {admaMsg.time_msec}, {admaMsg.time_nsec},\
             {admaMsg.poi_1.acc_body.x}, {admaMsg.poi_1.acc_body.y}, {admaMsg.poi_1.acc_body.z},\
             {admaMsg.poi_1.acc_hor.x}, {admaMsg.poi_1.acc_hor.y}, {admaMsg.poi_1.acc_hor.z},\
-            {admaMsg.poi_1.inv_path_radius}, {admaMsg.poi_1.side_slip_angle}, {admaMsg.poi_1.dist_trav}, {admaMsg.poi_1.ins_height},\
-            {admaMsg.poi_1.ins_lat_abs}, {admaMsg.poi_1.ins_long_abs}, {admaMsg.poi_1.ins_pos_rel_x}, {admaMsg.poi_1.ins_pos_rel_y},\
-            {admaMsg.poi_1.ins_vel_hor.x}, {admaMsg.poi_1.ins_vel_hor.y}, {admaMsg.poi_1.ins_vel_hor.z},\
+            {admaMsg.poi_1.inv_path_radius}, {admaMsg.poi_1.side_slip_angle},\
+            {admaMsg.poi_1.dist_trav}, {admaMsg.poi_1.ins_height},\
+            {admaMsg.poi_1.ins_lat_abs}, {admaMsg.poi_1.ins_long_abs},\
+            {admaMsg.poi_1.ins_pos_rel_x}, {admaMsg.poi_1.ins_pos_rel_y},\
+            {admaMsg.poi_1.ins_vel_hor.x}, {admaMsg.poi_1.ins_vel_hor.y},\
+            {admaMsg.poi_1.ins_vel_hor.z},\
             {admaMsg.poi_2.acc_body.x}, {admaMsg.poi_2.acc_body.y}, {admaMsg.poi_2.acc_body.z},\
             {admaMsg.poi_2.acc_hor.x}, {admaMsg.poi_2.acc_hor.y}, {admaMsg.poi_2.acc_hor.z},\
-            {admaMsg.poi_2.inv_path_radius}, {admaMsg.poi_2.side_slip_angle}, {admaMsg.poi_2.dist_trav}, {admaMsg.poi_2.ins_height},\
-            {admaMsg.poi_2.ins_lat_abs}, {admaMsg.poi_2.ins_long_abs}, {admaMsg.poi_2.ins_pos_rel_x}, {admaMsg.poi_2.ins_pos_rel_y},\
-            {admaMsg.poi_2.ins_vel_hor.x}, {admaMsg.poi_2.ins_vel_hor.y}, {admaMsg.poi_2.ins_vel_hor.z},\
+            {admaMsg.poi_2.inv_path_radius}, {admaMsg.poi_2.side_slip_angle},\
+            {admaMsg.poi_2.dist_trav}, {admaMsg.poi_2.ins_height},\
+            {admaMsg.poi_2.ins_lat_abs}, {admaMsg.poi_2.ins_long_abs},\
+            {admaMsg.poi_2.ins_pos_rel_x}, {admaMsg.poi_2.ins_pos_rel_y},\
+            {admaMsg.poi_2.ins_vel_hor.x}, {admaMsg.poi_2.ins_vel_hor.y},\
+            {admaMsg.poi_2.ins_vel_hor.z},\
             {admaMsg.poi_3.acc_body.x}, {admaMsg.poi_3.acc_body.y}, {admaMsg.poi_3.acc_body.z},\
             {admaMsg.poi_3.acc_hor.x}, {admaMsg.poi_3.acc_hor.y}, {admaMsg.poi_3.acc_hor.z},\
-            {admaMsg.poi_3.inv_path_radius}, {admaMsg.poi_3.side_slip_angle}, {admaMsg.poi_3.dist_trav}, {admaMsg.poi_3.ins_height},\
-            {admaMsg.poi_3.ins_lat_abs}, {admaMsg.poi_3.ins_long_abs}, {admaMsg.poi_3.ins_pos_rel_x}, {admaMsg.poi_3.ins_pos_rel_y},\
-            {admaMsg.poi_3.ins_vel_hor.x}, {admaMsg.poi_3.ins_vel_hor.y}, {admaMsg.poi_3.ins_vel_hor.z},\
+            {admaMsg.poi_3.inv_path_radius}, {admaMsg.poi_3.side_slip_angle},\
+            {admaMsg.poi_3.dist_trav}, {admaMsg.poi_3.ins_height},\
+            {admaMsg.poi_3.ins_lat_abs}, {admaMsg.poi_3.ins_long_abs},\
+            {admaMsg.poi_3.ins_pos_rel_x}, {admaMsg.poi_3.ins_pos_rel_y},\
+            {admaMsg.poi_3.ins_vel_hor.x}, {admaMsg.poi_3.ins_vel_hor.y},\
+            {admaMsg.poi_3.ins_vel_hor.z},\
             {admaMsg.poi_4.acc_body.x}, {admaMsg.poi_4.acc_body.y}, {admaMsg.poi_4.acc_body.z},\
             {admaMsg.poi_4.acc_hor.x}, {admaMsg.poi_4.acc_hor.y}, {admaMsg.poi_4.acc_hor.z},\
-            {admaMsg.poi_4.inv_path_radius}, {admaMsg.poi_4.side_slip_angle}, {admaMsg.poi_4.dist_trav}, {admaMsg.poi_4.ins_height},\
-            {admaMsg.poi_4.ins_lat_abs}, {admaMsg.poi_4.ins_long_abs}, {admaMsg.poi_4.ins_pos_rel_x}, {admaMsg.poi_4.ins_pos_rel_y},\
-            {admaMsg.poi_4.ins_vel_hor.x}, {admaMsg.poi_4.ins_vel_hor.y}, {admaMsg.poi_4.ins_vel_hor.z},\
+            {admaMsg.poi_4.inv_path_radius}, {admaMsg.poi_4.side_slip_angle},\
+            {admaMsg.poi_4.dist_trav}, {admaMsg.poi_4.ins_height},\
+            {admaMsg.poi_4.ins_lat_abs}, {admaMsg.poi_4.ins_long_abs},\
+            {admaMsg.poi_4.ins_pos_rel_x}, {admaMsg.poi_4.ins_pos_rel_y},\
+            {admaMsg.poi_4.ins_vel_hor.x}, {admaMsg.poi_4.ins_vel_hor.y},\
+            {admaMsg.poi_4.ins_vel_hor.z},\
             {admaMsg.poi_5.acc_body.x}, {admaMsg.poi_5.acc_body.y}, {admaMsg.poi_5.acc_body.z},\
             {admaMsg.poi_5.acc_hor.x}, {admaMsg.poi_5.acc_hor.y}, {admaMsg.poi_5.acc_hor.z},\
-            {admaMsg.poi_5.inv_path_radius}, {admaMsg.poi_5.side_slip_angle}, {admaMsg.poi_5.dist_trav}, {admaMsg.poi_5.ins_height},\
-            {admaMsg.poi_5.ins_lat_abs}, {admaMsg.poi_5.ins_long_abs}, {admaMsg.poi_5.ins_pos_rel_x}, {admaMsg.poi_5.ins_pos_rel_y},\
-            {admaMsg.poi_5.ins_vel_hor.x}, {admaMsg.poi_5.ins_vel_hor.y}, {admaMsg.poi_5.ins_vel_hor.z},\
+            {admaMsg.poi_5.inv_path_radius}, {admaMsg.poi_5.side_slip_angle},\
+            {admaMsg.poi_5.dist_trav}, {admaMsg.poi_5.ins_height},\
+            {admaMsg.poi_5.ins_lat_abs}, {admaMsg.poi_5.ins_long_abs},\
+            {admaMsg.poi_5.ins_pos_rel_x}, {admaMsg.poi_5.ins_pos_rel_y},\
+            {admaMsg.poi_5.ins_vel_hor.x}, {admaMsg.poi_5.ins_vel_hor.y},\
+            {admaMsg.poi_5.ins_vel_hor.z},\
             {admaMsg.poi_6.acc_body.x}, {admaMsg.poi_6.acc_body.y}, {admaMsg.poi_6.acc_body.z},\
             {admaMsg.poi_6.acc_hor.x}, {admaMsg.poi_6.acc_hor.y}, {admaMsg.poi_6.acc_hor.z},\
-            {admaMsg.poi_6.inv_path_radius}, {admaMsg.poi_6.side_slip_angle}, {admaMsg.poi_6.dist_trav}, {admaMsg.poi_6.ins_height},\
-            {admaMsg.poi_6.ins_lat_abs}, {admaMsg.poi_6.ins_long_abs}, {admaMsg.poi_6.ins_pos_rel_x}, {admaMsg.poi_6.ins_pos_rel_y},\
-            {admaMsg.poi_6.ins_vel_hor.x}, {admaMsg.poi_6.ins_vel_hor.y}, {admaMsg.poi_6.ins_vel_hor.z},\
+            {admaMsg.poi_6.inv_path_radius}, {admaMsg.poi_6.side_slip_angle},\
+            {admaMsg.poi_6.dist_trav}, {admaMsg.poi_6.ins_height},\
+            {admaMsg.poi_6.ins_lat_abs}, {admaMsg.poi_6.ins_long_abs},\
+            {admaMsg.poi_6.ins_pos_rel_x}, {admaMsg.poi_6.ins_pos_rel_y},\
+            {admaMsg.poi_6.ins_vel_hor.x}, {admaMsg.poi_6.ins_vel_hor.y},\
+            {admaMsg.poi_6.ins_vel_hor.z},\
             {admaMsg.poi_7.acc_body.x}, {admaMsg.poi_7.acc_body.y}, {admaMsg.poi_7.acc_body.z},\
             {admaMsg.poi_7.acc_hor.x}, {admaMsg.poi_7.acc_hor.y}, {admaMsg.poi_7.acc_hor.z},\
-            {admaMsg.poi_7.inv_path_radius}, {admaMsg.poi_7.side_slip_angle}, {admaMsg.poi_7.dist_trav}, {admaMsg.poi_7.ins_height},\
-            {admaMsg.poi_7.ins_lat_abs}, {admaMsg.poi_7.ins_long_abs}, {admaMsg.poi_7.ins_pos_rel_x}, {admaMsg.poi_7.ins_pos_rel_y},\
-            {admaMsg.poi_7.ins_vel_hor.x}, {admaMsg.poi_7.ins_vel_hor.y}, {admaMsg.poi_7.ins_vel_hor.z},\
+            {admaMsg.poi_7.inv_path_radius}, {admaMsg.poi_7.side_slip_angle},\
+            {admaMsg.poi_7.dist_trav}, {admaMsg.poi_7.ins_height},\
+            {admaMsg.poi_7.ins_lat_abs}, {admaMsg.poi_7.ins_long_abs},\
+            {admaMsg.poi_7.ins_pos_rel_x}, {admaMsg.poi_7.ins_pos_rel_y},\
+            {admaMsg.poi_7.ins_vel_hor.x}, {admaMsg.poi_7.ins_vel_hor.y},\
+            {admaMsg.poi_7.ins_vel_hor.z},\
             {admaMsg.poi_8.acc_body.x}, {admaMsg.poi_8.acc_body.y}, {admaMsg.poi_8.acc_body.z},\
             {admaMsg.poi_8.acc_hor.x}, {admaMsg.poi_8.acc_hor.y}, {admaMsg.poi_8.acc_hor.z},\
-            {admaMsg.poi_8.inv_path_radius}, {admaMsg.poi_8.side_slip_angle}, {admaMsg.poi_8.dist_trav}, {admaMsg.poi_8.ins_height},\
-            {admaMsg.poi_8.ins_lat_abs}, {admaMsg.poi_8.ins_long_abs}, {admaMsg.poi_8.ins_pos_rel_x}, {admaMsg.poi_8.ins_pos_rel_y},\
-            {admaMsg.poi_8.ins_vel_hor.x}, {admaMsg.poi_8.ins_vel_hor.y}, {admaMsg.poi_8.ins_vel_hor.z},\
-            {admaMsg.status.status_gnss_mode}, {admaMsg.status.status_standstill}, {admaMsg.status.status_skidding}, {admaMsg.status.status_external_vel_out},\
-            {admaMsg.status.status_trig_gnss}, {admaMsg.status.status_signal_in3}, {admaMsg.status.status_signal_in2}, {admaMsg.status.status_signal_in1},\
-            {admaMsg.status.status_alignment}, {admaMsg.status.status_ahrs_ins}, {admaMsg.status.status_dead_reckoning}, {admaMsg.status.status_synclock},\
-            {admaMsg.status.status_evk_activ}, {admaMsg.status.status_evk_estimates}, {admaMsg.status.status_heading_executed}, {admaMsg.status.status_config_changed},\
-            {admaMsg.status.status_tilt}, {admaMsg.status.status_pos}, {admaMsg.status.status_count},\
-            {admaMsg.status.status_kalmanfilter_settled}, {admaMsg.status.status_kf_lat_stimulated}, {admaMsg.status.status_kf_long_stimulated}, {admaMsg.status.status_kf_steady_state},\
+            {admaMsg.poi_8.inv_path_radius}, {admaMsg.poi_8.side_slip_angle},\
+            {admaMsg.poi_8.dist_trav}, {admaMsg.poi_8.ins_height},\
+            {admaMsg.poi_8.ins_lat_abs}, {admaMsg.poi_8.ins_long_abs},\
+            {admaMsg.poi_8.ins_pos_rel_x}, {admaMsg.poi_8.ins_pos_rel_y},\
+            {admaMsg.poi_8.ins_vel_hor.x}, {admaMsg.poi_8.ins_vel_hor.y},\
+            {admaMsg.poi_8.ins_vel_hor.z},\
+            {admaMsg.status.status_gnss_mode}, {admaMsg.status.status_standstill},\
+            {admaMsg.status.status_skidding}, {admaMsg.status.status_external_vel_out},\
+            {admaMsg.status.status_trig_gnss}, {admaMsg.status.status_signal_in3},\
+            {admaMsg.status.status_signal_in2}, {admaMsg.status.status_signal_in1},\
+            {admaMsg.status.status_alignment}, {admaMsg.status.status_ahrs_ins},\
+            {admaMsg.status.status_dead_reckoning}, {admaMsg.status.status_synclock},\
+            {admaMsg.status.status_evk_activ}, {admaMsg.status.status_evk_estimates},\
+            {admaMsg.status.status_heading_executed}, {admaMsg.status.status_config_changed},\
+            {admaMsg.status.status_tilt}, {admaMsg.status.status_pos},\
+            {admaMsg.status.status_count},\
+            {admaMsg.status.status_kalmanfilter_settled},\
+            {admaMsg.status.status_kf_lat_stimulated}, {admaMsg.status.status_kf_long_stimulated},\
+            {admaMsg.status.status_kf_steady_state},\
             {admaMsg.status.status_speed}, {admaMsg.status.status_robot},\
-            {ewMsg.error_warnings.error_gyro_hw}, {ewMsg.error_warnings.error_accel_hw}, {ewMsg.error_warnings.error_ext_speed_hw}, {ewMsg.error_warnings.error_gnss_hw},\
-            {ewMsg.error_warnings.error_data_bus_checksum},{ewMsg.error_warnings.error_eeprom}, {ewMsg.error_warnings.error_cmd},\
-            {ewMsg.error_warnings.error_data_bus}, {ewMsg.error_warnings.error_can_bus}, {ewMsg.error_warnings.error_num},\
-            {ewMsg.error_warnings.error_temp_warning}, {ewMsg.error_warnings.error_reduced_accuracy}, {ewMsg.error_warnings.error_range_max},\
-            {ewMsg.error_warnings.warn_gnss_no_solution}, {ewMsg.error_warnings.warn_gnss_vel_ignored}, {ewMsg.error_warnings.warn_gnss_pos_ignored}, {ewMsg.error_warnings.warn_gnss_unable_to_cfg},\
-            {ewMsg.error_warnings.warn_speed_off}, {ewMsg.error_warnings.warn_gnss_dualant_ignored},\
+            {ewMsg.error_warnings.error_gyro_hw}, {ewMsg.error_warnings.error_accel_hw},\
+            {ewMsg.error_warnings.error_ext_speed_hw}, {ewMsg.error_warnings.error_gnss_hw},\
+            {ewMsg.error_warnings.error_data_bus_checksum},{ewMsg.error_warnings.error_eeprom},\
+            {ewMsg.error_warnings.error_cmd},\
+            {ewMsg.error_warnings.error_data_bus}, {ewMsg.error_warnings.error_can_bus},\
+            {ewMsg.error_warnings.error_num},\
+            {ewMsg.error_warnings.error_temp_warning},\
+            {ewMsg.error_warnings.error_reduced_accuracy}, {ewMsg.error_warnings.error_range_max},\
+            {ewMsg.error_warnings.warn_gnss_no_solution},\
+            {ewMsg.error_warnings.warn_gnss_vel_ignored},\
+            {ewMsg.error_warnings.warn_gnss_pos_ignored},\
+            {ewMsg.error_warnings.warn_gnss_unable_to_cfg},\
+            {ewMsg.error_warnings.warn_speed_off},\
+            {ewMsg.error_warnings.warn_gnss_dualant_ignored},\
             {ewMsg.error_warnings.error_hw_sticky}\
             '
             )
@@ -127,7 +177,7 @@ class Ros2CSVConverter(Node):
             # define headers
             file = open(self.filename, 'w')
             file.write(
-                f'serial_number,\
+                'serial_number,\
             Acc_Body_HR_X, Acc_Body_HR_Y, Acc_Body_HR_Z,\
             Rate_Body_HR_X, Rate_Body_HR_Y, Rate_Body_HR_Z,\
             Rate_Body_X, Rate_Body_Y, Rate_Body_Z,\
@@ -135,21 +185,25 @@ class Ros2CSVConverter(Node):
             Acc_Body_X, Acc_Body_Y, Acc_Body_Z,\
             Acc_Hor_X, Acc_Hor_Y, Acc_Hor_Z,\
             Ext_Vel_An_X, Ext_Vel_An_Y,\
-            Ext_Vel_Dig_X, Ext_Vel_Dig_Y, Ext_Vel_Dig_Pulses_X, Ext_Vel_Dig_Pulses_Y, Ext_Vel_X_corrected, Ext_Vel_Y_corrected,\
+            Ext_Vel_Dig_X, Ext_Vel_Dig_Y, Ext_Vel_Dig_Pulses_X, Ext_Vel_Dig_Pulses_Y,\
+            Ext_Vel_X_corrected, Ext_Vel_Y_corrected,\
             Inv_Path_Radius, Side_Slip_Angle, Dist_Trav,\
-            Trig_Rising_1, Trig_Falling_1, Trig_Rising_2, Trig_Falling_2, Trig_Rising_3, Trig_Falling_3, Trig_Rising_4, Trig_Falling_4,\
+            Trig_Rising_1, Trig_Falling_1, Trig_Rising_2, Trig_Falling_2,\
+            Trig_Rising_3, Trig_Falling_3, Trig_Rising_4, Trig_Falling_4,\
             System_Ta, System_Temp, System_TimeSinceInit, System_DSP_Load,\
             GNSS_Lat_Abs, GNSS_Long_Abs, GNSS_Pos_Rel_X, GNSS_Pos_Rel_Y,\
             GNSS_Stddev_Lat, GNSS_Stddev_Long, GNSS_Stddev_Height,\
             GNSS_Vel_Frame_X, GNSS_Vel_Frame_Y, GNSS_Vel_Frame_Z, GNSS_Vel_Latency,\
             GNSS_Stddev_Vel_X, GNSS_Stddev_Vel_Y, GNSS_Stddev_Vel_Z,\
             GNSS_Time_msec, GNSS_Time_Week, GNSS_Trigger,\
-            GNSS_DiffAge, GNSS_Sats_Used, GNSS_Sats_Visible, GNSS_Sats_DualAnt_Used, GNSS_Sats_DualAnt_Visible,\
+            GNSS_DiffAge, GNSS_Sats_Used, GNSS_Sats_Visible,\
+            GNSS_Sats_DualAnt_Used, GNSS_Sats_DualAnt_Visible,\
             GNSS_Log_Delay, GNSS_Receiver_Load, GNSS_BaseNr,\
             INS_Roll, INS_Pitch, INS_Yaw, GNSS_COG,\
             GNSS_Height, Undulation, GNSS_DualAnt_Time_msec, GNSS_DualAnt_Time_Week,\
             GNSS_DualAnt_Heading, GNSS_DualAnt_Pitch,\
-            GNSS_DualAnt_Stddev_Heading, GNSS_DualAnt_Stddev_Pitch, GNSS_DualAnt_Stddev_Heading_HR, GNSS_DualAnt_Stddev_Pitch_HR,\
+            GNSS_DualAnt_Stddev_Heading, GNSS_DualAnt_Stddev_Pitch,\
+            GNSS_DualAnt_Stddev_Heading_HR, GNSS_DualAnt_Stddev_Pitch_HR,\
             INS_Height, INS_Time_msec, INS_Time_Week, Leap_Seconds,\
             INS_Lat_Abs, INS_Long_Abs, INS_Pos_Rel_X, INS_Pos_Rel_Y,\
             INS_Vel_Hor_X, INS_Vel_Hor_Y, INS_Vel_Hor_Z,\
@@ -203,15 +257,18 @@ class Ros2CSVConverter(Node):
             Status_GNSS_Mode, Status_Standstill, Status_Skidding, Status_External_Vel_Out,\
             Status_Trig_GNSS, Status_Signal_IN3, Status_Signal_IN2, Status_Signal_IN1,\
             Status_Alignment, Status_AHRS_INS, Status_Dead_reckoning, Status_SyncLock,\
-            Status_EVK_activ, Status_EVK_Estimates, Status_Heading_executed, Status_Config_Changed,\
+            Status_EVK_activ, Status_EVK_Estimates,\
+            Status_Heading_executed, Status_Config_Changed,\
             Status_Tilt, Status_Pos, Status_Count,\
-            Status_Kalmanfilter_settled, Status_KF_Lat_stimulated, Status_KF_Long_stimulated, Status_KF_steady_state,\
+            Status_Kalmanfilter_settled,\
+            Status_KF_Lat_stimulated, Status_KF_Long_stimulated, Status_KF_steady_state,\
             Status_Speed, Status_Robot,\
             Error_Gyro_HW, Error_Accel_HW, Error_Ext_Speed_HW, Error_GNSS_HW,\
             Error_Data_Bus_Checksum, Error_Eeprom, Error_Cmd,\
             Error_Data_Bus, Error_CAN_Bus, Error_Num,\
             Error_Temp_Warning, Error_Reduced_Accuracy, Error_Range_Max,\
-            Warn_GNSS_no_solution, Warn_GNSS_Vel_ignored, Warn_GNSS_Pos_ignored, Warn_GNSS_unable_to_cfg,\
+            Warn_GNSS_no_solution, Warn_GNSS_Vel_ignored,\
+            Warn_GNSS_Pos_ignored, Warn_GNSS_unable_to_cfg,\
             Warn_speed_off, Warn_GNSS_DualAnt_ignored,\
             Error_HW_Sticky\
             '
@@ -222,9 +279,9 @@ class Ros2CSVConverter(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    l = Ros2CSVConverter()
+    ros2csv_converter = Ros2CSVConverter()
     while rclpy.ok():
-        rclpy.spin(l)
+        rclpy.spin(ros2csv_converter)
 
 
 if __name__ == '__main__':

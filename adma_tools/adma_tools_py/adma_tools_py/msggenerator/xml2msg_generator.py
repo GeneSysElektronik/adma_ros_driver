@@ -9,10 +9,11 @@ class XML2MSGGenerator(Node, abc.ABC):
         super().__init__("xml2msg_generator")
         self.xml_file = self.declare_parameter(
             'xml_file',
-            '$HOME/ros2_ws/loki/src/adma_ros_driver/adma_tools/adma_tools_py/config/ADMA_UDP-DataStream_DELTA11_v7.0_v30.5.1.0.xml',
+            'ADMA_UDP-DataStream_DELTA11_v7.0_v30.5.1.0.xml',
         ).value
         self.msg_output_file = self.declare_parameter(
-            'msg_output_file', '$HOME/ros2_ws/src/adma_tools/adma_tools_py/config/generated.msg'
+            'msg_output_file',
+            '$HOME/ros2_ws/src/adma_tools/adma_tools_py/config/generated.msg',
         ).value
 
         # load json glossar for datatype remapping
@@ -61,7 +62,9 @@ class XML2MSGGenerator(Node, abc.ABC):
                 channel_name = channel.get('Name').lower()
                 channel_datatype = channel.find('DataType').text
                 channel_datatype = self.find_datatype(channel_datatype)
-                channel_byte_offset = channel.find('ByteOffset')  # may useful for validation
+                # channel_byte_offset = channel.find(
+                #     'ByteOffset'
+                # )  # may useful for validation
                 self.add_content_to_msg(channel_datatype, channel_name)
 
     def convert_content_to_msg(self):

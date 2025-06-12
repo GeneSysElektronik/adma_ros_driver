@@ -5,7 +5,7 @@
   <description>adma_ros_driver originally from https://github.com/lab176344/adma_ros_driver.git</description>
   <maintainer email="rico.schillings@hs-offenburg.de">Rico Schillings</maintainer>
   <license>BSD-3-Clause</license>
-   
+
   <buildtool_depend>ament_cmake</buildtool_depend>
   <!-- ROS dependencies -->
   <depend>rclcpp</depend>

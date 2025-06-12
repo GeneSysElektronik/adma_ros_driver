@@ -37,4 +37,3 @@ uint8 status_ips_mode                   # 2025
 # status_byte_5
 uint8 status_robot                      # 2027
 uint8 status_dualant_mode               # 2028
-

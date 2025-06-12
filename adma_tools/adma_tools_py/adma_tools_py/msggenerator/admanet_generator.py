@@ -12,7 +12,9 @@ class ADMANetGenerator(XML2MSGGenerator):
 
     def load_glossar(self):
         package_share_directory = get_package_share_directory('adma_tools_py')
-        glossar_path = os.path.join(package_share_directory, 'config', 'datatypes_glossar.json')
+        glossar_path = os.path.join(
+            package_share_directory, 'config', 'datatypes_glossar.json'
+        )
         glossar_content = None
         with open(glossar_path, 'r') as file:
             glossar_content = json.load(file)

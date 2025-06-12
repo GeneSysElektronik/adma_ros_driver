@@ -26,7 +26,7 @@ def generate_launch_description():
         namespace=LaunchConfiguration('adma_namespace'),
         name='adma_ros2_delta_driver',
         parameters=[LaunchConfiguration('driver_config')],
-        arguments=['--ros-args', '--log-level', LaunchConfiguration('log_level')]
+        arguments=['--ros-args', '--log-level', LaunchConfiguration('log_level')],
     )
 
     return LaunchDescription(

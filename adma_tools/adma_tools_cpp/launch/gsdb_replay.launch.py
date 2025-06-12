@@ -1,6 +1,11 @@
 from launch import LaunchDescription
 from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, LogInfo, Shutdown
+from launch.actions import (
+    DeclareLaunchArgument,
+    IncludeLaunchDescription,
+    LogInfo,
+    Shutdown,
+)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
@@ -11,11 +16,15 @@ def generate_launch_description():
     driver_config = PathJoinSubstitution(
         [FindPackageShare('adma_tools_cpp'), 'config', 'gsdb_replay_config.yaml']
     )
-    driver_config_arg = DeclareLaunchArgument('driver_config', default_value=driver_config)
+    driver_config_arg = DeclareLaunchArgument(
+        'driver_config', default_value=driver_config
+    )
     log_level_arg = DeclareLaunchArgument('log_level', default_value='INFO')
     # overwrite ROS arg here to prevent creating new gsdb file during replaying another one..
     log_gsdb_arg = DeclareLaunchArgument('log_gsdb', default_value='False')
-    log_addon_delta_gsdb_arg = DeclareLaunchArgument('log_addon_delta', default_value='False')
+    log_addon_delta_gsdb_arg = DeclareLaunchArgument(
+        'log_addon_delta', default_value='False'
+    )
 
     # set this to true if you want to replay GSDB and create a rosbag of it
     record_rosbag_arg = DeclareLaunchArgument('record_rosbag', default_value='False')
@@ -23,7 +32,11 @@ def generate_launch_description():
     adma_driver = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
-                [FindPackageShare('adma_ros2_driver'), 'launch', 'adma_driver.launch.py']
+                [
+                    FindPackageShare('adma_ros2_driver'),
+                    'launch',
+                    'adma_driver.launch.py',
+                ]
             )
         )
     )
