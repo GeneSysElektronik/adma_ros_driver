@@ -15,7 +15,7 @@ jobs:
             - iron
             - jazzy
             - rolling
-  
+
           # Define the Docker image(s) associated with each ROS distribution.
           # The include syntax allows additional variables to be defined, like
           # docker_image in this case. See documentation:
@@ -29,7 +29,7 @@ jobs:
             # - docker_image: ubuntu:focal
             #   ros_distribution: noetic
             #   ros_version: 1
-  
+
             # Foxy Fitzroy (June 2020 - June 2023)
             # - docker_image: ubuntu:focal # 20.04
             #  ros_distribution: foxy
@@ -41,34 +41,36 @@ jobs:
             #  ros_version: 2
 
             # Humble Hawksbill (May 2022 - May 2027)
-            - docker_image: ubuntu:jammy # 22.04
+            - docker_image: rostooling/setup-ros-docker:ubuntu-jammy-ros-humble-ros-base-latest # 22.04
               ros_distribution: humble
               ros_version: 2
-  
+
             # Iron Irwini (May 2023 - November 2024)
-            - docker_image: ubuntu:jammy # 22.04
+            - docker_image: rostooling/setup-ros-docker:ubuntu-jammy-ros-iron-ros-base-latest # 22.04
               ros_distribution: iron
               ros_version: 2
-  
+
             # Jazzy Jalisco (May 2024 - May 2029)
-            - docker_image: ubuntu:noble # 24.04
-              ros_distribution: jazzy
-              ros_version: 2
-  
+            # - docker_image: rostooling/setup-ros-docker:ubuntu-noble-ros-jazzy-ros-base-latest # 24.04
+            #   ros_distribution: jazzy
+            #   ros_version: 2
+
             # Rolling Ridley (No End-Of-Life)
-            - docker_image: ubuntu:noble # 24.04
-              ros_distribution: rolling
-              ros_version: 2
+            # - docker_image: rostooling/setup-ros-docker:ubuntu-noble-ros-rolling-ros-base-latest # 24.04
+            #   ros_distribution: rolling
+            #   ros_version: 2
       container:
         image: ${{ matrix.docker_image }}
       steps:
-        - name: setup ROS environment
-          uses: ros-tooling/setup-ros@v0.7
+        - name: setup directories
+          run: mkdir -p ros_ws/src
+        - name: checkout
+          uses: actions/checkout@v4
           with:
-            required-ros-distributions: ${{ matrix.ros_distribution }}
+            path: ros_ws/src
         - name: build and test ROS 2
           if: ${{ matrix.ros_version == 2 }}
-          uses: ros-tooling/action-ros-ci@v0.3
+          uses: ros-tooling/action-ros-ci@v0.4
           with:
             package-name: ""
             target-ros2-distro: ${{ matrix.ros_distribution }}
