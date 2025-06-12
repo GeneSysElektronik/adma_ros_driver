@@ -1,12 +1,13 @@
+import abc
+import xml.etree.ElementTree as ET
+
 import rclpy
 from rclpy.node import Node
-import xml.etree.ElementTree as ET
-import abc
 
 
 class XML2MSGGenerator(Node, abc.ABC):
     def __init__(self):
-        super().__init__("xml2msg_generator")
+        super().__init__('xml2msg_generator')
         self.xml_file = self.declare_parameter(
             'xml_file',
             'ADMA_UDP-DataStream_DELTA11_v7.0_v30.5.1.0.xml',
@@ -43,7 +44,7 @@ class XML2MSGGenerator(Node, abc.ABC):
         msg_name += self.xml_root_tree.find('FormatHeader').find('FormatVersion').text
         # print('Generating msg: ' + str(msg_name))
         self.msg_content.append(
-            f"# {msg_name} generated from XML by adma_tools_py from the offical ADMA ROS Driver\n"
+            f'# {msg_name} generated from XML by adma_tools_py from the offical ADMA ROS Driver\n'
         )
         msg_name = msg_name.replace('.', '')
         # TODO: may can be used for file name?!
@@ -78,8 +79,8 @@ class XML2MSGGenerator(Node, abc.ABC):
         with open(output_file, 'w') as file:
             file.write(msg_str)
 
-    """
-        Function to find the correct ROS datatype correspondending to the ADMA datatypes
+    def find_datatype(self, adma_datatype):
+        """Function to find the correct ROS datatype correspondending to the ADMA datatypes
 
         Parameters:
         datatypes: known datatypes loaded from the glossar.json
@@ -88,14 +89,13 @@ class XML2MSGGenerator(Node, abc.ABC):
         Returns:
         string datatype
         """
-
-    def find_datatype(self, adma_datatype):
         for datatype in self.glossar:
             if datatype['adma_datatype'] == adma_datatype:
                 return datatype['ros_datatype']
-        self.get_logger().warn(f"Couldnt find datatype: {adma_datatype}")
+        self.get_logger().warn(f'Couldnt find datatype: {adma_datatype}')
 
-    """
+    def add_reserved_block(self, datasize):
+        """
         Function to add a reserved block in the ROS msg to ensure the data is ordered correctly
 
         Parameters:
@@ -104,8 +104,6 @@ class XML2MSGGenerator(Node, abc.ABC):
         Returns:
         string text to append to ROS msg
         """
-
-    def add_reserved_block(self, datasize):
-        reserved_block = f"byte[{datasize}] reserved_{self.reserved_block_counter}"
+        reserved_block = f'byte[{datasize}] reserved_{self.reserved_block_counter}'
         self.reserved_block_counter += 1
         return reserved_block

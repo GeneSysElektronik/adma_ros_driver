@@ -1,6 +1,6 @@
 from launch import LaunchDescription
-from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
-from launch.actions import DeclareLaunchArgument, LogInfo, Shutdown, ExecuteProcess
+from launch.actions import DeclareLaunchArgument, ExecuteProcess, LogInfo, Shutdown
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
@@ -37,7 +37,7 @@ def generate_launch_description():
         parameters=[LaunchConfiguration('gsda_config')],
         arguments=['--ros-args', '--log-level', LaunchConfiguration('log_level')],
         on_exit=[
-            LogInfo(msg=["GSDA replay done. Stopping everything..."]),
+            LogInfo(msg=['GSDA replay done. Stopping everything...']),
             Shutdown(reason='launch is shutting down'),
         ],
     )

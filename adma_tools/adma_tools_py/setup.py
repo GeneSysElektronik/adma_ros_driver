@@ -1,5 +1,6 @@
-from setuptools import setup
 import glob
+
+from setuptools import setup
 
 package_name = 'adma_tools_py'
 
