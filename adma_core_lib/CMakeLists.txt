@@ -3,13 +3,13 @@ project(adma_core_lib)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS YES)
 
-# Default to C++14
+# Default to C++17
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 17)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options() # (-Wall -Wextra -Wpedantic)
+  add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
 # find ROS dependencies
@@ -49,8 +49,25 @@ install(DIRECTORY include/
   DESTINATION include)
 
 if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  ament_lint_auto_find_test_dependencies()
+  find_package(ament_cmake_cppcheck REQUIRED)
+  find_package(ament_cmake_cpplint REQUIRED)
+  find_package(ament_cmake_lint_cmake REQUIRED)
+  find_package(ament_cmake_xmllint REQUIRED)
+  find_package(ament_cmake_uncrustify REQUIRED)
+
+  set(_linter_excludes include/${PROJECT_NAME}/thirdparty/json.hpp)
+  ament_cppcheck(
+    EXCLUDE ${_linter_excludes}
+    LANGUAGE "c++"
+  )
+  ament_cpplint(EXCLUDE ${_linter_excludes})
+  ament_lint_cmake()
+
+  ament_uncrustify(
+    EXCLUDE ${_linter_excludes}
+    LANGUAGE "c++"
+  )
+  ament_xmllint()
 endif()
 
 ament_export_include_directories(include)

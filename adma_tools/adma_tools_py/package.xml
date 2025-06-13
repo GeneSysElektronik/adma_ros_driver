@@ -2,10 +2,10 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>adma_tools_py</name>
-  <version>0.0.0</version>
+  <version>2.4.0</version>
   <description>Collection of python tools to work with ADMA and ROS2</description>
   <maintainer email="rico.schillings@hs-offenburg.de">rschilli</maintainer>
-  <license>BSD3</license>
+  <license>BSD-3-Clause</license>
 
   <depend>rclpy</depend>
   <depend>adma_ros_driver_msgs</depend>

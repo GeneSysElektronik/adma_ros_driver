@@ -41,3 +41,5 @@ __pycache__
 .vs/VSWorkspaceState.json
 .vs/adma_ros_driver/v17/Browse.VC.db
 .vs/adma_ros_driver/FileContentIndex/8c31cab9-c325-4aac-99c8-cb485d5b9945.vsidx
+
+pre_commit_results.txt

@@ -3,9 +3,9 @@ project(adma_ros2_delta_driver)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS YES)
 
-# Default to C++14
+# Default to C++17
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD 17)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -57,8 +57,24 @@ install(DIRECTORY launch config
   DESTINATION share/${PROJECT_NAME})
 
 if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  ament_lint_auto_find_test_dependencies()
+  find_package(ament_cmake_cppcheck REQUIRED)
+  find_package(ament_cmake_cpplint REQUIRED)
+  find_package(ament_cmake_lint_cmake REQUIRED)
+  find_package(ament_cmake_xmllint REQUIRED)
+  find_package(ament_cmake_uncrustify REQUIRED)
+  find_package(ament_cmake_flake8 REQUIRED)
+
+  ament_cppcheck(
+    LANGUAGE "c++"
+  )
+  ament_cpplint()
+  ament_lint_cmake()
+
+  ament_uncrustify(
+    LANGUAGE "c++"
+  )
+  ament_xmllint()
+  ament_flake8()
 endif()
 
 ament_export_include_directories(include)

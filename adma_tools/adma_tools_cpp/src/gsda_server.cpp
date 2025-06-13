@@ -1,17 +1,41 @@
-#include "adma_tools_cpp/gsda_server.hpp"
+// BSD 3-Clause License
+// Copyright (c) 2023, GeneSys Elektronik
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+// 1. Redistributions of source code must retain the above copyright notice, this
+//    list of conditions and the following disclaimer.
+// 2. Redistributions in binary form must reproduce the above copyright notice,
+//    this list of conditions and the following disclaimer in the documentation
+//    and/or other materials provided with the distribution.
+// 3. Neither the name of the copyright holder nor the names of its
+//    contributors may be used to endorse or promote products derived from
+//    this software without specific prior written permission.
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <arpa/inet.h>
 #include <sys/socket.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+
 #include <iostream>
 #include <string>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 #include <rclcpp_components/register_node_macro.hpp>
 #include <adma_core_lib/parser/parser_utils.hpp>
 
+#include "adma_tools_cpp/gsda_server.hpp"
+
 /**
- * @brief This helper class can replay post-processed ADMA data (GSDA file) and publish the data to ROS
- * Only supported for protocol version >= 3.3.4
+ * @brief This helper class can replay post-processed ADMA data (GSDA file) and publish
+ * the data to ROS. Only supported for protocol version >= 3.3.4
  */
 namespace genesys
 {
@@ -19,8 +43,8 @@ namespace tools
 {
 GSDAServer::GSDAServer(const rclcpp::NodeOptions & options)
 : Node("gsda_server", options),
-msgCounter_(0),
-tfBroadcaster_(*this)
+  msgCounter_(0),
+  tfBroadcaster_(*this)
 {
   // read ros parameters
   frequency_ = this->declare_parameter("frequency", 100);
@@ -39,11 +63,9 @@ tfBroadcaster_(*this)
   velocity_id_ = this->declare_parameter("topic_pois.velocity", 1);
   odometry_id_ = this->declare_parameter("topic_pois.odometry", 1);
   gsdaFile_ = std::fstream(gsdaFilePath_);
-  if(gsdaFile_)
-  {
+  if (gsdaFile_) {
     RCLCPP_INFO(get_logger(), "Loaded GSDA-File: %s", gsdaFilePath_.c_str());
-  }else
-  {
+  } else {
     RCLCPP_WARN(get_logger(), "Desired GSDA-File not found: %s", gsdaFilePath_.c_str());
   }
 
@@ -56,13 +78,12 @@ tfBroadcaster_(*this)
   pub_heading_ = this->create_publisher<std_msgs::msg::Float64>("adma/heading", 1);
   pub_velocity_ = this->create_publisher<std_msgs::msg::Float64>("adma/velocity", 1);
   pub_odometry_ = this->create_publisher<nav_msgs::msg::Odometry>("adma/odometry", 1);
-  if(publish_TF_)
-  {
+  if (publish_TF_) {
     pub_trajectory_ = this->create_publisher<nav_msgs::msg::Path>("adma/trajectory", 1);
     trajectory_msg_.header.frame_id = odometry_child_frame_;
   }
 
-  // TODO: if a new protocol version is released, inject the version as ROS parameter for parsing
+  // TODO(rschilli): make version injection more dynamic
   parser_ = new ADMA2ROSParser(3360);
 
   updateLoop();
@@ -75,9 +96,8 @@ GSDAServer::~GSDAServer()
 
 void GSDAServer::updateLoop()
 {
-
   // define messages to publish
-  //TODO: inject frame_id as ROS params like its done in driver node
+  // TODO(rschilli): inject frame_id as ROS params like its done in driver node
   adma_ros_driver_msgs::msg::AdmaDataScaled dataScaledMsg;
   dataScaledMsg.header.frame_id = adma_frame_;
   adma_ros_driver_msgs::msg::AdmaStatus stateMsg;
@@ -92,26 +112,22 @@ void GSDAServer::updateLoop()
   odomMsg.header.frame_id = odometry_pose_frame_;
   odomMsg.child_frame_id = odometry_child_frame_;
 
-  //offset between UNIX and GNSS (in ms)
-  unsigned long long offset_gps_unix = 315964800000;
-  unsigned long long week_to_msec = 604800000;
-  unsigned long long timestamp;
+  // offset between UNIX and GNSS (in ms)
+  uint64_t offset_gps_unix = 315964800000;
+  uint64_t week_to_msec = 604800000;
+  uint64_t timestamp;
   builtin_interfaces::msg::Time timestampForMsgs;
 
-  while(rclcpp::ok())
-  {
-    //iterate through gsda file
-    while(getline(gsdaFile_, line))
-    {
-      if(msgCounter_ == 0){
+  while (rclcpp::ok()) {
+    // iterate through gsda file
+    while (getline(gsdaFile_, line)) {
+      if (msgCounter_ == 0) {
         readLine();
         extractHeader();
         msgCounter_++;
         continue;
-      }
-      else if(msgCounter_ == 1)
-      {
-        //skip first 2 lines cause they are not used here
+      } else if (msgCounter_ == 1) {
+        // skip first 2 lines cause they are not used here
         msgCounter_++;
         continue;
       }
@@ -150,9 +166,9 @@ void GSDAServer::updateLoop()
       imuMsg.header.stamp = timestampForMsgs;
       // read heading and velocity
       headingMsg.data = dataScaledMsg.ins_yaw;
-      geometry_msgs::msg::Vector3 insSource = velocity_id_ == 0
-          ? dataScaledMsg.ins_vel_frame
-          : pois[velocity_id_ - 1].ins_vel_hor;
+      geometry_msgs::msg::Vector3 insSource = velocity_id_ == 0 ?
+        dataScaledMsg.ins_vel_frame :
+        pois[velocity_id_ - 1].ins_vel_hor;
       velMsg.data = std::sqrt(std::pow(insSource.x, 2) + std::pow(insSource.y, 2)) * 3.6;
 
       extractBytes(stateMsg, dataScaledMsg);
@@ -161,10 +177,9 @@ void GSDAServer::updateLoop()
       odomMsg.header.stamp = timestampForMsgs;
       parser_->extractOdometry(dataScaledMsg, odomMsg, odometry_yaw_offset_, pois, odometry_id_);
 
-      // TODO: extract the TF stuff to separate node for reusage
-      if(publish_TF_)
-      {
-        // TODO: evaluate those transformations!!
+      // TODO(rschilli): extract the TF stuff to separate node for reusage
+      if (publish_TF_) {
+        // TODO(rschilli): evaluate those transformations!!
         geometry_msgs::msg::TransformStamped transform_msg;
         transform_msg.header.stamp = timestampForMsgs;
         transform_msg.header.frame_id = "map";
@@ -178,7 +193,7 @@ void GSDAServer::updateLoop()
         transform_msg.header.frame_id = adma_frame_;
         transform_msg.child_frame_id = odometry_child_frame_;
         tf2::Quaternion rotOdom2Base;
-        rotOdom2Base.setRPY(0.0,0.0,0.0);
+        rotOdom2Base.setRPY(0.0, 0.0, 0.0);
         transform_msg.transform.rotation = tf2::toMsg(rotOdom2Base);
         transform_msg.transform.translation.x = 0.0;
         transform_msg.transform.translation.y = 0.0;
@@ -203,27 +218,25 @@ void GSDAServer::updateLoop()
       std::this_thread::sleep_for(std::chrono::milliseconds(1000 / frequency_));
       msgCounter_++;
     }
-
     rclcpp::shutdown();
-    }
-
+  }
 }
 
 void GSDAServer::readLine()
 {
   row.clear();
   std::stringstream str(line);
-  while(getline(str, word, ','))
-      row.push_back(word);
+  while (getline(str, word, ',')) {
+    row.push_back(word);
+  }
 }
 
 void GSDAServer::extractHeader()
 {
-  for(int i = 0; i < row.size(); i++)
-  {
+  for (size_t i = 0; i < row.size(); i++) {
     std::string channelName = row[i];
     if (channelName.rfind("% ", 0) == 0) {
-      channelName.erase(0,2);
+      channelName.erase(0, 2);
     }
     indexMap_.insert({channelName, i});
   }
@@ -232,11 +245,9 @@ void GSDAServer::extractHeader()
 double GSDAServer::readValue(std::string dataName)
 {
   auto it = indexMap_.find(dataName);
-  if(it != indexMap_.end())
-  {
-    int index = (*it).second;
-    if(index <= row.size())
-    {
+  if (it != indexMap_.end()) {
+    size_t index = (*it).second;
+    if (index <= row.size()) {
       return std::stod(row[index]);
     }
   }
@@ -246,22 +257,25 @@ double GSDAServer::readValue(std::string dataName)
 int GSDAServer::readByteValue(std::string dataName)
 {
   auto it = indexMap_.find(dataName);
-  if(it != indexMap_.end())
-  {
-    int index = (*it).second;
-    if(index <= row.size())
-    {
+  if (it != indexMap_.end()) {
+    size_t index = (*it).second;
+    if (index <= row.size()) {
       return std::stoi(row[index].c_str());
     }
   }
-  if (std::find(unsupportedFields_.begin(), unsupportedFields_.end(), dataName) == unsupportedFields_.end()) {
+  if (std::find(
+      unsupportedFields_.begin(), unsupportedFields_.end(),
+      dataName) == unsupportedFields_.end())
+  {
     unsupportedFields_.push_back(dataName);
     RCLCPP_WARN(get_logger(), "Channelname %s not found in GSDA File..", dataName.c_str());
   }
   return 0;
 }
 
-void GSDAServer::extractBytes(adma_ros_driver_msgs::msg::AdmaStatus &stateMsg, adma_ros_driver_msgs::msg::AdmaDataScaled& dataScaledMsg)
+void GSDAServer::extractBytes(
+  adma_ros_driver_msgs::msg::AdmaStatus & stateMsg,
+  adma_ros_driver_msgs::msg::AdmaDataScaled & dataScaledMsg)
 {
   // read values
   unsigned char gnssStatus = (unsigned char) readByteValue("State0");
@@ -281,7 +295,7 @@ void GSDAServer::extractBytes(adma_ros_driver_msgs::msg::AdmaStatus &stateMsg, a
   // stateMsg.status_bytes.status_count = ?;
   stateMsg.status_bytes.status_byte_4 = kfStatus;
   stateMsg.status_bytes.status_byte_5 = statusRobot;
-  //fill error/warning bytes
+  // fill error/warning bytes
   stateMsg.error_warnings_bytes.error_1 = error1;
   stateMsg.error_warnings_bytes.error_2 = error2;
   stateMsg.error_warnings_bytes.warn_1 = warn1;
@@ -411,371 +425,370 @@ void GSDAServer::extractBytes(adma_ros_driver_msgs::msg::AdmaStatus &stateMsg, a
   stateMsg.error_warnings.warn_gnss_dualant_ignored = getbit(warn1, 5);
 
   // error_byte_2
-    stateMsg.error_warnings.error_hw_sticky = getbit(error3, 0);
+  stateMsg.error_warnings.error_hw_sticky = getbit(error3, 0);
 }
 
-void GSDAServer::fillDataScaledMsg(adma_ros_driver_msgs::msg::AdmaDataScaled& dataScaledMsg)
+void GSDAServer::fillDataScaledMsg(adma_ros_driver_msgs::msg::AdmaDataScaled & dataScaledMsg)
 {
-    // accelerations body in g
-    dataScaledMsg.acc_body.x = readValue("Acc_Body_X");
-    dataScaledMsg.acc_body.y = readValue("Acc_Body_Y");
-    dataScaledMsg.acc_body.z = readValue("Acc_Body_Z");
-
-    // acceleration horizontal in g
-    dataScaledMsg.acc_hor.x = readValue("Acc_Hor_X");
-    dataScaledMsg.acc_hor.y = readValue("Acc_Hor_Y");
-    dataScaledMsg.acc_hor.z = readValue("Acc_Hor_Z");
-
-    // acceleration frame in g
-    dataScaledMsg.acc_body_hr.x = readValue("Acc_Frame_X");
-    dataScaledMsg.acc_body_hr.y = readValue("Acc_Frame_Y");
-    dataScaledMsg.acc_body_hr.z = readValue("Acc_Frame_Z");
-
-    // rates body in deg/s
-    dataScaledMsg.rate_body.x = readValue("Rate_Body_X");
-    dataScaledMsg.rate_body.y = readValue("Rate_Body_Y");
-    dataScaledMsg.rate_body.z = readValue("Rate_Body_Z");
-
-    // rates hor in deg/s
-    dataScaledMsg.rate_hor.x = readValue("Rate_Hor_X");
-    dataScaledMsg.rate_hor.y = readValue("Rate_Hor_Y");
-    dataScaledMsg.rate_hor.z = readValue("Rate_Hor_Z");
-
-    // rates frame in deg/s
-    dataScaledMsg.rate_body_hr.x = readValue("Rate_Frame_X");
-    dataScaledMsg.rate_body_hr.y = readValue("Rate_Frame_Y");
-    dataScaledMsg.rate_body_hr.z = readValue("Rate_Frame_Z");
-
-    // POI's
-    // POI1
-    // acceleration body in g
-    dataScaledMsg.poi_1.acc_body.x = readValue("Acc_Body_X_POI1");
-    dataScaledMsg.poi_1.acc_body.y = readValue("Acc_Body_Y_POI1");
-    dataScaledMsg.poi_1.acc_body.z = readValue("Acc_Body_Z_POI1");
-
-    // acceleration horizontal in g
-    dataScaledMsg.poi_1.acc_hor.x = readValue("Acc_Hor_X_POI1");
-    dataScaledMsg.poi_1.acc_hor.y = readValue("Acc_Hor_Y_POI1");
-    dataScaledMsg.poi_1.acc_hor.z = readValue("Acc_Hor_Z_POI1");
-
-    // Auxiliary
-    dataScaledMsg.poi_1.inv_path_radius = readValue("Inv_Path_Radius_POI1");
-    dataScaledMsg.poi_1.side_slip_angle = readValue("Side_Slip_Angle_POI1");
-    dataScaledMsg.poi_1.dist_trav = readValue("Dist_Trav_POI1");
-
-    // ins Position
-    dataScaledMsg.poi_1.ins_lat_abs = readValue("INS_Lat_Abs_POI1");
-    dataScaledMsg.poi_1.ins_long_abs = readValue("INS_Long_Abs_POI1");
-    dataScaledMsg.poi_1.ins_height = readValue("INS_Height_POI1");
-
-    // relative position
-    dataScaledMsg.poi_1.ins_pos_rel_x = readValue("INS_Pos_Rel_X_POI1");
-    dataScaledMsg.poi_1.ins_pos_rel_y = readValue("INS_Pos_Rel_Y_POI1");
-
-    // ins velocities
-    dataScaledMsg.poi_1.ins_vel_hor.x = readValue("INS_Vel_Hor_X_POI1");
-    dataScaledMsg.poi_1.ins_vel_hor.y = readValue("INS_Vel_Hor_Y_POI1");
-    dataScaledMsg.poi_1.ins_vel_hor.z = readValue("INS_Vel_Hor_Z_POI1");
-
-    // POI2
-    // acceleration body in g
-    dataScaledMsg.poi_2.acc_body.x = readValue("Acc_Body_X_POI2");
-    dataScaledMsg.poi_2.acc_body.y = readValue("Acc_Body_Y_POI2");
-    dataScaledMsg.poi_2.acc_body.z = readValue("Acc_Body_Z_POI2");
-
-    // acceleration horizontal in g
-    dataScaledMsg.poi_2.acc_hor.x = readValue("Acc_Hor_X_POI2");
-    dataScaledMsg.poi_2.acc_hor.y = readValue("Acc_Hor_Y_POI2");
-    dataScaledMsg.poi_2.acc_hor.z = readValue("Acc_Hor_Z_POI2");
-
-    // Auxiliary
-    dataScaledMsg.poi_2.inv_path_radius = readValue("Inv_Path_Radius_POI2");
-    dataScaledMsg.poi_2.side_slip_angle = readValue("Side_Slip_Angle_POI2");
-    dataScaledMsg.poi_2.dist_trav = readValue("Dist_Trav_POI2");
-
-    // ins Position
-    dataScaledMsg.poi_2.ins_lat_abs = readValue("INS_Lat_Abs_POI2");
-    dataScaledMsg.poi_2.ins_long_abs = readValue("INS_Long_Abs_POI2");
-    dataScaledMsg.poi_2.ins_height = readValue("INS_Height_POI2");
-
-    // relative position
-    dataScaledMsg.poi_2.ins_pos_rel_x = readValue("INS_Pos_Rel_X_POI2");
-    dataScaledMsg.poi_2.ins_pos_rel_y = readValue("INS_Pos_Rel_Y_POI2");
-
-    // ins velocities
-    dataScaledMsg.poi_2.ins_vel_hor.x = readValue("INS_Vel_Hor_X_POI2");
-    dataScaledMsg.poi_2.ins_vel_hor.y = readValue("INS_Vel_Hor_Y_POI2");
-    dataScaledMsg.poi_2.ins_vel_hor.z = readValue("INS_Vel_Hor_Z_POI2");
-
-    // POI3
-    // acceleration body in g
-    dataScaledMsg.poi_3.acc_body.x = readValue("Acc_Body_X_POI3");
-    dataScaledMsg.poi_3.acc_body.y = readValue("Acc_Body_Y_POI3");
-    dataScaledMsg.poi_3.acc_body.z = readValue("Acc_Body_Z_POI3");
-
-    // acceleration horizontal in g
-    dataScaledMsg.poi_3.acc_hor.x = readValue("Acc_Hor_X_POI3");
-    dataScaledMsg.poi_3.acc_hor.y = readValue("Acc_Hor_Y_POI3");
-    dataScaledMsg.poi_3.acc_hor.z = readValue("Acc_Hor_Z_POI3");
-
-    // Auxiliary
-    dataScaledMsg.poi_3.inv_path_radius = readValue("Inv_Path_Radius_POI3");
-    dataScaledMsg.poi_3.side_slip_angle = readValue("Side_Slip_Angle_POI3");
-    dataScaledMsg.poi_3.dist_trav = readValue("Dist_Trav_POI3");
-
-    // ins Position
-    dataScaledMsg.poi_3.ins_lat_abs = readValue("INS_Lat_Abs_POI3");
-    dataScaledMsg.poi_3.ins_long_abs = readValue("INS_Long_Abs_POI3");
-    dataScaledMsg.poi_3.ins_height = readValue("INS_Height_POI3");
-
-    // relative position
-    dataScaledMsg.poi_3.ins_pos_rel_x = readValue("INS_Pos_Rel_X_POI3");
-    dataScaledMsg.poi_3.ins_pos_rel_y = readValue("INS_Pos_Rel_Y_POI3");
-
-    // ins velocities
-    dataScaledMsg.poi_3.ins_vel_hor.x = readValue("INS_Vel_Hor_X_POI3");
-    dataScaledMsg.poi_3.ins_vel_hor.y = readValue("INS_Vel_Hor_Y_POI3");
-    dataScaledMsg.poi_3.ins_vel_hor.z = readValue("INS_Vel_Hor_Z_POI3");
-
-    // POI4
-    // acceleration body in g
-    dataScaledMsg.poi_4.acc_body.x = readValue("Acc_Body_X_POI4");
-    dataScaledMsg.poi_4.acc_body.y = readValue("Acc_Body_Y_POI4");
-    dataScaledMsg.poi_4.acc_body.z = readValue("Acc_Body_Z_POI4");
-
-    // acceleration horizontal in g
-    dataScaledMsg.poi_4.acc_hor.x = readValue("Acc_Hor_X_POI4");
-    dataScaledMsg.poi_4.acc_hor.y = readValue("Acc_Hor_Y_POI4");
-    dataScaledMsg.poi_4.acc_hor.z = readValue("Acc_Hor_Z_POI4");
-
-    // Auxiliary
-    dataScaledMsg.poi_4.inv_path_radius = readValue("Inv_Path_Radius_POI4");
-    dataScaledMsg.poi_4.side_slip_angle = readValue("Side_Slip_Angle_POI4");
-    dataScaledMsg.poi_4.dist_trav = readValue("Dist_Trav_POI4");
-
-    // ins Position
-    dataScaledMsg.poi_4.ins_lat_abs = readValue("INS_Lat_Abs_POI4");
-    dataScaledMsg.poi_4.ins_long_abs = readValue("INS_Long_Abs_POI4");
-    dataScaledMsg.poi_4.ins_height = readValue("INS_Height_POI4");
-
-    // relative position
-    dataScaledMsg.poi_4.ins_pos_rel_x = readValue("INS_Pos_Rel_X_POI4");
-    dataScaledMsg.poi_4.ins_pos_rel_y = readValue("INS_Pos_Rel_Y_POI4");
-
-    // ins velocities
-    dataScaledMsg.poi_4.ins_vel_hor.x = readValue("INS_Vel_Hor_X_POI4");
-    dataScaledMsg.poi_4.ins_vel_hor.y = readValue("INS_Vel_Hor_Y_POI4");
-    dataScaledMsg.poi_4.ins_vel_hor.z = readValue("INS_Vel_Hor_Z_POI4");
-
-    // POI5
-    // acceleration body in g
-    dataScaledMsg.poi_5.acc_body.x = readValue("Acc_Body_X_POI5");
-    dataScaledMsg.poi_5.acc_body.y = readValue("Acc_Body_Y_POI5");
-    dataScaledMsg.poi_5.acc_body.z = readValue("Acc_Body_Z_POI5");
-
-    // acceleration horizontal in g
-    dataScaledMsg.poi_5.acc_hor.x = readValue("Acc_Hor_X_POI5");
-    dataScaledMsg.poi_5.acc_hor.y = readValue("Acc_Hor_Y_POI5");
-    dataScaledMsg.poi_5.acc_hor.z = readValue("Acc_Hor_Z_POI5");
-
-    // Auxiliary
-    dataScaledMsg.poi_5.inv_path_radius = readValue("Inv_Path_Radius_POI5");
-    dataScaledMsg.poi_5.side_slip_angle = readValue("Side_Slip_Angle_POI5");
-    dataScaledMsg.poi_5.dist_trav = readValue("Dist_Trav_POI5");
-
-    // ins Position
-    dataScaledMsg.poi_5.ins_lat_abs = readValue("INS_Lat_Abs_POI5");
-    dataScaledMsg.poi_5.ins_long_abs = readValue("INS_Long_Abs_POI5");
-    dataScaledMsg.poi_5.ins_height = readValue("INS_Height_POI5");
-
-    // relative position
-    dataScaledMsg.poi_5.ins_pos_rel_x = readValue("INS_Pos_Rel_X_POI5");
-    dataScaledMsg.poi_5.ins_pos_rel_y = readValue("INS_Pos_Rel_Y_POI5");
-
-    // ins velocities
-    dataScaledMsg.poi_5.ins_vel_hor.x = readValue("INS_Vel_Hor_X_POI5");
-    dataScaledMsg.poi_5.ins_vel_hor.y = readValue("INS_Vel_Hor_Y_POI5");
-    dataScaledMsg.poi_5.ins_vel_hor.z = readValue("INS_Vel_Hor_Z_POI5");
-
-    // POI6
-    // acceleration body in g
-    dataScaledMsg.poi_6.acc_body.x = readValue("Acc_Body_X_POI6");
-    dataScaledMsg.poi_6.acc_body.y = readValue("Acc_Body_Y_POI6");
-    dataScaledMsg.poi_6.acc_body.z = readValue("Acc_Body_Z_POI6");
-
-    // acceleration horizontal in g
-    dataScaledMsg.poi_6.acc_hor.x = readValue("Acc_Hor_X_POI6");
-    dataScaledMsg.poi_6.acc_hor.y = readValue("Acc_Hor_Y_POI6");
-    dataScaledMsg.poi_6.acc_hor.z = readValue("Acc_Hor_Z_POI6");
-
-    // Auxiliary
-    dataScaledMsg.poi_6.inv_path_radius = readValue("Inv_Path_Radius_POI6");
-    dataScaledMsg.poi_6.side_slip_angle = readValue("Side_Slip_Angle_POI6");
-    dataScaledMsg.poi_6.dist_trav = readValue("Dist_Trav_POI6");
-
-    // ins Position
-    dataScaledMsg.poi_6.ins_lat_abs = readValue("INS_Lat_Abs_POI6");
-    dataScaledMsg.poi_6.ins_long_abs = readValue("INS_Long_Abs_POI6");
-    dataScaledMsg.poi_6.ins_height = readValue("INS_Height_POI6");
-
-    // relative position
-    dataScaledMsg.poi_6.ins_pos_rel_x = readValue("INS_Pos_Rel_X_POI6");
-    dataScaledMsg.poi_6.ins_pos_rel_y = readValue("INS_Pos_Rel_Y_POI6");
-
-    // ins velocities
-    dataScaledMsg.poi_6.ins_vel_hor.x = readValue("INS_Vel_Hor_X_POI6");
-    dataScaledMsg.poi_6.ins_vel_hor.y = readValue("INS_Vel_Hor_Y_POI6");
-    dataScaledMsg.poi_6.ins_vel_hor.z = readValue("INS_Vel_Hor_Z_POI6");
-
-    // POI7
-    // acceleration body in g
-    dataScaledMsg.poi_7.acc_body.x = readValue("Acc_Body_X_POI7");
-    dataScaledMsg.poi_7.acc_body.y = readValue("Acc_Body_Y_POI7");
-    dataScaledMsg.poi_7.acc_body.z = readValue("Acc_Body_Z_POI7");
-
-    // acceleration horizontal in g
-    dataScaledMsg.poi_7.acc_hor.x = readValue("Acc_Hor_X_POI7");
-    dataScaledMsg.poi_7.acc_hor.y = readValue("Acc_Hor_Y_POI7");
-    dataScaledMsg.poi_7.acc_hor.z = readValue("Acc_Hor_Z_POI7");
-
-    // Auxiliary
-    dataScaledMsg.poi_7.inv_path_radius = readValue("Inv_Path_Radius_POI7");
-    dataScaledMsg.poi_7.side_slip_angle = readValue("Side_Slip_Angle_POI7");
-    dataScaledMsg.poi_7.dist_trav = readValue("Dist_Trav_POI7");
-
-    // ins Position
-    dataScaledMsg.poi_7.ins_lat_abs = readValue("INS_Lat_Abs_POI7");
-    dataScaledMsg.poi_7.ins_long_abs = readValue("INS_Long_Abs_POI7");
-    dataScaledMsg.poi_7.ins_height = readValue("INS_Height_POI7");
-
-    // relative position
-    dataScaledMsg.poi_7.ins_pos_rel_x = readValue("INS_Pos_Rel_X_POI7");
-    dataScaledMsg.poi_7.ins_pos_rel_y = readValue("INS_Pos_Rel_Y_POI7");
-
-    // ins velocities
-    dataScaledMsg.poi_7.ins_vel_hor.x = readValue("INS_Vel_Hor_X_POI7");
-    dataScaledMsg.poi_7.ins_vel_hor.y = readValue("INS_Vel_Hor_Y_POI7");
-    dataScaledMsg.poi_7.ins_vel_hor.z = readValue("INS_Vel_Hor_Z_POI7");
-
-    // POI8
-    // acceleration body in g
-    dataScaledMsg.poi_8.acc_body.x = readValue("Acc_Body_X_POI8");
-    dataScaledMsg.poi_8.acc_body.y = readValue("Acc_Body_Y_POI8");
-    dataScaledMsg.poi_8.acc_body.z = readValue("Acc_Body_Z_POI8");
-
-    // acceleration horizontal in g
-    dataScaledMsg.poi_8.acc_hor.x = readValue("Acc_Hor_X_POI8");
-    dataScaledMsg.poi_8.acc_hor.y = readValue("Acc_Hor_Y_POI8");
-    dataScaledMsg.poi_8.acc_hor.z = readValue("Acc_Hor_Z_POI8");
-
-    // Auxiliary
-    dataScaledMsg.poi_8.inv_path_radius = readValue("Inv_Path_Radius_POI8");
-    dataScaledMsg.poi_8.side_slip_angle = readValue("Side_Slip_Angle_POI8");
-    dataScaledMsg.poi_8.dist_trav = readValue("Dist_Trav_POI8");
-
-    // ins Position
-    dataScaledMsg.poi_8.ins_lat_abs = readValue("INS_Lat_Abs_POI8");
-    dataScaledMsg.poi_8.ins_long_abs = readValue("INS_Long_Abs_POI8");
-    dataScaledMsg.poi_8.ins_height = readValue("INS_Height_POI8");
-
-    // relative position
-    dataScaledMsg.poi_8.ins_pos_rel_x = readValue("INS_Pos_Rel_X_POI8");
-    dataScaledMsg.poi_8.ins_pos_rel_y = readValue("INS_Pos_Rel_Y_POI8");
-
-    // ins velocities
-    dataScaledMsg.poi_8.ins_vel_hor.x = readValue("INS_Vel_Hor_X_POI8");
-    dataScaledMsg.poi_8.ins_vel_hor.y = readValue("INS_Vel_Hor_Y_POI8");
-    dataScaledMsg.poi_8.ins_vel_hor.z = readValue("INS_Vel_Hor_Z_POI8");
-
-
-    // external velocity
-    dataScaledMsg.ext_vel_x_corrected = readValue("Ext_Vel_X_corrected");
-
-    // system data
-    dataScaledMsg.system_ta = readValue("System_TA");
-    dataScaledMsg.system_temp = readValue("System_Temp");
-    dataScaledMsg.system_dsp_load = readValue("System_DSP_Load");
-    dataScaledMsg.system_time_since_init = readValue("System_TimeSinceInit");
-
-    // auxiliary
-    dataScaledMsg.inv_path_radius = readValue("Inv_Path_Radius");
-    dataScaledMsg.side_slip_angle = readValue("Side_Slip_Angle");
-    dataScaledMsg.dist_trav = readValue("Dist_Trav");
-
-    // gnss positions
-    dataScaledMsg.gnss_lat_abs = readValue("GNSS_Lat_Abs");
-    dataScaledMsg.gnss_long_abs = readValue("GNSS_Long_Abs");
-    dataScaledMsg.gnss_height = readValue("GNSS_Height");
-    dataScaledMsg.gnss_pos_rel_x = readValue("GNSS_Pos_Rel_X");
-    dataScaledMsg.gnss_pos_rel_y = readValue("GNSS_Pos_Rel_Y");
-    dataScaledMsg.gnss_stddev_lat = readValue("GNSS_Stddev_Lat");
-    dataScaledMsg.gnss_stddev_long = readValue("GNSS_Stddev_Long");
-    dataScaledMsg.gnss_stddev_height = readValue("GNSS_Stddev_Height");
-
-    // gnss velocities
-    dataScaledMsg.gnss_vel_frame.x = readValue("GNSS_Vel_Frame_X");
-    dataScaledMsg.gnss_vel_frame.y = readValue("GNSS_Vel_Frame_Y");
-    dataScaledMsg.gnss_vel_frame.z = readValue("GNSS_Vel_Frame_Z");
-    dataScaledMsg.gnss_vel_latency = readValue("GNSS_Vel_Latency");
-    dataScaledMsg.gnss_stddev_vel.x = readValue("GNSS_Stddev_Vel_X");
-    dataScaledMsg.gnss_stddev_vel.y = readValue("GNSS_Stddev_Vel_Y");
-    dataScaledMsg.gnss_stddev_vel.z = readValue("GNSS_Stddev_Vel_Z");
-
-    // gnss aux data
-    dataScaledMsg.gnss_log_delay = readValue("GNSS_Log_Delay");
-    dataScaledMsg.gnss_diffage = readValue("GNSS_DiffAge");
-    dataScaledMsg.gnss_sats_visible = readValue("GNSS_Sats_Visible");
-    dataScaledMsg.gnss_time_msec = readValue("GNSS_Time_msec");
-    dataScaledMsg.gnss_time_week = readValue("GNSS_Time_Week");
-
-    // dual ant data
-    dataScaledMsg.gnss_dualant_heading = readValue("GNSS_DualAnt_Heading");
-    dataScaledMsg.gnss_dualant_stddev_heading = readValue("GNSS_DualAnt_Stddev_Heading");
-    dataScaledMsg.gnss_dualant_pitch = readValue("GNSS_DualAnt_Pitch");
-    dataScaledMsg.gnss_dualant_stddev_pitch = readValue("GNSS_DualAnt_Stddev_Pitch");
-    dataScaledMsg.gnss_dualant_time_msec = readValue("GNSS_DualAnt_Time_msec");
-
-    // angles
-    dataScaledMsg.ins_roll = readValue("INS_Roll");
-    dataScaledMsg.ins_pitch = readValue("INS_Pitch");
-    dataScaledMsg.ins_yaw = readValue("INS_Yaw");
-    dataScaledMsg.gnss_cog = readValue("GNSS_COG");
-    dataScaledMsg.ins_stddev_roll = readValue("INS_Stddev_Roll");
-    dataScaledMsg.ins_stddev_pitch = readValue("INS_Stddev_Pitch");
-    dataScaledMsg.ins_stddev_yaw = readValue("INS_Stddev_Yaw");
-
-    // ins position data
-    dataScaledMsg.ins_lat_abs = readValue("INS_Lat_Abs");
-    dataScaledMsg.ins_long_abs = readValue("INS_Long_Abs");
-    dataScaledMsg.ins_height = readValue("INS_Height");
-    dataScaledMsg.ins_stddev_lat = readValue("INS_Stddev_Lat");
-    dataScaledMsg.ins_stddev_long = readValue("INS_Stddev_Long");
-    dataScaledMsg.ins_stddev_height = readValue("INS_Stddev_Height");
-    dataScaledMsg.ins_pos_rel_x = readValue("INS_Pos_Rel_X");
-    dataScaledMsg.ins_pos_rel_y = readValue("INS_Pos_Rel_Y");
-    dataScaledMsg.ins_time_msec = readValue("INS_Time_msec");
-    dataScaledMsg.ins_time_week = readValue("INS_Time_Week");
-
-    // ins frame velocities
-    dataScaledMsg.ins_vel_frame.x = readValue("INS_Vel_Frame_X");
-    dataScaledMsg.ins_vel_frame.y = readValue("INS_Vel_Frame_Y");
-    dataScaledMsg.ins_vel_frame.z = readValue("INS_Vel_Frame_Z");
-
-    // ins horizontal velocities
-    dataScaledMsg.ins_vel_hor.x = readValue("INS_Vel_Hor_X");
-    dataScaledMsg.ins_vel_hor.y = readValue("INS_Vel_Hor_Y");
-    dataScaledMsg.ins_vel_hor.z = readValue("INS_Vel_Hor_Z");
-
-    // ins velocity standarddeviations
-    dataScaledMsg.ins_stddev_vel.x = readValue("INS_Stddev_Vel_X");
-    dataScaledMsg.ins_stddev_vel.y = readValue("INS_Stddev_Vel_Y");
-    dataScaledMsg.ins_stddev_vel.z = readValue("INS_Stddev_Vel_Z");
-
-    // kalman filter stati
-    dataScaledMsg.kf_lat_stimulated = readValue("KF_Lat_stimulated");
-    dataScaledMsg.kf_long_stimulated = readValue("KF_Long_stimulated");
-    dataScaledMsg.kf_steady_state = readValue("KF_Steady-State");
-
+  // accelerations body in g
+  dataScaledMsg.acc_body.x = readValue("Acc_Body_X");
+  dataScaledMsg.acc_body.y = readValue("Acc_Body_Y");
+  dataScaledMsg.acc_body.z = readValue("Acc_Body_Z");
+
+  // acceleration horizontal in g
+  dataScaledMsg.acc_hor.x = readValue("Acc_Hor_X");
+  dataScaledMsg.acc_hor.y = readValue("Acc_Hor_Y");
+  dataScaledMsg.acc_hor.z = readValue("Acc_Hor_Z");
+
+  // acceleration frame in g
+  dataScaledMsg.acc_body_hr.x = readValue("Acc_Frame_X");
+  dataScaledMsg.acc_body_hr.y = readValue("Acc_Frame_Y");
+  dataScaledMsg.acc_body_hr.z = readValue("Acc_Frame_Z");
+
+  // rates body in deg/s
+  dataScaledMsg.rate_body.x = readValue("Rate_Body_X");
+  dataScaledMsg.rate_body.y = readValue("Rate_Body_Y");
+  dataScaledMsg.rate_body.z = readValue("Rate_Body_Z");
+
+  // rates hor in deg/s
+  dataScaledMsg.rate_hor.x = readValue("Rate_Hor_X");
+  dataScaledMsg.rate_hor.y = readValue("Rate_Hor_Y");
+  dataScaledMsg.rate_hor.z = readValue("Rate_Hor_Z");
+
+  // rates frame in deg/s
+  dataScaledMsg.rate_body_hr.x = readValue("Rate_Frame_X");
+  dataScaledMsg.rate_body_hr.y = readValue("Rate_Frame_Y");
+  dataScaledMsg.rate_body_hr.z = readValue("Rate_Frame_Z");
+
+  // POI's
+  // POI1
+  // acceleration body in g
+  dataScaledMsg.poi_1.acc_body.x = readValue("Acc_Body_X_POI1");
+  dataScaledMsg.poi_1.acc_body.y = readValue("Acc_Body_Y_POI1");
+  dataScaledMsg.poi_1.acc_body.z = readValue("Acc_Body_Z_POI1");
+
+  // acceleration horizontal in g
+  dataScaledMsg.poi_1.acc_hor.x = readValue("Acc_Hor_X_POI1");
+  dataScaledMsg.poi_1.acc_hor.y = readValue("Acc_Hor_Y_POI1");
+  dataScaledMsg.poi_1.acc_hor.z = readValue("Acc_Hor_Z_POI1");
+
+  // Auxiliary
+  dataScaledMsg.poi_1.inv_path_radius = readValue("Inv_Path_Radius_POI1");
+  dataScaledMsg.poi_1.side_slip_angle = readValue("Side_Slip_Angle_POI1");
+  dataScaledMsg.poi_1.dist_trav = readValue("Dist_Trav_POI1");
+
+  // ins Position
+  dataScaledMsg.poi_1.ins_lat_abs = readValue("INS_Lat_Abs_POI1");
+  dataScaledMsg.poi_1.ins_long_abs = readValue("INS_Long_Abs_POI1");
+  dataScaledMsg.poi_1.ins_height = readValue("INS_Height_POI1");
+
+  // relative position
+  dataScaledMsg.poi_1.ins_pos_rel_x = readValue("INS_Pos_Rel_X_POI1");
+  dataScaledMsg.poi_1.ins_pos_rel_y = readValue("INS_Pos_Rel_Y_POI1");
+
+  // ins velocities
+  dataScaledMsg.poi_1.ins_vel_hor.x = readValue("INS_Vel_Hor_X_POI1");
+  dataScaledMsg.poi_1.ins_vel_hor.y = readValue("INS_Vel_Hor_Y_POI1");
+  dataScaledMsg.poi_1.ins_vel_hor.z = readValue("INS_Vel_Hor_Z_POI1");
+
+  // POI2
+  // acceleration body in g
+  dataScaledMsg.poi_2.acc_body.x = readValue("Acc_Body_X_POI2");
+  dataScaledMsg.poi_2.acc_body.y = readValue("Acc_Body_Y_POI2");
+  dataScaledMsg.poi_2.acc_body.z = readValue("Acc_Body_Z_POI2");
+
+  // acceleration horizontal in g
+  dataScaledMsg.poi_2.acc_hor.x = readValue("Acc_Hor_X_POI2");
+  dataScaledMsg.poi_2.acc_hor.y = readValue("Acc_Hor_Y_POI2");
+  dataScaledMsg.poi_2.acc_hor.z = readValue("Acc_Hor_Z_POI2");
+
+  // Auxiliary
+  dataScaledMsg.poi_2.inv_path_radius = readValue("Inv_Path_Radius_POI2");
+  dataScaledMsg.poi_2.side_slip_angle = readValue("Side_Slip_Angle_POI2");
+  dataScaledMsg.poi_2.dist_trav = readValue("Dist_Trav_POI2");
+
+  // ins Position
+  dataScaledMsg.poi_2.ins_lat_abs = readValue("INS_Lat_Abs_POI2");
+  dataScaledMsg.poi_2.ins_long_abs = readValue("INS_Long_Abs_POI2");
+  dataScaledMsg.poi_2.ins_height = readValue("INS_Height_POI2");
+
+  // relative position
+  dataScaledMsg.poi_2.ins_pos_rel_x = readValue("INS_Pos_Rel_X_POI2");
+  dataScaledMsg.poi_2.ins_pos_rel_y = readValue("INS_Pos_Rel_Y_POI2");
+
+  // ins velocities
+  dataScaledMsg.poi_2.ins_vel_hor.x = readValue("INS_Vel_Hor_X_POI2");
+  dataScaledMsg.poi_2.ins_vel_hor.y = readValue("INS_Vel_Hor_Y_POI2");
+  dataScaledMsg.poi_2.ins_vel_hor.z = readValue("INS_Vel_Hor_Z_POI2");
+
+  // POI3
+  // acceleration body in g
+  dataScaledMsg.poi_3.acc_body.x = readValue("Acc_Body_X_POI3");
+  dataScaledMsg.poi_3.acc_body.y = readValue("Acc_Body_Y_POI3");
+  dataScaledMsg.poi_3.acc_body.z = readValue("Acc_Body_Z_POI3");
+
+  // acceleration horizontal in g
+  dataScaledMsg.poi_3.acc_hor.x = readValue("Acc_Hor_X_POI3");
+  dataScaledMsg.poi_3.acc_hor.y = readValue("Acc_Hor_Y_POI3");
+  dataScaledMsg.poi_3.acc_hor.z = readValue("Acc_Hor_Z_POI3");
+
+  // Auxiliary
+  dataScaledMsg.poi_3.inv_path_radius = readValue("Inv_Path_Radius_POI3");
+  dataScaledMsg.poi_3.side_slip_angle = readValue("Side_Slip_Angle_POI3");
+  dataScaledMsg.poi_3.dist_trav = readValue("Dist_Trav_POI3");
+
+  // ins Position
+  dataScaledMsg.poi_3.ins_lat_abs = readValue("INS_Lat_Abs_POI3");
+  dataScaledMsg.poi_3.ins_long_abs = readValue("INS_Long_Abs_POI3");
+  dataScaledMsg.poi_3.ins_height = readValue("INS_Height_POI3");
+
+  // relative position
+  dataScaledMsg.poi_3.ins_pos_rel_x = readValue("INS_Pos_Rel_X_POI3");
+  dataScaledMsg.poi_3.ins_pos_rel_y = readValue("INS_Pos_Rel_Y_POI3");
+
+  // ins velocities
+  dataScaledMsg.poi_3.ins_vel_hor.x = readValue("INS_Vel_Hor_X_POI3");
+  dataScaledMsg.poi_3.ins_vel_hor.y = readValue("INS_Vel_Hor_Y_POI3");
+  dataScaledMsg.poi_3.ins_vel_hor.z = readValue("INS_Vel_Hor_Z_POI3");
+
+  // POI4
+  // acceleration body in g
+  dataScaledMsg.poi_4.acc_body.x = readValue("Acc_Body_X_POI4");
+  dataScaledMsg.poi_4.acc_body.y = readValue("Acc_Body_Y_POI4");
+  dataScaledMsg.poi_4.acc_body.z = readValue("Acc_Body_Z_POI4");
+
+  // acceleration horizontal in g
+  dataScaledMsg.poi_4.acc_hor.x = readValue("Acc_Hor_X_POI4");
+  dataScaledMsg.poi_4.acc_hor.y = readValue("Acc_Hor_Y_POI4");
+  dataScaledMsg.poi_4.acc_hor.z = readValue("Acc_Hor_Z_POI4");
+
+  // Auxiliary
+  dataScaledMsg.poi_4.inv_path_radius = readValue("Inv_Path_Radius_POI4");
+  dataScaledMsg.poi_4.side_slip_angle = readValue("Side_Slip_Angle_POI4");
+  dataScaledMsg.poi_4.dist_trav = readValue("Dist_Trav_POI4");
+
+  // ins Position
+  dataScaledMsg.poi_4.ins_lat_abs = readValue("INS_Lat_Abs_POI4");
+  dataScaledMsg.poi_4.ins_long_abs = readValue("INS_Long_Abs_POI4");
+  dataScaledMsg.poi_4.ins_height = readValue("INS_Height_POI4");
+
+  // relative position
+  dataScaledMsg.poi_4.ins_pos_rel_x = readValue("INS_Pos_Rel_X_POI4");
+  dataScaledMsg.poi_4.ins_pos_rel_y = readValue("INS_Pos_Rel_Y_POI4");
+
+  // ins velocities
+  dataScaledMsg.poi_4.ins_vel_hor.x = readValue("INS_Vel_Hor_X_POI4");
+  dataScaledMsg.poi_4.ins_vel_hor.y = readValue("INS_Vel_Hor_Y_POI4");
+  dataScaledMsg.poi_4.ins_vel_hor.z = readValue("INS_Vel_Hor_Z_POI4");
+
+  // POI5
+  // acceleration body in g
+  dataScaledMsg.poi_5.acc_body.x = readValue("Acc_Body_X_POI5");
+  dataScaledMsg.poi_5.acc_body.y = readValue("Acc_Body_Y_POI5");
+  dataScaledMsg.poi_5.acc_body.z = readValue("Acc_Body_Z_POI5");
+
+  // acceleration horizontal in g
+  dataScaledMsg.poi_5.acc_hor.x = readValue("Acc_Hor_X_POI5");
+  dataScaledMsg.poi_5.acc_hor.y = readValue("Acc_Hor_Y_POI5");
+  dataScaledMsg.poi_5.acc_hor.z = readValue("Acc_Hor_Z_POI5");
+
+  // Auxiliary
+  dataScaledMsg.poi_5.inv_path_radius = readValue("Inv_Path_Radius_POI5");
+  dataScaledMsg.poi_5.side_slip_angle = readValue("Side_Slip_Angle_POI5");
+  dataScaledMsg.poi_5.dist_trav = readValue("Dist_Trav_POI5");
+
+  // ins Position
+  dataScaledMsg.poi_5.ins_lat_abs = readValue("INS_Lat_Abs_POI5");
+  dataScaledMsg.poi_5.ins_long_abs = readValue("INS_Long_Abs_POI5");
+  dataScaledMsg.poi_5.ins_height = readValue("INS_Height_POI5");
+
+  // relative position
+  dataScaledMsg.poi_5.ins_pos_rel_x = readValue("INS_Pos_Rel_X_POI5");
+  dataScaledMsg.poi_5.ins_pos_rel_y = readValue("INS_Pos_Rel_Y_POI5");
+
+  // ins velocities
+  dataScaledMsg.poi_5.ins_vel_hor.x = readValue("INS_Vel_Hor_X_POI5");
+  dataScaledMsg.poi_5.ins_vel_hor.y = readValue("INS_Vel_Hor_Y_POI5");
+  dataScaledMsg.poi_5.ins_vel_hor.z = readValue("INS_Vel_Hor_Z_POI5");
+
+  // POI6
+  // acceleration body in g
+  dataScaledMsg.poi_6.acc_body.x = readValue("Acc_Body_X_POI6");
+  dataScaledMsg.poi_6.acc_body.y = readValue("Acc_Body_Y_POI6");
+  dataScaledMsg.poi_6.acc_body.z = readValue("Acc_Body_Z_POI6");
+
+  // acceleration horizontal in g
+  dataScaledMsg.poi_6.acc_hor.x = readValue("Acc_Hor_X_POI6");
+  dataScaledMsg.poi_6.acc_hor.y = readValue("Acc_Hor_Y_POI6");
+  dataScaledMsg.poi_6.acc_hor.z = readValue("Acc_Hor_Z_POI6");
+
+  // Auxiliary
+  dataScaledMsg.poi_6.inv_path_radius = readValue("Inv_Path_Radius_POI6");
+  dataScaledMsg.poi_6.side_slip_angle = readValue("Side_Slip_Angle_POI6");
+  dataScaledMsg.poi_6.dist_trav = readValue("Dist_Trav_POI6");
+
+  // ins Position
+  dataScaledMsg.poi_6.ins_lat_abs = readValue("INS_Lat_Abs_POI6");
+  dataScaledMsg.poi_6.ins_long_abs = readValue("INS_Long_Abs_POI6");
+  dataScaledMsg.poi_6.ins_height = readValue("INS_Height_POI6");
+
+  // relative position
+  dataScaledMsg.poi_6.ins_pos_rel_x = readValue("INS_Pos_Rel_X_POI6");
+  dataScaledMsg.poi_6.ins_pos_rel_y = readValue("INS_Pos_Rel_Y_POI6");
+
+  // ins velocities
+  dataScaledMsg.poi_6.ins_vel_hor.x = readValue("INS_Vel_Hor_X_POI6");
+  dataScaledMsg.poi_6.ins_vel_hor.y = readValue("INS_Vel_Hor_Y_POI6");
+  dataScaledMsg.poi_6.ins_vel_hor.z = readValue("INS_Vel_Hor_Z_POI6");
+
+  // POI7
+  // acceleration body in g
+  dataScaledMsg.poi_7.acc_body.x = readValue("Acc_Body_X_POI7");
+  dataScaledMsg.poi_7.acc_body.y = readValue("Acc_Body_Y_POI7");
+  dataScaledMsg.poi_7.acc_body.z = readValue("Acc_Body_Z_POI7");
+
+  // acceleration horizontal in g
+  dataScaledMsg.poi_7.acc_hor.x = readValue("Acc_Hor_X_POI7");
+  dataScaledMsg.poi_7.acc_hor.y = readValue("Acc_Hor_Y_POI7");
+  dataScaledMsg.poi_7.acc_hor.z = readValue("Acc_Hor_Z_POI7");
+
+  // Auxiliary
+  dataScaledMsg.poi_7.inv_path_radius = readValue("Inv_Path_Radius_POI7");
+  dataScaledMsg.poi_7.side_slip_angle = readValue("Side_Slip_Angle_POI7");
+  dataScaledMsg.poi_7.dist_trav = readValue("Dist_Trav_POI7");
+
+  // ins Position
+  dataScaledMsg.poi_7.ins_lat_abs = readValue("INS_Lat_Abs_POI7");
+  dataScaledMsg.poi_7.ins_long_abs = readValue("INS_Long_Abs_POI7");
+  dataScaledMsg.poi_7.ins_height = readValue("INS_Height_POI7");
+
+  // relative position
+  dataScaledMsg.poi_7.ins_pos_rel_x = readValue("INS_Pos_Rel_X_POI7");
+  dataScaledMsg.poi_7.ins_pos_rel_y = readValue("INS_Pos_Rel_Y_POI7");
+
+  // ins velocities
+  dataScaledMsg.poi_7.ins_vel_hor.x = readValue("INS_Vel_Hor_X_POI7");
+  dataScaledMsg.poi_7.ins_vel_hor.y = readValue("INS_Vel_Hor_Y_POI7");
+  dataScaledMsg.poi_7.ins_vel_hor.z = readValue("INS_Vel_Hor_Z_POI7");
+
+  // POI8
+  // acceleration body in g
+  dataScaledMsg.poi_8.acc_body.x = readValue("Acc_Body_X_POI8");
+  dataScaledMsg.poi_8.acc_body.y = readValue("Acc_Body_Y_POI8");
+  dataScaledMsg.poi_8.acc_body.z = readValue("Acc_Body_Z_POI8");
+
+  // acceleration horizontal in g
+  dataScaledMsg.poi_8.acc_hor.x = readValue("Acc_Hor_X_POI8");
+  dataScaledMsg.poi_8.acc_hor.y = readValue("Acc_Hor_Y_POI8");
+  dataScaledMsg.poi_8.acc_hor.z = readValue("Acc_Hor_Z_POI8");
+
+  // Auxiliary
+  dataScaledMsg.poi_8.inv_path_radius = readValue("Inv_Path_Radius_POI8");
+  dataScaledMsg.poi_8.side_slip_angle = readValue("Side_Slip_Angle_POI8");
+  dataScaledMsg.poi_8.dist_trav = readValue("Dist_Trav_POI8");
+
+  // ins Position
+  dataScaledMsg.poi_8.ins_lat_abs = readValue("INS_Lat_Abs_POI8");
+  dataScaledMsg.poi_8.ins_long_abs = readValue("INS_Long_Abs_POI8");
+  dataScaledMsg.poi_8.ins_height = readValue("INS_Height_POI8");
+
+  // relative position
+  dataScaledMsg.poi_8.ins_pos_rel_x = readValue("INS_Pos_Rel_X_POI8");
+  dataScaledMsg.poi_8.ins_pos_rel_y = readValue("INS_Pos_Rel_Y_POI8");
+
+  // ins velocities
+  dataScaledMsg.poi_8.ins_vel_hor.x = readValue("INS_Vel_Hor_X_POI8");
+  dataScaledMsg.poi_8.ins_vel_hor.y = readValue("INS_Vel_Hor_Y_POI8");
+  dataScaledMsg.poi_8.ins_vel_hor.z = readValue("INS_Vel_Hor_Z_POI8");
+
+
+  // external velocity
+  dataScaledMsg.ext_vel_x_corrected = readValue("Ext_Vel_X_corrected");
+
+  // system data
+  dataScaledMsg.system_ta = readValue("System_TA");
+  dataScaledMsg.system_temp = readValue("System_Temp");
+  dataScaledMsg.system_dsp_load = readValue("System_DSP_Load");
+  dataScaledMsg.system_time_since_init = readValue("System_TimeSinceInit");
+
+  // auxiliary
+  dataScaledMsg.inv_path_radius = readValue("Inv_Path_Radius");
+  dataScaledMsg.side_slip_angle = readValue("Side_Slip_Angle");
+  dataScaledMsg.dist_trav = readValue("Dist_Trav");
+
+  // gnss positions
+  dataScaledMsg.gnss_lat_abs = readValue("GNSS_Lat_Abs");
+  dataScaledMsg.gnss_long_abs = readValue("GNSS_Long_Abs");
+  dataScaledMsg.gnss_height = readValue("GNSS_Height");
+  dataScaledMsg.gnss_pos_rel_x = readValue("GNSS_Pos_Rel_X");
+  dataScaledMsg.gnss_pos_rel_y = readValue("GNSS_Pos_Rel_Y");
+  dataScaledMsg.gnss_stddev_lat = readValue("GNSS_Stddev_Lat");
+  dataScaledMsg.gnss_stddev_long = readValue("GNSS_Stddev_Long");
+  dataScaledMsg.gnss_stddev_height = readValue("GNSS_Stddev_Height");
+
+  // gnss velocities
+  dataScaledMsg.gnss_vel_frame.x = readValue("GNSS_Vel_Frame_X");
+  dataScaledMsg.gnss_vel_frame.y = readValue("GNSS_Vel_Frame_Y");
+  dataScaledMsg.gnss_vel_frame.z = readValue("GNSS_Vel_Frame_Z");
+  dataScaledMsg.gnss_vel_latency = readValue("GNSS_Vel_Latency");
+  dataScaledMsg.gnss_stddev_vel.x = readValue("GNSS_Stddev_Vel_X");
+  dataScaledMsg.gnss_stddev_vel.y = readValue("GNSS_Stddev_Vel_Y");
+  dataScaledMsg.gnss_stddev_vel.z = readValue("GNSS_Stddev_Vel_Z");
+
+  // gnss aux data
+  dataScaledMsg.gnss_log_delay = readValue("GNSS_Log_Delay");
+  dataScaledMsg.gnss_diffage = readValue("GNSS_DiffAge");
+  dataScaledMsg.gnss_sats_visible = readValue("GNSS_Sats_Visible");
+  dataScaledMsg.gnss_time_msec = readValue("GNSS_Time_msec");
+  dataScaledMsg.gnss_time_week = readValue("GNSS_Time_Week");
+
+  // dual ant data
+  dataScaledMsg.gnss_dualant_heading = readValue("GNSS_DualAnt_Heading");
+  dataScaledMsg.gnss_dualant_stddev_heading = readValue("GNSS_DualAnt_Stddev_Heading");
+  dataScaledMsg.gnss_dualant_pitch = readValue("GNSS_DualAnt_Pitch");
+  dataScaledMsg.gnss_dualant_stddev_pitch = readValue("GNSS_DualAnt_Stddev_Pitch");
+  dataScaledMsg.gnss_dualant_time_msec = readValue("GNSS_DualAnt_Time_msec");
+
+  // angles
+  dataScaledMsg.ins_roll = readValue("INS_Roll");
+  dataScaledMsg.ins_pitch = readValue("INS_Pitch");
+  dataScaledMsg.ins_yaw = readValue("INS_Yaw");
+  dataScaledMsg.gnss_cog = readValue("GNSS_COG");
+  dataScaledMsg.ins_stddev_roll = readValue("INS_Stddev_Roll");
+  dataScaledMsg.ins_stddev_pitch = readValue("INS_Stddev_Pitch");
+  dataScaledMsg.ins_stddev_yaw = readValue("INS_Stddev_Yaw");
+
+  // ins position data
+  dataScaledMsg.ins_lat_abs = readValue("INS_Lat_Abs");
+  dataScaledMsg.ins_long_abs = readValue("INS_Long_Abs");
+  dataScaledMsg.ins_height = readValue("INS_Height");
+  dataScaledMsg.ins_stddev_lat = readValue("INS_Stddev_Lat");
+  dataScaledMsg.ins_stddev_long = readValue("INS_Stddev_Long");
+  dataScaledMsg.ins_stddev_height = readValue("INS_Stddev_Height");
+  dataScaledMsg.ins_pos_rel_x = readValue("INS_Pos_Rel_X");
+  dataScaledMsg.ins_pos_rel_y = readValue("INS_Pos_Rel_Y");
+  dataScaledMsg.ins_time_msec = readValue("INS_Time_msec");
+  dataScaledMsg.ins_time_week = readValue("INS_Time_Week");
+
+  // ins frame velocities
+  dataScaledMsg.ins_vel_frame.x = readValue("INS_Vel_Frame_X");
+  dataScaledMsg.ins_vel_frame.y = readValue("INS_Vel_Frame_Y");
+  dataScaledMsg.ins_vel_frame.z = readValue("INS_Vel_Frame_Z");
+
+  // ins horizontal velocities
+  dataScaledMsg.ins_vel_hor.x = readValue("INS_Vel_Hor_X");
+  dataScaledMsg.ins_vel_hor.y = readValue("INS_Vel_Hor_Y");
+  dataScaledMsg.ins_vel_hor.z = readValue("INS_Vel_Hor_Z");
+
+  // ins velocity standarddeviations
+  dataScaledMsg.ins_stddev_vel.x = readValue("INS_Stddev_Vel_X");
+  dataScaledMsg.ins_stddev_vel.y = readValue("INS_Stddev_Vel_Y");
+  dataScaledMsg.ins_stddev_vel.z = readValue("INS_Stddev_Vel_Z");
+
+  // kalman filter stati
+  dataScaledMsg.kf_lat_stimulated = readValue("KF_Lat_stimulated");
+  dataScaledMsg.kf_long_stimulated = readValue("KF_Long_stimulated");
+  dataScaledMsg.kf_steady_state = readValue("KF_Steady-State");
 }
 
 }  // end namespace tools
