@@ -86,6 +86,8 @@ void ADMADeltaDriver::updateLoop()
                 // publish both msgs
                 pub_delta_raw_->publish(delta_msg_raw);
                 pub_delta_scaled_->publish(delta_msg_scaled);
+                // reset raw byte array
+                delta_msg_raw.raw_data.clear();
         }
 }
 
